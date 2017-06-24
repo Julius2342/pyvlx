@@ -1,0 +1,7 @@
+*.pyc
+
+build/
+dist/
+xknx.egg-info/
+
+.DS_Store
