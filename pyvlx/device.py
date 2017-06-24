@@ -1,8 +1,8 @@
 
 class Device:
-    def __init__(self, pyvlx, id, name):
+    def __init__(self, pyvlx, ident, name):
         self.pyvlx = pyvlx
-        self.id = id
+        self.ident = ident
         self.name = name
 
     def get_name(self):

@@ -1,22 +1,21 @@
-from .device import Device
 
 class Scene:
 
-    def __init__(self, pyvlx, id, name):
+    def __init__(self, pyvlx, ident, name):
         self.pyvlx = pyvlx
-        self.id = id
+        self.ident = ident
         self.name = name
 
 
     @classmethod
     def from_config(cls, pyvlx, item):
         name = item['name']
-        id = item['id']
-        return cls(pyvlx, id, name)
+        ident = item['id']
+        return cls(pyvlx, ident, name)
 
 
     async def run(self):
-        await self.pyvlx.interface.api_call('scenes','run', {'id':self.id})
+        await self.pyvlx.interface.api_call('scenes', 'run', {'id': self.ident})
 
 
     def __str__(self):
@@ -24,10 +23,8 @@ class Scene:
                     'id="{1}" />' \
                     .format(
                         self.name,
-                        self.id)
+                        self.ident)
+
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
-
-
-

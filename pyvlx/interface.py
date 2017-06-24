@@ -1,7 +1,7 @@
-import aiohttp
 import asyncio
-import async_timeout
 import json
+import aiohttp
+import async_timeout
 
 
 class Interface:
@@ -46,7 +46,7 @@ class Interface:
         body['action'] = action
         if params is not None:
             body['params'] = params
-        return body  
+        return body
 
 
     def evaluate_response(self, json_response):
@@ -59,16 +59,13 @@ class Interface:
     def fix_response(self, response):
         # WTF: For whatever reason, the KLF 200 sometimes puts an ")]}'," in front of the response ...
         index = response.find('{')
-        if index>0:
+        if index > 0:
             return response[index:]
         return response
 
 
     async def refresh_token(self):
-        json_response = await self.api_call('auth','login', {'password': self.config.password}, add_authorization_token=False)
+        json_response = await self.api_call('auth', 'login', {'password': self.config.password}, add_authorization_token=False)
         if not "token" in json_response:
             raise Exception("no element token found in response: {0}".format(json.dumps(json_response)))
         self.token = json_response["token"]
-        
-
-

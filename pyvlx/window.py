@@ -2,22 +2,22 @@ from .device import Device
 
 class Window(Device):
 
-    def __init__(self, pyvlx, id, name, subtype, typeId):
+    def __init__(self, pyvlx, ident, name, subtype, typeid):
         self.pyvlx = pyvlx
-        self.id = id
+        self.ident = ident
         self.name = name
         self.subtype = subtype
-        self.typeId = typeId
-        Device.__init__(self, pyvlx, id, name)
+        self.typeid = typeid
+        Device.__init__(self, pyvlx, ident, name)
 
 
     @classmethod
     def from_config(cls, pyvlx, item):
         name = item['name']
-        id = item['id']
+        ident = item['id']
         subtype = item['subtype']
-        typeId = item['typeId']
-        return cls(pyvlx, id, name, subtype, typeId)
+        typeid = item['typeId']
+        return cls(pyvlx, ident, name, subtype, typeid)
 
 
     def __str__(self):
@@ -27,12 +27,9 @@ class Window(Device):
                     'typeId="{3}" />' \
                     .format(
                         self.name,
-                        self.id,
+                        self.ident,
                         self.subtype,
-                        self.typeId)
+                        self.typeid)
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
-
-
-

@@ -34,7 +34,7 @@ class Devices:
 
 
     async def load(self):
-        json_response = await self.pyvlx.interface.api_call('products','get')
+        json_response = await self.pyvlx.interface.api_call('products', 'get')
         if not 'data' in json_response:
             raise Exception('no element data found in response: {0}'.format(json.dumps(json_response)))
         data = json_response['data']
@@ -43,7 +43,7 @@ class Devices:
             if not 'category' in item:
                 raise Exception('no element category in product: {0}'.format(json.dumps(item)))
             category = item['category']
-            if(category == 'Window opener'):
+            if category == 'Window opener':
                 self.load_window_opener(item)
             else:
                 print("WARNING: Could not parse product: {0}".format(category))

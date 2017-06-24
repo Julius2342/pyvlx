@@ -33,7 +33,7 @@ class Scenes:
 
 
     async def load(self):
-        json_response = await self.pyvlx.interface.api_call('scenes','get')
+        json_response = await self.pyvlx.interface.api_call('scenes', 'get')
         if not 'data' in json_response:
             raise Exception('no element data found in response: {0}'.format(json.dumps(json_response)))
         data = json_response['data']
@@ -43,5 +43,5 @@ class Scenes:
 
 
     def load_scene(self, item):
-        scene= Scene.from_config(self.pyvlx, item)
+        scene = Scene.from_config(self.pyvlx, item)
         self.add(scene)

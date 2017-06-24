@@ -11,12 +11,13 @@ class PyVLX:
         self.devices = Devices(self)
         self.scenes = Scenes(self)
 
+
     async def connect(self):
         await self.interface.refresh_token()
 
 
     async def load_devices(self):
-        await self.devices.load() 
+        await self.devices.load()
 
 
     async def load_scenes(self):
