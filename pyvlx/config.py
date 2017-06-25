@@ -3,7 +3,8 @@ import yaml
 class Config:
 
     def __init__(self, path):
-        self.read_config(path)
+        if path is not None:
+            self.read_config(path)
 
     def read_config(self, path):
         print("Reading {0}".format(path))

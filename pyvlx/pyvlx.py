@@ -5,7 +5,7 @@ from .scenes import Scenes
 
 class PyVLX:
 
-    def __init__(self, path):
+    def __init__(self, path=None):
         self.config = Config(path)
         self.interface = Interface(self.config)
         self.devices = Devices(self)
