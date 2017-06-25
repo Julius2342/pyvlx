@@ -2,7 +2,7 @@ from pyvlx import PyVLX
 import asyncio
 
 async def main():
-    pyvlx = PyVLX("pyvlx.yaml")
+    pyvlx = PyVLX('pyvlx.yaml')
 
     await pyvlx.load_devices()
     print(pyvlx.devices[1])

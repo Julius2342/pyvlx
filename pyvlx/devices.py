@@ -46,7 +46,7 @@ class Devices:
             if category == 'Window opener':
                 self.load_window_opener(item)
             else:
-                print("WARNING: Could not parse product: {0}".format(category))
+                print('WARNING: Could not parse product: {0}'.format(category))
 
 
     def load_window_opener(self, item):

@@ -20,17 +20,17 @@ class TestScenes(unittest.TestCase):
 
         scene1 = Scene(pyvlx, 0, 'Scene_1')
         scenes.add(scene1)
-        scene2 = Scene(pyvlx, 1, "Scene_2")
+        scene2 = Scene(pyvlx, 1, 'Scene_2')
         scenes.add(scene2)
         scene3 = Scene(pyvlx, 2, 'Scene_3')
         scenes.add(scene3)
-        scene4 = Scene(pyvlx, 3, "Scene_4")
+        scene4 = Scene(pyvlx, 3, 'Scene_4')
         scenes.add(scene4)
 
-        self.assertEqual(scenes["Scene_1"], scene1)
-        self.assertEqual(scenes["Scene_2"], scene2)
-        self.assertEqual(scenes["Scene_3"], scene3)
-        self.assertEqual(scenes["Scene_4"], scene4)
+        self.assertEqual(scenes['Scene_1'], scene1)
+        self.assertEqual(scenes['Scene_2'], scene2)
+        self.assertEqual(scenes['Scene_3'], scene3)
+        self.assertEqual(scenes['Scene_4'], scene4)
 
         self.assertEqual(scenes[0], scene1)
         self.assertEqual(scenes[1], scene2)
@@ -44,11 +44,11 @@ class TestScenes(unittest.TestCase):
 
         scene1 = Scene(pyvlx, 0, 'Scene_1')
         scenes.add(scene1)
-        scene2 = Scene(pyvlx, 1, "Scene_2")
+        scene2 = Scene(pyvlx, 1, 'Scene_2')
         scenes.add(scene2)
         scene3 = Scene(pyvlx, 2, 'Scene_3')
         scenes.add(scene3)
-        scene4 = Scene(pyvlx, 3, "Scene_4")
+        scene4 = Scene(pyvlx, 3, 'Scene_4')
         scenes.add(scene4)
 
         self.assertEqual(
@@ -64,7 +64,7 @@ class TestScenes(unittest.TestCase):
         scenes.add(scene1)
         self.assertEqual(len(scenes), 1)
 
-        scene2 = Scene(pyvlx, 1, "Scene_2")
+        scene2 = Scene(pyvlx, 1, 'Scene_2')
         scenes.add(scene2)
         self.assertEqual(len(scenes), 2)
 
@@ -72,7 +72,7 @@ class TestScenes(unittest.TestCase):
         scenes.add(scene3)
         self.assertEqual(len(scenes), 3)
 
-        scene4 = Scene(pyvlx, 3, "Scene_4")
+        scene4 = Scene(pyvlx, 3, 'Scene_4')
         scenes.add(scene4)
         self.assertEqual(len(scenes), 4)
 
