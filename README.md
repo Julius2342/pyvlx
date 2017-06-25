@@ -5,6 +5,16 @@ PyVLX - controling VELUX windows with Python
 
 PyVLX uses the Velux KLF 200 interface to control Velux Windows.
 
+Installation
+------------
+
+PyVLX can be installed via:
+
+```bash
+pip3 install pyvlx
+```
+
+
 Basic Operations
 ----------------
 
