@@ -2,6 +2,6 @@
 
 build/
 dist/
-xknx.egg-info/
+pyvlx.egg-info/
 
 .DS_Store
