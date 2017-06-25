@@ -2,9 +2,14 @@ import yaml
 
 class Config:
 
-    def __init__(self, path):
+    def __init__(self, path=None, host=None, password=None):
         if path is not None:
             self.read_config(path)
+        if host is not None:
+            self.host = host
+        if password is not None:
+            self.password = password
+
 
     def read_config(self, path):
         print('Reading {0}'.format(path))
