@@ -4,8 +4,8 @@ setup(
         name='pyvlx',
         description='PyVLX - controling VELUX windows with Python via KLF 200',
 
-        version='0.1.0',
-        download_url='https://github.com/Julius2342/pyvlx/archive/0.1.0.zip',
+        version='0.1.1',
+        download_url='https://github.com/Julius2342/pyvlx/archive/0.1.1.zip',
         url='https://github.com/Julius2342/pyvlx',
 
         author='Julius Mittenzwei',
