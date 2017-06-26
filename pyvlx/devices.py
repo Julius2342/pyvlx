@@ -1,6 +1,7 @@
 import json
 from .device import Device
 from .window import Window
+from .rollershutter import RollerShutter
 
 class Devices:
 
@@ -35,6 +36,10 @@ class Devices:
 
     async def load(self):
         json_response = await self.pyvlx.interface.api_call('products', 'get')
+        self.data_import(json_response)
+
+
+    def data_import(self, json_response):
         if not 'data' in json_response:
             raise Exception('no element data found in response: {0}'.format(json.dumps(json_response)))
         data = json_response['data']
@@ -45,6 +50,8 @@ class Devices:
             category = item['category']
             if category == 'Window opener':
                 self.load_window_opener(item)
+            elif category == 'Roller shutter':
+                self.load_roller_shutter(item)
             else:
                 print('WARNING: Could not parse product: {0}'.format(category))
 
@@ -52,3 +59,8 @@ class Devices:
     def load_window_opener(self, item):
         window = Window.from_config(self.pyvlx, item)
         self.add(window)
+
+
+    def load_roller_shutter(self, item):
+        rollershutter = RollerShutter.from_config(self.pyvlx, item)
+        self.add(rollershutter)

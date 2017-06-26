@@ -34,6 +34,10 @@ class Scenes:
 
     async def load(self):
         json_response = await self.pyvlx.interface.api_call('scenes', 'get')
+        self.data_import(json_response)
+
+
+    def data_import(self, json_response):
         if not 'data' in json_response:
             raise Exception('no element data found in response: {0}'.format(json.dumps(json_response)))
         data = json_response['data']

@@ -1,5 +1,6 @@
 import unittest
 import asyncio
+import json
 
 from pyvlx import PyVLX, Scenes, Scene
 
@@ -76,6 +77,17 @@ class TestScenes(unittest.TestCase):
         scenes.add(scene4)
         self.assertEqual(len(scenes), 4)
 
+    def test_load_windows(self):
+        pyvlx = PyVLX()
+        scenes = Scenes(pyvlx)
+
+        get_response = '{"token":"aEGjV20T32j1V3EJTFmMBw==","result":true,"deviceStatus":"IDLE","data":[{"name":"All windows closed","id":0,"silent":false,"products":[{"typeId":4,"name":"Window 1","actuator":0,"status":0},{"typeId":4,"name":"Window 2","actuator":0,"status":0}]},{"name":"All windows open","id":1,"silent":false,"products":[{"typeId":4,"name":"Window 1","actuator":0,"status":100},{"typeId":4,"name":"Window 2","actuator":0,"status":100}]}],"errors":[]}'
+
+        scenes.data_import(json.loads(get_response))
+
+        self.assertEqual(len(scenes), 2)
+        self.assertEqual(scenes[0], Scene(pyvlx, 0, 'All windows closed'))
+        self.assertEqual(scenes[1], Scene(pyvlx, 1, 'All windows open'))
 
 SUITE = unittest.TestLoader().loadTestsFromTestCase(TestScenes)
 unittest.TextTestRunner(verbosity=2).run(SUITE)

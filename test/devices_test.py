@@ -1,7 +1,8 @@
 import unittest
 import asyncio
+import json
 
-from pyvlx import PyVLX, Devices, Window
+from pyvlx import PyVLX, Devices, Window, RollerShutter
 
 # pylint: disable=too-many-public-methods,invalid-name
 class TestDevices(unittest.TestCase):
@@ -75,6 +76,34 @@ class TestDevices(unittest.TestCase):
         window4 = Window(pyvlx, 3, 'Window_4', 0, 0)
         devices.add(window4)
         self.assertEqual(len(devices), 4)
+
+
+    def test_load_windows(self):
+        pyvlx = PyVLX()
+        devices = Devices(pyvlx)
+
+        get_response = '{"token":"aEGjVG0T3jj1VNEJTFmMBw==","result":true,"deviceStatus":"IDLE","data":[{"name":"Window 1","category":"Window opener","id":0,"typeId":4,"subtype":1,"scenes":["All windows closed","Sleeping wide Open","Sleeping slight open"]},{"name":"Window 2","category":"Window opener","id":1,"typeId":4,"subtype":1,"scenes":["All windows closed","Sleeping wide Open","Sleeping slight open"]},{"name":"Window 3","category":"Window opener","id":2,"typeId":4,"subtype":1,"scenes":["All windows closed","Sleeping wide Open","Sleeping slight open"]},{"name":"Window 4","category":"Window opener","id":3,"typeId":4,"subtype":1,"scenes":["All windows closed","Sleeping wide Open","Sleeping slight open"]}],"errors":[]}'
+        devices.data_import(json.loads(get_response))
+
+        self.assertEqual(len(devices), 4)
+        self.assertEqual(devices[0], Window(pyvlx, 0, 'Window 1', 1, 4))
+        self.assertEqual(devices[1], Window(pyvlx, 1, 'Window 2', 1, 4))
+        self.assertEqual(devices[2], Window(pyvlx, 2, 'Window 3', 1, 4))
+        self.assertEqual(devices[3], Window(pyvlx, 3, 'Window 4', 1, 4))
+
+
+    def test_load_windows_and_roller_shutters(self):
+        pyvlx = PyVLX()
+        devices = Devices(pyvlx)
+
+        get_response = '{"token":"aEGjVG0T3jj1VNEJTFmMBw==","result":true,"deviceStatus":"IDLE","data":[{"name": "Volet roulant cour", "id": 0, "scenes": ["Fermer volet cour", "Ouvrir volet cour"], "category": "Roller shutter", "typeId": 2, "subtype": 0}, {"name": "Fenêtre cour", "id": 1, "scenes": ["Fermer fenetre cour", "Ouvrir fenetre cour"], "category": "Window opener", "typeId": 4, "subtype": 1}, {"name": "Fenêtre jardin", "id": 2, "scenes": ["Fermer fenetre jardin", "Ouvrir fenetre jardin"], "category": "Window opener", "typeId": 4, "subtype": 1}, {"name": "Volet roulant jardin", "id": 3, "scenes": ["Fermer volet jardin", "Ouvrir Volet jardin"], "category": "Roller shutter", "typeId": 2, "subtype": 0}]}'
+        devices.data_import(json.loads(get_response))
+
+        self.assertEqual(len(devices), 4)
+        self.assertEqual(devices[0], RollerShutter(pyvlx, 0, 'Volet roulant cour', 0, 2))
+        self.assertEqual(devices[1], Window(pyvlx, 1, 'Fenêtre cour', 1, 4))
+        self.assertEqual(devices[2], Window(pyvlx, 2, 'Fenêtre jardin', 1, 4))
+        self.assertEqual(devices[3], RollerShutter(pyvlx, 3, 'Volet roulant jardin', 0, 2))
 
 
 SUITE = unittest.TestLoader().loadTestsFromTestCase(TestDevices)
