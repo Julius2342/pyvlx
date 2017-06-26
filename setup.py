@@ -1,5 +1,10 @@
 from setuptools import setup, find_packages
 
+REQUIRES = [
+    'aiohttp',
+    'PyYAML'
+]
+
 setup(
         name='pyvlx',
         description='PyVLX - controling VELUX windows with Python via KLF 200',
@@ -21,6 +26,6 @@ setup(
           'Programming Language :: Python :: 3.5'
         ],
         packages=find_packages(),
-        install_requires=['PyYAML'],
+        install_requires=REQUIRES,
         keywords = 'velux KLF 200 home automation',
         zip_safe=False)
