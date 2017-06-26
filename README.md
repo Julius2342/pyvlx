@@ -12,6 +12,7 @@ PyVLX can be installed via:
 
 ```bash
 pip3 install pyvlx
+pip3 install aiohttp
 ```
 
 
