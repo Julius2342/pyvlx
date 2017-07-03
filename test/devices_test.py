@@ -2,7 +2,7 @@ import unittest
 import asyncio
 import json
 
-from pyvlx import PyVLX, Devices, Window, RollerShutter
+from pyvlx import PyVLX, PyVLXException, Devices, Window, RollerShutter
 
 # pylint: disable=too-many-public-methods,invalid-name
 class TestDevices(unittest.TestCase):
@@ -104,6 +104,15 @@ class TestDevices(unittest.TestCase):
         self.assertEqual(devices[1], Window(pyvlx, 1, 'Fenêtre cour', 1, 4))
         self.assertEqual(devices[2], Window(pyvlx, 2, 'Fenêtre jardin', 1, 4))
         self.assertEqual(devices[3], RollerShutter(pyvlx, 3, 'Volet roulant jardin', 0, 2))
+
+
+    def test_load_no_data_element(self):
+        pyvlx = PyVLX()
+        devices = Devices(pyvlx)
+
+        get_response = '{"token":"aEGjVG0T3jj1VNEJTFmMBw==","result":true,"deviceStatus":"IDLE"}'
+        with self.assertRaises(PyVLXException):
+            devices.data_import(json.loads(get_response))
 
 
 SUITE = unittest.TestLoader().loadTestsFromTestCase(TestDevices)

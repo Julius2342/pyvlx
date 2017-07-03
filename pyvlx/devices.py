@@ -2,6 +2,7 @@ import json
 from .device import Device
 from .window import Window
 from .rollershutter import RollerShutter
+from .exception import PyVLXException
 
 class Devices:
 
@@ -41,12 +42,12 @@ class Devices:
 
     def data_import(self, json_response):
         if not 'data' in json_response:
-            raise Exception('no element data found in response: {0}'.format(json.dumps(json_response)))
+            raise PyVLXException('no element data found in response: {0}'.format(json.dumps(json_response)))
         data = json_response['data']
 
         for item in data:
             if not 'category' in item:
-                raise Exception('no element category in product: {0}'.format(json.dumps(item)))
+                raise PyVLXException('no element category in product: {0}'.format(json.dumps(item)))
             category = item['category']
             if category == 'Window opener':
                 self.load_window_opener(item)

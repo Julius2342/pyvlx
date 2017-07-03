@@ -2,6 +2,7 @@ import json
 import aiohttp
 import async_timeout
 
+from .exception import PyVLXException
 
 class Interface:
     def __init__(self, config):
@@ -13,7 +14,7 @@ class Interface:
 
         #try:
         return await self.api_call_impl(verb, action, params, add_authorization_token)
-        #except 
+        #except
 
     async def api_call_impl(self, verb, action, params=None, add_authorization_token=True):
         if add_authorization_token and not self.token:
@@ -63,9 +64,9 @@ class Interface:
     @staticmethod
     def evaluate_response(json_response):
         if not 'result' in json_response:
-            raise Exception('no element result  found in response: {0}'.format(json.dumps(json_response)))
+            raise PyVLXException('no element result  found in response: {0}'.format(json.dumps(json_response)))
         if not json_response['result']:
-            raise Exception('Request failed {0}'.format(json.dumps(json_response)))
+            raise PyVLXException('Request failed {0}'.format(json.dumps(json_response)))
 
 
     @staticmethod
@@ -80,5 +81,5 @@ class Interface:
     async def refresh_token(self):
         json_response = await self.api_call('auth', 'login', {'password': self.config.password}, add_authorization_token=False)
         if not 'token' in json_response:
-            raise Exception('no element token found in response: {0}'.format(json.dumps(json_response)))
+            raise PyVLXException('no element token found in response: {0}'.format(json.dumps(json_response)))
         self.token = json_response['token']

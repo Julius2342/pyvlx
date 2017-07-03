@@ -1,5 +1,6 @@
 import json
 from .scene import Scene
+from .exception import PyVLXException
 
 class Scenes:
 
@@ -39,7 +40,7 @@ class Scenes:
 
     def data_import(self, json_response):
         if not 'data' in json_response:
-            raise Exception('no element data found in response: {0}'.format(json.dumps(json_response)))
+            raise PyVLXException('no element data found in response: {0}'.format(json.dumps(json_response)))
         data = json_response['data']
 
         for item in data:

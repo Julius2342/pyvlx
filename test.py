@@ -2,7 +2,7 @@ from pyvlx import PyVLX
 import asyncio
 
 async def main():
-    pyvlx = PyVLX('pyvlx.yaml')  # Alternative: pyvlx = PyVLX(host="192.168.2.127",password="velux123")
+    pyvlx = PyVLX('pyvlx.yaml')  # Alternative: pyvlx = PyVLX(host="192.168.2.127", password="velux123")
 
     await pyvlx.load_devices()
     print(pyvlx.devices[1])

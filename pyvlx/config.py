@@ -1,5 +1,7 @@
 import yaml
 
+from .exception import PyVLXException
+
 class Config:
 
     def __init__(self, path=None, host=None, password=None):
@@ -13,13 +15,16 @@ class Config:
 
     def read_config(self, path):
         print('Reading {0}'.format(path))
-        with open(path, 'r') as filehandle:
-            doc = yaml.load(filehandle)
-            if not 'config' in doc:
-                raise Exception('no element config found in: {0}'.format(path))
-            if not 'host' in doc['config']:
-                raise Exception('no element host found in: {0}'.format(path))
-            if not 'password' in doc['config']:
-                raise Exception('no element password found in: {0}'.format(path))
-            self.host = doc['config']['host']
-            self.password = doc['config']['password']
+        try:
+            with open(path, 'r') as filehandle:
+                doc = yaml.load(filehandle)
+                if not 'config' in doc:
+                    raise PyVLXException('no element config found in: {0}'.format(path))
+                if not 'host' in doc['config']:
+                    raise PyVLXException('no element host found in: {0}'.format(path))
+                if not 'password' in doc['config']:
+                    raise PyVLXException('no element password found in: {0}'.format(path))
+                self.host = doc['config']['host']
+                self.password = doc['config']['password']
+        except FileNotFoundError as ex:
+            raise PyVLXException('file does not exist: {0}'.format(ex))
