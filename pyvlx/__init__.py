@@ -6,4 +6,4 @@ from .scenes import Scenes
 from .devices import Devices
 from .config import Config
 from .interface import Interface
-from .exception import PyVLXException
+from .exception import PyVLXException, InvalidToken
