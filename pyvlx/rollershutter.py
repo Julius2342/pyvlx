@@ -2,6 +2,7 @@ from .device import Device
 
 class RollerShutter(Device):
 
+    # pylint: disable=too-many-arguments
     def __init__(self, pyvlx, ident, name, subtype, typeid):
         self.pyvlx = pyvlx
         self.ident = ident

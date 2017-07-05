@@ -82,7 +82,20 @@ class TestDevices(unittest.TestCase):
         pyvlx = PyVLX()
         devices = Devices(pyvlx)
 
-        get_response = '{"token":"aEGjVG0T3jj1VNEJTFmMBw==","result":true,"deviceStatus":"IDLE","data":[{"name":"Window 1","category":"Window opener","id":0,"typeId":4,"subtype":1,"scenes":["All windows closed","Sleeping wide Open","Sleeping slight open"]},{"name":"Window 2","category":"Window opener","id":1,"typeId":4,"subtype":1,"scenes":["All windows closed","Sleeping wide Open","Sleeping slight open"]},{"name":"Window 3","category":"Window opener","id":2,"typeId":4,"subtype":1,"scenes":["All windows closed","Sleeping wide Open","Sleeping slight open"]},{"name":"Window 4","category":"Window opener","id":3,"typeId":4,"subtype":1,"scenes":["All windows closed","Sleeping wide Open","Sleeping slight open"]}],"errors":[]}'
+        get_response = \
+            '{"token":"aEGjVG0T3jj1VNEJTFmMBw==","result":true,"deviceSta' + \
+            'tus":"IDLE","data":[{"name":"Window 1","category":"Window op' + \
+            'ener","id":0,"typeId":4,"subtype":1,"scenes":["All windows c' + \
+            'losed","Sleeping wide Open","Sleeping slight open"]},{"name"' + \
+            ':"Window 2","category":"Window opener","id":1,"typeId":4,"su' + \
+            'btype":1,"scenes":["All windows closed","Sleeping wide Open"' + \
+            ',"Sleeping slight open"]},{"name":"Window 3","category":"Win' + \
+            'dow opener","id":2,"typeId":4,"subtype":1,"scenes":["All win' + \
+            'dows closed","Sleeping wide Open","Sleeping slight open"]},{' + \
+            '"name":"Window 4","category":"Window opener","id":3,"typeId"' + \
+            ':4,"subtype":1,"scenes":["All windows closed","Sleeping wide' + \
+            'Open","Sleeping slight open"]}],"errors":[]}'
+
         devices.data_import(json.loads(get_response))
 
         self.assertEqual(len(devices), 4)
@@ -96,7 +109,20 @@ class TestDevices(unittest.TestCase):
         pyvlx = PyVLX()
         devices = Devices(pyvlx)
 
-        get_response = '{"token":"aEGjVG0T3jj1VNEJTFmMBw==","result":true,"deviceStatus":"IDLE","data":[{"name": "Volet roulant cour", "id": 0, "scenes": ["Fermer volet cour", "Ouvrir volet cour"], "category": "Roller shutter", "typeId": 2, "subtype": 0}, {"name": "Fenêtre cour", "id": 1, "scenes": ["Fermer fenetre cour", "Ouvrir fenetre cour"], "category": "Window opener", "typeId": 4, "subtype": 1}, {"name": "Fenêtre jardin", "id": 2, "scenes": ["Fermer fenetre jardin", "Ouvrir fenetre jardin"], "category": "Window opener", "typeId": 4, "subtype": 1}, {"name": "Volet roulant jardin", "id": 3, "scenes": ["Fermer volet jardin", "Ouvrir Volet jardin"], "category": "Roller shutter", "typeId": 2, "subtype": 0}]}'
+        get_response = \
+            '{"token":"aEGjVG0T3jj1VNEJTFmMBw==","result":true,"deviceSta' + \
+            'tus":"IDLE","data":[{"name": "Volet roulant cour", "id": 0, ' + \
+            '"scenes": ["Fermer volet cour", "Ouvrir volet cour"], "categ' + \
+            'ory": "Roller shutter", "typeId": 2, "subtype": 0}, {"name":' + \
+            '"Fenêtre cour", "id": 1, "scenes": ["Fermer fenetre cour", "' + \
+            'Ouvrir fenetre cour"], "category": "Window opener", "typeId"' + \
+            ': 4, "subtype": 1}, {"name": "Fenêtre jardin", "id": 2, "sce' + \
+            'nes": ["Fermer fenetre jardin", "Ouvrir fenetre jardin"], "c' + \
+            'ategory": "Window opener", "typeId": 4, "subtype": 1}, {"nam' + \
+            'e": "Volet roulant jardin", "id": 3, "scenes": ["Fermer vole' + \
+            't jardin", "Ouvrir Volet jardin"], "category": "Roller shutt' + \
+            'er", "typeId": 2, "subtype": 0}]}'
+
         devices.data_import(json.loads(get_response))
 
         self.assertEqual(len(devices), 4)

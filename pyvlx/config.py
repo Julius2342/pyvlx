@@ -2,6 +2,7 @@ import yaml
 
 from .exception import PyVLXException
 
+# pylint: disable=too-few-public-methods
 class Config:
 
     def __init__(self, path=None, host=None, password=None):

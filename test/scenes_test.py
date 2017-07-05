@@ -81,7 +81,15 @@ class TestScenes(unittest.TestCase):
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
 
-        get_response = '{"token":"aEGjV20T32j1V3EJTFmMBw==","result":true,"deviceStatus":"IDLE","data":[{"name":"All windows closed","id":0,"silent":false,"products":[{"typeId":4,"name":"Window 1","actuator":0,"status":0},{"typeId":4,"name":"Window 2","actuator":0,"status":0}]},{"name":"All windows open","id":1,"silent":false,"products":[{"typeId":4,"name":"Window 1","actuator":0,"status":100},{"typeId":4,"name":"Window 2","actuator":0,"status":100}]}],"errors":[]}'
+        get_response = \
+            '{"token":"aEGjV20T32j1V3EJTFmMBw==","result":true,"deviceSta' + \
+            'tus":"IDLE","data":[{"name":"All windows closed","id":0,"sil' + \
+            'ent":false,"products":[{"typeId":4,"name":"Window 1","actuat' + \
+            'or":0,"status":0},{"typeId":4,"name":"Window 2","actuator":0' + \
+            ',"status":0}]},{"name":"All windows open","id":1,"silent":fa' + \
+            'lse,"products":[{"typeId":4,"name":"Window 1","actuator":0,"' + \
+            'status":100},{"typeId":4,"name":"Window 2","actuator":0,"sta' + \
+            'tus":100}]}],"errors":[]}'
 
         scenes.data_import(json.loads(get_response))
 
