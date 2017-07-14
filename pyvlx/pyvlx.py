@@ -16,6 +16,10 @@ class PyVLX:
         await self.interface.refresh_token()
 
 
+    async def disconnect(self):
+        await self.interface.disconnect()
+
+
     async def load_devices(self):
         await self.devices.load()
 

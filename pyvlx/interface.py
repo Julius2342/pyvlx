@@ -65,6 +65,11 @@ class Interface:
         self.token = json_response['token']
 
 
+    async def disconnect(self):
+        json_response = await self.api_call('auth', 'logout', {}, add_authorization_token=True)
+        self.token = None
+
+
     @staticmethod
     def create_api_url(host, verb):
         return 'http://{0}/api/v1/{1}'.format(host, verb)
