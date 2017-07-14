@@ -15,6 +15,8 @@ async def main():
     # opening/ closing windows by running scenes, yay!
     await pyvlx.scenes[1].run()
 
+    await pyvlx.disconnect()
+
 # pylint: disable=invalid-name
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
