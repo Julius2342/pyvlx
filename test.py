@@ -1,5 +1,5 @@
-from pyvlx import PyVLX
 import asyncio
+from pyvlx import PyVLX
 
 async def main():
     pyvlx = PyVLX('pyvlx.yaml')  # Alternative: pyvlx = PyVLX(host="192.168.2.127", password="velux123")
@@ -15,7 +15,7 @@ async def main():
     # opening/ closing windows by running scenes, yay!
     await pyvlx.scenes[1].run()
 
+# pylint: disable=invalid-name
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main())
 loop.close()
-

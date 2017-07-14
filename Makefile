@@ -27,7 +27,7 @@ upload-pypi:
 	@python3 setup.py sdist upload -r pypi
 
 pylint:
-	@pylint --rcfile=.pylintrc pyvlx test/*.py
+	@pylint --rcfile=.pylintrc pyvlx test/*.py *.py
 
 
 pydocstyle:

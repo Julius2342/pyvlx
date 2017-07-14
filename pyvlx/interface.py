@@ -46,12 +46,13 @@ class Interface:
 
 
     async def do_http_request_impl(self, url, body, headers):
+        print(url, body, headers)
         async with aiohttp.ClientSession() as session:
             with async_timeout.timeout(10):
                 async with session.post(url, data=json.dumps(body), headers=headers) as response:
                     response = await response.text()
                     response = self.fix_response(response)
-                    #print(response)
+                    print(response)
                     json_response = json.loads(response)
                     self.evaluate_response(json_response)
                     #print(json.dumps(json_response, indent=4, sort_keys=True))
