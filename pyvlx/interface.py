@@ -67,7 +67,7 @@ class Interface:
 
 
     async def disconnect(self):
-        json_response = await self.api_call('auth', 'logout', {}, add_authorization_token=True)
+        await self.api_call('auth', 'logout', {}, add_authorization_token=True)
         self.token = None
 
 
