@@ -5,7 +5,7 @@ REQUIRES = [
     'PyYAML'
 ]
 
-VERSION = '0.1.3'
+VERSION = '0.1.4'
 
 setup(
     name='pyvlx',
@@ -24,8 +24,8 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: System :: Hardware :: Hardware Drivers',
         'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5'
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6'
         ],
     packages=find_packages(),
     install_requires=REQUIRES,
