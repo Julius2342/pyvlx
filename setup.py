@@ -5,12 +5,14 @@ REQUIRES = [
     'PyYAML'
 ]
 
+VERSION = '0.1.3'
+
 setup(
         name='pyvlx',
         description='PyVLX - controling VELUX windows with Python via KLF 200',
 
-        version='0.1.3',
-        download_url='https://github.com/Julius2342/pyvlx/archive/0.1.3.zip',
+        version=vERSION,
+        download_url='https://github.com/Julius2342/pyvlx/archive/'+VERSION+'.zip',
         url='https://github.com/Julius2342/pyvlx',
 
         author='Julius Mittenzwei',
