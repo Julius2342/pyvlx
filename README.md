@@ -46,3 +46,22 @@ loop.close()
 ```
 
 
+If you are VELUX:
+-----------------
+
+Hi VELUX Team,
+
+the VELUX KLF 200 is a great device. But there is room for improvement. Here is my wishlist:
+
+  * Make devices directly accessible, which includes *reading and setting the state of windows and shutters*. A direct access to the rain sensor would also be nice.
+  * Fix the *security issue* mentioned [here](https://gist.github.com/Julius2342/6282ded9f527e762ea50f42c2c439a1a)! 
+  * Allow more than one *simultaneous connections*.
+  * Use *https* instead of http for connections.
+  * Fix the Bug mentioned [here](https://github.com/Julius2342/pyvlx/blob/master/pyvlx/interface.py#L124) which is an indication of scruffy buffer handling.
+
+:-)
+
+
+
+
+
