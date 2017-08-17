@@ -4,9 +4,15 @@
 class PyVLXException(Exception):
     """Exception class for PyVLX library."""
 
-    def __init__(self, message):
+    def __init__(self, description):
         """Initialize exception with the given error message."""
-        super(PyVLXException, self).__init__(message)
+        super(PyVLXException, self).__init__()
+        self.description = description
+
+    def __str__(self):
+        """Return object as readable string."""
+        return '<PyVLXException description="{0}" />' \
+            .format(self.description)
 
 
 class InvalidToken(PyVLXException):

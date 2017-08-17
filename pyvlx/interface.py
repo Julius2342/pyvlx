@@ -22,7 +22,7 @@ class Interface:
             await self.refresh_token()
 
         try:
-            return await self.api_call_impl(verb, action, params, add_authorization_token)
+            return await self._api_call_impl(verb, action, params, add_authorization_token)
         except InvalidToken:
             if not retry and add_authorization_token:
                 await self.refresh_token()
@@ -110,7 +110,7 @@ class Interface:
         """Evaluate rest errors."""
         if 'errors' not in json_response or \
            not isinstance(json_response['errors'], list) or \
-           len(json_response['errors']) == 0 or \
+           not json_response['errors'] or \
            not isinstance(json_response['errors'][0], int):
             raise PyVLXException('Could not evaluate errors {0}'.format(json.dumps(json_response)))
 

@@ -1,3 +1,5 @@
+"""PyVLX - controling VELUX windows with Python."""
+
 # flake8: noqa
 from .pyvlx import PyVLX
 from .window import Window
