@@ -1,21 +1,26 @@
+"""Unit test for Scenes object."""
 import unittest
 import asyncio
 import json
 
 from pyvlx import PyVLX, Scenes, Scene
 
+
 # pylint: disable=too-many-public-methods,invalid-name
 class TestScenes(unittest.TestCase):
+    """Test class for scenes object."""
 
     def setUp(self):
+        """Set up test class."""
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
 
     def tearDown(self):
+        """Tear down test class."""
         self.loop.close()
 
-
     def test_get_item(self):
+        """Test get_item from Scene object."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
 
@@ -38,8 +43,8 @@ class TestScenes(unittest.TestCase):
         self.assertEqual(scenes[2], scene3)
         self.assertEqual(scenes[3], scene4)
 
-
     def test_iter(self):
+        """Test iterator."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
 
@@ -56,8 +61,8 @@ class TestScenes(unittest.TestCase):
             tuple(scenes.__iter__()),
             (scene1, scene2, scene3, scene4))
 
-
     def test_len(self):
+        """Test len()."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
         self.assertEqual(len(scenes), 0)
@@ -78,6 +83,7 @@ class TestScenes(unittest.TestCase):
         self.assertEqual(len(scenes), 4)
 
     def test_load_windows(self):
+        """Test load windows."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
 
@@ -96,6 +102,7 @@ class TestScenes(unittest.TestCase):
         self.assertEqual(len(scenes), 2)
         self.assertEqual(scenes[0], Scene(pyvlx, 0, 'All windows closed'))
         self.assertEqual(scenes[1], Scene(pyvlx, 1, 'All windows open'))
+
 
 SUITE = unittest.TestLoader().loadTestsFromTestCase(TestScenes)
 unittest.TextTestRunner(verbosity=2).run(SUITE)

@@ -1,3 +1,5 @@
+"""Module for exceptions."""
+
 
 class PyVLXException(Exception):
     """Exception class for PyVLX library."""
@@ -5,7 +7,6 @@ class PyVLXException(Exception):
     def __init__(self, message):
         """Initialize exception with the given error message."""
         super(PyVLXException, self).__init__(message)
-
 
 
 class InvalidToken(PyVLXException):

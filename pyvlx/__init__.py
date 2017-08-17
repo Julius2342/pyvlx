@@ -1,3 +1,4 @@
+# flake8: noqa
 from .pyvlx import PyVLX
 from .window import Window
 from .rollershutter import RollerShutter

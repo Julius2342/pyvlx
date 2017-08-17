@@ -1,11 +1,16 @@
+"""Module for configuration."""
+
 import yaml
 
 from .exception import PyVLXException
 
+
 # pylint: disable=too-few-public-methods
 class Config:
+    """Object for configuration."""
 
     def __init__(self, path=None, host=None, password=None):
+        """Initialize Config class."""
         if path is not None:
             self.read_config(path)
         if host is not None:
@@ -13,17 +18,17 @@ class Config:
         if password is not None:
             self.password = password
 
-
     def read_config(self, path):
+        """Read configuration file."""
         print('Reading {0}'.format(path))
         try:
             with open(path, 'r') as filehandle:
                 doc = yaml.load(filehandle)
-                if not 'config' in doc:
+                if 'config' not in doc:
                     raise PyVLXException('no element config found in: {0}'.format(path))
-                if not 'host' in doc['config']:
+                if 'host' not in doc['config']:
                     raise PyVLXException('no element host found in: {0}'.format(path))
-                if not 'password' in doc['config']:
+                if 'password' not in doc['config']:
                     raise PyVLXException('no element password found in: {0}'.format(path))
                 self.host = doc['config']['host']
                 self.password = doc['config']['password']

@@ -1,8 +1,13 @@
+"""Example implementation for PyVLX."""
 import asyncio
 from pyvlx import PyVLX
 
+
 async def main():
-    pyvlx = PyVLX('pyvlx.yaml')  # Alternative: pyvlx = PyVLX(host="192.168.2.127", password="velux123")
+    """Load devices and scenes, run first scene."""
+    pyvlx = PyVLX('pyvlx.yaml')
+    # Alternative:
+    # pyvlx = PyVLX(host="192.168.2.127", password="velux123")
 
     await pyvlx.load_devices()
     print(pyvlx.devices[1])
@@ -16,6 +21,7 @@ async def main():
     await pyvlx.scenes[1].run()
 
     await pyvlx.disconnect()
+
 
 # pylint: disable=invalid-name
 loop = asyncio.get_event_loop()

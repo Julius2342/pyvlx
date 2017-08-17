@@ -1,3 +1,5 @@
+"""Module for setting up PyVLX pypi object."""
+
 from setuptools import setup, find_packages
 
 REQUIRES = [
