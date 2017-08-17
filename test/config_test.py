@@ -14,7 +14,7 @@ class TestConfig(unittest.TestCase):
         self.loop.close()
 
     def test_config_file(self):
-        pyvlx = PyVLX("data/test_config.yaml")
+        pyvlx = PyVLX("test/data/test_config.yaml")
         self.assertEqual(pyvlx.config.password, "velux123")
         self.assertEqual(pyvlx.config.host, "192.168.2.127")
 
@@ -25,19 +25,19 @@ class TestConfig(unittest.TestCase):
 
     def test_config_wrong1(self):
         with self.assertRaises(PyVLXException):
-            PyVLX("data/test_config_wrong1.yaml")
+            PyVLX("test/data/test_config_wrong1.yaml")
 
     def test_config_wrong2(self):
         with self.assertRaises(PyVLXException):
-            PyVLX("data/test_config_wrong2.yaml")
+            PyVLX("test/data/test_config_wrong2.yaml")
 
     def test_config_wrong3(self):
         with self.assertRaises(PyVLXException):
-            PyVLX("data/test_config_wrong3.yaml")
+            PyVLX("test/data/test_config_wrong3.yaml")
 
     def test_config_non_existent(self):
         with self.assertRaises(PyVLXException):
-            PyVLX("data/test_config_non_existent.yaml")
+            PyVLX("test/data/test_config_non_existent.yaml")
 
 SUITE = unittest.TestLoader().loadTestsFromTestCase(TestConfig)
 unittest.TextTestRunner(verbosity=2).run(SUITE)

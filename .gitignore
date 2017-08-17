@@ -4,4 +4,7 @@ build/
 dist/
 pyvlx.egg-info/
 
+.coverage
+.tox
+
 .DS_Store
