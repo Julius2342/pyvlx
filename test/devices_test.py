@@ -48,9 +48,9 @@ class TestDevices(unittest.TestCase):
         window1 = Window(pyvlx, 0, 'Window_1', 0, 0)
         devices.add(window1)
         with self.assertRaises(KeyError):
-            devices['Window_2'] # pylint: disable=pointless-statement
+            devices['Window_2']  # pylint: disable=pointless-statement
         with self.assertRaises(IndexError):
-            devices[1] # pylint: disable=pointless-statement
+            devices[1]  # pylint: disable=pointless-statement
 
     def test_iter(self):
         """Test iterator."""

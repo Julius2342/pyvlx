@@ -50,9 +50,9 @@ class TestScenes(unittest.TestCase):
         scene1 = Scene(pyvlx, 0, 'Scene_1')
         scenes.add(scene1)
         with self.assertRaises(KeyError):
-            scenes['Scene_2'] # pylint: disable=pointless-statement
+            scenes['Scene_2']  # pylint: disable=pointless-statement
         with self.assertRaises(IndexError):
-            scenes[1] # pylint: disable=pointless-statement
+            scenes[1]  # pylint: disable=pointless-statement
 
     def test_iter(self):
         """Test iterator."""

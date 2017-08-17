@@ -26,11 +26,12 @@ class TestWindow(unittest.TestCase):
         self.assertEqual(window.get_name(), "Test Window")
 
     def test_str(self):
+        """Test string representation of Window object."""
         pyvlx = PyVLX()
         window = Window(pyvlx, 0, 'Test Window', 0, 2)
         self.assertEqual(
             str(window),
-            '<Window name="Test Window" id="0" subtype="0" ' \
+            '<Window name="Test Window" id="0" subtype="0" '
             'typeId="2" />')
 
 

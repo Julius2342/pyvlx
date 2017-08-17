@@ -26,6 +26,7 @@ class TestScene(unittest.TestCase):
         self.assertEqual(scene.get_name(), "Scene 1")
 
     def test_str(self):
+        """Test string representation of Scene object."""
         pyvlx = PyVLX()
         scene = Scene(pyvlx, 2, 'Scene 1')
         self.assertEqual(

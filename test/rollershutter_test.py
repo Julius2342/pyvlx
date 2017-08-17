@@ -26,11 +26,12 @@ class TestDevices(unittest.TestCase):
         self.assertEqual(rollershutter.get_name(), "Test Shutter")
 
     def test_str(self):
+        """Test string representation of RollerShutter objec."""
         pyvlx = PyVLX()
         rollershutter = RollerShutter(pyvlx, 0, 'Test Shutter', 0, 2)
         self.assertEqual(
             str(rollershutter),
-            '<RollerShutter name="Test Shutter" id="0" subtype="0" ' \
+            '<RollerShutter name="Test Shutter" id="0" subtype="0" '
             'typeId="2" />')
 
 

@@ -20,12 +20,14 @@ class TestException(unittest.TestCase):
         self.loop.close()
 
     def test_str(self):
+        """Test string representation of PyVLXException."""
         exception = PyVLXException("fnord fnord")
         self.assertEqual(
             str(exception),
             '<PyVLXException description="fnord fnord" />')
 
     def test_invalid_token(self):
+        """Test InvalidToken exception."""
         exception = InvalidToken(23)
         self.assertEqual(
             str(exception),
@@ -33,6 +35,7 @@ class TestException(unittest.TestCase):
         self.assertEqual(
             exception.error_code,
             23)
+
 
 SUITE = unittest.TestLoader().loadTestsFromTestCase(TestException)
 unittest.TextTestRunner(verbosity=2).run(SUITE)
