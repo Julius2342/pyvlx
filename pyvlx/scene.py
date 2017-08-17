@@ -21,6 +21,10 @@ class Scene:
         """Run scene."""
         await self.pyvlx.interface.api_call('scenes', 'run', {'id': self.ident})
 
+    def get_name(self):
+        """Return name of object."""
+        return self.name
+
     def __str__(self):
         """Return object as readable string."""
         return '<Scene name="{0}" ' \

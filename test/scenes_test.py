@@ -43,6 +43,17 @@ class TestScenes(unittest.TestCase):
         self.assertEqual(scenes[2], scene3)
         self.assertEqual(scenes[3], scene4)
 
+    def test_get_item_failed(self):
+        """Test get_item with non existing object."""
+        pyvlx = PyVLX()
+        scenes = Scenes(pyvlx)
+        scene1 = Scene(pyvlx, 0, 'Scene_1')
+        scenes.add(scene1)
+        with self.assertRaises(KeyError):
+            scenes['Scene_2'] # pylint: disable=pointless-statement
+        with self.assertRaises(IndexError):
+            scenes[1] # pylint: disable=pointless-statement
+
     def test_iter(self):
         """Test iterator."""
         pyvlx = PyVLX()
@@ -81,6 +92,15 @@ class TestScenes(unittest.TestCase):
         scene4 = Scene(pyvlx, 3, 'Scene_4')
         scenes.add(scene4)
         self.assertEqual(len(scenes), 4)
+
+    def test_add_item_failed(self):
+        """Test add() with wrong type."""
+        pyvlx = PyVLX()
+        scenes = Scenes(pyvlx)
+        with self.assertRaises(TypeError):
+            scenes.add(scenes)
+        with self.assertRaises(TypeError):
+            scenes.add("scenes")
 
     def test_load_windows(self):
         """Test load windows."""

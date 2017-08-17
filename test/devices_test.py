@@ -41,6 +41,17 @@ class TestDevices(unittest.TestCase):
         self.assertEqual(devices[2], window3)
         self.assertEqual(devices[3], window4)
 
+    def test_get_item_failed(self):
+        """Test get_item with non existing object."""
+        pyvlx = PyVLX()
+        devices = Devices(pyvlx)
+        window1 = Window(pyvlx, 0, 'Window_1', 0, 0)
+        devices.add(window1)
+        with self.assertRaises(KeyError):
+            devices['Window_2'] # pylint: disable=pointless-statement
+        with self.assertRaises(IndexError):
+            devices[1] # pylint: disable=pointless-statement
+
     def test_iter(self):
         """Test iterator."""
         pyvlx = PyVLX()
@@ -74,6 +85,15 @@ class TestDevices(unittest.TestCase):
         window4 = Window(pyvlx, 3, 'Window_4', 0, 0)
         devices.add(window4)
         self.assertEqual(len(devices), 4)
+
+    def test_add_item_failed(self):
+        """Test add() with wrong type."""
+        pyvlx = PyVLX()
+        devices = Devices(pyvlx)
+        with self.assertRaises(TypeError):
+            devices.add(devices)
+        with self.assertRaises(TypeError):
+            devices.add("device")
 
     def test_load_windows(self):
         """Test load configuration with windows."""
