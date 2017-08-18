@@ -60,7 +60,8 @@ class Devices:
             elif category == 'Roller shutter':
                 self.load_roller_shutter(item)
             else:
-                print('WARNING: Could not parse product: {0}'.format(category))
+                self.pyvlx.logger.warning(
+                    'WARNING: Could not parse product: %s', category)
 
     def load_window_opener(self, item):
         """Load window opener from JSON."""

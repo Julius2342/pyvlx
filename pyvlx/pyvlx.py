@@ -5,6 +5,8 @@ PyVLX is an asynchronous library for connecting to
 a VELUX KLF 200 device for controlling window openers
 and roller shutters.
 """
+import logging
+
 from .config import Config
 from .interface import Interface
 from .devices import Devices
@@ -16,7 +18,8 @@ class PyVLX:
 
     def __init__(self, path=None, host=None, password=None):
         """Initialize PyVLX class."""
-        self.config = Config(path, host, password)
+        self.logger = logging.getLogger('pyvlx.log')
+        self.config = Config(self, path, host, password)
         self.interface = Interface(self.config)
         self.devices = Devices(self)
         self.scenes = Scenes(self)

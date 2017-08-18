@@ -9,8 +9,9 @@ from .exception import PyVLXException
 class Config:
     """Object for configuration."""
 
-    def __init__(self, path=None, host=None, password=None):
+    def __init__(self, pyvlx, path=None, host=None, password=None):
         """Initialize Config class."""
+        self.pyvlx = pyvlx
         if path is not None:
             self.read_config(path)
         if host is not None:
@@ -20,7 +21,7 @@ class Config:
 
     def read_config(self, path):
         """Read configuration file."""
-        print('Reading {0}'.format(path))
+        self.pyvlx.logger.info('Reading config file: ', path)
         try:
             with open(path, 'r') as filehandle:
                 doc = yaml.load(filehandle)

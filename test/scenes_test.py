@@ -1,9 +1,10 @@
 """Unit test for Scenes object."""
 import unittest
+from unittest.mock import patch
 import asyncio
 import json
 
-from pyvlx import PyVLX, Scenes, Scene
+from pyvlx import PyVLX, Scenes, Scene, PyVLXException
 
 
 # pylint: disable=too-many-public-methods,invalid-name
@@ -122,6 +123,45 @@ class TestScenes(unittest.TestCase):
         self.assertEqual(len(scenes), 2)
         self.assertEqual(scenes[0], Scene(pyvlx, 0, 'All windows closed'))
         self.assertEqual(scenes[1], Scene(pyvlx, 1, 'All windows open'))
+
+    @patch('pyvlx.Interface.api_call')
+    def test_load_interface_call(self, mock_apicall):
+        """Test if interface is called correctly."""
+        async def return_async_value(val):
+            return val
+        pyvlx = PyVLX()
+        scenes = Scenes(pyvlx)
+        get_response = \
+            '{"token":"aEGjV20T32j1V3EJTFmMBw==","result":true,"deviceSta' + \
+            'tus":"IDLE","data":[{"name":"All windows closed","id":0,"sil' + \
+            'ent":false,"products":[{"typeId":4,"name":"Window 1","actuat' + \
+            'or":0,"status":0},{"typeId":4,"name":"Window 2","actuator":0' + \
+            ',"status":0}]},{"name":"All windows open","id":1,"silent":fa' + \
+            'lse,"products":[{"typeId":4,"name":"Window 1","actuator":0,"' + \
+            'status":100},{"typeId":4,"name":"Window 2","actuator":0,"sta' + \
+            'tus":100}]}],"errors":[]}'
+        mock_apicall.return_value = return_async_value(json.loads(get_response))
+        self.loop.run_until_complete(asyncio.Task(
+            scenes.load()))
+        mock_apicall.assert_called_with('scenes', 'get')
+        self.assertEqual(len(scenes), 2)
+        self.assertEqual(scenes[0], Scene(pyvlx, 0, 'All windows closed'))
+        self.assertEqual(scenes[1], Scene(pyvlx, 1, 'All windows open'))
+
+    @patch('pyvlx.Interface.api_call')
+    def test_load_interface_call_failed(self, mock_apicall):
+        """Test if error is raised if no data element is in response."""
+        async def return_async_value(val):
+            return val
+        pyvlx = PyVLX()
+        scenes = Scenes(pyvlx)
+        get_response = \
+            '{"token":"aEGjV20T32j1V3EJTFmMBw==","result":true,"deviceSta' + \
+            'tus":"IDLE","errors":[]}'
+        mock_apicall.return_value = return_async_value(json.loads(get_response))
+        with self.assertRaises(PyVLXException):
+            self.loop.run_until_complete(asyncio.Task(
+                scenes.load()))
 
 
 SUITE = unittest.TestLoader().loadTestsFromTestCase(TestScenes)

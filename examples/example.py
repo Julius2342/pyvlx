@@ -15,7 +15,7 @@ async def main():
 
     await pyvlx.load_scenes()
     print(pyvlx.scenes[0])
-    print(pyvlx.scenes['Bath close'])
+    print(pyvlx.scenes['Bath Closed'])
 
     # opening/ closing windows by running scenes, yay!
     await pyvlx.scenes[1].run()

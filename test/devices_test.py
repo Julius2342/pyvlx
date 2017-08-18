@@ -1,6 +1,7 @@
 """Unit test for devices container within PyVLX."""
 
 import unittest
+from unittest.mock import patch
 import asyncio
 import json
 
@@ -160,6 +161,89 @@ class TestDevices(unittest.TestCase):
             'tus":"IDLE"}'
         with self.assertRaises(PyVLXException):
             devices.data_import(json.loads(get_response))
+
+    @patch('pyvlx.Interface.api_call')
+    def test_load_interface_call(self, mock_apicall):
+        """Test if interface is called correctly."""
+        async def return_async_value(val):
+            return val
+        pyvlx = PyVLX()
+        devices = Devices(pyvlx)
+        get_response = \
+            '{"token":"aEGjVG0T3jj1VNEJTFmMBw==","result":true,"deviceSta' + \
+            'tus":"IDLE","data":[{"name": "Volet roulant cour", "id": 0, ' + \
+            '"scenes": ["Fermer volet cour", "Ouvrir volet cour"], "categ' + \
+            'ory": "Roller shutter", "typeId": 2, "subtype": 0}, {"name":' + \
+            '"Fenêtre cour", "id": 1, "scenes": ["Fermer fenetre cour", "' + \
+            'Ouvrir fenetre cour"], "category": "Window opener", "typeId"' + \
+            ': 4, "subtype": 1}, {"name": "Fenêtre jardin", "id": 2, "sce' + \
+            'nes": ["Fermer fenetre jardin", "Ouvrir fenetre jardin"], "c' + \
+            'ategory": "Window opener", "typeId": 4, "subtype": 1}, {"nam' + \
+            'e": "Volet roulant jardin", "id": 3, "scenes": ["Fermer vole' + \
+            't jardin", "Ouvrir Volet jardin"], "category": "Roller shutt' + \
+            'er", "typeId": 2, "subtype": 0}]}'
+        mock_apicall.return_value = return_async_value(json.loads(get_response))
+        self.loop.run_until_complete(asyncio.Task(
+            devices.load()))
+        mock_apicall.assert_called_with('products', 'get')
+        self.assertEqual(len(devices), 4)
+        self.assertEqual(
+            devices[0],
+            RollerShutter(pyvlx, 0, 'Volet roulant cour', 0, 2))
+        self.assertEqual(
+            devices[1],
+            Window(pyvlx, 1, 'Fenêtre cour', 1, 4))
+        self.assertEqual(
+            devices[2],
+            Window(pyvlx, 2, 'Fenêtre jardin', 1, 4))
+        self.assertEqual(
+            devices[3],
+            RollerShutter(pyvlx, 3, 'Volet roulant jardin', 0, 2))
+
+    @patch('pyvlx.Interface.api_call')
+    def test_load_interface_call_failed(self, mock_apicall):
+        """Test if error is raised if no data element is in response."""
+        async def return_async_value(val):
+            return val
+        pyvlx = PyVLX()
+        devices = Devices(pyvlx)
+        get_response = \
+            '{"token":"aEGjV20T32j1V3EJTFmMBw==","result":true,"deviceSta' + \
+            'tus":"IDLE","errors":[]}'
+        mock_apicall.return_value = return_async_value(json.loads(get_response))
+        with self.assertRaises(PyVLXException):
+            self.loop.run_until_complete(asyncio.Task(
+                devices.load()))
+
+    @patch('pyvlx.Interface.api_call')
+    def test_load_interface_call_failed_no_category(self, mock_apicall):
+        """Test if error is raised if no data element is in response."""
+        async def return_async_value(val):
+            return val
+        pyvlx = PyVLX()
+        devices = Devices(pyvlx)
+        get_response = \
+            '{"token":"aEGjV20T32j1V3EJTFmMBw==","result":true,"deviceSta' + \
+            'tus":"IDLE","data":[{"name": "Fnord"}],"errors":[]}'
+        mock_apicall.return_value = return_async_value(json.loads(get_response))
+        with self.assertRaises(PyVLXException):
+            self.loop.run_until_complete(asyncio.Task(
+                devices.load()))
+
+    @patch('pyvlx.Interface.api_call')
+    def test_load_interface_call_failed_wrong_category(self, mock_apicall):
+        """Test if error is raised if no data element is in response."""
+        async def return_async_value(val):
+            return val
+        pyvlx = PyVLX()
+        devices = Devices(pyvlx)
+        get_response = \
+            '{"token":"aEGjV20T32j1V3EJTFmMBw==","result":true,"deviceSta' + \
+            'tus":"IDLE","data":[{"name": "Fnord", "category": "xyz"}],"errors":[]}'
+        mock_apicall.return_value = return_async_value(json.loads(get_response))
+        with self.assertLogs('pyvlx.log', level='WARNING'):
+            self.loop.run_until_complete(asyncio.Task(
+                devices.load()))
 
 
 SUITE = unittest.TestLoader().loadTestsFromTestCase(TestDevices)

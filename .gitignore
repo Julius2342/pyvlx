@@ -6,5 +6,5 @@ pyvlx.egg-info/
 
 .coverage
 .tox
-
+.cache
 .DS_Store
