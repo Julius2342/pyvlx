@@ -57,7 +57,7 @@ class Devices:
             category = item['category']
             if category == 'Window opener':
                 self.load_window_opener(item)
-            elif category == 'Roller shutter':
+            elif category in ['Roller shutter', 'Dual Shutter']:
                 self.load_roller_shutter(item)
             else:
                 print('WARNING: Could not parse product: {0}'.format(category))
