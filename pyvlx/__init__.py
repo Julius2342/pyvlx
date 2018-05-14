@@ -4,6 +4,7 @@
 from .pyvlx import PyVLX
 from .window import Window
 from .rollershutter import RollerShutter
+from .blind import Blind
 from .scene import Scene
 from .scenes import Scenes
 from .device import Device
