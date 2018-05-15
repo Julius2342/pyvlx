@@ -30,6 +30,7 @@ after_success: coveralls
 install:
   - sudo apt-get update -q 
   - sudo apt-get install python-dev libpython-dev
+  - pip install git+https://github.com/yaml/pyyaml.git
   - pip install -r requirements.txt
 
 after_success: coveralls
