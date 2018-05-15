@@ -4,6 +4,7 @@ import json
 from .device import Device
 from .window import Window
 from .rollershutter import RollerShutter
+from .blind import Blind
 from .exception import PyVLXException
 
 
@@ -59,6 +60,8 @@ class Devices:
                 self.load_window_opener(item)
             elif category in ['Roller shutter', 'Dual Shutter']:
                 self.load_roller_shutter(item)
+            elif category in ['Blind']:
+                self.load_blind(item)
             else:
                 self.pyvlx.logger.warning(
                     'WARNING: Could not parse product: %s', category)
@@ -72,3 +75,8 @@ class Devices:
         """Load roller shutter from JSON."""
         rollershutter = RollerShutter.from_config(self.pyvlx, item)
         self.add(rollershutter)
+
+    def load_blind(self, item):
+        """Load blind from JSON."""
+        blind = Blind.from_config(self.pyvlx, item)
+        self.add(blind)
