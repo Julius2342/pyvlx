@@ -1,4 +1,4 @@
-pyyaml>=3.11,<4
+pyyaml
 pylint
 aiohttp
 tox
