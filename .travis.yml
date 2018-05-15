@@ -27,6 +27,9 @@ language: python
 script: travis_wait tox
 after_success: coveralls
 
+# This fixes a dependency bug within TravisCI
+before_install: pip install awscli==1.11.18 
+
 # command to install dependencies
 install: "pip install -r requirements.txt"
 
