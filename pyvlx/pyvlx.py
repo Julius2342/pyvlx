@@ -16,11 +16,11 @@ from .scenes import Scenes
 class PyVLX:
     """Class for PyVLX."""
 
-    def __init__(self, path=None, host=None, password=None):
+    def __init__(self, path=None, host=None, password=None, timeout=10):
         """Initialize PyVLX class."""
         self.logger = logging.getLogger('pyvlx.log')
         self.config = Config(self, path, host, password)
-        self.interface = Interface(self.config)
+        self.interface = Interface(self.config, timeout)
         self.devices = Devices(self)
         self.scenes = Scenes(self)
 

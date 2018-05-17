@@ -10,10 +10,11 @@ from .exception import PyVLXException, InvalidToken
 class Interface:
     """Interface to KLF 200."""
 
-    def __init__(self, config):
+    def __init__(self, config, timeout=10):
         """Initialize interface class."""
         self.config = config
         self.token = None
+        self.timeout = timeout
 
     # pylint: disable=too-many-arguments
     async def api_call(self, verb, action, params=None, add_authorization_token=True, retry=False):
@@ -50,7 +51,7 @@ class Interface:
     async def _do_http_request_impl(self, url, body, headers):
         print(url, body, headers)
         async with aiohttp.ClientSession() as session:
-            with async_timeout.timeout(10):
+            with async_timeout.timeout(self.timeout):
                 async with session.post(url, data=json.dumps(body), headers=headers) as response:
                     response = await response.text()
                     response = self.fix_response(response)
