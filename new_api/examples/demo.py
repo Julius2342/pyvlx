@@ -25,7 +25,7 @@ async def demo(config, loop):
     conn.write(FramePasswordEnterRequest(password=config.password))
     await asyncio.sleep(1)
 
-    conn.write(FrameCommandSendRequest(node_ids=[0,1,2,4,5], position=90, session_id=5))
+    conn.write(FrameCommandSendRequest(node_ids=[0,1,2,4,5], position=100, session_id=5))
 
     # conn.write(FrameDiscoverNodesRequest())
     # conn.write(FrameGetSceneListRequest())
