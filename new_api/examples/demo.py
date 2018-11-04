@@ -4,7 +4,8 @@ from pyvlx.config import Config
 from pyvlx.frame_password_enter import FramePasswordEnterRequest
 #from pyvlx.frame_get_scene_list import FrameGetSceneListRequest
 #from pyvlx.frame_discover_nodes import FrameDiscoverNodesRequest
-from pyvlx.frame_get_node_information import FrameGetNodeInformationRequest
+#from pyvlx.frame_get_node_information import FrameGetNodeInformationRequest
+from pyvlx.frame_command_send import FrameCommandSendRequest
 from pyvlx.connection import Connection
 
 
@@ -23,13 +24,16 @@ async def demo(config, loop):
     #await asyncio.sleep(1)
     conn.write(FramePasswordEnterRequest(password=config.password))
     await asyncio.sleep(1)
+
+    conn.write(FrameCommandSendRequest(node_ids=[0,1,2,4,5], position=90, session_id=5))
+
     # conn.write(FrameDiscoverNodesRequest())
     # conn.write(FrameGetSceneListRequest())
-    conn.write(FrameGetNodeInformationRequest(node_id=0))
-    await asyncio.sleep(1)
-    conn.write(FrameGetNodeInformationRequest(node_id=1))
-    await asyncio.sleep(1)
-    conn.write(FrameGetNodeInformationRequest(node_id=2))
+    #conn.write(FrameGetNodeInformationRequest(node_id=0))
+    #await asyncio.sleep(1)
+    #conn.write(FrameGetNodeInformationRequest(node_id=1))
+    #await asyncio.sleep(1)
+    #conn.write(FrameGetNodeInformationRequest(node_id=2))
     #await asyncio.sleep(1)
     #conn.write(FrameGetNodeInformationRequest(node_id=3))
     #await asyncio.sleep(1)
