@@ -1,4 +1,4 @@
-"""Unit tests for PyVLX PasswortEnterRequest Frames."""
+"""Unit tests for PyVLX PasswordEnterRequest Frames."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frame_password_enter import FramePasswordEnterRequest
@@ -6,7 +6,7 @@ from pyvlx.exception import PyVLXException
 
 
 class TestFramePasswordEnter(unittest.TestCase):
-    """Test class for PyVLX PasswortEnterRequest Frames."""
+    """Test class for PyVLX PasswordEnterRequest Frames."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 
@@ -26,7 +26,7 @@ class TestFramePasswordEnter(unittest.TestCase):
             bytes(frame),
             b'\x00#0\x00xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\x13')
 
-    def test_passwort_enter_request_from_raw(self):
+    def test_password_enter_request_from_raw(self):
         """Test parsing FramePasswordEnterRequest from raw bytes."""
         frame = frame_from_raw(
             b'\x00#0\x00fnord\x00\x00\x00\x00\x00' +
@@ -35,7 +35,7 @@ class TestFramePasswordEnter(unittest.TestCase):
         self.assertTrue(isinstance(frame, FramePasswordEnterRequest))
         self.assertEqual(frame.password, 'fnord')
 
-    def test_passwort_enter_request_from_raw_long(self):
+    def test_password_enter_request_from_raw_long(self):
         """Test parsing FramePasswordEnterRequest from raw bytes with long password."""
         frame = frame_from_raw(b'\x00#0\x00xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\x13')
         self.assertTrue(isinstance(frame, FramePasswordEnterRequest))

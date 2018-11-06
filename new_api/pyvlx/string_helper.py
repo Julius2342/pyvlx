@@ -1,6 +1,7 @@
 """Module for string encoding, decoding."""
 from .exception import PyVLXException
 
+
 def string_to_bytes(string, size):
     """Convert string to bytes add padding."""
     if len(string) > size:

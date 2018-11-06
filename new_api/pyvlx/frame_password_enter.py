@@ -33,7 +33,7 @@ class FramePasswordEnterRequest(FrameBase):
         return '<FramePasswordEnterRequest password=\'{}******\'/>'.format(self.password[:2])
 
 
-class PasswortEnterConfirmationStatus(Enum):
+class PasswordEnterConfirmationStatus(Enum):
     """Enum class for status of password enter confirmation."""
 
     SUCCESSFUL = 0
@@ -43,7 +43,7 @@ class PasswortEnterConfirmationStatus(Enum):
 class FramePasswordEnterConfirmation(FrameBase):
     """Frame for confirmation for sent password."""
 
-    def __init__(self, status=PasswortEnterConfirmationStatus.SUCCESSFUL):
+    def __init__(self, status=PasswordEnterConfirmationStatus.SUCCESSFUL):
         """Init Frame."""
         super().__init__(Command.GW_PASSWORD_ENTER_CFM)
         self.status = status
@@ -54,7 +54,7 @@ class FramePasswordEnterConfirmation(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.status = PasswortEnterConfirmationStatus(payload[0])
+        self.status = PasswordEnterConfirmationStatus(payload[0])
 
     def __str__(self):
         """Return human readable string."""

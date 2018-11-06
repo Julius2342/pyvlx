@@ -4,7 +4,7 @@ from .frame_get_node_information import FrameGetNodeInformationRequest, FrameGet
 from .frame_password_enter import FramePasswordEnterRequest, FramePasswordEnterConfirmation
 from .frame_discover_nodes import FrameDiscoverNodesRequest, FrameDiscoverNodesConfirmation, FrameDiscoverNodesNotification
 from .frame_error_notification import FrameErrorNotification
-from .frame_command_send import FrameCommandSendRequest
+from .frame_command_send import FrameCommandSendRequest, FrameCommandSendConfirmation
 from .const import Command
 from .frame_helper import extract_from_frame
 
@@ -22,11 +22,13 @@ def frame_from_raw(raw):
 
 def create_frame(command):
     """Create and return empty Frame from Command."""
+    # pylint: disable=too-many-branches,too-many-return-statements
     if command == Command.GW_ERROR_NTF:
         return FrameErrorNotification()
-
     if command == Command.GW_COMMAND_SEND_REQ:
         return FrameCommandSendRequest()
+    if command == Command.GW_COMMAND_SEND_CFM:
+        return FrameCommandSendConfirmation()
 
     if command == Command.GW_PASSWORD_ENTER_REQ:
         return FramePasswordEnterRequest()

@@ -3,8 +3,10 @@ from enum import Enum
 from .frame import FrameBase
 from .const import Command
 
+
 class ErrorType(Enum):
     """Enum class for error types."""
+
     NotFurtherDefined = 0
     UnknownCommand = 1
     ErrorOnFrameStructure = 2
