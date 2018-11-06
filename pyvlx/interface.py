@@ -29,8 +29,7 @@ class Interface:
                 await self.refresh_token()
                 # Recursive call of api_call
                 return await self.api_call(verb, action, params, add_authorization_token, True)
-            else:
-                raise
+            raise
 
     async def _api_call_impl(self, verb, action, params=None, add_authorization_token=True):
         url = self.create_api_url(self.config.host, verb)
