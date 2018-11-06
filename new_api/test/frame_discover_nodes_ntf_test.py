@@ -1,11 +1,11 @@
-"""Unit tests for PyVLX Frames."""
+"""Unit tests for FrameDiscoverNodesNotification."""
 import unittest
 from pyvlx.frame_discover_nodes import FrameDiscoverNodesNotification
 from pyvlx.frame_creation import frame_from_raw
 
 
 class TestFrameDiscoverNodesNotification(unittest.TestCase):
-    """Test class for PyVLX Frames."""
+    """Test class for FrameDiscoverNodesNotification."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 

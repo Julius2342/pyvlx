@@ -1,4 +1,4 @@
-"""Unit tests for PyVLX PasswordEnterRequest Frames."""
+"""Unit tests for PyVLX PasswordEnterRequest."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frame_password_enter import FramePasswordEnterRequest
@@ -6,7 +6,7 @@ from pyvlx.exception import PyVLXException
 
 
 class TestFramePasswordEnter(unittest.TestCase):
-    """Test class for PyVLX PasswordEnterRequest Frames."""
+    """Test class for FramePasswordEnterRequest."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 

@@ -1,4 +1,4 @@
-"""Unit tests for PyVLX Frames."""
+"""Unit tests string_helper module."""
 import unittest
 from pyvlx.string_helper import string_to_bytes, bytes_to_string
 from pyvlx.exception import PyVLXException

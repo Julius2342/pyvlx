@@ -1,3 +1,4 @@
+"""Module for sending command to gw."""
 from enum import Enum
 from .const import Command
 from .frame import FrameBase
@@ -70,7 +71,7 @@ class CommandSendConfirmationStatus(Enum):
 
 
 class FrameCommandSendConfirmation(FrameBase):
-    """Frame for sending command to gw."""
+    """Frame for confirmation of command send frame."""
 
     def __init__(self, session_id=None, status=None):
         """Init Frame."""

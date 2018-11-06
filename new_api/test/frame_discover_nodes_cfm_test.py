@@ -1,11 +1,11 @@
-"""Unit tests for PyVLX Frames."""
+"""Unit tests for FrameDiscoverNodesConfirmation."""
 import unittest
 from pyvlx.frame_discover_nodes import FrameDiscoverNodesConfirmation
 from pyvlx.frame_creation import frame_from_raw
 
 
 class TestFrameNodeDiscoverConfirmation(unittest.TestCase):
-    """Test class for PyVLX Frames."""
+    """Test class for FrameDiscoverNodesConfirmation."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 

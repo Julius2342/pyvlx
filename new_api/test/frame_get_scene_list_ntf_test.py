@@ -1,11 +1,11 @@
-"""Unit tests for PyVLX Frames."""
+"""Unit tests for FrameGetSceneListNotification."""
 import unittest
 from pyvlx.frame_get_scene_list import FrameGetSceneListNotification
 from pyvlx.frame_creation import frame_from_raw
 
 
 class TestFrameGetSceneListNotification(unittest.TestCase):
-    """Test class for PyVLX Frames."""
+    """Test class for FrameGetSceneListNotification."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 

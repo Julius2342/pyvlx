@@ -1,4 +1,4 @@
-"""Module for get scene list frame classes."""
+"""Module for get node information from gateway."""
 from enum import Enum
 from .frame import FrameBase
 from .const import Command
@@ -7,7 +7,7 @@ from .string_helper import bytes_to_string  # , string_to_bytes
 
 
 class FrameGetNodeInformationRequest(FrameBase):
-    """Frame for get scene list request."""
+    """Frame for get node information request."""
 
     def __init__(self, node_id=None):
         """Init Frame."""
@@ -83,6 +83,7 @@ class FrameGetNodeInformationNotification(FrameBase):
 
     @property
     def serial_number(self):
+        """Property for serial number in a human readable way."""
         return ":".join("{:02x}".format(c) for c in self._serial_number)
 
     def get_payload(self):

@@ -1,11 +1,11 @@
-"""Unit tests for Command Send Request Frame."""
+"""Unit tests for FrameCommandSendRequest."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frame_command_send import FrameCommandSendRequest
 
 
 class TestFrameCommandSendRequest(unittest.TestCase):
-    """Test class for PyVLX Frames."""
+    """Test class FrameCommandSendRequest."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 

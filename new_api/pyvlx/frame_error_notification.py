@@ -1,4 +1,4 @@
-"""Module for discover nodes classes."""
+"""Module for error notification."""
 from enum import Enum
 from .frame import FrameBase
 from .const import Command

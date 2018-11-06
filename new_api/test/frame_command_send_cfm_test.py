@@ -5,7 +5,7 @@ from pyvlx.frame_command_send import FrameCommandSendConfirmation, CommandSendCo
 
 
 class TestFrameCommandSendConfirmation(unittest.TestCase):
-    """Test class for PyVLX Frames."""
+    """Test class FrameCommandSendConfirmation."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 

@@ -1,4 +1,4 @@
-"""Module for discover nodes classes."""
+"""Module for discover nodes requests."""
 from .frame import FrameBase
 from .const import Command, NodeType
 

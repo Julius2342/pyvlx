@@ -1,4 +1,4 @@
-"""Helper for Frames."""
+"""Helper module for SLIP Frames."""
 from .exception import PyVLXException
 from .const import Command
 

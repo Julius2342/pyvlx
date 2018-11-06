@@ -5,6 +5,7 @@ from enum import Enum
 
 class Command(Enum):
     """Enum class for GW Command bytes."""
+
     GW_ERROR_NTF = 0x0000
 
     GW_CS_DISCOVER_NODES_REQ = 0x0103

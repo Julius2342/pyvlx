@@ -26,7 +26,7 @@ class FrameGetSceneListRequest(FrameBase):
 
 
 class FrameGetSceneListConfirmation(FrameBase):
-    """Frame for confirmation for sent password."""
+    """Frame for confirmation for scene list request."""
 
     def __init__(self, count_scenes=0):
         """Init Frame."""
@@ -47,7 +47,7 @@ class FrameGetSceneListConfirmation(FrameBase):
 
 
 class FrameGetSceneListNotification(FrameBase):
-    """Frame for discover nodes notification."""
+    """Frame for scene list notification."""
 
     def __init__(self):
         """Init Frame."""

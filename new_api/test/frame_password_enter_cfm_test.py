@@ -1,11 +1,11 @@
-"""Unit tests for PyVLX Frames."""
+"""Unit tests for FramePasswordEnterConfirmation."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frame_password_enter import FramePasswordEnterConfirmation, PasswordEnterConfirmationStatus
 
 
 class TestFramePasswordEnterConfirmation(unittest.TestCase):
-    """Test class for PyVLX Frames."""
+    """Test class for FramePasswordEnterConfirmation."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 
@@ -20,7 +20,7 @@ class TestFramePasswordEnterConfirmation(unittest.TestCase):
         self.assertEqual(bytes(frame), b'\x00\x040\x01\x014')
 
     def test_discover_node_request_from_raw(self):
-        """Test parse FrameDiscoverNodesRequest from raw."""
+        """Test parse FramePasswordEnterConfirmation from raw."""
         frame = frame_from_raw(b'\x00\x040\x01\x014')
         self.assertTrue(isinstance(frame, FramePasswordEnterConfirmation))
         self.assertEqual(frame.status, PasswordEnterConfirmationStatus.FAILED)
