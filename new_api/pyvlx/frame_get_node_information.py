@@ -119,15 +119,16 @@ class FrameGetNodeInformationNotification(FrameBase):
             if pos == 0xF7FF:
                 return '\'n/a\''
             return pos
-        return '<FrameGetNodeInformationNotification ' \
-             'node_id={} order={} placement={} name=\'{}\' velocity=\'{}\'' \
-             ' serial_number=\'{}\'' \
-             ' current_position={}' \
-             ' target_position={}' \
-             ' fp1_current_position={}' \
-             ' fp2_current_position={}' \
-             ' fp3_current_position={}' \
-             ' fp4_current_position={}' \
+        return \
+            '<FrameGetNodeInformationNotification ' \
+            'node_id={} order={} placement={} name=\'{}\' velocity=\'{}\'' \
+            ' serial_number=\'{}\'' \
+            ' current_position={}' \
+            ' target_position={}' \
+            ' fp1_current_position={}' \
+            ' fp2_current_position={}' \
+            ' fp3_current_position={}' \
+            ' fp4_current_position={}' \
             '/>'.format(
                 self.node_id, self.order, self.placement, self.name, self.velocity,
                 self.serial_number,
