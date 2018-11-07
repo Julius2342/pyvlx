@@ -6,6 +6,7 @@ from .frame_discover_nodes import FrameDiscoverNodesRequest, FrameDiscoverNodesC
 from .frame_error_notification import FrameErrorNotification
 from .frame_command_send import FrameCommandSendRequest, FrameCommandSendConfirmation, FrameCommandRunStatusNotification, \
     FrameCommandRemainingTimeNotification, FrameSessionFinishedNotification
+from .frame_activate_scene import FrameActivateSceneRequest, FrameActivateSceneConfirmation
 from .const import Command
 from .frame_helper import extract_from_frame
 
@@ -62,4 +63,9 @@ def create_frame(command):
         return FrameGetNodeInformationConfirmation()
     if command == Command.GW_GET_NODE_INFORMATION_NTF:
         return FrameGetNodeInformationNotification()
+
+    if command == Command.GW_ACTIVATE_SCENE_REQ:
+        return FrameActivateSceneRequest()
+    if command == Command.GW_ACTIVATE_SCENE_CFM:
+        return FrameActivateSceneConfirmation()
     return None
