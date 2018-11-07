@@ -43,7 +43,7 @@ class ActivateSceneConfirmationStatus(Enum):
     ACCEPTED = 0
     ERROR_INVALID_PARAMETER = 1
     ERROR_REQUEST_REJECTED = 2
-    
+
 
 class FrameActivateSceneConfirmation(FrameBase):
     """Frame for confirmation of command send frame."""
