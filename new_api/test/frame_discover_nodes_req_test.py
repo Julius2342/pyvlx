@@ -25,3 +25,10 @@ class TestFrameNodeDiscover(unittest.TestCase):
         frame = frame_from_raw(b'\x00\x04\x01\x03\x06\x00')
         self.assertTrue(isinstance(frame, FrameDiscoverNodesRequest))
         self.assertEqual(frame.node_type, NodeType.LIGHT)
+
+    def test_str(self):
+        """Test string representation of FrameDiscoverNodesRequest."""
+        frame = FrameDiscoverNodesRequest(NodeType.LIGHT)
+        self.assertEqual(
+            str(frame),
+            '<FrameDiscoverNodesRequest node_type=\'NodeType.LIGHT\'/>')

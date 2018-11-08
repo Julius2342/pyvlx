@@ -22,3 +22,10 @@ class TestFrameCommandRemainingTimeNotification(unittest.TestCase):
         self.assertEqual(frame.index_id, 23)
         self.assertEqual(frame.node_parameter, 42)
         self.assertEqual(frame.seconds, 1337)
+
+    def test_str(self):
+        """Test string representation of FrameCommandRemainingTimeNotification."""
+        frame = FrameCommandRemainingTimeNotification(session_id=1000, index_id=23, node_parameter=42, seconds=1337)
+        self.assertEqual(
+            str(frame),
+            '<FrameCommandRemainingTimeNotification session_id=1000 index_id=23 node_parameter=42 seconds=1337/>')

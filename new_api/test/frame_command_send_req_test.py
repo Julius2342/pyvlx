@@ -32,3 +32,10 @@ class TestFrameCommandSendRequest(unittest.TestCase):
         self.assertEqual(frame.node_ids, [1, 2, 3])
         self.assertEqual(frame.position, 75)
         self.assertEqual(frame.session_id, 1000)
+
+    def test_str(self):
+        """Test string representation of FrameCommandSendRequest."""
+        frame = FrameCommandSendRequest(node_ids=[1, 2, 3], position=75, session_id=1000)
+        self.assertEqual(
+            str(frame),
+            '<FrameCommandSendRequest node_ids=[1, 2, 3] position=75 session_id=1000/>')

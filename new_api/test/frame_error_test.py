@@ -19,3 +19,10 @@ class TestErrorNotification(unittest.TestCase):
         frame = frame_from_raw(b'\x00\x04\x00\x00\x02\x06')
         self.assertTrue(isinstance(frame, FrameErrorNotification))
         self.assertEqual(frame.error_type, ErrorType.ErrorOnFrameStructure)
+
+    def test_str(self):
+        """Test string representation of FrameErrorNotification."""
+        frame = FrameErrorNotification(error_type=ErrorType.ErrorOnFrameStructure)
+        self.assertEqual(
+            str(frame),
+            '<FrameErrorNotification error_type=\'ErrorType.ErrorOnFrameStructure\'/>')

@@ -20,3 +20,10 @@ class TestFrameActivateSceneRequest(unittest.TestCase):
         self.assertTrue(isinstance(frame, FrameActivateSceneRequest))
         self.assertEqual(frame.scene_id, 4)
         self.assertEqual(frame.session_id, 1000)
+
+    def test_str(self):
+        """Test string representation of FrameActivateSceneRequest."""
+        frame = FrameActivateSceneRequest(scene_id=4, session_id=1000)
+        self.assertEqual(
+            str(frame),
+            '<FrameActivateSceneRequest scene_id=4 session_id=1000/>')

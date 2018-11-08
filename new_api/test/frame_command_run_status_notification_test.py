@@ -23,3 +23,10 @@ class TestFrameCommandRunStatusNotification(unittest.TestCase):
         self.assertEqual(frame.index_id, 23)
         self.assertEqual(frame.node_parameter, 42)
         self.assertEqual(frame.parameter_value, 1337)
+
+    def test_str(self):
+        """Test string representation of FrameCommandRunStatusNotification."""
+        frame = FrameCommandRunStatusNotification(session_id=1000, status_id=7, index_id=23, node_parameter=42, parameter_value=1337)
+        self.assertEqual(
+            str(frame),
+            '<FrameCommandRunStatusNotification session_id=1000 status_id=7 index_id=23 node_parameter=42 parameter_value=1337/>')

@@ -37,3 +37,16 @@ class TestFrameDiscoverNodesNotification(unittest.TestCase):
             + b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
             + b'\x00\x00\x00\x00\x00\x00\x00\x82')
         self.assertTrue(isinstance(frame, FrameDiscoverNodesNotification))
+
+    def test_str(self):
+        """Test string representation of FrameDiscoverNodesNotification."""
+        frame = FrameDiscoverNodesNotification()
+        self.assertEqual(
+            str(frame),
+            '<FrameDiscoverNodesNotification payload=\'00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00\'/>')

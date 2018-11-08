@@ -25,3 +25,10 @@ class TestFrameActivateSceneConfirmation(unittest.TestCase):
         self.assertTrue(isinstance(frame, FrameActivateSceneConfirmation))
         self.assertEqual(frame.status, ActivateSceneConfirmationStatus.ERROR_REQUEST_REJECTED)
         self.assertEqual(frame.session_id, 1000)
+
+    def test_str(self):
+        """Test string representation of FrameActivateSceneConfirmation."""
+        frame = FrameActivateSceneConfirmation(session_id=1000, status=ActivateSceneConfirmationStatus.ACCEPTED)
+        self.assertEqual(
+            str(frame),
+            '<FrameActivateSceneConfirmation session_id=1000 status=ActivateSceneConfirmationStatus.ACCEPTED/>')

@@ -17,11 +17,3 @@ class PyVLXException(Exception):
         """Return object as readable string."""
         return '<PyVLXException description="{0}" {1}/>' \
             .format(self.description, self._format_parameter())
-
-    def __eq__(self, other):
-        """Equal operator."""
-        return self.__dict__ == other.__dict__
-
-    def __hash__(self):
-        """Hash function."""
-        return 0

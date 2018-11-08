@@ -18,3 +18,10 @@ class TestFrameNodeDiscoverConfirmation(unittest.TestCase):
         """Test parse FrameDiscoverNodesConfirmation from raw."""
         frame = frame_from_raw(b'\x00\x03\x01\x04\x06')
         self.assertTrue(isinstance(frame, FrameDiscoverNodesConfirmation))
+
+    def test_str(self):
+        """Test string representation of FrameDiscoverNodesConfirmation."""
+        frame = FrameDiscoverNodesConfirmation()
+        self.assertEqual(
+            str(frame),
+            '<FrameDiscoverNodesConfirmation/>')

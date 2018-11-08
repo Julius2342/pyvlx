@@ -47,3 +47,17 @@ class TestFramePasswordEnter(unittest.TestCase):
             bytes(FramePasswordEnterRequest())
         with self.assertRaises(PyVLXException):
             bytes(FramePasswordEnterRequest(password="x" * 33))
+
+    def test_str(self):
+        """Test string representation of FramePasswordEnterRequest."""
+        frame = FramePasswordEnterRequest(password='fnord')
+        self.assertEqual(
+            str(frame),
+            '<FramePasswordEnterRequest password=fn****/>')
+
+    def test_str_no_password(self):
+        """Test string representation of FramePasswordEnterRequest with no password."""
+        frame = FramePasswordEnterRequest()
+        self.assertEqual(
+            str(frame),
+            '<FramePasswordEnterRequest password=None/>')

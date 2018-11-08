@@ -25,3 +25,10 @@ class TestFrameCommandSendConfirmation(unittest.TestCase):
         self.assertTrue(isinstance(frame, FrameCommandSendConfirmation))
         self.assertEqual(frame.status, CommandSendConfirmationStatus.REJECTED)
         self.assertEqual(frame.session_id, 1000)
+
+    def test_str(self):
+        """Test string representation of FrameCommandSendConfirmation."""
+        frame = FrameCommandSendConfirmation(session_id=1000, status=CommandSendConfirmationStatus.ACCEPTED)
+        self.assertEqual(
+            str(frame),
+            '<FrameCommandSendConfirmation session_id=1000 status=CommandSendConfirmationStatus.ACCEPTED/>')

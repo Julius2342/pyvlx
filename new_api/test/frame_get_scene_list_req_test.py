@@ -18,3 +18,10 @@ class TestFrameGetSceneListRequest(unittest.TestCase):
         """Test parse FrameGetSceneListRequest from raw."""
         frame = frame_from_raw(b'\x00\x03\x04\x0c\x0b')
         self.assertTrue(isinstance(frame, FrameGetSceneListRequest))
+
+    def test_str(self):
+        """Test string representation of FrameGetSceneListRequest."""
+        frame = FrameGetSceneListRequest()
+        self.assertEqual(
+            str(frame),
+            '<FrameGetSceneListRequest/>')

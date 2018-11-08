@@ -30,7 +30,8 @@ class FramePasswordEnterRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FramePasswordEnterRequest password=\'{}******\'/>'.format(self.password[:2])
+        password_esc = None if self.password is None else '{}****'.format(self.password[:2])
+        return '<FramePasswordEnterRequest password={}/>'.format(password_esc)
 
 
 class PasswordEnterConfirmationStatus(Enum):

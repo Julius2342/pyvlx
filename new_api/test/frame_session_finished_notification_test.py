@@ -19,3 +19,10 @@ class TestFrameSessionFinishedNotification(unittest.TestCase):
         frame = frame_from_raw(b'\x00\x05\x03\x04\x03\xe8\xe9')
         self.assertTrue(isinstance(frame, FrameSessionFinishedNotification))
         self.assertEqual(frame.session_id, 1000)
+
+    def test_str(self):
+        """Test string representation of FrameSessionFinishedNotification."""
+        frame = FrameSessionFinishedNotification(session_id=1000)
+        self.assertEqual(
+            str(frame),
+            '<FrameSessionFinishedNotification session_id=1000 />')

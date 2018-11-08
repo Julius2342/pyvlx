@@ -49,3 +49,13 @@ class TestFrameGetSceneListNotification(unittest.TestCase):
         self.assertTrue(isinstance(frame, FrameGetSceneListNotification))
         self.assertEqual(frame.scenes, [(0, 'All Windows Closed'), (1, 'Sleeping Wide Open'), (2, 'Bath Open')])
         self.assertEqual(frame.remaining_scenes, 3)
+
+    def test_str(self):
+        """Test string representation of FrameGetSceneListNotification."""
+        frame = FrameGetSceneListNotification()
+        frame.scenes = [(0, 'All Windows Closed'), (1, 'Sleeping Wide Open'), (2, 'Bath Open')]
+        frame.remaining_scenes = 3
+        self.assertEqual(
+            str(frame),
+            '<FrameGetSceneListNotification scenes=[(0, \'All Windows Closed\'), '
+            + '(1, \'Sleeping Wide Open\'), (2, \'Bath Open\')] remaining_scenes=3>')

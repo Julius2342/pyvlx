@@ -45,3 +45,15 @@ class TestSlip(unittest.TestCase):
         self.assertEqual(
             get_next_slip(b'\xc0\xdb\xdc\xdb\xdc\xdb\xdd\xdb\xdd\xdb\xdc\xdb\xdd\xdb\xdc\xc0fnord'),
             (b'\xc0\xc0\xdb\xdb\xc0\xdb\xc0', b'fnord'))
+
+    def test_get_next_slip_no_complete_slip(self):
+        """Test get_next_slip function with no complete slip frame beeing in queue."""
+        self.assertEqual(
+            get_next_slip(b'zz\xc0abc\xc0'),
+            (None, b'zz\xc0abc\xc0'))
+
+    def test_get_next_slip_empty_queue(self):
+        """Test get_next_slip function with empty queue."""
+        self.assertEqual(
+            get_next_slip(b''),
+            (None, b''))

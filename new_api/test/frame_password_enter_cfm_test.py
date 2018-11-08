@@ -24,3 +24,10 @@ class TestFramePasswordEnterConfirmation(unittest.TestCase):
         frame = frame_from_raw(b'\x00\x040\x01\x014')
         self.assertTrue(isinstance(frame, FramePasswordEnterConfirmation))
         self.assertEqual(frame.status, PasswordEnterConfirmationStatus.FAILED)
+
+    def test_str(self):
+        """Test string representation of FramePasswordEnterConfirmation."""
+        frame = FramePasswordEnterConfirmation()
+        self.assertEqual(
+            str(frame),
+            '<FramePasswordEnterConfirmation status=\'PasswordEnterConfirmationStatus.SUCCESSFUL\'/>')
