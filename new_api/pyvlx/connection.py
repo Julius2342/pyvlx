@@ -65,6 +65,7 @@ class Connection:
         self.loop = loop
         self.config = config
         self.transport = None
+        self.frame_received_cbs = []
 
     def __del__(self):
         """Destruct connection."""
@@ -85,6 +86,14 @@ class Connection:
             port=self.config.port,
             ssl=self.create_ssl_context())
 
+    def register_frame_received_callback(self, callback):
+        """Register frame received callback."""
+        self.frame_received_cbs.append(callback)
+
+    def unregister_frame_received_callback(self, callback):
+        """Unregister frame received callback."""
+        self.frame_received_cbs.remove(callback)
+
     def write(self, frame):
         """Write frame to Bus."""
         if not isinstance(frame, FrameBase):
@@ -102,5 +111,6 @@ class Connection:
 
     def frame_received_cb(self, frame):
         """Received message."""
-        # pylint: disable=no-self-use
-        print("XXXXXXX FRAME RECEIVED: ", frame)
+        for frame_received_cb in self.frame_received_cbs:
+            # pylint: disable=not-callable
+            self.loop.create_task(frame_received_cb(frame))
