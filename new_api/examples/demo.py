@@ -1,13 +1,10 @@
 """Just a demo of the new PyVLX module."""
 import asyncio
 from pyvlx.config import Config
-# from pyvlx.frame_discover_nodes import FrameDiscoverNodesRequest
-# from pyvlx.frame_get_node_information import FrameGetNodeInformationRequest
-# from pyvlx.frame_activate_scene import FrameActivateSceneRequest
-# from pyvlx.frame_command_send import FrameCommandSendRequest
 from pyvlx.connection import Connection
 from pyvlx.login import Login
 from pyvlx.scene_list import SceneList
+from pyvlx.activate_scene import ActivateScene
 
 
 async def wait(count, seconds):
@@ -29,8 +26,20 @@ async def demo(config, loop):
         scene_list = SceneList(connection=connection)
         await scene_list.do_api_call()
         print(scene_list.scenes)
+
+        activate_scene = ActivateScene(connection=connection, scene_id=2)
+        await activate_scene.do_api_call()
+
+        activate_scene = ActivateScene(connection=connection, scene_id=0)
+        await activate_scene.do_api_call()
     return
 
+    # BACKUP:
+    #
+    # from pyvlx.frame_discover_nodes import FrameDiscoverNodesRequest
+    # from pyvlx.frame_get_node_information import FrameGetNodeInformationRequest
+    # from pyvlx.frame_activate_scene import FrameActivateSceneRequest
+    # from pyvlx.frame_command_send import FrameCommandSendRequest
     # conn.write(FrameGetNodeInformationRequest(node_id=0))
     # await asyncio.sleep(1)
 
@@ -46,9 +55,7 @@ async def demo(config, loop):
     # await wait(15, 5)
 
     # conn.write(FrameDiscoverNodesRequest())
-    # conn.write(FrameGetSceneListRequest())
 
-    # conn.write(FrameActivateSceneRequest(scene_id=3, session_id=23))
     # conn.write(FrameGetNodeInformationRequest(node_id=0))
     # await asyncio.sleep(1)
     # conn.write(FrameGetNodeInformationRequest(node_id=1))
