@@ -1,24 +1,19 @@
-"""Module for exceptions."""
+"""Module for PyVLX Exceptions."""
 
 
 class PyVLXException(Exception):
-    """Exception class for PyVLX library."""
+    """Default PyVLX Exception."""
 
-    def __init__(self, description):
-        """Initialize exception with the given error message."""
-        super(PyVLXException, self).__init__()
+    def __init__(self, description, **kwargs):
+        """Initialize PyVLXException class."""
+        super().__init__(description)
         self.description = description
+        self.parameter = kwargs
+
+    def _format_parameter(self):
+        return " ".join(['%s="%s"' % (key, value) for (key, value) in sorted(self.parameter.items())])
 
     def __str__(self):
         """Return object as readable string."""
-        return '<PyVLXException description="{0}" />' \
-            .format(self.description)
-
-
-class InvalidToken(PyVLXException):
-    """KLF 200 token invalid or expired."""
-
-    def __init__(self, error_code):
-        """Initialize exception with the given error message."""
-        super(InvalidToken, self).__init__("Invalid Token")
-        self.error_code = error_code
+        return '<PyVLXException description="{0}" {1}/>' \
+            .format(self.description, self._format_parameter())

@@ -7,13 +7,6 @@ from pyvlx.scene_list import SceneList
 from pyvlx.activate_scene import ActivateScene
 
 
-async def wait(count, seconds):
-    """Wait specified seconds for count times."""
-    for i in range(count):
-        print("Wait for bus responses: {} of {}".format(i+1, count))
-        await asyncio.sleep(seconds)
-
-
 async def demo(config, loop):
     """Demonstrate functionality of PyVLX."""
     connection = Connection(loop=loop, config=config)
@@ -52,7 +45,6 @@ async def demo(config, loop):
     # conn.write(FrameCommandSendRequest(node_ids=[3], position=100, session_id=8))
     # await asyncio.sleep(1)
     # conn.write(FrameCommandSendRequest(node_ids=[4], position=100, session_id=9))
-    # await wait(15, 5)
 
     # conn.write(FrameDiscoverNodesRequest())
 
@@ -71,7 +63,6 @@ async def demo(config, loop):
     # conn.write(FrameGetNodeInformationRequest(node_id=6))
     # await asyncio.sleep(1)
     # conn.write(FrameGetNodeInformationRequest(node_id=7))
-    # await wait(5, 5)
 
 
 async def main(loop):

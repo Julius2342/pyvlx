@@ -6,6 +6,8 @@ from enum import Enum
 class Command(Enum):
     """Enum class for GW Command bytes."""
 
+    #pylint: disable=invalid-name
+
     GW_ERROR_NTF = 0x0000
     GW_REBOOT_REQ = 0x0001
     GW_REBOOT_CFM = 0x0002

@@ -8,3 +8,6 @@ pyvlx.egg-info/
 .tox
 .cache
 .DS_Store
+
+.venv
+venv
