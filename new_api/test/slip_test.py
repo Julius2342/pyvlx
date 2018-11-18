@@ -6,6 +6,8 @@ from pyvlx.slip import decode, encode, is_slip, slip_pack, get_next_slip
 class TestSlip(unittest.TestCase):
     """Test class for slip helper functions."""
 
+    # pylint: disable=invalid-name
+
     def encode_decode(self, decoded, encoded):
         """Decode encoded, encode decoded and test results."""
         self.assertEqual(decode(encoded), decoded)

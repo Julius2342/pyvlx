@@ -1,7 +1,6 @@
 """Unit tests frame_helper module."""
 import unittest
 from pyvlx.frame_helper import calc_crc, extract_from_frame
-from pyvlx.const import Command
 from pyvlx.exception import PyVLXException
 
 
@@ -28,4 +27,3 @@ class TestFrameHelper(unittest.TestCase):
             extract_from_frame(bytes(b'\x00\x04\x00\x00\x02\x07')) # invalid crc
         with self.assertRaises(PyVLXException):
             extract_from_frame(bytes(b'\x00\x04\xFF\xFF\x02\x06')) # invalid crc
-

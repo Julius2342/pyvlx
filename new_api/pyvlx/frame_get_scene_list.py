@@ -77,7 +77,6 @@ class FrameGetSceneListNotification(FrameBase):
             number = scene[0]
             name = bytes_to_string(scene[1:])
             self.scenes.append((number, name))
-        print(self)
 
     def __str__(self):
         """Return human readable string."""
