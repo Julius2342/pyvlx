@@ -22,8 +22,8 @@ class TestFrameHelper(unittest.TestCase):
         with self.assertRaises(PyVLXException):
             extract_from_frame(bytes(4))
         with self.assertRaises(PyVLXException):
-            extract_from_frame(bytes(b'\x01\x04\x00\x00\x02\x06')) # invalid length (first 2 bytes)
+            extract_from_frame(bytes(b'\x01\x04\x00\x00\x02\x06'))  # invalid length (first 2 bytes)
         with self.assertRaises(PyVLXException):
-            extract_from_frame(bytes(b'\x00\x04\x00\x00\x02\x07')) # invalid crc
+            extract_from_frame(bytes(b'\x00\x04\x00\x00\x02\x07'))  # invalid crc
         with self.assertRaises(PyVLXException):
-            extract_from_frame(bytes(b'\x00\x04\xFF\xFF\x02\x06')) # invalid crc
+            extract_from_frame(bytes(b'\x00\x04\xFF\xFF\x02\x06'))  # invalid crc

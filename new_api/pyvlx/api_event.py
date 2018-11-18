@@ -5,7 +5,6 @@ import asyncio
 class ApiEvent():
     """Base class for waiting a specific frame from API connection."""
 
-
     def __init__(self, connection, timeout_in_seconds=10):
         """Initialize ApiEvent."""
         self.connection = connection
