@@ -24,7 +24,7 @@ class FrameGetNodeInformationRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetNodeInformationRequest/>'
+        return '<FrameGetNodeInformationRequest node_id={}/>'.format(self.node_id)
 
 
 class NodeInformationStatus(Enum):
