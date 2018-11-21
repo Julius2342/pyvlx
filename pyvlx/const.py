@@ -255,6 +255,7 @@ class NodeTypeWithSubtype(Enum):
     SWINGING_SHUTTERS = 0x0600
     SWINGING_SHUTTER_WITH_INDEPENDENT_LEAVES = 0x0601
 
+
 class NodeType(Enum):
     """Enum class for node types."""
 
