@@ -58,7 +58,7 @@ class TestSlip(unittest.TestCase):
             Position(raw=b'\xC8\x01')
         with self.assertRaises(PyVLXException):
             Position(raw=b'\xC9\x00')
- 
+
     def test_known(self):
         """Test 'known' property."""
         self.assertTrue(Position(raw=b'\x12\x00').known)
