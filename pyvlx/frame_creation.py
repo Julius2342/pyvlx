@@ -1,6 +1,8 @@
 """Helper module for creating a frame out of raw data."""
 from .frame_get_scene_list import FrameGetSceneListRequest, FrameGetSceneListConfirmation, FrameGetSceneListNotification
 from .frame_get_node_information import FrameGetNodeInformationRequest, FrameGetNodeInformationConfirmation, FrameGetNodeInformationNotification
+from .frame_get_all_nodes_information import FrameGetAllNodesInformationRequest, FrameGetAllNodesInformationConfirmation, \
+    FrameGetAllNodesInformationNotification, FrameGetAllNodesInformationFinishedNotification
 from .frame_password_enter import FramePasswordEnterRequest, FramePasswordEnterConfirmation
 from .frame_discover_nodes import FrameDiscoverNodesRequest, FrameDiscoverNodesConfirmation, FrameDiscoverNodesNotification
 from .frame_error_notification import FrameErrorNotification
@@ -63,6 +65,15 @@ def create_frame(command):
         return FrameGetNodeInformationConfirmation()
     if command == Command.GW_GET_NODE_INFORMATION_NTF:
         return FrameGetNodeInformationNotification()
+
+    if command == Command.GW_GET_ALL_NODES_INFORMATION_REQ:
+        return FrameGetAllNodesInformationRequest()
+    if command == Command.GW_GET_ALL_NODES_INFORMATION_CFM:
+        return FrameGetAllNodesInformationConfirmation()
+    if command == Command.GW_GET_ALL_NODES_INFORMATION_NTF:
+        return FrameGetAllNodesInformationNotification()
+    if command == Command.GW_GET_ALL_NODES_INFORMATION_FINISHED_NTF:
+        return FrameGetAllNodesInformationFinishedNotification()
 
     if command == Command.GW_ACTIVATE_SCENE_REQ:
         return FrameActivateSceneRequest()

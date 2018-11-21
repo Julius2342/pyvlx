@@ -4,7 +4,6 @@ from pyvlx.config import Config
 from pyvlx.connection import Connection
 from pyvlx.login import Login
 from pyvlx.scene_list import SceneList
-from pyvlx.activate_scene import ActivateScene
 
 
 async def demo(config, loop):
@@ -20,49 +19,52 @@ async def demo(config, loop):
         await scene_list.do_api_call()
         print(scene_list.scenes)
 
-        activate_scene = ActivateScene(connection=connection, scene_id=2)
-        await activate_scene.do_api_call()
+        # from pyvlx.activate_scene import ActivateScene
+        # activate_scene = ActivateScene(connection=connection, scene_id=2)
+        # await activate_scene.do_api_call()
 
-        activate_scene = ActivateScene(connection=connection, scene_id=0)
-        await activate_scene.do_api_call()
-    return
+        # activate_scene = ActivateScene(connection=connection, scene_id=0)
+        # await activate_scene.do_api_call()
+    # return
+
+    from pyvlx.frame_get_all_nodes_information import FrameGetAllNodesInformationRequest
+    connection.write(FrameGetAllNodesInformationRequest())
+    await asyncio.sleep(10)
 
     # BACKUP:
     #
-    # from pyvlx.frame_discover_nodes import FrameDiscoverNodesRequest
-    # from pyvlx.frame_get_node_information import FrameGetNodeInformationRequest
-    # from pyvlx.frame_activate_scene import FrameActivateSceneRequest
     # from pyvlx.frame_command_send import FrameCommandSendRequest
-    # conn.write(FrameGetNodeInformationRequest(node_id=0))
+    # connection.write(FrameGetNodeInformationRequest(node_id=0))
     # await asyncio.sleep(1)
+    # connection.write(FrameCommandSendRequest(node_ids=[0], position=100, session_id=5))
+    # await asyncio.sleep(1)
+    # connection.write(FrameCommandSendRequest(node_ids=[1], position=100, session_id=6))
+    # await asyncio.sleep(1)
+    # connection.write(FrameCommandSendRequest(node_ids=[2], position=100, session_id=7))
+    # await asyncio.sleep(1)
+    # connection.write(FrameCommandSendRequest(node_ids=[3], position=100, session_id=8))
+    # await asyncio.sleep(1)
+    # connection.write(FrameCommandSendRequest(node_ids=[4], position=100, session_id=9))
 
-    # conn.write(FrameCommandSendRequest(node_ids=[0], position=100, session_id=5))
-    # await asyncio.sleep(1)
-    # conn.write(FrameCommandSendRequest(node_ids=[1], position=100, session_id=6))
-    # await asyncio.sleep(1)
-    # conn.write(FrameCommandSendRequest(node_ids=[2], position=100, session_id=7))
-    # await asyncio.sleep(1)
-    # conn.write(FrameCommandSendRequest(node_ids=[3], position=100, session_id=8))
-    # await asyncio.sleep(1)
-    # conn.write(FrameCommandSendRequest(node_ids=[4], position=100, session_id=9))
+    # from pyvlx.frame_discover_nodes import FrameDiscoverNodesRequest
+    # connection.write(FrameDiscoverNodesRequest())
 
-    # conn.write(FrameDiscoverNodesRequest())
-
-    # conn.write(FrameGetNodeInformationRequest(node_id=0))
+    # from pyvlx.frame_get_node_information import FrameGetNodeInformationRequest
+    # connection.write(FrameGetNodeInformationRequest(node_id=0))
     # await asyncio.sleep(1)
-    # conn.write(FrameGetNodeInformationRequest(node_id=1))
+    # connection.write(FrameGetNodeInformationRequest(node_id=1))
     # await asyncio.sleep(1)
-    # conn.write(FrameGetNodeInformationRequest(node_id=2))
+    # connection.write(FrameGetNodeInformationRequest(node_id=2))
     # await asyncio.sleep(1)
-    # conn.write(FrameGetNodeInformationRequest(node_id=3))
+    # connection.write(FrameGetNodeInformationRequest(node_id=3))
     # await asyncio.sleep(1)
-    # conn.write(FrameGetNodeInformationRequest(node_id=4))
+    # connection.write(FrameGetNodeInformationRequest(node_id=4))
     # await asyncio.sleep(1)
-    # conn.write(FrameGetNodeInformationRequest(node_id=5))
+    # connection.write(FrameGetNodeInformationRequest(node_id=5))
     # await asyncio.sleep(1)
-    # conn.write(FrameGetNodeInformationRequest(node_id=6))
+    # connection.write(FrameGetNodeInformationRequest(node_id=6))
     # await asyncio.sleep(1)
-    # conn.write(FrameGetNodeInformationRequest(node_id=7))
+    # connection.write(FrameGetNodeInformationRequest(node_id=7))
 
 
 async def main(loop):
