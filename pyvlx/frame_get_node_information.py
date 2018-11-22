@@ -1,9 +1,9 @@
 """Module for get node information from gateway."""
 from enum import Enum
 from .frame import FrameBase
-from .const import Command
-# from .exception import PyVLXException
-from .string_helper import bytes_to_string  # , string_to_bytes
+from .const import Command, NodeTypeWithSubtype, NodeVariation
+from .string_helper import bytes_to_string, string_to_bytes
+from .position import Position
 
 
 class FrameGetNodeInformationRequest(FrameBase):
@@ -20,7 +20,7 @@ class FrameGetNodeInformationRequest(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        return payload[0]
+        self.node_id = payload[0]
 
     def __str__(self):
         """Return human readable string."""
@@ -66,20 +66,28 @@ class FrameGetNodeInformationNotification(FrameBase):
     def __init__(self):
         """Init Frame."""
         super().__init__(Command.GW_GET_NODE_INFORMATION_NTF)
-        self.node_id = None
-        self.order = None
-        self.placement = None
-        self.name = None
-        self.velocity = None
-
+        self.node_id = 0
+        self.order = 0
+        self.placement = 0
+        self.name = ""
+        self.velocity = 0
+        self.node_type = NodeTypeWithSubtype.NO_TYPE
+        self.product_group = 0
+        self.product_type = 0
+        self.node_variation = NodeVariation.NOT_SET
+        self.power_mode = 0
         self._serial_number = bytes(8)
-
-        self.current_position = None
-        self.target = None
-        self.fp1_current_position = None
-        self.fp2_current_position = None
-        self.fp3_current_position = None
-        self.fp4_current_position = None
+        self.state = 0
+        self.current_position = Position()
+        self.target = Position()
+        self.current_position_fp1 = Position()
+        self.current_position_fp2 = Position()
+        self.current_position_fp3 = Position()
+        self.current_position_fp4 = Position()
+        self.remaining_time = 0
+        self.timestamp = bytes(4)
+        self.nbr_of_alias = 0
+        self.alias_array = bytes(16)
 
     @property
     def serial_number(self):
@@ -88,12 +96,30 @@ class FrameGetNodeInformationNotification(FrameBase):
 
     def get_payload(self):
         """Return Payload."""
-        # ret = bytes([len(self.scenes)])
-        # for number, name in self.scenes:
-        #    ret += bytes([number])
-        #    ret += string_to_bytes(name, 64)
-        # ret += bytes([self.remaining_scenes])
-        # return ret
+        payload = bytes()
+        payload += bytes([self.node_id])
+        payload += bytes([self.order >> 8 & 255, self.order & 255])
+        payload += bytes([self.placement])
+        payload += bytes(string_to_bytes(self.name, 64))
+        payload += bytes([self.velocity])
+        payload += bytes([self.node_type.value >> 8 & 255, self.node_type.value & 255])
+        payload += bytes([self.product_group])
+        payload += bytes([self.product_type])
+        payload += bytes([self.node_variation.value])
+        payload += bytes([self.power_mode])
+        payload += bytes(self._serial_number)
+        payload += bytes([self.state])
+        payload += bytes(self.current_position.raw)
+        payload += bytes(self.target.raw)
+        payload += bytes(self.current_position_fp1.raw)
+        payload += bytes(self.current_position_fp2.raw)
+        payload += bytes(self.current_position_fp3.raw)
+        payload += bytes(self.current_position_fp4.raw)
+        payload += bytes([self.remaining_time >> 8 & 255, self.remaining_time & 255])
+        payload += bytes(self.timestamp)
+        payload += bytes([self.nbr_of_alias])
+        payload += bytes(self.alias_array)
+        return payload
 
     def from_payload(self, payload):
         """Init frame from binary data."""
@@ -102,39 +128,52 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.placement = payload[3]
         self.name = bytes_to_string(payload[4:68])
         self.velocity = payload[68]
+        self.node_type = NodeTypeWithSubtype(payload[69] * 256 + payload[70])
+        self.product_group = payload[71]
+        self.product_type = payload[72]
+        self.node_variation = NodeVariation(payload[73])
+        self.power_mode = payload[74]
         self._serial_number = payload[75:83]
-
-        print("STATE: ", payload[84-1])
-
-        self.current_position = payload[85-1] * 256 + payload[86-1]
-        self.target = payload[87-1] * 256 + payload[88-1]
-        self.fp1_current_position = payload[89-1] * 256 + payload[90-1]
-        self.fp2_current_position = payload[91-1] * 256 + payload[92-1]
-        self.fp3_current_position = payload[93-1] * 256 + payload[94-1]
-        self.fp4_current_position = payload[95-1] * 256 + payload[96-1]
+        self.state = payload[83]
+        self.current_position = Position(payload[84:86])
+        self.target = Position(payload[86:88])
+        self.current_position_fp1 = Position(payload[88:90])
+        self.current_position_fp2 = Position(payload[90:92])
+        self.current_position_fp3 = Position(payload[92:94])
+        self.current_position_fp4 = Position(payload[94:96])
+        self.remaining_time = payload[96] * 256 + payload[97]
+        self.timestamp = payload[98:102]
+        self.nbr_of_alias = payload[102]
+        self.alias_array = payload[103:124]
 
     def __str__(self):
         """Return human readable string."""
-        def format_position(pos):
-            if pos == 0xF7FF:
-                return '\'n/a\''
-            return pos
-        return \
-            '<FrameGetNodeInformationNotification ' \
-            'node_id={} order={} placement={} name=\'{}\' velocity=\'{}\'' \
-            ' serial_number=\'{}\'' \
-            ' current_position={}' \
-            ' target_position={}' \
-            ' fp1_current_position={}' \
-            ' fp2_current_position={}' \
-            ' fp3_current_position={}' \
-            ' fp4_current_position={}' \
-            '/>'.format(
-                self.node_id, self.order, self.placement, self.name, self.velocity,
+        return '<FrameGetNodeInformationNotification node_id={} oder={} ' \
+            'placement={} name=\'{}\' velocity={} node_type=\'{}\' product_group={} ' \
+            'product_type={} node_variation={} power_mode={} ' \
+            'serial_number=\'{}\' state={} current_position=\'{}\' ' \
+            'target=\'{}\' current_position_fp1=\'{}\' current_position_fp2=\'{}\' ' \
+            'current_position_fp3=\'{}\' current_position_fp4=\'{}\' ' \
+            'remaining_time={} timestamp={} nbr_of_alias={} alias_array=\'{}\'/>'.format(
+                self.node_id,
+                self.order,
+                self.placement,
+                self.name,
+                self.velocity,
+                self.node_type,
+                self.product_group,
+                self.product_type,
+                self.node_variation,
+                self.power_mode,
                 self.serial_number,
-                format_position(self.current_position),
-                format_position(self.target),
-                format_position(self.fp1_current_position),
-                format_position(self.fp2_current_position),
-                format_position(self.fp3_current_position),
-                format_position(self.fp4_current_position))
+                self.state,
+                self.current_position,
+                self.target,
+                self.current_position_fp1,
+                self.current_position_fp2,
+                self.current_position_fp3,
+                self.current_position_fp4,
+                self.remaining_time,
+                self.timestamp,
+                self.nbr_of_alias,
+                (":".join("{:02x}".format(c) for c in self.alias_array)))

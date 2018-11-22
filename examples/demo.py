@@ -49,7 +49,7 @@ async def demo(config, loop):
     # from pyvlx.frame_discover_nodes import FrameDiscoverNodesRequest
     # connection.write(FrameDiscoverNodesRequest())
 
-    # from pyvlx.frame_get_node_information import FrameGetNodeInformationRequest
+    from pyvlx.frame_get_node_information import FrameGetNodeInformationRequest
     # connection.write(FrameGetNodeInformationRequest(node_id=0))
     # await asyncio.sleep(1)
     # connection.write(FrameGetNodeInformationRequest(node_id=1))
@@ -63,8 +63,9 @@ async def demo(config, loop):
     # connection.write(FrameGetNodeInformationRequest(node_id=5))
     # await asyncio.sleep(1)
     # connection.write(FrameGetNodeInformationRequest(node_id=6))
-    # await asyncio.sleep(1)
-    # connection.write(FrameGetNodeInformationRequest(node_id=7))
+    await asyncio.sleep(1)
+    connection.write(FrameGetNodeInformationRequest(node_id=7))
+    await asyncio.sleep(5)
 
 
 async def main(loop):
