@@ -85,7 +85,7 @@ class Position():
         if len(raw) != 2:
             raise PyVLXException("Position::raw_must_be_two_bytes")
         if raw != Position.UNKNOWN_POSITION and Position.to_int(raw) > Position.MAX:
-            raise PyVLXException("position::raw_exceed_limit")
+            raise PyVLXException("position::raw_exceed_limit", raw=raw)
         return raw
 
     def __str__(self):
