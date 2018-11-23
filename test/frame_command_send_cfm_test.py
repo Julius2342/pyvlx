@@ -9,17 +9,17 @@ class TestFrameCommandSendConfirmation(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    def test_discover_node_request(self):
+    def test_bytes(self):
         """Test FrameCommandSendConfirmation."""
         frame = FrameCommandSendConfirmation(session_id=1000, status=CommandSendConfirmationStatus.ACCEPTED)
         self.assertEqual(bytes(frame), b'\x00\x06\x03\x01\x03\xe8\x01\xee')
 
-    def test_discover_node_request_error(self):
+    def test_bytes_error(self):
         """Test failed FrameCommandSendConfirmation."""
         frame = FrameCommandSendConfirmation(session_id=1000, status=CommandSendConfirmationStatus.REJECTED)
         self.assertEqual(bytes(frame), b'\x00\x06\x03\x01\x03\xe8\x00\xef')
 
-    def test_discover_node_request_from_raw(self):
+    def test_frame_from_raw(self):
         """Test parse FrameCommandSendConfirmation from raw."""
         frame = frame_from_raw(b'\x00\x06\x03\x01\x03\xe8\x00\xef')
         self.assertTrue(isinstance(frame, FrameCommandSendConfirmation))

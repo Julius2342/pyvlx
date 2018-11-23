@@ -9,12 +9,12 @@ class TestFrameGetNodeInformationConfirmation(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    def test_discover_node_request(self):
+    def test_bytes(self):
         """Test FrameGetNodeInformationConfirmation."""
         frame = FrameGetNodeInformationConfirmation(node_id=23)
         self.assertEqual(bytes(frame), b'\x00\x05\x02\x01\x00\x17\x11')
 
-    def test_discover_node_request_from_raw(self):
+    def test_frame_from_raw(self):
         """Test parse FrameGetNodeInformationConfirmation from raw."""
         frame = frame_from_raw(b'\x00\x05\x02\x01\x00\x17\x11')
         self.assertTrue(isinstance(frame, FrameGetNodeInformationConfirmation))

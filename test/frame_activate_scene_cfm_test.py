@@ -9,17 +9,17 @@ class TestFrameActivateSceneConfirmation(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    def test_discover_node_request(self):
+    def test_bytes(self):
         """Test FrameActivateSceneConfirmation."""
         frame = FrameActivateSceneConfirmation(session_id=1000, status=ActivateSceneConfirmationStatus.ACCEPTED)
         self.assertEqual(bytes(frame), b'\x00\x06\x04\x13\x00\x03\xe8\xfa')
 
-    def test_discover_node_request_error(self):
+    def test_bytes_error(self):
         """Test failed FrameActivateSceneConfirmation."""
         frame = FrameActivateSceneConfirmation(session_id=1000, status=ActivateSceneConfirmationStatus.ERROR_REQUEST_REJECTED)
         self.assertEqual(bytes(frame), b'\x00\x06\x04\x13\x02\x03\xe8\xf8')
 
-    def test_discover_node_request_from_raw(self):
+    def test_frame_from_raw(self):
         """Test parse FrameActivateSceneConfirmation from raw."""
         frame = frame_from_raw(b'\x00\x06\x04\x13\x02\x03\xe8\xf8')
         self.assertTrue(isinstance(frame, FrameActivateSceneConfirmation))

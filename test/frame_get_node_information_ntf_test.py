@@ -10,15 +10,15 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00{\x02\x10\x17\x04\xd2\x02Fnord23\x00\x00\x00\x00\x00' \
+    EXAMPLE_FRAME = b'\x00|\x02\x10\x17\x04\xd2\x02Fnord23\x00\x00\x00\x00\x00' \
         b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
         b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
         b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x03\x00@\x17\r\x01\x01\x01\x02\x03\x04\x05\x06\x06\x08\x01' \
+        b'\x00\x03\x00@\x17\r\x01\x01\x07\x01\x02\x03\x04\x05\x06\x06\x08\x01' \
         b'\x00\x0c\x00{\x04\xd2\t)\r\x80\x11\xd7\x00\x01\x03\x03\x02\x03\x17012'\
         b'34567890ABCDEF@'
 
-    def test_discover_node_request(self):
+    def test_bytes(self):
         """Test FrameGetNodeInformationNotification."""
         frame = FrameGetNodeInformationNotification()
         frame.node_id = 23
@@ -31,6 +31,7 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         frame.product_type = 13
         frame.node_variation = NodeVariation.TOPHUNG
         frame.power_mode = 1
+        frame.build_number = 7
         frame._serial_number = b'\x01\x02\x03\x04\x05\x06\x06\x08'  # pylint: disable=protected-access
         frame.state = 1
         frame.current_position.position = 12
@@ -43,13 +44,9 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         frame.timestamp = b'\x03\x03\x02\x03'
         frame.nbr_of_alias = 23
         frame.alias_array = b'01234567890ABCDEF'
-
-        print(bytes(frame))
-        print(self.EXAMPLE_FRAME)
-
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_discover_node_request_from_raw(self):
+    def test_frame_from_raw(self):
         """Test parse FrameGetNodeInformationNotification from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameGetNodeInformationNotification))
@@ -63,6 +60,7 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         self.assertEqual(frame.product_type, 13)
         self.assertEqual(frame.node_variation, NodeVariation.TOPHUNG)
         self.assertEqual(frame.power_mode, 1)
+        self.assertEqual(frame.build_number, 7)
         self.assertEqual(frame.serial_number, '01:02:03:04:05:06:06:08')
         self.assertEqual(frame.state, 1)
         self.assertEqual(frame.current_position.position, 12)
@@ -84,7 +82,7 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
             '<FrameGetNodeInformationNotification node_id=23 oder=1234 placement=2 '
             'name=\'Fnord23\' velocity=3 node_type=\'NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND\' '
             'product_group=23 product_type=13 node_variation=NodeVariation.TOPHUNG '
-            'power_mode=1 serial_number=\'01:02:03:04:05:06:06:08\' state=1 '
+            'power_mode=1 build_number=7 serial_number=\'01:02:03:04:05:06:06:08\' state=1 '
             'current_position=\'0 %\' target=\'0 %\' current_position_fp1=\'2 %\' '
             'current_position_fp2=\'4 %\' current_position_fp3=\'6 %\' current_position_fp4=\'8 %\' '
             'remaining_time=1 timestamp=b\'\\x03\\x03\\x02\\x03\' nbr_of_alias=23 '

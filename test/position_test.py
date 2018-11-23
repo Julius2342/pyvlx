@@ -10,6 +10,7 @@ class TestSlip(unittest.TestCase):
     # pylint: disable=invalid-name
 
     def test_no_position(self):
+        """Test empty Position object."""
         self.assertEqual(Position().raw, b'\xF7\xFF')
 
     def test_raw(self):

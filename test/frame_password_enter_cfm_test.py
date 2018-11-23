@@ -9,17 +9,17 @@ class TestFramePasswordEnterConfirmation(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    def test_discover_node_request(self):
+    def test_bytes(self):
         """Test FramePasswordEnterConfirmation."""
         frame = FramePasswordEnterConfirmation()
         self.assertEqual(bytes(frame), b'\x00\x040\x01\x005')
 
-    def test_discover_node_request_error(self):
+    def test_bytes_error(self):
         """Test failed FramePasswordEnterConfirmation."""
         frame = FramePasswordEnterConfirmation(status=PasswordEnterConfirmationStatus.FAILED)
         self.assertEqual(bytes(frame), b'\x00\x040\x01\x014')
 
-    def test_discover_node_request_from_raw(self):
+    def test_frame_from_raw(self):
         """Test parse FramePasswordEnterConfirmation from raw."""
         frame = frame_from_raw(b'\x00\x040\x01\x014')
         self.assertTrue(isinstance(frame, FramePasswordEnterConfirmation))

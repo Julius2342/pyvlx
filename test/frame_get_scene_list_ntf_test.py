@@ -9,7 +9,7 @@ class TestFrameGetSceneListNotification(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    def test_discover_node_request(self):
+    def test_bytes(self):
         """Test FrameGetSceneListNotification."""
         frame = FrameGetSceneListNotification()
         frame.scenes = [(0, 'All Windows Closed'), (1, 'Sleeping Wide Open'), (2, 'Bath Open')]
@@ -30,7 +30,7 @@ class TestFrameGetSceneListNotification(unittest.TestCase):
             + b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
             + b'\x00\x00\x00\x00\x00\x00\x00\x00\x03\xe2')
 
-    def test_discover_node_request_from_raw(self):
+    def test_frame_from_raw(self):
         """Test parse FrameGetSceneListNotification from raw."""
         frame = frame_from_raw(
             b'\x00\xc8\x04\x0e\x03\x00All Window'

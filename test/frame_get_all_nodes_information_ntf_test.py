@@ -18,7 +18,7 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
         b'\x00\x0c\x00{\x04\xd2\t)\r\x80\x11\xd7\x00\x01\x03\x03\x02\x03\x17012'\
         b'34567890ABCDEFT'
 
-    def test_discover_node_request(self):
+    def test_bytes(self):
         """Test FrameGetAllNodesInformationNotification."""
         frame = FrameGetAllNodesInformationNotification()
         frame.node_id = 23
@@ -46,7 +46,7 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
         frame.alias_array = b'01234567890ABCDEF'
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_discover_node_request_from_raw(self):
+    def test_frame_from_raw(self):
         """Test parse FrameGetAllNodesInformationNotification from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameGetAllNodesInformationNotification))
