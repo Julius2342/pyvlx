@@ -14,14 +14,16 @@ The [current state can be found here](https://github.com/Julius2342/pyvlx/blob/m
 
 This wrapper can already:
 
-* Login to KLF 200 with password
-* Retrieve scene list
-* Run/activate scene
+* Login to KLF 200 with password.
+* Retrieve scene list.
+* Run/activate scene.
+* Retrieve object list.
 * Set position of specific window (50%)
 
 Stay tuned!
 
-<!--
+**Note:** To use version 0.2.\* you have to install the [new Firmware](https://www.velux.com/api/klf200) on your KLF device. If you dont want to use the new firmware install pyvlx==0.1.6.
+
 Installation
 ------------
 
@@ -30,7 +32,6 @@ PyVLX can be installed via:
 ```bash
 pip3 install pyvlx
 ```
--->
 
 Basic Operations
 ----------------
