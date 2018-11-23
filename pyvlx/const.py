@@ -223,6 +223,8 @@ class Command(Enum):
 
 
 class NodeTypeWithSubtype(Enum):
+    """Enum class for node type plus sub type combined values."""
+
     # pylint: disable=invalid-name
     NO_TYPE = 0
     INTERIOR_VENETIAN_BLIND = 0x0040
@@ -288,6 +290,7 @@ class NodeType(Enum):
 
 class NodeVariation(Enum):
     """Enum class for node variations."""
+
     NOT_SET = 0
     TOPHUNG = 1
     KIP = 2
