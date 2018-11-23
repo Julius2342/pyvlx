@@ -1,0 +1,5 @@
+
+config:
+    host: "192.168.2.127"
+    password: "velux123"
+    port: 1234
