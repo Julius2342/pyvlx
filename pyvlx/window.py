@@ -1,6 +1,8 @@
 """Module for window openers."""
-
 from .node import Node
+from .command_send import CommandSend
+from .position import Position
+from .exception import PyVLXException
 
 
 class Window(Node):
@@ -20,10 +22,17 @@ class Window(Node):
                 self.name,
                 self.node_id, self.rain_sensor)
 
+    async def set_position_percent(self, position_percent):
+        """Set window to desired position."""
+        command_send = CommandSend(pyvlx=self.pyvlx, node_id=self.node_id, position=Position(position_percent=position_percent))
+        await command_send.do_api_call()
+        if not command_send.success:
+            raise PyVLXException("Unable to send command")
+
     async def open(self):
         """Open window."""
-        print("Open window: ", self.name)
+        await self.set_position_percent(0)
 
     async def close(self):
         """Close window."""
-        print("Close window: ", self.name)
+        await self.set_position_percent(100)

@@ -29,7 +29,7 @@ class FrameCommandSendRequest(FrameBase):
         ret += bytes([0])
         ret += bytes([0])
         # Main parameter + functional parameter (in our case: position)
-        ret += bytes([self.position * 2, 0])
+        ret += bytes(self.position)
         ret += bytes(32)
         # Nodes array: Number of nodes + node array + padding
         ret += bytes([len(self.node_ids)])  # index array count
@@ -60,7 +60,7 @@ class FrameCommandSendRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameCommandSendRequest node_ids={} position={} session_id={}/>'.format(self.node_ids, self.position, self.session_id)
+        return '<FrameCommandSendRequest node_ids={} position="{}" session_id={}/>'.format(self.node_ids, self.position, self.session_id)
 
 
 class CommandSendConfirmationStatus(Enum):

@@ -1,26 +1,29 @@
 """Module for retrieving scene list from API."""
-from .frame_activate_scene import FrameActivateSceneRequest, FrameActivateSceneConfirmation, ActivateSceneConfirmationStatus
-from .frame_command_send import FrameSessionFinishedNotification, \
-    FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification
-from .api_event import ApiEvent
-from .session_id import get_new_session_id
+from pyvlx.frame_command_send import FrameCommandSendRequest, FrameCommandSendConfirmation, \
+    FrameSessionFinishedNotification, FrameCommandRunStatusNotification, CommandSendConfirmationStatus, \
+    FrameCommandRemainingTimeNotification
+from pyvlx.api_event import ApiEvent
+from pyvlx.session_id import get_new_session_id
 
 
-class ActivateScene(ApiEvent):
-    """Class for activating scene via API."""
+class CommandSend(ApiEvent):
+    """Class for sending command to API."""
 
-    def __init__(self, pyvlx, scene_id, wait_for_completion=True, timeout_in_seconds=60):
+    # pylint: disable=too-many-arguments
+
+    def __init__(self, pyvlx, node_id, position, wait_for_completion=True, timeout_in_seconds=60):
         """Initialize SceneList class."""
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
         self.success = False
-        self.scene_id = scene_id
+        self.node_id = node_id
+        self.position = position
         self.wait_for_completion = wait_for_completion
         self.session_id = None
 
     async def handle_frame(self, frame):
         """Handle incoming API frame, return True if this was the expected frame."""
-        if isinstance(frame, FrameActivateSceneConfirmation) and frame.session_id == self.session_id:
-            if frame.status == ActivateSceneConfirmationStatus.ACCEPTED:
+        if isinstance(frame, FrameCommandSendConfirmation) and frame.session_id == self.session_id:
+            if frame.status == CommandSendConfirmationStatus.ACCEPTED:
                 self.success = True
             return not self.wait_for_completion
         if isinstance(frame, FrameCommandRemainingTimeNotification) and frame.session_id == self.session_id:
@@ -37,4 +40,4 @@ class ActivateScene(ApiEvent):
     def request_frame(self):
         """Construct initiating frame."""
         self.session_id = get_new_session_id()
-        return FrameActivateSceneRequest(scene_id=self.scene_id, session_id=self.session_id)
+        return FrameCommandSendRequest(node_ids=[self.node_id], position=self.position, session_id=self.session_id)

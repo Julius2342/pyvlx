@@ -2,6 +2,7 @@
 import unittest
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frame_command_send import FrameCommandSendRequest
+from pyvlx.position import Position
 
 
 class TestFrameCommandSendRequest(unittest.TestCase):
@@ -18,7 +19,7 @@ class TestFrameCommandSendRequest(unittest.TestCase):
 
     def test_bytes(self):
         """Test FrameCommandSendRequest with NO_TYPE."""
-        frame = FrameCommandSendRequest(node_ids=[1, 2, 3], position=75, session_id=1000)
+        frame = FrameCommandSendRequest(node_ids=[1, 2, 3], position=Position(position_percent=75), session_id=1000)
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
     def test_frame_from_raw(self):
@@ -31,7 +32,7 @@ class TestFrameCommandSendRequest(unittest.TestCase):
 
     def test_str(self):
         """Test string representation of FrameCommandSendRequest."""
-        frame = FrameCommandSendRequest(node_ids=[1, 2, 3], position=75, session_id=1000)
+        frame = FrameCommandSendRequest(node_ids=[1, 2, 3], position=Position(position=12345), session_id=1000)
         self.assertEqual(
             str(frame),
-            '<FrameCommandSendRequest node_ids=[1, 2, 3] position=75 session_id=1000/>')
+            '<FrameCommandSendRequest node_ids=[1, 2, 3] position="24 %" session_id=1000/>')

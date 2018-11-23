@@ -19,6 +19,10 @@ class Position():
         else:
             self.raw = Position.UNKNOWN_POSITION
 
+    def __bytes__(self):
+        """Convert object in byte representation."""
+        return self.raw
+
     @property
     def known(self):
         """Known property, true if position is not in an unknown position."""
