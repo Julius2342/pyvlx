@@ -12,7 +12,7 @@ from .connection import Connection
 from .login import Login
 from .exception import PyVLXException
 # from .devices import Devices
-from .scene_list import SceneList
+from .scenes import Scenes
 
 
 class PyVLX:
@@ -29,7 +29,7 @@ class PyVLX:
         if log_frames:
             self.connection.register_frame_received_cb(self.log_frame)
         # self.devices = Devices(self)
-        self.scenes = SceneList(self)
+        self.scenes = Scenes(self)
 
     async def connect(self):
         """Connect to KLF 200."""
