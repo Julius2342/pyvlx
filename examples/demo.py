@@ -14,9 +14,9 @@ async def main(loop):
     await pyvlx.scenes["All Windows Closed"].run()
 
     await pyvlx.load_nodes()
-    await pyvlx.nodes['Treppe'].open()
-    await pyvlx.nodes['Treppe'].close()
-    await pyvlx.nodes['Treppe'].set_position_percent(45)
+    await pyvlx.nodes['Bath'].open()
+    await pyvlx.nodes['Bath'].close()
+    await pyvlx.nodes['Bath'].set_position_percent(45)
 
 if __name__ == '__main__':
     # pylint: disable=invalid-name
