@@ -76,6 +76,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.product_type = 0
         self.node_variation = NodeVariation.NOT_SET
         self.power_mode = 0
+        self.build_number = 0
         self._serial_number = bytes(8)
         self.state = 0
         self.current_position = Position()
@@ -107,6 +108,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         payload += bytes([self.product_type])
         payload += bytes([self.node_variation.value])
         payload += bytes([self.power_mode])
+        payload += bytes([self.build_number])  # <-- hey @VELUX: your documentation is wrong here
         payload += bytes(self._serial_number)
         payload += bytes([self.state])
         payload += bytes(self.current_position.raw)
@@ -133,24 +135,25 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.product_type = payload[72]
         self.node_variation = NodeVariation(payload[73])
         self.power_mode = payload[74]
-        self._serial_number = payload[75:83]
-        self.state = payload[83]
-        self.current_position = Position(payload[84:86])
-        self.target = Position(payload[86:88])
-        self.current_position_fp1 = Position(payload[88:90])
-        self.current_position_fp2 = Position(payload[90:92])
-        self.current_position_fp3 = Position(payload[92:94])
-        self.current_position_fp4 = Position(payload[94:96])
-        self.remaining_time = payload[96] * 256 + payload[97]
-        self.timestamp = payload[98:102]
-        self.nbr_of_alias = payload[102]
-        self.alias_array = payload[103:124]
+        self.build_number = payload[75]  # <-- hey @VELUX: your documentation is wrong here
+        self._serial_number = payload[76:84]
+        self.state = payload[84]
+        self.current_position = Position(payload[85:87])
+        self.target = Position(payload[87:89])
+        self.current_position_fp1 = Position(payload[89:91])
+        self.current_position_fp2 = Position(payload[91:93])
+        self.current_position_fp3 = Position(payload[93:95])
+        self.current_position_fp4 = Position(payload[95:97])
+        self.remaining_time = payload[97] * 256 + payload[98]
+        self.timestamp = payload[99:103]
+        self.nbr_of_alias = payload[103]
+        self.alias_array = payload[104:125]
 
     def __str__(self):
         """Return human readable string."""
         return '<FrameGetNodeInformationNotification node_id={} oder={} ' \
             'placement={} name=\'{}\' velocity={} node_type=\'{}\' product_group={} ' \
-            'product_type={} node_variation={} power_mode={} ' \
+            'product_type={} node_variation={} power_mode={} build_number={} ' \
             'serial_number=\'{}\' state={} current_position=\'{}\' ' \
             'target=\'{}\' current_position_fp1=\'{}\' current_position_fp2=\'{}\' ' \
             'current_position_fp3=\'{}\' current_position_fp4=\'{}\' ' \
@@ -165,6 +168,7 @@ class FrameGetNodeInformationNotification(FrameBase):
                 self.product_type,
                 self.node_variation,
                 self.power_mode,
+                self.build_number,
                 self.serial_number,
                 self.state,
                 self.current_position,
