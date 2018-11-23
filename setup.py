@@ -16,6 +16,7 @@ setup(
     download_url='https://github.com/Julius2342/pyvlx/archive/'+VERSION+'.zip',
     url='https://github.com/Julius2342/pyvlx',
 
+    description="PyVLX is a wrapper for the Velux KLF 200 API.\n\nPyVLX enables you to run scenes and or open and close velux windows.",
     author='Julius Mittenzwei',
     author_email='julius@mittenzwei.com',
     license='LGPL',

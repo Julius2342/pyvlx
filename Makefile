@@ -25,7 +25,10 @@ build:
 
 pypi:
 	# python3 setup.py register -r pypi
-	@python3 setup.py sdist upload -r pypi
+	#@python3 setup.py sdist upload -r pypi
+	@rm dist/*
+	@python setup.py sdist
+	@twine upload dist/*
 
 pylint:
 	@pylint -j 8 --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
