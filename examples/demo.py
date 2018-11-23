@@ -11,23 +11,19 @@ async def main(loop):
 
     await pyvlx.connect()
     await pyvlx.load_scenes()
-
     await pyvlx.scenes["All Windows Closed"].run()
 
-    #get_node_information = GetNodeInformation(connection=connection, node_id=6)
-    #await get_node_information.do_api_call()
-    #print(get_node_information.node)
-
-    #print("---------------------------------------")
-
-    #from pyvlx.get_node_information import GetNodeInformation
-    #from pyvlx.get_all_nodes_information import GetAllNodesInformation
+    # BACKUP:
+    #
+    # get_node_information = GetNodeInformation(connection=connection, node_id=6)
+    # await get_node_information.do_api_call()
+    # print(get_node_information.node)
+    #
+    # from pyvlx.get_node_information import GetNodeInformation
+    # from pyvlx.get_all_nodes_information import GetAllNodesInformation
     # get_all_nodes_information = GetAllNodesInformation(connection=pyvlx.connection)
     # await get_all_nodes_information.do_api_call()
     # print(get_all_nodes_information.nodes)
-
-
-    # BACKUP:
     #
     # from pyvlx.frame_command_send import FrameCommandSendRequest
     # connection.write(FrameGetNodeInformationRequest(node_id=0))
