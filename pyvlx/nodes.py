@@ -9,7 +9,7 @@ class Nodes:
     """Object for storing node objects."""
 
     def __init__(self, pyvlx):
-        """Initalize Nodes object."""
+        """Initialize Nodes object."""
         self.pyvlx = pyvlx
         self.__nodes = []
 
