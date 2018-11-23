@@ -5,6 +5,8 @@ from pyvlx.activate_scene import ActivateScene
 class Scene:
     """Object for scene."""
 
+    # pylint: disable=too-few-public-methods
+
     def __init__(self, pyvlx, scene_id, name):
         """Initialize Scene object."""
         self.pyvlx = pyvlx
