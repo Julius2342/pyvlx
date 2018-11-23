@@ -5,9 +5,9 @@ import asyncio
 class ApiEvent():
     """Base class for waiting a specific frame from API connection."""
 
-    def __init__(self, connection, timeout_in_seconds=10):
+    def __init__(self, pyvlx, timeout_in_seconds=10):
         """Initialize ApiEvent."""
-        self.connection = connection
+        self.pyvlx = pyvlx
         self.response_received_or_timeout = asyncio.Event()
 
         self.success = False
@@ -17,13 +17,13 @@ class ApiEvent():
 
     async def do_api_call(self):
         """Start. Sending and waiting for answer."""
-        self.connection.register_frame_received_cb(
+        self.pyvlx.connection.register_frame_received_cb(
             self.response_rec_callback)
         await self.send_frame()
         await self.start_timeout()
         await self.response_received_or_timeout.wait()
         await self.stop_timeout()
-        self.connection.unregister_frame_received_cb(self.response_rec_callback)
+        self.pyvlx.connection.unregister_frame_received_cb(self.response_rec_callback)
 
     async def handle_frame(self, frame):
         """Handle incoming API frame, return True if this was the expected frame."""
@@ -31,7 +31,7 @@ class ApiEvent():
 
     async def send_frame(self):
         """Send frame to API connection."""
-        self.connection.write(self.request_frame())
+        self.pyvlx.connection.write(self.request_frame())
 
     def request_frame(self):
         """Construct initiating framw."""
@@ -48,7 +48,7 @@ class ApiEvent():
 
     async def start_timeout(self):
         """Start timeout."""
-        self.timeout_handle = self.connection.loop.call_later(
+        self.timeout_handle = self.pyvlx.connection.loop.call_later(
             self.timeout_in_seconds, self.timeout)
 
     async def stop_timeout(self):

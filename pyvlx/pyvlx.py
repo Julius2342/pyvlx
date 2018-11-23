@@ -11,7 +11,7 @@ from .config import Config
 from .connection import Connection
 from .login import Login
 from .exception import PyVLXException
-# from .devices import Devices
+from .nodes import Nodes
 from .scenes import Scenes
 
 
@@ -28,13 +28,13 @@ class PyVLX:
         self.connection = Connection(loop=self.loop, config=self.config)
         if log_frames:
             self.connection.register_frame_received_cb(self.log_frame)
-        # self.devices = Devices(self)
+        self.nodes = Nodes(self)
         self.scenes = Scenes(self)
 
     async def connect(self):
         """Connect to KLF 200."""
         await self.connection.connect()
-        login = Login(connection=self.connection, password=self.config.password)
+        login = Login(pyvlx=self, password=self.config.password)
         await login.do_api_call()
         if not login.success:
             raise PyVLXException("Unable to login")
@@ -43,10 +43,9 @@ class PyVLX:
         """Disconnect from KLF 200."""
         self.connection.disconnect()
 
-    async def load_devices(self):
-        """Load devices from KLF 200."""
-        # await self.devices.load()
-        pass
+    async def load_nodes(self, node_id=None):
+        """Load devices from KLF 200, if no node_id is specified all nodes are loaded."""
+        await self.nodes.load(node_id)
 
     async def load_scenes(self):
         """Load scenes from KLF 200."""

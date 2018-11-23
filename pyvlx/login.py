@@ -1,14 +1,14 @@
 """Module for handling the login to API."""
-from pyvlx.frame_password_enter import FramePasswordEnterRequest, FramePasswordEnterConfirmation, PasswordEnterConfirmationStatus
-from pyvlx.api_event import ApiEvent
+from .frame_password_enter import FramePasswordEnterRequest, FramePasswordEnterConfirmation, PasswordEnterConfirmationStatus
+from .api_event import ApiEvent
 
 
 class Login(ApiEvent):
     """Class for handling login to API."""
 
-    def __init__(self, connection, password):
+    def __init__(self, pyvlx, password):
         """Initialize login class."""
-        super().__init__(connection)
+        super().__init__(pyvlx=pyvlx)
         self.password = password
         self.success = False
 

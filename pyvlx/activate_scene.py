@@ -1,16 +1,16 @@
 """Module for retrieving scene list from API."""
-from pyvlx.frame_activate_scene import FrameActivateSceneRequest, FrameActivateSceneConfirmation, ActivateSceneConfirmationStatus
-from pyvlx.frame_command_send import FrameSessionFinishedNotification, FrameCommandRunStatusNotification
-from pyvlx.api_event import ApiEvent
-from pyvlx.session_id import get_new_session_id
+from .frame_activate_scene import FrameActivateSceneRequest, FrameActivateSceneConfirmation, ActivateSceneConfirmationStatus
+from .frame_command_send import FrameSessionFinishedNotification, FrameCommandRunStatusNotification
+from .api_event import ApiEvent
+from .session_id import get_new_session_id
 
 
 class ActivateScene(ApiEvent):
     """Class for retrieving scene list from API."""
 
-    def __init__(self, connection, scene_id, wait_for_completion=True, timeout_in_seconds=60):
+    def __init__(self, pyvlx, scene_id, wait_for_completion=True, timeout_in_seconds=60):
         """Initialize SceneList class."""
-        super().__init__(connection, timeout_in_seconds)
+        super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
         self.success = False
         self.scene_id = scene_id
         self.wait_for_completion = wait_for_completion

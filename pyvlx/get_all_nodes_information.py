@@ -1,20 +1,19 @@
 """Module for retrieving node information from API."""
-from pyvlx.frame_get_all_nodes_information import FrameGetAllNodesInformationRequest, \
+from .frame_get_all_nodes_information import FrameGetAllNodesInformationRequest, \
     FrameGetAllNodesInformationConfirmation, FrameGetAllNodesInformationNotification, \
     FrameGetAllNodesInformationFinishedNotification
-from pyvlx.api_event import ApiEvent
-from .node_helper import convert_frame_to_node
+from .api_event import ApiEvent
 
 
 class GetAllNodesInformation(ApiEvent):
     """Class for retrieving node informationfrom API."""
 
-    def __init__(self, connection):
+    def __init__(self, pyvlx):
         """Initialize SceneList class."""
-        super().__init__(connection)
+        super().__init__(pyvlx=pyvlx)
         self.number_of_nodes = 0
         self.success = False
-        self.nodes = []
+        self.notification_frames = []
 
     async def handle_frame(self, frame):
         """Handle incoming API frame, return True if this was the expected frame."""
@@ -23,11 +22,9 @@ class GetAllNodesInformation(ApiEvent):
             # We are still waiting for FrameGetAllNodesInformationNotification
             return False
         if isinstance(frame, FrameGetAllNodesInformationNotification):
-            node = convert_frame_to_node(frame)
-            if node is not None:
-                self.nodes.append(node)
+            self.notification_frames.append(frame)
         if isinstance(frame, FrameGetAllNodesInformationFinishedNotification):
-            if self.number_of_nodes != len(self.nodes):
+            if self.number_of_nodes != len(self.notification_frames):
                 print("Warning: number of received scenes does not match expected number")
             self.success = True
             return True

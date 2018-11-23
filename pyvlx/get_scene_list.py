@@ -8,8 +8,7 @@ class GetSceneList(ApiEvent):
 
     def __init__(self, pyvlx):
         """Initialize SceneList class."""
-        super().__init__(connection=pyvlx.connection)
-        self.pyvlx = pyvlx
+        super().__init__(pyvlx=pyvlx)
         self.success = False
         self.count_scenes = None
         self.scenes = []
