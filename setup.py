@@ -3,7 +3,6 @@
 from setuptools import setup, find_packages
 
 REQUIRES = [
-    'aiohttp',
     'PyYAML'
 ]
 
