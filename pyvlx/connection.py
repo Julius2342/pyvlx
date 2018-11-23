@@ -98,7 +98,6 @@ class Connection:
         """Write frame to Bus."""
         if not isinstance(frame, FrameBase):
             raise PyVLXException("Frame not of type FrameBase", frame_type=type(frame))
-        # print("XXXXXXX FRAME SENT:     ", frame)
         self.transport.write(slip_pack(bytes(frame)))
 
     @staticmethod
@@ -111,7 +110,6 @@ class Connection:
 
     def frame_received_cb(self, frame):
         """Received message."""
-        # print("YYYYYY FRAME RECEIVED: ", frame)
         for frame_received_cb in self.frame_received_cbs:
             # pylint: disable=not-callable
             self.loop.create_task(frame_received_cb(frame))
