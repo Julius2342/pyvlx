@@ -5,6 +5,8 @@ Node object is an interface class and should
 be derived by other objects like window openers
 and roller shutters.
 """
+from .set_node_name import SetNodeName
+from .exception import PyVLXException
 
 
 # pylint: disable=too-few-public-methods
@@ -15,6 +17,14 @@ class Node:
         """Initialize Node object."""
         self.pyvlx = pyvlx
         self.node_id = node_id
+        self.name = name
+
+    async def rename(self, name):
+        """Change name of node."""
+        set_node_name = SetNodeName(pyvlx=self.pyvlx, node_id=self.node_id, name=name)
+        await set_node_name.do_api_call()
+        if not set_node_name.success:
+            raise PyVLXException("Unable to rename node")
         self.name = name
 
     def __str__(self):

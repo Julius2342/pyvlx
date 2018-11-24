@@ -45,7 +45,6 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         frame.timestamp = b'\x03\x03\x02\x03'
         frame.nbr_of_alias = 23
         frame.alias_array = b'01234567890123456789'
-        print(bytes(frame))
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
     def test_frame_from_raw(self):
