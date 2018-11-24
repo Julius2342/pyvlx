@@ -65,7 +65,7 @@ class FrameGetNodeInformationConfirmation(FrameBase):
 class FrameGetNodeInformationNotification(FrameBase):
     """Frame for notification of note information request."""
 
-    PAYLOAD_LEN = 121
+    PAYLOAD_LEN = 124
 
     def __init__(self):
         """Init Frame."""
@@ -92,7 +92,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.remaining_time = 0
         self.timestamp = bytes(4)
         self.nbr_of_alias = 0
-        self.alias_array = bytes(16)
+        self.alias_array = bytes(20)  # @VELUX: Looks like your documentation is wrong here. Alias array has 20 bytes.
 
     @property
     def serial_number(self):
@@ -124,7 +124,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         payload += bytes([self.remaining_time >> 8 & 255, self.remaining_time & 255])
         payload += bytes(self.timestamp)
         payload += bytes([self.nbr_of_alias])
-        payload += bytes(self.alias_array)
+        payload += self.alias_array
         return payload
 
     def from_payload(self, payload):

@@ -10,13 +10,14 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00|\x02\x10\x17\x04\xd2\x02Fnord23\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x03\x00@\x17\r\x01\x01\x07\x01\x02\x03\x04\x05\x06\x06\x08\x01' \
-        b'\x00\x0c\x00{\x04\xd2\t)\r\x80\x11\xd7\x00\x01\x03\x03\x02\x03\x17012'\
-        b'34567890ABCDEF@'
+    EXAMPLE_FRAME = \
+        b'\x00\x7f\x02\x10\x17\x04\xd2\x02Fnord23\x00\x00\x00\x00\x00' \
+        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
+        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
+        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
+        b'\x00\x00\x00\x00\x00\x00\x00\x03\x00@\x17\r\x01\x01\x07\x01' \
+        b'\x02\x03\x04\x05\x06\x06\x08\x01\x00\x0c\x00{\x04\xd2\t)\r\x80' \
+        b'\x11\xd7\x00\x01\x03\x03\x02\x03\x1701234567890123456789u'
 
     def test_bytes(self):
         """Test FrameGetNodeInformationNotification."""
@@ -43,7 +44,8 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         frame.remaining_time = 1
         frame.timestamp = b'\x03\x03\x02\x03'
         frame.nbr_of_alias = 23
-        frame.alias_array = b'01234567890ABCDEF'
+        frame.alias_array = b'01234567890123456789'
+        print(bytes(frame))
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
     def test_frame_from_raw(self):
@@ -72,7 +74,7 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         self.assertEqual(frame.remaining_time, 1)
         self.assertEqual(frame.timestamp, b'\x03\x03\x02\x03')
         self.assertEqual(frame.nbr_of_alias, 23)
-        self.assertEqual(frame.alias_array, b'01234567890ABCDEF')
+        self.assertEqual(frame.alias_array, b'01234567890123456789')
 
     def test_str(self):
         """Test string representation of FrameGetNodeInformationNotification."""
@@ -86,4 +88,4 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
             'current_position=\'0 %\' target=\'0 %\' current_position_fp1=\'2 %\' '
             'current_position_fp2=\'4 %\' current_position_fp3=\'6 %\' current_position_fp4=\'8 %\' '
             'remaining_time=1 timestamp=b\'\\x03\\x03\\x02\\x03\' nbr_of_alias=23 '
-            'alias_array=\'30:31:32:33:34:35:36:37:38:39:30:41:42:43:44:45:46\'/>')
+            'alias_array=\'30:31:32:33:34:35:36:37:38:39:30:31:32:33:34:35:36:37:38:39\'/>')
