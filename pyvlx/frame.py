@@ -24,7 +24,7 @@ class FrameBase:
             return
         # pylint: disable=no-member
         if len(payload) != self.PAYLOAD_LEN:
-            raise PyVLXException("Invalid payload len", expected_len=self.PAYLOAD_LEN, current_len=len(payload))
+            raise PyVLXException("Invalid payload len", expected_len=self.PAYLOAD_LEN, current_len=len(payload), frame_type=type(self).__name__)
 
     def get_payload(self):
         """Return Payload."""
