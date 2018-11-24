@@ -17,10 +17,8 @@ class Login(ApiEvent):
         if not isinstance(frame, FramePasswordEnterConfirmation):
             return False
         if frame.status == PasswordEnterConfirmationStatus.FAILED:
-            print("Login failed")
             self.success = False
         if frame.status == PasswordEnterConfirmationStatus.SUCCESSFUL:
-            print("Login successful")
             self.success = True
         return True
 
