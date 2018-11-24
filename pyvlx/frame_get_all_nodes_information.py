@@ -63,9 +63,7 @@ class FrameGetAllNodesInformationConfirmation(FrameBase):
 class FrameGetAllNodesInformationNotification(FrameBase):
     """Frame for notification of all nodes information request."""
 
-    # pylint: disable=too-many-instance-attributes
-
-    PAYLOAD_LEN = 121
+    PAYLOAD_LEN = 124
 
     def __init__(self):
         """Init Frame."""
@@ -92,7 +90,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.remaining_time = 0
         self.timestamp = bytes(4)
         self.nbr_of_alias = 0
-        self.alias_array = bytes(16)
+        self.alias_array = bytes(20)  # @VELUX: Looks like your documentation is wrong here. Alias array has 20 bytes.
 
     @property
     def serial_number(self):
@@ -124,7 +122,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         payload += bytes([self.remaining_time >> 8 & 255, self.remaining_time & 255])
         payload += bytes(self.timestamp)
         payload += bytes([self.nbr_of_alias])
-        payload += bytes(self.alias_array)
+        payload += self.alias_array
         return payload
 
     def from_payload(self, payload):
