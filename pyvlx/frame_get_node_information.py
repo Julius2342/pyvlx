@@ -65,8 +65,6 @@ class FrameGetNodeInformationConfirmation(FrameBase):
 class FrameGetNodeInformationNotification(FrameBase):
     """Frame for notification of note information request."""
 
-    # pylint: disable=too-many-instance-attributes
-
     PAYLOAD_LEN = 121
 
     def __init__(self):

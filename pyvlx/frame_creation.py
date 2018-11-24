@@ -9,6 +9,8 @@ from .frame_error_notification import FrameErrorNotification
 from .frame_command_send import FrameCommandSendRequest, FrameCommandSendConfirmation, FrameCommandRunStatusNotification, \
     FrameCommandRemainingTimeNotification, FrameSessionFinishedNotification
 from .frame_activate_scene import FrameActivateSceneRequest, FrameActivateSceneConfirmation
+from .frame_get_protocol_version import FrameGetProtocolVersionRequest, FrameGetProtocolVersionConfirmation
+from .frame_get_version import FrameGetVersionRequest, FrameGetVersionConfirmation
 from .const import Command
 from .frame_helper import extract_from_frame
 
@@ -80,4 +82,14 @@ def create_frame(command):
         return FrameActivateSceneRequest()
     if command == Command.GW_ACTIVATE_SCENE_CFM:
         return FrameActivateSceneConfirmation()
+
+    if command == Command.GW_GET_VERSION_REQ:
+        return FrameGetVersionRequest()
+    if command == Command.GW_GET_VERSION_CFM:
+        return FrameGetVersionConfirmation()
+    if command == Command.GW_GET_PROTOCOL_VERSION_REQ:
+        return FrameGetProtocolVersionRequest()
+    if command == Command.GW_GET_PROTOCOL_VERSION_CFM:
+        return FrameGetProtocolVersionConfirmation()
+
     return None

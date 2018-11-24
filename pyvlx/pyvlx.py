@@ -10,6 +10,8 @@ import asyncio
 from .config import Config
 from .connection import Connection
 from .login import Login
+from .get_version import GetVersion
+from .get_protocol_version import GetProtocolVersion
 from .exception import PyVLXException
 from .nodes import Nodes
 from .scenes import Scenes
@@ -30,20 +32,39 @@ class PyVLX:
             self.connection.register_frame_received_cb(self.log_frame)
         self.nodes = Nodes(self)
         self.scenes = Scenes(self)
+        self.version = None
+        self.protocol_version = None
 
     async def connect(self):
         """Connect to KLF 200."""
+        self.logger.warning("Connecting to API.")
         await self.connection.connect()
         login = Login(pyvlx=self, password=self.config.password)
         await login.do_api_call()
         if not login.success:
             raise PyVLXException("Unable to login")
 
+    async def update_version(self):
+        """Retrieve version and protocol version from API."""
+        get_version = GetVersion(pyvlx=self)
+        await get_version.do_api_call()
+        if not get_version.success:
+            raise PyVLXException("Unable to retrieve version")
+        self.version = get_version.version
+        get_protocol_version = GetProtocolVersion(pyvlx=self)
+        await get_protocol_version.do_api_call()
+        if not get_protocol_version.success:
+            raise PyVLXException("Unable to retrieve protocol version")
+        self.protocol_version = get_protocol_version.version
+        self.logger.warning(
+            "Connected to: %s, protocol version: %s",
+            self.version, self.protocol_version)
+
     async def send_frame(self, frame):
         """Send frame to API via connection."""
         if not self.connection.connected:
-            self.logger.warning("Not connected, establishing connection to KLF 200")
             await self.connect()
+            await self.update_version()
         self.connection.write(frame)
 
     async def disconnect(self):
