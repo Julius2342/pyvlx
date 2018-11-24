@@ -5,7 +5,6 @@ PyVLX is an asynchronous library for connecting to
 a VELUX KLF 200 device for controlling window openers
 and roller shutters.
 """
-import logging
 import asyncio
 from .config import Config
 from .connection import Connection
@@ -15,6 +14,7 @@ from .get_protocol_version import GetProtocolVersion
 from .exception import PyVLXException
 from .nodes import Nodes
 from .scenes import Scenes
+from .log import PYVLXLOG
 
 
 class PyVLX:
@@ -25,7 +25,6 @@ class PyVLX:
     def __init__(self, path=None, host=None, password=None, log_frames=False, loop=None):
         """Initialize PyVLX class."""
         self.loop = loop or asyncio.get_event_loop()
-        self.logger = logging.getLogger('pyvlx.log')
         self.config = Config(self, path, host, password)
         self.connection = Connection(loop=self.loop, config=self.config)
         if log_frames:
@@ -37,7 +36,7 @@ class PyVLX:
 
     async def connect(self):
         """Connect to KLF 200."""
-        self.logger.warning("Connecting to API.")
+        PYVLXLOG.warning("Connecting to API.")
         await self.connection.connect()
         login = Login(pyvlx=self, password=self.config.password)
         await login.do_api_call()
@@ -56,7 +55,7 @@ class PyVLX:
         if not get_protocol_version.success:
             raise PyVLXException("Unable to retrieve protocol version")
         self.protocol_version = get_protocol_version.version
-        self.logger.warning(
+        PYVLXLOG.warning(
             "Connected to: %s, protocol version: %s",
             self.version, self.protocol_version)
 
@@ -81,4 +80,4 @@ class PyVLX:
 
     async def log_frame(self, frame):
         """Log frame to logger."""
-        self.logger.warning("%s", frame)
+        PYVLXLOG.warning("%s", frame)

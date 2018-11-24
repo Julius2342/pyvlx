@@ -13,6 +13,7 @@ from .frame_get_protocol_version import FrameGetProtocolVersionRequest, FrameGet
 from .frame_get_version import FrameGetVersionRequest, FrameGetVersionConfirmation
 from .const import Command
 from .frame_helper import extract_from_frame
+from .log import PYVLXLOG
 
 
 def frame_from_raw(raw):
@@ -20,7 +21,7 @@ def frame_from_raw(raw):
     command, payload = extract_from_frame(raw)
     frame = create_frame(command)
     if frame is None:
-        print("Command {0} not implemented, raw: {1}".format(command, ":".join("{:02x}".format(c) for c in raw)))
+        PYVLXLOG.warning("Command %s not implemented, raw: %s", command, ":".join("{:02x}".format(c) for c in raw))
         return None
     frame.validate_payload_len(payload)
     frame.from_payload(payload)

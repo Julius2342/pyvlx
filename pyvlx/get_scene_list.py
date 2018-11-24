@@ -1,6 +1,7 @@
 """Module for retrieving scene list from API."""
 from .frame_get_scene_list import FrameGetSceneListRequest, FrameGetSceneListConfirmation, FrameGetSceneListNotification
 from .api_event import ApiEvent
+from .log import PYVLXLOG
 
 
 class GetSceneList(ApiEvent):
@@ -25,7 +26,7 @@ class GetSceneList(ApiEvent):
                 # We are still waiting for FrameGetSceneListConfirmation(s)
                 return False
             if self.count_scenes != len(self.scenes):
-                self.pyvlx.logger.warning("Warning: number of received scenes does not match expected number")
+                PYVLXLOG.warning("Warning: number of received scenes does not match expected number")
             self.success = True
             return True
         return False

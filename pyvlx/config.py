@@ -1,8 +1,7 @@
 """Module for configuration."""
-
 import yaml
-
 from .exception import PyVLXException
+from .log import PYVLXLOG
 
 
 # pylint: disable=too-few-public-methods, too-many-arguments
@@ -22,7 +21,7 @@ class Config:
 
     def read_config(self, path):
         """Read configuration file."""
-        self.pyvlx.logger.info('Reading config file: ', path)
+        PYVLXLOG.info('Reading config file: %s', path)
         try:
             with open(path, 'r') as filehandle:
                 doc = yaml.load(filehandle)

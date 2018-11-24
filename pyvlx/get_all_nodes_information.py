@@ -3,6 +3,7 @@ from .frame_get_all_nodes_information import FrameGetAllNodesInformationRequest,
     FrameGetAllNodesInformationConfirmation, FrameGetAllNodesInformationNotification, \
     FrameGetAllNodesInformationFinishedNotification
 from .api_event import ApiEvent
+from .log import PYVLXLOG
 
 
 class GetAllNodesInformation(ApiEvent):
@@ -25,7 +26,7 @@ class GetAllNodesInformation(ApiEvent):
             self.notification_frames.append(frame)
         if isinstance(frame, FrameGetAllNodesInformationFinishedNotification):
             if self.number_of_nodes != len(self.notification_frames):
-                print("Warning: number of received scenes does not match expected number")
+                PYVLXLOG.warning("Number of received scenes does not match expected number")
             self.success = True
             return True
         return False

@@ -1,6 +1,7 @@
 """Helper module for Node objects."""
 from .const import NodeTypeWithSubtype
 from .opening_device import Window, Blind, RollerShutter
+from .log import PYVLXLOG
 
 
 def convert_frame_to_node(pyvlx, frame):
@@ -16,5 +17,5 @@ def convert_frame_to_node(pyvlx, frame):
             frame.node_type == NodeTypeWithSubtype.LOUVER_BLIND:
         return Blind(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
 
-    pyvlx.logger.warning("%s not implemented", frame.node_type)
+    PYVLXLOG.warning("%s not implemented", frame.node_type)
     return None
