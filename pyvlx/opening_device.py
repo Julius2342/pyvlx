@@ -27,7 +27,6 @@ class OpeningDevice(Node):
 class Window(OpeningDevice):
     """Window object."""
 
-    # pylint: disable=too-many-arguments
     def __init__(self, pyvlx, node_id, name, rain_sensor=False):
         """Initialize Window class."""
         super().__init__(pyvlx=pyvlx, node_id=node_id, name=name)

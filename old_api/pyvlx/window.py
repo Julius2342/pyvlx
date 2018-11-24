@@ -6,7 +6,6 @@ from .device import Device
 class Window(Device):
     """Class for window openers."""
 
-    # pylint: disable=too-many-arguments
     def __init__(self, pyvlx, ident, name, subtype, typeid):
         """Initialize Window class."""
         self.pyvlx = pyvlx

@@ -16,7 +16,6 @@ class Interface:
         self.token = None
         self.timeout = timeout
 
-    # pylint: disable=too-many-arguments
     async def api_call(self, verb, action, params=None, add_authorization_token=True, retry=False):
         """Send api call."""
         if add_authorization_token and not self.token:

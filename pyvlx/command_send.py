@@ -9,8 +9,6 @@ from pyvlx.session_id import get_new_session_id
 class CommandSend(ApiEvent):
     """Class for sending command to API."""
 
-    # pylint: disable=too-many-arguments
-
     def __init__(self, pyvlx, node_id, position, wait_for_completion=True, timeout_in_seconds=60):
         """Initialize SceneList class."""
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)

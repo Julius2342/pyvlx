@@ -6,7 +6,6 @@ from .device import Device
 class Blind(Device):
     """Class for blinds."""
 
-    # pylint: disable=too-many-arguments
     def __init__(self, pyvlx, ident, name, subtype, typeid):
         """Initialize blind class."""
         self.pyvlx = pyvlx

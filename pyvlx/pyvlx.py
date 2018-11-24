@@ -20,8 +20,6 @@ from .log import PYVLXLOG
 class PyVLX:
     """Class for PyVLX."""
 
-    # pylint: disable=too-many-arguments
-
     def __init__(self, path=None, host=None, password=None, log_frames=False, loop=None):
         """Initialize PyVLX class."""
         self.loop = loop or asyncio.get_event_loop()

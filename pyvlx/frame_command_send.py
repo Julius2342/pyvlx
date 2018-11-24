@@ -102,8 +102,6 @@ class FrameCommandSendConfirmation(FrameBase):
 class FrameCommandRunStatusNotification(FrameBase):
     """Frame for run status notification in scope of command send frame."""
 
-    # pylint: disable=too-many-arguments
-
     PAYLOAD_LEN = 13
 
     def __init__(self, session_id=None, status_id=None, index_id=None, node_parameter=None, parameter_value=None):

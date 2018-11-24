@@ -39,4 +39,5 @@ class FrameNodeInformationChangedNotification(FrameBase):
         """Return human readable string."""
         return '<FrameNodeInformationChangedNotification node_id={} name="{}" order={} ' \
             'placement={} node_variation="{}"/>'.format(
-            self.node_id, self.name, self.order, self.placement, self.node_variation)
+                self.node_id, self.name, self.order,
+                self.placement, self.node_variation)

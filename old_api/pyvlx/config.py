@@ -1,11 +1,8 @@
 """Module for configuration."""
-
 import yaml
-
 from .exception import PyVLXException
 
 
-# pylint: disable=too-few-public-methods
 class Config:
     """Object for configuration."""
 

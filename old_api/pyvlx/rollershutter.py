@@ -6,7 +6,6 @@ from .device import Device
 class RollerShutter(Device):
     """Class for roller shutters."""
 
-    # pylint: disable=too-many-arguments
     def __init__(self, pyvlx, ident, name, subtype, typeid):
         """Initialize roller shutter class."""
         self.pyvlx = pyvlx

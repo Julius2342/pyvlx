@@ -4,7 +4,6 @@ from .exception import PyVLXException
 from .log import PYVLXLOG
 
 
-# pylint: disable=too-few-public-methods, too-many-arguments
 class Config:
     """Object for configuration."""
 

@@ -7,7 +7,6 @@ and roller shutters.
 """
 
 
-# pylint: disable=too-few-public-methods
 class Device:
     """Class for device abstraction."""
 

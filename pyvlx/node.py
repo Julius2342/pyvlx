@@ -9,7 +9,6 @@ from .set_node_name import SetNodeName
 from .exception import PyVLXException
 
 
-# pylint: disable=too-few-public-methods
 class Node:
     """Class for node abstraction."""
 
