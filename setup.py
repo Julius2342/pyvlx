@@ -10,7 +10,6 @@ VERSION = '0.2.0'
 
 setup(
     name='pyvlx',
-    description='PyVLX - controling VELUX windows with Python via KLF 200',
 
     version=VERSION,
     download_url='https://github.com/Julius2342/pyvlx/archive/'+VERSION+'.zip',
