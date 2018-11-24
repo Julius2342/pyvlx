@@ -104,7 +104,7 @@ class FrameCommandRunStatusNotification(FrameBase):
 
     # pylint: disable=too-many-arguments
 
-    PAYLOAD_LEN = 7
+    PAYLOAD_LEN = 13
 
     def __init__(self, session_id=None, status_id=None, index_id=None, node_parameter=None, parameter_value=None):
         """Init Frame."""
@@ -122,6 +122,9 @@ class FrameCommandRunStatusNotification(FrameBase):
         ret += bytes([self.index_id])
         ret += bytes([self.node_parameter])
         ret += bytes([self.parameter_value >> 8 & 255, self.parameter_value & 255])
+
+        # XXX: Missing implementation of run_status, status_reply and information_code
+        ret += bytes(6)
         return ret
 
     def from_payload(self, payload):
