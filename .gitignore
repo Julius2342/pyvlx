@@ -11,3 +11,5 @@ pyvlx.egg-info/
 
 .venv
 venv
+
+htmlcov
