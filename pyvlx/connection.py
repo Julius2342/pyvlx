@@ -50,7 +50,8 @@ class TCPTransport(asyncio.Protocol):
         while self.tokenizer.has_tokens():
             raw = self.tokenizer.get_next_token()
             frame = frame_from_raw(raw)
-            self.frame_received_cb(frame)
+            if frame is not None:
+                self.frame_received_cb(frame)
 
     def connection_lost(self, exc):
         """Handle lost connection."""
