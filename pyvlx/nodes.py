@@ -2,6 +2,7 @@
 from .get_node_information import GetNodeInformation
 from .get_all_nodes_information import GetAllNodesInformation
 from .node_helper import convert_frame_to_node
+from .node import Node
 from .exception import PyVLXException
 
 
@@ -18,10 +19,10 @@ class Nodes:
         yield from self.__nodes
 
     def __getitem__(self, key):
-        """Return device by name or by index."""
-        for device in self.__nodes:
-            if device.name == key:
-                return device
+        """Return node by name or by index."""
+        for node in self.__nodes:
+            if node.name == key:
+                return node
         if isinstance(key, int):
             return self.__nodes[key]
         raise KeyError
@@ -30,9 +31,19 @@ class Nodes:
         """Return number of nodes."""
         return len(self.__nodes)
 
-    def add(self, device):
-        """Add device."""
-        self.__nodes.append(device)
+    def add(self, node):
+        """Add Node, replace existing node if node with node_id is present."""
+        if not isinstance(node, Node):
+            raise TypeError()
+        for i, j in enumerate(self.__nodes):
+            if j.node_id == node.node_id:
+                self.__nodes[i] = node
+                return
+        self.__nodes.append(node)
+
+    def clear(self):
+        """Clear internal node array."""
+        self.__nodes = []
 
     async def load(self, node_id=None):
         """Load nodes from KLF 200, if no node_id is specified all nodes are loaded."""
@@ -57,8 +68,7 @@ class Nodes:
         await get_all_nodes_information.do_api_call()
         if not get_all_nodes_information.success:
             raise PyVLXException("Unable to retrieve node information")
+        self.clear()
         for notification_frame in get_all_nodes_information.notification_frames:
             node = convert_frame_to_node(self.pyvlx, notification_frame)
             self.add(node)
-
-        # XXX At the moment the nodes are just added not replaces.:w

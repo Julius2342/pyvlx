@@ -30,10 +30,18 @@ class Scenes():
         return len(self.__scenes)
 
     def add(self, scene):
-        """Add scene."""
+        """Add scene, replace existing scene if scene with scene_id is present."""
         if not isinstance(scene, Scene):
             raise TypeError()
+        for i, j in enumerate(self.__scenes):
+            if j.scene_id == scene.scene_id:
+                self.__scenes[i] = scene
+                return
         self.__scenes.append(scene)
+
+    def clear(self):
+        """Clear internal scenes array."""
+        self.__scenes = []
 
     async def load(self):
         """Load scenes from KLF 200."""

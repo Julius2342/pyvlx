@@ -1,7 +1,7 @@
 """Unit test for roller shutter."""
 import unittest
 from pyvlx import PyVLX
-from pyvlx.opening_device import Window, Blind, RollerShutter
+from pyvlx import Window, Blind, RollerShutter
 
 
 # pylint: disable=too-many-public-methods,invalid-name
