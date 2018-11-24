@@ -42,7 +42,6 @@ class TestFrameGetSceneListNotification(unittest.TestCase):
         frame = FrameGetSceneListNotification()
         frame.scenes = [(0, 'One Scene')]
         frame.remaining_scenes = 0
-        print(bytes(frame))
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME2)
 
     def test_frame_from_raw(self):
