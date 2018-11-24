@@ -54,7 +54,7 @@ class TCPTransport(asyncio.Protocol):
     def connection_lost(self, exc):
         """Handle lost connection."""
         print('server closed the connection')
-        asyncio.get_event_loop().stop()
+        # asyncio.get_event_loop().stop()
 
 
 class Connection:
