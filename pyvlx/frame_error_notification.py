@@ -18,6 +18,8 @@ class ErrorType(Enum):
 class FrameErrorNotification(FrameBase):
     """Frame for error notification."""
 
+    PAYLOAD_LEN = 1
+
     def __init__(self, error_type=ErrorType.NotFurtherDefined):
         """Init Frame."""
         super().__init__(Command.GW_ERROR_NTF)

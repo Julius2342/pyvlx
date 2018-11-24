@@ -20,6 +20,7 @@ def frame_from_raw(raw):
     if frame is None:
         print("Command {0} not implemented, raw: {1}".format(command, ":".join("{:02x}".format(c) for c in raw)))
         return None
+    frame.validate_payload_len(payload)
     frame.from_payload(payload)
     return frame
 

@@ -8,6 +8,8 @@ from .exception import PyVLXException
 class FrameCommandSendRequest(FrameBase):
     """Frame for sending command to gw."""
 
+    PAYLOAD_LEN = 66
+
     def __init__(self, node_ids=None, position=None, session_id=None):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_SEND_REQ)
@@ -73,6 +75,8 @@ class CommandSendConfirmationStatus(Enum):
 class FrameCommandSendConfirmation(FrameBase):
     """Frame for confirmation of command send frame."""
 
+    PAYLOAD_LEN = 3
+
     def __init__(self, session_id=None, status=None):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_SEND_CFM)
@@ -99,6 +103,8 @@ class FrameCommandRunStatusNotification(FrameBase):
     """Frame for run status notification in scope of command send frame."""
 
     # pylint: disable=too-many-arguments
+
+    PAYLOAD_LEN = 7
 
     def __init__(self, session_id=None, status_id=None, index_id=None, node_parameter=None, parameter_value=None):
         """Init Frame."""
@@ -138,6 +144,8 @@ class FrameCommandRunStatusNotification(FrameBase):
 class FrameCommandRemainingTimeNotification(FrameBase):
     """Frame for notification of remaining time in scope of command send frame."""
 
+    PAYLOAD_LEN = 6
+
     def __init__(self, session_id=None, index_id=None, node_parameter=None, seconds=0):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_REMAINING_TIME_NTF)
@@ -171,6 +179,8 @@ class FrameCommandRemainingTimeNotification(FrameBase):
 
 class FrameSessionFinishedNotification(FrameBase):
     """Frame for notification of session finishid in scope of command send frame."""
+
+    PAYLOAD_LEN = 2
 
     def __init__(self, session_id=None):
         """Init Frame."""

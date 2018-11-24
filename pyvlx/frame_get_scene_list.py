@@ -8,6 +8,8 @@ from .string_helper import bytes_to_string, string_to_bytes
 class FrameGetSceneListRequest(FrameBase):
     """Frame for get scene list request."""
 
+    PAYLOAD_LEN = 0
+
     def __init__(self):
         """Init Frame."""
         super().__init__(Command.GW_GET_SCENE_LIST_REQ)
@@ -27,6 +29,8 @@ class FrameGetSceneListRequest(FrameBase):
 
 class FrameGetSceneListConfirmation(FrameBase):
     """Frame for confirmation for scene list request."""
+
+    PAYLOAD_LEN = 1
 
     def __init__(self, count_scenes=0):
         """Init Frame."""

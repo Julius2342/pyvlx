@@ -2,11 +2,12 @@
 from enum import Enum
 from .const import Command
 from .frame import FrameBase
-from .exception import PyVLXException
 
 
 class FrameActivateSceneRequest(FrameBase):
     """Frame for sending command to gw."""
+
+    PAYLOAD_LEN = 6
 
     def __init__(self, scene_id=None, session_id=None):
         """Init Frame."""
@@ -25,10 +26,6 @@ class FrameActivateSceneRequest(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        if len(payload) != 6:
-            raise PyVLXException(
-                "FrameActivateSceneRequest_has_invalid_payload_length",
-                payload_length=len(payload))
         self.session_id = payload[0]*256 + payload[1]
         self.scene_id = payload[4]
 
@@ -47,6 +44,8 @@ class ActivateSceneConfirmationStatus(Enum):
 
 class FrameActivateSceneConfirmation(FrameBase):
     """Frame for confirmation of command send frame."""
+
+    PAYLOAD_LEN = 3
 
     def __init__(self, session_id=None, status=None):
         """Init Frame."""

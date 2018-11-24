@@ -10,6 +10,7 @@ class FramePasswordEnterRequest(FrameBase):
     """Frame for sending password enter request."""
 
     MAX_SIZE = 32
+    PAYLOAD_LEN = 32
 
     def __init__(self, password=None):
         """Init Frame."""
@@ -43,6 +44,8 @@ class PasswordEnterConfirmationStatus(Enum):
 
 class FramePasswordEnterConfirmation(FrameBase):
     """Frame for confirmation for sent password."""
+
+    PAYLOAD_LEN = 1
 
     def __init__(self, status=PasswordEnterConfirmationStatus.SUCCESSFUL):
         """Init Frame."""

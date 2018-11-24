@@ -6,6 +6,8 @@ from .const import Command, NodeType
 class FrameDiscoverNodesRequest(FrameBase):
     """Frame for discover nodes request."""
 
+    PAYLOAD_LEN = 1
+
     def __init__(self, node_type=NodeType.NO_TYPE):
         """Init Frame."""
         super().__init__(Command.GW_CS_DISCOVER_NODES_REQ)
@@ -28,6 +30,8 @@ class FrameDiscoverNodesRequest(FrameBase):
 class FrameDiscoverNodesConfirmation(FrameBase):
     """Frame for discover nodes confirmation."""
 
+    PAYLOAD_LEN = 0
+
     def __init__(self):
         """Init Frame."""
         super().__init__(Command.GW_CS_DISCOVER_NODES_CFM)
@@ -47,6 +51,8 @@ class FrameDiscoverNodesConfirmation(FrameBase):
 
 class FrameDiscoverNodesNotification(FrameBase):
     """Frame for discover nodes notification."""
+
+    PAYLOAD_LEN = 131
 
     def __init__(self):
         """Init Frame."""

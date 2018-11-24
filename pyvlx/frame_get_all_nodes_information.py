@@ -9,6 +9,8 @@ from .position import Position
 class FrameGetAllNodesInformationRequest(FrameBase):
     """Frame for get node information request."""
 
+    PAYLOAD_LEN = 0
+
     def __init__(self):
         """Init Frame."""
         super().__init__(Command.GW_GET_ALL_NODES_INFORMATION_REQ)
@@ -36,6 +38,8 @@ class AllNodesInformationStatus(Enum):
 class FrameGetAllNodesInformationConfirmation(FrameBase):
     """Frame for confirmation for node information request."""
 
+    PAYLOAD_LEN = 2
+
     def __init__(self, status=AllNodesInformationStatus.OK, number_of_nodes=0):
         """Init Frame."""
         super().__init__(Command.GW_GET_ALL_NODES_INFORMATION_CFM)
@@ -60,6 +64,8 @@ class FrameGetAllNodesInformationNotification(FrameBase):
     """Frame for notification of all nodes information request."""
 
     # pylint: disable=too-many-instance-attributes
+
+    PAYLOAD_LEN = 121
 
     def __init__(self):
         """Init Frame."""
@@ -184,7 +190,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
 class FrameGetAllNodesInformationFinishedNotification(FrameBase):
     """Frame for notification of all nodes information finished notification."""
 
-    # pylint: disable=too-many-instance-attributes
+    PAYLOAD_LEN = 0
 
     def __init__(self):
         """Init Frame."""
