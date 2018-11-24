@@ -20,7 +20,7 @@ async def main(loop):
     await pyvlx.nodes['Bath'].set_position_percent(45)
 
     # You can easily rename nodes:
-    # await pyvlx.nodes["Window 10"].rename("Window 10")
+    # await pyvlx.nodes["Window 10"].rename("Window 11")
 
 
 if __name__ == '__main__':
