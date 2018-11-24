@@ -3,8 +3,7 @@ import unittest
 from pyvlx import PyVLX, Window, Blind, RollerShutter
 from pyvlx.node_helper import convert_frame_to_node
 from pyvlx.frame_get_node_information import FrameGetNodeInformationNotification
-from pyvlx.const import NodeTypeWithSubtype, NodeVariation
-from pyvlx.exception import PyVLXException
+from pyvlx.const import NodeTypeWithSubtype
 
 
 class TestNodeHelper(unittest.TestCase):
@@ -60,5 +59,3 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_type = NodeTypeWithSubtype.NO_TYPE
         pyvlx = PyVLX()
         self.assertEqual(convert_frame_to_node(pyvlx, frame), None)
-
-
