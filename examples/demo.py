@@ -9,7 +9,6 @@ async def main(loop):
     # Alternative:
     # pyvlx = PyVLX(host="192.168.2.127", password="velux123", loop=loop)
 
-    await pyvlx.connect()
     await pyvlx.load_scenes()
     await pyvlx.scenes["All Windows Closed"].run()
 

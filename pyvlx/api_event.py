@@ -31,7 +31,7 @@ class ApiEvent():
 
     async def send_frame(self):
         """Send frame to API connection."""
-        self.pyvlx.connection.write(self.request_frame())
+        await self.pyvlx.send_frame(self.request_frame())
 
     def request_frame(self):
         """Construct initiating framw."""

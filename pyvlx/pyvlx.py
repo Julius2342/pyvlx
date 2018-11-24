@@ -39,6 +39,13 @@ class PyVLX:
         if not login.success:
             raise PyVLXException("Unable to login")
 
+    async def send_frame(self, frame):
+        """Send frame to API via connection."""
+        if not self.connection.connected:
+            self.logger.warning("Not connected, establishing connection to KLF 200")
+            await self.connect()
+        self.connection.write(frame)
+
     async def disconnect(self):
         """Disconnect from KLF 200."""
         self.connection.disconnect()

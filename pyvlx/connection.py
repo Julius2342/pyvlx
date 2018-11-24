@@ -119,6 +119,3 @@ class Connection:
     def connection_closed_cb(self):
         """Server closed connection."""
         self.connected = False
-
-        print("Reconnecting")
-        self.loop.create_task(self.connect())
