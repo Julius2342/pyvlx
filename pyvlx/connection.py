@@ -34,14 +34,15 @@ class SlipTokenizer:
 class TCPTransport(asyncio.Protocol):
     """Class for handling asyncio connection transport."""
 
-    def __init__(self, frame_received_cb):
+    def __init__(self, frame_received_cb, connection_closed_cb):
         """Init TCPTransport."""
         self.frame_received_cb = frame_received_cb
+        self.connection_closed_cb = connection_closed_cb
         self.tokenizer = SlipTokenizer()
 
     def connection_made(self, transport):
         """Handle sucessful connection."""
-        print("Connection made")
+        pass
 
     def data_received(self, data):
         """Handle data received."""
@@ -53,8 +54,7 @@ class TCPTransport(asyncio.Protocol):
 
     def connection_lost(self, exc):
         """Handle lost connection."""
-        print('server closed the connection')
-        # asyncio.get_event_loop().stop()
+        self.connection_closed_cb()
 
 
 class Connection:
@@ -66,6 +66,7 @@ class Connection:
         self.config = config
         self.transport = None
         self.frame_received_cbs = []
+        self.connected = False
 
     def __del__(self):
         """Destruct connection."""
@@ -79,12 +80,13 @@ class Connection:
 
     async def connect(self):
         """Connect to gateway via SSL."""
-        tcp_client = TCPTransport(self.frame_received_cb)
+        tcp_client = TCPTransport(self.frame_received_cb, self.connection_closed_cb)
         self.transport, _ = await self.loop.create_connection(
             lambda: tcp_client,
             host=self.config.host,
             port=self.config.port,
             ssl=self.create_ssl_context())
+        self.connected = True
 
     def register_frame_received_cb(self, callback):
         """Register frame received callback."""
@@ -113,3 +115,10 @@ class Connection:
         for frame_received_cb in self.frame_received_cbs:
             # pylint: disable=not-callable
             self.loop.create_task(frame_received_cb(frame))
+
+    def connection_closed_cb(self):
+        """Server closed connection."""
+        self.connected = False
+
+        print("Reconnecting")
+        self.loop.create_task(self.connect())
