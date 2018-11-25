@@ -8,7 +8,7 @@ class Heartbeat():
     """Class for sending heartbeats to API."""
 
     def __init__(self, pyvlx, timeout_in_seconds=60):
-        """Initalize Heartbeat object."""
+        """Initialize Heartbeat object."""
         self.pyvlx = pyvlx
         self.timeout_in_seconds = timeout_in_seconds
         self.loop_event = asyncio.Event()
