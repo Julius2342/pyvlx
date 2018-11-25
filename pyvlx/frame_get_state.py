@@ -19,7 +19,6 @@ class FrameGetStateRequest(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        pass
 
     def __str__(self):
         """Return human readable string."""

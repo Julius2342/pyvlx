@@ -42,7 +42,6 @@ class TCPTransport(asyncio.Protocol):
 
     def connection_made(self, transport):
         """Handle sucessful connection."""
-        pass
 
     def data_received(self, data):
         """Handle data received."""

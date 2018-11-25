@@ -45,10 +45,6 @@ class Window(OpeningDevice):
 class Blind(OpeningDevice):
     """Blind objects."""
 
-    pass
-
 
 class RollerShutter(OpeningDevice):
     """RollerShutter object."""
-
-    pass

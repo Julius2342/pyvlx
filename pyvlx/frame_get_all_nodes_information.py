@@ -21,7 +21,6 @@ class FrameGetAllNodesInformationRequest(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        pass
 
     def __str__(self):
         """Return human readable string."""
@@ -200,7 +199,6 @@ class FrameGetAllNodesInformationFinishedNotification(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        pass
 
     def __str__(self):
         """Return human readable string."""
