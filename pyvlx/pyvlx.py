@@ -15,6 +15,7 @@ from .exception import PyVLXException
 from .nodes import Nodes
 from .scenes import Scenes
 from .log import PYVLXLOG
+from .heartbeat import Heartbeat
 
 
 class PyVLX:
@@ -25,6 +26,8 @@ class PyVLX:
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
         self.connection = Connection(loop=self.loop, config=self.config)
+        self.heartbeat = Heartbeat(pyvlx=self)
+        self.heartbeat.start()
         if log_frames:
             self.connection.register_frame_received_cb(self.log_frame)
         self.nodes = Nodes(self)
@@ -66,6 +69,7 @@ class PyVLX:
 
     async def disconnect(self):
         """Disconnect from KLF 200."""
+        await self.heartbeat.stop()
         self.connection.disconnect()
 
     async def load_nodes(self, node_id=None):

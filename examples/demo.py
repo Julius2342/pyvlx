@@ -22,6 +22,7 @@ async def main(loop):
     # You can easily rename nodes:
     # await pyvlx.nodes["Window 10"].rename("Window 11")
 
+    await pyvlx.disconnect()
 
 if __name__ == '__main__':
     # pylint: disable=invalid-name

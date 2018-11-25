@@ -13,6 +13,7 @@ from .frame_get_protocol_version import FrameGetProtocolVersionRequest, FrameGet
 from .frame_get_version import FrameGetVersionRequest, FrameGetVersionConfirmation
 from .frame_set_node_name import FrameSetNodeNameRequest, FrameSetNodeNameConfirmation
 from .frame_node_information_changed import FrameNodeInformationChangedNotification
+from .frame_get_state import FrameGetStateRequest, FrameGetStateConfirmation
 from .const import Command
 from .frame_helper import extract_from_frame
 from .log import PYVLXLOG
@@ -102,5 +103,10 @@ def create_frame(command):
 
     if command == Command.GW_NODE_INFORMATION_CHANGED_NTF:
         return FrameNodeInformationChangedNotification()
+
+    if command == Command.GW_GET_STATE_REQ:
+        return FrameGetStateRequest()
+    if command == Command.GW_GET_STATE_CFM:
+        return FrameGetStateConfirmation()
 
     return None
