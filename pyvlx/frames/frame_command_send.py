@@ -1,8 +1,8 @@
 """Module for sending command to gw."""
 from enum import Enum
-from .const import Command
+from pyvlx.const import Command
+from pyvlx.exception import PyVLXException
 from .frame import FrameBase
-from .exception import PyVLXException
 
 
 class FrameCommandSendRequest(FrameBase):

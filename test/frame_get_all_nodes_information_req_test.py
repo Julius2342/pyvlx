@@ -1,7 +1,7 @@
 """Unit tests for FrameGetAllNodesInformationRequest."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frame_get_all_nodes_information import FrameGetAllNodesInformationRequest
+from pyvlx.frames import FrameGetAllNodesInformationRequest
 
 
 class TestFrameGetAllNodesInformationRequest(unittest.TestCase):

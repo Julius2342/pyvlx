@@ -2,7 +2,7 @@
 import unittest
 from pyvlx import PyVLX, Window, Blind, RollerShutter
 from pyvlx.node_helper import convert_frame_to_node
-from pyvlx.frame_get_node_information import FrameGetNodeInformationNotification
+from pyvlx.frames import FrameGetNodeInformationNotification
 from pyvlx.const import NodeTypeWithSubtype
 
 

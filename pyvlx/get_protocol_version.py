@@ -1,5 +1,5 @@
 """Module for retrieving protocol version from API."""
-from .frame_get_protocol_version import FrameGetProtocolVersionRequest, FrameGetProtocolVersionConfirmation
+from .frames import FrameGetProtocolVersionRequest, FrameGetProtocolVersionConfirmation
 from .api_event import ApiEvent
 
 

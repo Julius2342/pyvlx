@@ -1,9 +1,9 @@
 """Module for password enter frame classes."""
 from enum import Enum
+from pyvlx.exception import PyVLXException
+from pyvlx.const import Command
+from pyvlx.string_helper import string_to_bytes, bytes_to_string
 from .frame import FrameBase
-from .exception import PyVLXException
-from .const import Command
-from .string_helper import string_to_bytes, bytes_to_string
 
 
 class FramePasswordEnterRequest(FrameBase):

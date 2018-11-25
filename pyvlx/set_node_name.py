@@ -1,5 +1,5 @@
 """Module for changing a node name."""
-from .frame_set_node_name import FrameSetNodeNameRequest, FrameSetNodeNameConfirmation, SetNodeNameConfirmationStatus
+from .frames import FrameSetNodeNameRequest, FrameSetNodeNameConfirmation, SetNodeNameConfirmationStatus
 from .api_event import ApiEvent
 
 

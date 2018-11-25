@@ -1,7 +1,7 @@
 """Module for error notification."""
 from enum import Enum
+from pyvlx.const import Command
 from .frame import FrameBase
-from .const import Command
 
 
 class ErrorType(Enum):

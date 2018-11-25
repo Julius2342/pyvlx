@@ -1,7 +1,7 @@
 """Unit tests for FrameActivateSceneRequest."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frame_activate_scene import FrameActivateSceneRequest
+from pyvlx.frames import FrameActivateSceneRequest
 
 
 class TestFrameActivateSceneRequest(unittest.TestCase):

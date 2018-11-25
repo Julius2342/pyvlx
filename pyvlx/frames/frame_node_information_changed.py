@@ -1,7 +1,7 @@
 """Module for requesting change of node name."""
+from pyvlx.const import Command, NodeVariation
+from pyvlx.string_helper import string_to_bytes, bytes_to_string
 from .frame import FrameBase
-from .const import Command, NodeVariation
-from .string_helper import string_to_bytes, bytes_to_string
 
 
 class FrameNodeInformationChangedNotification(FrameBase):

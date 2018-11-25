@@ -1,7 +1,7 @@
 """Unit tests for FrameCommandRunStatusNotification."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frame_command_send import FrameCommandRunStatusNotification
+from pyvlx.frames import FrameCommandRunStatusNotification
 
 
 class TestFrameCommandRunStatusNotification(unittest.TestCase):

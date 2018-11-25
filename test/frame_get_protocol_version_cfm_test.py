@@ -1,7 +1,7 @@
 """Unit tests for FrameGetProtocolVersionConfirmation."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frame_get_protocol_version import FrameGetProtocolVersionConfirmation
+from pyvlx.frames import FrameGetProtocolVersionConfirmation
 
 
 class TestFrameGetProtocolVersionConfirmation(unittest.TestCase):

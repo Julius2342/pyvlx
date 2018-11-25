@@ -1,5 +1,5 @@
 """Module for retrieving scene list from API."""
-from pyvlx.frame_command_send import FrameCommandSendRequest, FrameCommandSendConfirmation, \
+from pyvlx.frames import FrameCommandSendRequest, FrameCommandSendConfirmation, \
     FrameSessionFinishedNotification, FrameCommandRunStatusNotification, CommandSendConfirmationStatus, \
     FrameCommandRemainingTimeNotification
 from pyvlx.api_event import ApiEvent

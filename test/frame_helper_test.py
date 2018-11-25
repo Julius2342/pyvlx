@@ -1,11 +1,11 @@
-"""Unit tests frame_helper module."""
+"""Unit tests frame_creation module."""
 import unittest
-from pyvlx.frame_helper import calc_crc, extract_from_frame
+from pyvlx.frames import calc_crc, extract_from_frame
 from pyvlx.exception import PyVLXException
 
 
 class TestFrameHelper(unittest.TestCase):
-    """Test class for frame_helper module."""
+    """Test class for frame_creation module."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 

@@ -1,7 +1,7 @@
 """Unit tests for FrameCommandRemainingTimeNotification."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frame_command_send import FrameCommandRemainingTimeNotification
+from pyvlx.frames import FrameCommandRemainingTimeNotification
 
 
 class TestFrameCommandRemainingTimeNotification(unittest.TestCase):

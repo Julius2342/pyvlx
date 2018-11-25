@@ -1,5 +1,5 @@
 """Module for retrieving node information from API."""
-from .frame_get_all_nodes_information import FrameGetAllNodesInformationRequest, \
+from .frames import FrameGetAllNodesInformationRequest, \
     FrameGetAllNodesInformationConfirmation, FrameGetAllNodesInformationNotification, \
     FrameGetAllNodesInformationFinishedNotification
 from .api_event import ApiEvent

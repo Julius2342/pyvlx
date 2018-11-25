@@ -1,5 +1,5 @@
 """Module for handling the login to API."""
-from .frame_password_enter import FramePasswordEnterRequest, FramePasswordEnterConfirmation, PasswordEnterConfirmationStatus
+from .frames import FramePasswordEnterRequest, FramePasswordEnterConfirmation, PasswordEnterConfirmationStatus
 from .api_event import ApiEvent
 
 

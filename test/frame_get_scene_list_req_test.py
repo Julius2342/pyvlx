@@ -1,7 +1,7 @@
 """Unit tests for FrameGetSceneListRequest."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frame_get_scene_list import FrameGetSceneListRequest
+from pyvlx.frames import FrameGetSceneListRequest
 
 
 class TestFrameGetSceneListRequest(unittest.TestCase):

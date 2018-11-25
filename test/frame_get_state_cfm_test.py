@@ -1,7 +1,7 @@
 """Unit tests for FrameGetStateConfirmation."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frame_get_state import FrameGetStateConfirmation, GatewayState, GatewaySubState
+from pyvlx.frames import FrameGetStateConfirmation, GatewayState, GatewaySubState
 
 
 class TestFrameGetStateConfirmation(unittest.TestCase):

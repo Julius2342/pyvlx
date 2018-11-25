@@ -1,7 +1,7 @@
 """Unit tests for FrameGetAllNodesInformationFinishedNotification."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frame_get_all_nodes_information import FrameGetAllNodesInformationFinishedNotification
+from pyvlx.frames import FrameGetAllNodesInformationFinishedNotification
 
 
 class TestFrameGetAllNodesInformationFinishedNotification(unittest.TestCase):

@@ -1,7 +1,7 @@
 """Unit tests for FrameGetAllNodesInformationNotification."""
 import unittest
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frame_get_all_nodes_information import FrameGetAllNodesInformationNotification
+from pyvlx.frames import FrameGetAllNodesInformationNotification
 from pyvlx.const import NodeTypeWithSubtype, NodeVariation
 
 

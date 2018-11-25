@@ -1,21 +1,21 @@
 """Helper module for creating a frame out of raw data."""
-from .frame_get_scene_list import FrameGetSceneListRequest, FrameGetSceneListConfirmation, FrameGetSceneListNotification
-from .frame_get_node_information import FrameGetNodeInformationRequest, FrameGetNodeInformationConfirmation, FrameGetNodeInformationNotification
-from .frame_get_all_nodes_information import FrameGetAllNodesInformationRequest, FrameGetAllNodesInformationConfirmation, \
+from .frames import FrameGetSceneListRequest, FrameGetSceneListConfirmation, FrameGetSceneListNotification
+from .frames import FrameGetNodeInformationRequest, FrameGetNodeInformationConfirmation, FrameGetNodeInformationNotification
+from .frames import FrameGetAllNodesInformationRequest, FrameGetAllNodesInformationConfirmation, \
     FrameGetAllNodesInformationNotification, FrameGetAllNodesInformationFinishedNotification
-from .frame_password_enter import FramePasswordEnterRequest, FramePasswordEnterConfirmation
-from .frame_discover_nodes import FrameDiscoverNodesRequest, FrameDiscoverNodesConfirmation, FrameDiscoverNodesNotification
-from .frame_error_notification import FrameErrorNotification
-from .frame_command_send import FrameCommandSendRequest, FrameCommandSendConfirmation, FrameCommandRunStatusNotification, \
+from .frames import FramePasswordEnterRequest, FramePasswordEnterConfirmation
+from .frames import FrameDiscoverNodesRequest, FrameDiscoverNodesConfirmation, FrameDiscoverNodesNotification
+from .frames import FrameErrorNotification
+from .frames import FrameCommandSendRequest, FrameCommandSendConfirmation, FrameCommandRunStatusNotification, \
     FrameCommandRemainingTimeNotification, FrameSessionFinishedNotification
-from .frame_activate_scene import FrameActivateSceneRequest, FrameActivateSceneConfirmation
-from .frame_get_protocol_version import FrameGetProtocolVersionRequest, FrameGetProtocolVersionConfirmation
-from .frame_get_version import FrameGetVersionRequest, FrameGetVersionConfirmation
-from .frame_set_node_name import FrameSetNodeNameRequest, FrameSetNodeNameConfirmation
-from .frame_node_information_changed import FrameNodeInformationChangedNotification
-from .frame_get_state import FrameGetStateRequest, FrameGetStateConfirmation
+from .frames import FrameActivateSceneRequest, FrameActivateSceneConfirmation
+from .frames import FrameGetProtocolVersionRequest, FrameGetProtocolVersionConfirmation
+from .frames import FrameGetVersionRequest, FrameGetVersionConfirmation
+from .frames import FrameSetNodeNameRequest, FrameSetNodeNameConfirmation
+from .frames import FrameNodeInformationChangedNotification
+from .frames import FrameGetStateRequest, FrameGetStateConfirmation
+from .frames import extract_from_frame
 from .const import Command
-from .frame_helper import extract_from_frame
 from .log import PYVLXLOG
 
 

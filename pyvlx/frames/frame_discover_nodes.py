@@ -1,6 +1,6 @@
 """Module for discover nodes requests."""
+from pyvlx.const import Command, NodeType
 from .frame import FrameBase
-from .const import Command, NodeType
 
 
 class FrameDiscoverNodesRequest(FrameBase):
