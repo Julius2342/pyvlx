@@ -15,7 +15,7 @@ async def main(loop):
 
     # Changing position of windows:
     await pyvlx.load_nodes()
-    await pyvlx.nodes['Window 1'].open()
+    await pyvlx.nodes['Bath'].open()
     await pyvlx.nodes['Bath'].close()
     await pyvlx.nodes['Bath'].set_position_percent(45)
 
