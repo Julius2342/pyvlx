@@ -15,6 +15,7 @@ from .frames import FrameSetNodeNameRequest, FrameSetNodeNameConfirmation
 from .frames import FrameNodeInformationChangedNotification
 from .frames import FrameGetStateRequest, FrameGetStateConfirmation
 from .frames import extract_from_frame
+from .frames import FrameActivationLogUpdatedNotification
 from .const import Command
 from .log import PYVLXLOG
 
@@ -108,5 +109,8 @@ def create_frame(command):
         return FrameGetStateRequest()
     if command == Command.GW_GET_STATE_CFM:
         return FrameGetStateConfirmation()
+
+    if command == Command.GW_ACTIVATION_LOG_UPDATED_NTF:
+        return FrameActivationLogUpdatedNotification()
 
     return None

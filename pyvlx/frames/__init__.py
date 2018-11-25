@@ -18,3 +18,4 @@ from .frame_get_version import FrameGetVersionRequest, FrameGetVersionConfirmati
 from .frame_set_node_name import FrameSetNodeNameRequest, FrameSetNodeNameConfirmation, SetNodeNameConfirmationStatus
 from .frame_node_information_changed import FrameNodeInformationChangedNotification
 from .frame_get_state import FrameGetStateRequest, FrameGetStateConfirmation, GatewayState, GatewaySubState
+from .frame_activation_log_updated import FrameActivationLogUpdatedNotification
