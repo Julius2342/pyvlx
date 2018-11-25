@@ -10,14 +10,14 @@ async def main(loop):
     # pyvlx = PyVLX(host="192.168.2.127", password="velux123", loop=loop)
 
     # Runing scenes:
-    #await pyvlx.load_scenes()
-    #await pyvlx.scenes["All Windows Closed"].run()
+    await pyvlx.load_scenes()
+    await pyvlx.scenes["All Windows Closed"].run()
 
     # Changing position of windows:
     await pyvlx.load_nodes()
     await pyvlx.nodes['Window 1'].open()
-    #await pyvlx.nodes['Bath'].close()
-    #await pyvlx.nodes['Bath'].set_position_percent(45)
+    await pyvlx.nodes['Bath'].close()
+    await pyvlx.nodes['Bath'].set_position_percent(45)
 
     # You can easily rename nodes:
     # await pyvlx.nodes["Window 10"].rename("Window 11")
