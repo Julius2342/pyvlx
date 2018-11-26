@@ -1,21 +1,5 @@
 """Helper module for creating a frame out of raw data."""
-from .frames import FrameGetSceneListRequest, FrameGetSceneListConfirmation, FrameGetSceneListNotification
-from .frames import FrameGetNodeInformationRequest, FrameGetNodeInformationConfirmation, FrameGetNodeInformationNotification
-from .frames import FrameGetAllNodesInformationRequest, FrameGetAllNodesInformationConfirmation, \
-    FrameGetAllNodesInformationNotification, FrameGetAllNodesInformationFinishedNotification
-from .frames import FramePasswordEnterRequest, FramePasswordEnterConfirmation
-from .frames import FrameDiscoverNodesRequest, FrameDiscoverNodesConfirmation, FrameDiscoverNodesNotification
-from .frames import FrameErrorNotification
-from .frames import FrameCommandSendRequest, FrameCommandSendConfirmation, FrameCommandRunStatusNotification, \
-    FrameCommandRemainingTimeNotification, FrameSessionFinishedNotification
-from .frames import FrameActivateSceneRequest, FrameActivateSceneConfirmation
-from .frames import FrameGetProtocolVersionRequest, FrameGetProtocolVersionConfirmation
-from .frames import FrameGetVersionRequest, FrameGetVersionConfirmation
-from .frames import FrameSetNodeNameRequest, FrameSetNodeNameConfirmation
-from .frames import FrameNodeInformationChangedNotification
-from .frames import FrameGetStateRequest, FrameGetStateConfirmation
-from .frames import extract_from_frame
-from .frames import FrameActivationLogUpdatedNotification
+from .frames import *
 from .const import Command
 from .log import PYVLXLOG
 
@@ -112,5 +96,14 @@ def create_frame(command):
 
     if command == Command.GW_ACTIVATION_LOG_UPDATED_NTF:
         return FrameActivationLogUpdatedNotification()
+
+    if command == Command.GW_HOUSE_STATUS_MONITOR_ENABLE_REQ:
+        return FrameHouseStatusMonitorEnableRequest()
+    if command == Command.GW_HOUSE_STATUS_MONITOR_ENABLE_CFM:
+        return FrameHouseStatusMonitorEnableConfirmation()
+    if command == Command.GW_HOUSE_STATUS_MONITOR_DISABLE_REQ:
+        return FrameHouseStatusMonitorDisableRequest()
+    if command == Command.GW_HOUSE_STATUS_MONITOR_DISABLE_CFM:
+        return FrameHouseStatusMonitorDisableConfirmation()
 
     return None
