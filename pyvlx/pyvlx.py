@@ -16,6 +16,7 @@ from .nodes import Nodes
 from .scenes import Scenes
 from .log import PYVLXLOG
 from .heartbeat import Heartbeat
+from .house_status_monitor import house_status_monitor_enable
 
 
 class PyVLX:
@@ -65,6 +66,7 @@ class PyVLX:
         if not self.connection.connected:
             await self.connect()
             await self.update_version()
+            await house_status_monitor_enable(pyvlx=self)
         self.connection.write(frame)
 
     async def disconnect(self):

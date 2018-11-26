@@ -1,4 +1,5 @@
 """Helper module for creating a frame out of raw data."""
+# pylint: disable=unused-wildcard-import,wildcard-import
 from .frames import *
 from .const import Command
 from .log import PYVLXLOG
