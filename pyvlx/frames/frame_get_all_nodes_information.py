@@ -15,17 +15,6 @@ class FrameGetAllNodesInformationRequest(FrameBase):
         """Init Frame."""
         super().__init__(Command.GW_GET_ALL_NODES_INFORMATION_REQ)
 
-    def get_payload(self):
-        """Return Payload."""
-        return b''
-
-    def from_payload(self, payload):
-        """Init frame from binary data."""
-
-    def __str__(self):
-        """Return human readable string."""
-        return '<FrameGetAllNodesInformationRequest/>'
-
 
 class AllNodesInformationStatus(Enum):
     """Enum for node information status."""
@@ -192,14 +181,3 @@ class FrameGetAllNodesInformationFinishedNotification(FrameBase):
     def __init__(self):
         """Init Frame."""
         super().__init__(Command.GW_GET_ALL_NODES_INFORMATION_FINISHED_NTF)
-
-    def get_payload(self):
-        """Return Payload."""
-        return b''
-
-    def from_payload(self, payload):
-        """Init frame from binary data."""
-
-    def __str__(self):
-        """Return human readable string."""
-        return '<FrameGetAllNodesInformationFinishedNotification/>'

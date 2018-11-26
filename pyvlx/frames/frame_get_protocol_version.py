@@ -12,17 +12,6 @@ class FrameGetProtocolVersionRequest(FrameBase):
         """Init Frame."""
         super().__init__(Command.GW_GET_PROTOCOL_VERSION_REQ)
 
-    def get_payload(self):
-        """Return Payload."""
-        return b''
-
-    def from_payload(self, payload):
-        """Init frame from binary data."""
-
-    def __str__(self):
-        """Return human readable string."""
-        return '<FrameGetProtocolVersionRequest/>'
-
 
 class FrameGetProtocolVersionConfirmation(FrameBase):
     """Frame for response for get protocol version requests."""

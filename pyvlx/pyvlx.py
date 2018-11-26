@@ -37,7 +37,7 @@ class PyVLX:
 
     async def connect(self):
         """Connect to KLF 200."""
-        PYVLXLOG.warning("Connecting to API.")
+        PYVLXLOG.warning("Connecting to KLF 200.")
         await self.connection.connect()
         login = Login(pyvlx=self, password=self.config.password)
         await login.do_api_call()

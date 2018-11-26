@@ -14,17 +14,6 @@ class FrameGetSceneListRequest(FrameBase):
         """Init Frame."""
         super().__init__(Command.GW_GET_SCENE_LIST_REQ)
 
-    def get_payload(self):
-        """Return Payload."""
-        return b''
-
-    def from_payload(self, payload):
-        """Init frame from binary data."""
-
-    def __str__(self):
-        """Return human readable string."""
-        return '<FrameGetSceneListRequest/>'
-
 
 class FrameGetSceneListConfirmation(FrameBase):
     """Frame for confirmation for scene list request."""
