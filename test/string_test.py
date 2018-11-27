@@ -30,3 +30,12 @@ class TestString(unittest.TestCase):
     def test_decoding_without_padding(self):
         """Test decoding of string without padding."""
         self.assertEqual(bytes_to_string(b'fnord'), 'fnord')
+
+    def test_encode_utf8(self):
+        """Test encoding a string with special characters."""
+        self.assertEqual(string_to_bytes('Fenster Büro', 16), b'Fenster B\xc3\xbcro\x00\x00\x00')
+
+    def test_decode_utf8(self):
+        """Test decoding a string with special characters."""
+        self.assertEqual(bytes_to_string(b'Fenster B\xc3\xbcro\x00\x00\x00'), 'Fenster Büro')
+
