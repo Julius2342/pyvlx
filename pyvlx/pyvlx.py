@@ -18,6 +18,7 @@ from .log import PYVLXLOG
 from .login import Login
 from .nodes import Nodes
 from .scenes import Scenes
+from .set_utc import set_utc
 
 
 class PyVLX:
@@ -67,6 +68,7 @@ class PyVLX:
         if not self.connection.connected:
             await self.connect()
             await self.update_version()
+            await set_utc(pyvlx=self)
             await house_status_monitor_enable(pyvlx=self)
         self.connection.write(frame)
 

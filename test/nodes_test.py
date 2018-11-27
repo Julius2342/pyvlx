@@ -5,6 +5,7 @@ from pyvlx import Blind, Nodes, PyVLX, RollerShutter, Window
 
 # pylint: disable=too-many-public-methods,invalid-name
 
+
 class TestNodes(unittest.TestCase):
     """Test class for nodes object."""
 

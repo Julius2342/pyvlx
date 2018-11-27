@@ -32,7 +32,8 @@ from pyvlx.frames import (FrameActivateSceneConfirmation,
                           FramePasswordEnterRequest,
                           FrameSessionFinishedNotification,
                           FrameSetNodeNameConfirmation,
-                          FrameSetNodeNameRequest, extract_from_frame)
+                          FrameSetNodeNameRequest, FrameSetUTCConfirmation,
+                          FrameSetUTCRequest, extract_from_frame)
 
 from .const import Command
 from .log import PYVLXLOG
@@ -127,6 +128,11 @@ def create_frame(command):
         return FrameGetStateRequest()
     if command == Command.GW_GET_STATE_CFM:
         return FrameGetStateConfirmation()
+
+    if command == Command.GW_SET_UTC_REQ:
+        return FrameSetUTCRequest()
+    if command == Command.GW_SET_UTC_CFM:
+        return FrameSetUTCConfirmation()
 
     if command == Command.GW_ACTIVATION_LOG_UPDATED_NTF:
         return FrameActivationLogUpdatedNotification()

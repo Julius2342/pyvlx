@@ -5,6 +5,7 @@ from pyvlx import PyVLX, Scene, Scenes
 
 # pylint: disable=too-many-public-methods,invalid-name
 
+
 class TestScenes(unittest.TestCase):
     """Test class for scenes object."""
 
