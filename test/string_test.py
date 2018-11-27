@@ -38,4 +38,3 @@ class TestString(unittest.TestCase):
     def test_decode_utf8(self):
         """Test decoding a string with special characters."""
         self.assertEqual(bytes_to_string(b'Fenster B\xc3\xbcro\x00\x00\x00'), 'Fenster Büro')
-
