@@ -1,8 +1,10 @@
 """Module for get node information from gateway."""
 from enum import Enum
+
 from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation
-from pyvlx.string_helper import bytes_to_string, string_to_bytes
 from pyvlx.position import Position
+from pyvlx.string_helper import bytes_to_string, string_to_bytes
+
 from .frame import FrameBase
 
 

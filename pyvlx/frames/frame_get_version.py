@@ -1,5 +1,6 @@
 """Module for get version frame classes."""
 from pyvlx.const import Command
+
 from .frame import FrameBase
 
 

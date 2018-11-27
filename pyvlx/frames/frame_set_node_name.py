@@ -1,7 +1,9 @@
 """Module for requesting change of node name."""
 from enum import Enum
+
 from pyvlx.const import Command
-from pyvlx.string_helper import string_to_bytes, bytes_to_string
+from pyvlx.string_helper import bytes_to_string, string_to_bytes
+
 from .frame import FrameBase
 
 

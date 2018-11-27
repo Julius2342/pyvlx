@@ -1,6 +1,8 @@
 """Frames for receiving state from gateway."""
 from enum import Enum
+
 from pyvlx.const import Command
+
 from .frame import FrameBase
 
 
