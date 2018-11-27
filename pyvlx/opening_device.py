@@ -1,8 +1,8 @@
 """Module for window openers."""
-from .node import Node
 from .command_send import CommandSend
-from .position import Position
 from .exception import PyVLXException
+from .node import Node
+from .position import Position
 
 
 class OpeningDevice(Node):

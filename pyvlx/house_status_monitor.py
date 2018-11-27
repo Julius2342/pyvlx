@@ -1,8 +1,10 @@
 """Module for house status monitor."""
-from .frames import FrameHouseStatusMonitorEnableRequest, FrameHouseStatusMonitorEnableConfirmation, \
-    FrameHouseStatusMonitorDisableRequest, FrameHouseStatusMonitorDisableConfirmation
 from .api_event import ApiEvent
 from .exception import PyVLXException
+from .frames import (FrameHouseStatusMonitorDisableConfirmation,
+                     FrameHouseStatusMonitorDisableRequest,
+                     FrameHouseStatusMonitorEnableConfirmation,
+                     FrameHouseStatusMonitorEnableRequest)
 
 
 class HouseStatusMonitorEnable(ApiEvent):

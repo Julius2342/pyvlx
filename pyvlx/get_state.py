@@ -1,6 +1,6 @@
 """Module for retrieving gateway state from API."""
-from .frames import FrameGetStateRequest, FrameGetStateConfirmation
 from .api_event import ApiEvent
+from .frames import FrameGetStateConfirmation, FrameGetStateRequest
 
 
 class GetState(ApiEvent):

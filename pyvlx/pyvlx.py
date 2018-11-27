@@ -6,17 +6,18 @@ a VELUX KLF 200 device for controlling window openers
 and roller shutters.
 """
 import asyncio
+
 from .config import Config
 from .connection import Connection
-from .login import Login
-from .get_version import GetVersion
-from .get_protocol_version import GetProtocolVersion
 from .exception import PyVLXException
-from .nodes import Nodes
-from .scenes import Scenes
-from .log import PYVLXLOG
+from .get_protocol_version import GetProtocolVersion
+from .get_version import GetVersion
 from .heartbeat import Heartbeat
 from .house_status_monitor import house_status_monitor_enable
+from .log import PYVLXLOG
+from .login import Login
+from .nodes import Nodes
+from .scenes import Scenes
 
 
 class PyVLX:

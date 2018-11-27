@@ -2,10 +2,10 @@
 import asyncio
 import ssl
 
-from .slip import is_slip, get_next_slip, slip_pack
-from .frames import FrameBase
-from .frame_creation import frame_from_raw
 from .exception import PyVLXException
+from .frame_creation import frame_from_raw
+from .frames import FrameBase
+from .slip import get_next_slip, is_slip, slip_pack
 
 
 class SlipTokenizer:

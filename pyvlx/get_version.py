@@ -1,6 +1,6 @@
 """Module for retrieving firmware version from API."""
-from .frames import FrameGetVersionRequest, FrameGetVersionConfirmation
 from .api_event import ApiEvent
+from .frames import FrameGetVersionConfirmation, FrameGetVersionRequest
 
 
 class GetVersion(ApiEvent):

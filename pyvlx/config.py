@@ -1,5 +1,6 @@
 """Module for configuration."""
 import yaml
+
 from .exception import PyVLXException
 from .log import PYVLXLOG
 
