@@ -157,7 +157,7 @@ class FrameGetNodeInformationNotification(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetNodeInformationNotification node_id={} oder={} ' \
+        return '<FrameGetNodeInformationNotification node_id={} order={} ' \
             'placement={} name=\'{}\' velocity={} node_type=\'{}\' product_group={} ' \
             'product_type={} node_variation={} power_mode={} build_number={} ' \
             'serial_number=\'{}\' state={} current_position=\'{}\' ' \
