@@ -1,6 +1,39 @@
 """Helper module for creating a frame out of raw data."""
-# pylint: disable=unused-wildcard-import,wildcard-import
-from .frames import *
+from pyvlx.frames import (FrameActivateSceneConfirmation,
+                          FrameActivateSceneRequest,
+                          FrameActivationLogUpdatedNotification,
+                          FrameCommandRemainingTimeNotification,
+                          FrameCommandRunStatusNotification,
+                          FrameCommandSendConfirmation,
+                          FrameCommandSendRequest,
+                          FrameDiscoverNodesConfirmation,
+                          FrameDiscoverNodesNotification,
+                          FrameDiscoverNodesRequest, FrameErrorNotification,
+                          FrameGetAllNodesInformationConfirmation,
+                          FrameGetAllNodesInformationFinishedNotification,
+                          FrameGetAllNodesInformationNotification,
+                          FrameGetAllNodesInformationRequest,
+                          FrameGetNodeInformationConfirmation,
+                          FrameGetNodeInformationNotification,
+                          FrameGetNodeInformationRequest,
+                          FrameGetProtocolVersionConfirmation,
+                          FrameGetProtocolVersionRequest,
+                          FrameGetSceneListConfirmation,
+                          FrameGetSceneListNotification,
+                          FrameGetSceneListRequest, FrameGetStateConfirmation,
+                          FrameGetStateRequest, FrameGetVersionConfirmation,
+                          FrameGetVersionRequest,
+                          FrameHouseStatusMonitorDisableConfirmation,
+                          FrameHouseStatusMonitorDisableRequest,
+                          FrameHouseStatusMonitorEnableConfirmation,
+                          FrameHouseStatusMonitorEnableRequest,
+                          FrameNodeInformationChangedNotification,
+                          FramePasswordEnterConfirmation,
+                          FramePasswordEnterRequest,
+                          FrameSessionFinishedNotification,
+                          FrameSetNodeNameConfirmation,
+                          FrameSetNodeNameRequest, extract_from_frame)
+
 from .const import Command
 from .log import PYVLXLOG
 
