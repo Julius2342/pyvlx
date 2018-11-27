@@ -1,5 +1,6 @@
 """Unit tests for data sample obtained from MiSchroe."""
 import unittest
+import os
 
 from pyvlx.slip import get_next_slip
 from pyvlx.const import NodeTypeWithSubtype, NodeVariation
@@ -34,6 +35,10 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         "f7:ff:f7:ff:f7:ff:00:00:4f:0d:f9:a8:02:d8:02:64:" \
         "00:d8:03:ba:00:00:00:00:00:00:00:00:00:00:00:00:" \
         "00:e0:c0"
+
+    def setUp(self):
+        """Set up test class."""
+        os.environ['TZ'] = 'Europe/Berlin'
 
     def test_frame1_from_raw(self):
         """Test parse EXAMPLE_FRAME1 from raw."""

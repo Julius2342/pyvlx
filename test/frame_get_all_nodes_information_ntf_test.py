@@ -1,5 +1,6 @@
 """Unit tests for FrameGetAllNodesInformationNotification."""
 import unittest
+import os
 
 from pyvlx.const import NodeTypeWithSubtype, NodeVariation
 from pyvlx.frame_creation import frame_from_raw
@@ -19,6 +20,10 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
         + b'\x00\x00\x00\x00\x00\x00\x00\x03\x00@\x17\r\x01\x01\x07\x01\x02' \
         + b'\x03\x04\x05\x06\x06\x08\x01\x00\x0c\x00{\x04\xd2\t)\r\x80\x11' \
         + b'\xd7\x00\x01\x03\x03\x02\x03\x1701234567890123456789a'
+
+    def setUp(self):
+        """Set up test class."""
+        os.environ['TZ'] = 'Europe/Berlin'
 
     def test_bytes(self):
         """Test FrameGetAllNodesInformationNotification."""
