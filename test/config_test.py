@@ -1,5 +1,6 @@
 """Unit test for configuration."""
 import unittest
+
 from pyvlx import PyVLX, PyVLXException
 
 

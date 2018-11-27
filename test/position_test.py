@@ -1,7 +1,8 @@
 """Test for Position class."""
 import unittest
-from pyvlx.position import Position
+
 from pyvlx.exception import PyVLXException
+from pyvlx.position import Position
 
 
 class TestSlip(unittest.TestCase):

@@ -1,5 +1,6 @@
 """Unit test for roller shutter."""
 import unittest
+
 from pyvlx.exception import PyVLXException
 
 

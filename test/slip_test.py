@@ -1,6 +1,7 @@
 """Test for slip helper functions."""
 import unittest
-from pyvlx.slip import decode, encode, is_slip, slip_pack, get_next_slip
+
+from pyvlx.slip import decode, encode, get_next_slip, is_slip, slip_pack
 
 
 class TestSlip(unittest.TestCase):

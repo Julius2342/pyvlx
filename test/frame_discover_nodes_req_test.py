@@ -1,8 +1,9 @@
 """Unit tests for FrameDiscoverNodesRequest."""
 import unittest
+
+from pyvlx.const import NodeType
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameDiscoverNodesRequest
-from pyvlx.const import NodeType
 
 
 class TestFrameNodeDiscover(unittest.TestCase):

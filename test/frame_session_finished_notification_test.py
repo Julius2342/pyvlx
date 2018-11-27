@@ -1,5 +1,6 @@
 """Unit tests for FrameSessionFinishedNotification."""
 import unittest
+
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameSessionFinishedNotification
 

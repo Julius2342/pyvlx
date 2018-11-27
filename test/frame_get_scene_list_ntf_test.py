@@ -1,7 +1,8 @@
 """Unit tests for FrameGetSceneListNotification."""
 import unittest
-from pyvlx.frames import FrameGetSceneListNotification
+
 from pyvlx.frame_creation import frame_from_raw
+from pyvlx.frames import FrameGetSceneListNotification
 
 
 class TestFrameGetSceneListNotification(unittest.TestCase):

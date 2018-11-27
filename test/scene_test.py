@@ -1,6 +1,7 @@
 """Unit test for scene."""
 
 import unittest
+
 from pyvlx import PyVLX, Scene
 
 

@@ -1,7 +1,8 @@
 """Unit tests for FrameDiscoverNodesConfirmation."""
 import unittest
-from pyvlx.frames import FrameDiscoverNodesConfirmation
+
 from pyvlx.frame_creation import frame_from_raw
+from pyvlx.frames import FrameDiscoverNodesConfirmation
 
 
 class TestFrameNodeDiscoverConfirmation(unittest.TestCase):

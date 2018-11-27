@@ -1,7 +1,7 @@
 """Unit test for Scenes object."""
 import unittest
-from pyvlx import PyVLX, Scene, Scenes
 
+from pyvlx import PyVLX, Scene, Scenes
 
 # pylint: disable=too-many-public-methods,invalid-name
 

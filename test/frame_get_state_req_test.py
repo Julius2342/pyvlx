@@ -1,5 +1,6 @@
 """Unit tests for FrameGetStateRequest."""
 import unittest
+
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameGetStateRequest
 

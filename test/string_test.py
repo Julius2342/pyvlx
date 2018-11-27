@@ -1,7 +1,8 @@
 """Unit tests string_helper module."""
 import unittest
-from pyvlx.string_helper import string_to_bytes, bytes_to_string
+
 from pyvlx.exception import PyVLXException
+from pyvlx.string_helper import bytes_to_string, string_to_bytes
 
 
 class TestString(unittest.TestCase):
