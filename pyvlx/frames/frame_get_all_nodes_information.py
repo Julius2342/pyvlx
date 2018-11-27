@@ -1,5 +1,7 @@
 """Module for get all node information from gateway."""
 from enum import Enum
+from datetime import datetime
+import struct
 
 from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation
 from pyvlx.position import Position
@@ -78,7 +80,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.current_position_fp3 = Position()
         self.current_position_fp4 = Position()
         self.remaining_time = 0
-        self.timestamp = bytes(4)
+        self.timestamp = 0
         self.nbr_of_alias = 0
         self.alias_array = bytes(20)  # @VELUX: Looks like your documentation is wrong here. Alias array has 20 bytes.
 
@@ -110,7 +112,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         payload += bytes(self.current_position_fp3.raw)
         payload += bytes(self.current_position_fp4.raw)
         payload += bytes([self.remaining_time >> 8 & 255, self.remaining_time & 255])
-        payload += bytes(self.timestamp)
+        payload += struct.pack(">I", self.timestamp)
         payload += bytes([self.nbr_of_alias])
         payload += self.alias_array
         return payload
@@ -137,9 +139,14 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.current_position_fp3 = Position(payload[93:95])
         self.current_position_fp4 = Position(payload[95:97])
         self.remaining_time = payload[97] * 256 + payload[98]
-        self.timestamp = payload[99:103]
+        self.timestamp = struct.unpack(">I", payload[99:103])[0]
         self.nbr_of_alias = payload[103]
         self.alias_array = payload[104:125]
+
+    @property
+    def timestamp_formatted(self):
+        """Return time as human readable string."""
+        return datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
     def __str__(self):
         """Return human readable string."""
@@ -149,7 +156,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
             'serial_number=\'{}\' state={} current_position=\'{}\' ' \
             'target=\'{}\' current_position_fp1=\'{}\' current_position_fp2=\'{}\' ' \
             'current_position_fp3=\'{}\' current_position_fp4=\'{}\' ' \
-            'remaining_time={} timestamp={} nbr_of_alias={} alias_array=\'{}\'/>'.format(
+            'remaining_time={} time=\'{}\' nbr_of_alias={} alias_array=\'{}\'/>'.format(
                 self.node_id,
                 self.order,
                 self.placement,
@@ -170,7 +177,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
                 self.current_position_fp3,
                 self.current_position_fp4,
                 self.remaining_time,
-                self.timestamp,
+                self.timestamp_formatted,
                 self.nbr_of_alias,
                 (":".join("{:02x}".format(c) for c in self.alias_array)))
 

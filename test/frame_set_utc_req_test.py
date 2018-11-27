@@ -10,7 +10,7 @@ class TestFrameSetUTCRequest(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\x07 \x00n\xaa\xfd[E'
+    EXAMPLE_FRAME = b'\x00\x07 \x00[\xfd\xaanE'
     EXAMPLE_TS = 1543350894
 
     def test_bytes(self):
@@ -29,4 +29,4 @@ class TestFrameSetUTCRequest(unittest.TestCase):
         frame = FrameSetUTCRequest(timestamp=1543350894)
         self.assertEqual(
             str(frame),
-            '<FrameSetUTCRequest time_formatted="2018-11-27 21:34:54"/>')
+            '<FrameSetUTCRequest time="2018-11-27 21:34:54"/>')

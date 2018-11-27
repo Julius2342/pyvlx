@@ -18,18 +18,18 @@ class FrameSetUTCRequest(FrameBase):
         self.timestamp = timestamp
 
     @property
-    def time_formatted(self):
+    def timestamp_formatted(self):
         """Return time as human readable string."""
         return datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
     def get_payload(self):
         """Return Payload."""
-        return struct.pack("I", self.timestamp)
+        return struct.pack(">I", self.timestamp)
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.timestamp = struct.unpack("I", payload[0:4])[0]
+        self.timestamp = struct.unpack(">I", payload[0:4])[0]
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameSetUTCRequest time_formatted="{}"/>'.format(self.time_formatted)
+        return '<FrameSetUTCRequest time="{}"/>'.format(self.timestamp_formatted)

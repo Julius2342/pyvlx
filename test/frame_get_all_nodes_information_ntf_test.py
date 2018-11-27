@@ -43,7 +43,7 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
         frame.current_position_fp3.position = 3456
         frame.current_position_fp4.position = 4567
         frame.remaining_time = 1
-        frame.timestamp = b'\x03\x03\x02\x03'
+        frame.timestamp = 50528771
         frame.nbr_of_alias = 23
         frame.alias_array = b'01234567890123456789'  # 20 bytes.
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
@@ -72,7 +72,7 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
         self.assertEqual(frame.current_position_fp3.position, 3456)
         self.assertEqual(frame.current_position_fp4.position, 4567)
         self.assertEqual(frame.remaining_time, 1)
-        self.assertEqual(frame.timestamp, b'\x03\x03\x02\x03')
+        self.assertEqual(frame.timestamp, 50528771)
         self.assertEqual(frame.nbr_of_alias, 23)
         self.assertEqual(frame.alias_array, b'01234567890123456789')
 
@@ -87,5 +87,5 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
             'power_mode=1 build_number=7 serial_number=\'01:02:03:04:05:06:06:08\' state=1 '
             'current_position=\'0 %\' target=\'0 %\' current_position_fp1=\'2 %\' '
             'current_position_fp2=\'4 %\' current_position_fp3=\'6 %\' current_position_fp4=\'8 %\' '
-            'remaining_time=1 timestamp=b\'\\x03\\x03\\x02\\x03\' nbr_of_alias=23 '
+            'remaining_time=1 time=\'1971-08-08 20:46:11\' nbr_of_alias=23 '
             'alias_array=\'30:31:32:33:34:35:36:37:38:39:30:31:32:33:34:35:36:37:38:39\'/>')
