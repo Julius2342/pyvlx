@@ -25,7 +25,7 @@ class AliasArray():
 
     def parse_raw(self, raw):
         """Parse alias array from raw bytes."""
-        if type(raw) != bytes:
+        if not isinstance(raw, bytes):
             raise PyVLXException("AliasArray::invalid_type_if_raw", type_raw=type(raw))
         if len(raw) != 21:
             raise PyVLXException("AliasArray::invalid_size", size=len(raw))

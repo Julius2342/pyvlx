@@ -1,6 +1,5 @@
 """Unit tests for data sample obtained from MiSchroe."""
 import unittest
-import os
 
 from pyvlx.slip import get_next_slip
 from pyvlx.const import NodeTypeWithSubtype, NodeVariation

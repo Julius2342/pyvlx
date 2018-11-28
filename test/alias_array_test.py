@@ -22,15 +22,14 @@ class TestAliasArray(unittest.TestCase):
         self.assertEqual(bytes(alias_array), bytes(21))
         self.assertEqual(str(alias_array), "")
 
-
     def test_from_one_element(self):
-        """Test alias_array with one element"""
-        alias_array = AliasArray(raw=b'\x01abcd'+ bytes(16))
-        self.assertEqual(bytes(alias_array), b'\x01abcd'+ bytes(16))
+        """Test alias_array with one element."""
+        alias_array = AliasArray(raw=b'\x01abcd' + bytes(16))
+        self.assertEqual(bytes(alias_array), b'\x01abcd' + bytes(16))
         self.assertEqual(str(alias_array), "6162=6364")
 
     def test_from_four_elements(self):
-        """Test alias_array with one element"""
+        """Test alias_array with one element."""
         alias_array = AliasArray(raw=b'\x05abcd1234efgh5678ijkl')
         self.assertEqual(bytes(alias_array), b'\x05abcd1234efgh5678ijkl')
         self.assertEqual(str(alias_array), '6162=6364, 3132=3334, 6566=6768, 3536=3738, 696a=6b6c')
@@ -42,4 +41,4 @@ class TestAliasArray(unittest.TestCase):
         with self.assertRaises(PyVLXException):
             AliasArray(raw=bytes(20))
         with self.assertRaises(PyVLXException):
-            AliasArray(raw= b'\x06' + bytes(20))
+            AliasArray(raw=b'\x06' + bytes(20))
