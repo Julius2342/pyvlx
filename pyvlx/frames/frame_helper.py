@@ -19,7 +19,7 @@ def extract_from_frame(data):
     if len(data) != length + 3:
         raise PyVLXException("could_not_extract_from_frame_invalid_length", data=data, current_length=len(data), expected_length=length + 3)
     if calc_crc(data[:-1]) != data[-1]:
-        raise PyVLXException("could_not_extract_from_frame_invalid_crc", data=data)
+        raise PyVLXException("could_not_extract_from_frame_invalid_crc", data=data, expected_crc=calc_crc(data[:-1]), current_crc=data[-1])
     payload = data[4:-1]
     try:
         command = Command(data[2] * 256 + data[3])

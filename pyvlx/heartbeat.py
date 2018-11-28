@@ -33,7 +33,6 @@ class Heartbeat():
         self.loop_event.set()
         # Waiting for shutdown of loop()
         await self.stopped_event.wait()
-        print("HEARTBEAT STOPPED")
 
     async def loop(self):
         """Pulse every timeout seconds until stopped."""

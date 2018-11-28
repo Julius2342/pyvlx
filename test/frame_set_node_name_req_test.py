@@ -20,7 +20,6 @@ class TestFrameSetNodeNameRequest(unittest.TestCase):
     def test_bytes(self):
         """Test FrameSetNodeNameRequest with NO_TYPE."""
         frame = FrameSetNodeNameRequest(node_id=4, name="Fnord")
-        print(bytes(frame))
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
     def test_frame_from_raw(self):

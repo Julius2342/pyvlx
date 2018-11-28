@@ -68,8 +68,7 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         self.assertEqual(frame.remaining_time, 0)
         self.assertEqual(frame.timestamp, 1326315943)
         self.assertEqual(frame.timestamp_formatted, '2012-01-11 22:05:43')
-        self.assertEqual(frame.nbr_of_alias, 2)
-        self.assertEqual(frame.alias_array, b'\xd8\x02d\x00\xd8\x03\xba\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+        self.assertEqual(str(frame.alias_array), 'd802=6400, d803=ba00')
         # Crosscheck, Serializing:
         self.assertEqual(bytes(frame), raw)
 
@@ -101,7 +100,6 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         self.assertEqual(frame.remaining_time, 0)
         self.assertEqual(frame.timestamp, 1326315944)
         self.assertEqual(frame.timestamp_formatted, '2012-01-11 22:05:44')
-        self.assertEqual(frame.nbr_of_alias, 2)
-        self.assertEqual(frame.alias_array, b'\xd8\x02d\x00\xd8\x03\xba\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+        self.assertEqual(str(frame.alias_array), 'd802=6400, d803=ba00')
         # Crosscheck, Serializing:
         self.assertEqual(bytes(frame), raw)
