@@ -36,10 +36,6 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         "00:d8:03:ba:00:00:00:00:00:00:00:00:00:00:00:00:" \
         "00:e0:c0"
 
-    def setUp(self):
-        """Set up test class."""
-        os.environ['TZ'] = 'Europe/Berlin'
-
     def test_frame1_from_raw(self):
         """Test parse EXAMPLE_FRAME1 from raw."""
         slip = bytearray.fromhex(self.EXAMPLE_FRAME1.replace(':', ''))

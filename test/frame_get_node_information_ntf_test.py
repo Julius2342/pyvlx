@@ -22,10 +22,6 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         b'\x02\x03\x04\x05\x06\x06\x08\x01\x00\x0c\x00{\x04\xd2\t)\r\x80' \
         b'\x11\xd7\x00\x01\x03\x03\x02\x03\x0501234567890123456789\x67'
 
-    def setUp(self):
-        """Set up test class."""
-        os.environ['TZ'] = 'Europe/Berlin'
-
     def test_bytes(self):
         """Test FrameGetNodeInformationNotification."""
         frame = FrameGetNodeInformationNotification()
