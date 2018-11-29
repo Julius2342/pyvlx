@@ -1,5 +1,6 @@
 """Unit tests for data sample obtained from MiSchroe."""
 import unittest
+from datetime import datetime
 
 from pyvlx.slip import get_next_slip
 from pyvlx.const import NodeTypeWithSubtype, NodeVariation
@@ -62,7 +63,8 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         self.assertEqual(str(frame.current_position_fp4), 'UNKNOWN')
         self.assertEqual(frame.remaining_time, 0)
         self.assertEqual(frame.timestamp, 1326315943)
-        self.assertEqual(frame.timestamp_formatted, '2012-01-11 22:05:43')
+        test_ts = datetime.fromtimestamp(1326315943).strftime('%Y-%m-%d %H:%M:%S')
+        self.assertEqual(frame.timestamp_formatted, test_ts)
         self.assertEqual(str(frame.alias_array), 'd802=6400, d803=ba00')
         # Crosscheck, Serializing:
         self.assertEqual(bytes(frame), raw)
@@ -94,7 +96,8 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         self.assertEqual(str(frame.current_position_fp4), 'UNKNOWN')
         self.assertEqual(frame.remaining_time, 0)
         self.assertEqual(frame.timestamp, 1326315944)
-        self.assertEqual(frame.timestamp_formatted, '2012-01-11 22:05:44')
+        test_ts = datetime.fromtimestamp(1326315944).strftime('%Y-%m-%d %H:%M:%S')
+        self.assertEqual(frame.timestamp_formatted, test_ts)
         self.assertEqual(str(frame.alias_array), 'd802=6400, d803=ba00')
         # Crosscheck, Serializing:
         self.assertEqual(bytes(frame), raw)

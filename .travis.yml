@@ -11,13 +11,10 @@ matrix:
       env: TOXENV=pydocstyle
     - python: "3.5"
       env: TOXENV=py35
-      env: TZ=Europe/Berlin
     - python: "3.6"
       env: TOXENV=py36
-      env: TZ=Europe/Berlin
     - python: "3.6-dev"
       env: TOXENV=py36
-      env: TZ=Europe/Berlin
 #    - python: "3.7-dev"
 #      env: TOXENV=py36
 #    - python: "nightly"

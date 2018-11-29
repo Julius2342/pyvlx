@@ -1,5 +1,6 @@
 """Unit tests for FrameGetAllNodesInformationNotification."""
 import unittest
+from datetime import datetime
 
 from pyvlx.const import NodeTypeWithSubtype, NodeVariation
 from pyvlx.frame_creation import frame_from_raw
@@ -78,6 +79,7 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameGetAllNodesInformationNotification."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
+        test_ts = datetime.fromtimestamp(50528771).strftime('%Y-%m-%d %H:%M:%S')
         self.assertEqual(
             str(frame),
             '<FrameGetAllNodesInformationNotification node_id=23 order=1234 placement=2 '
@@ -86,5 +88,5 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
             'power_mode=1 build_number=7 serial_number=\'01:02:03:04:05:06:06:08\' state=1 '
             'current_position=\'0 %\' target=\'0 %\' current_position_fp1=\'2 %\' '
             'current_position_fp2=\'4 %\' current_position_fp3=\'6 %\' current_position_fp4=\'8 %\' '
-            'remaining_time=1 time=\'1971-08-08 20:46:11\' '
-            'alias_array=\'3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839\'/>')
+            'remaining_time=1 time=\'{}\' '
+            'alias_array=\'3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839\'/>'.format(test_ts))
