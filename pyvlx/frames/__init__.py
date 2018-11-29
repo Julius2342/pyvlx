@@ -25,3 +25,4 @@ from .frame_house_status_monitor_enable_cfm import FrameHouseStatusMonitorEnable
 from .frame_house_status_monitor_enable_req import FrameHouseStatusMonitorEnableRequest
 from .frame_set_utc_req import FrameSetUTCRequest
 from .frame_set_utc_cfm import FrameSetUTCConfirmation
+from .frame_node_state_position_changed_notification import FrameNodeStatePositionChangedNotification

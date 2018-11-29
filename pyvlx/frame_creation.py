@@ -28,6 +28,7 @@ from pyvlx.frames import (FrameActivateSceneConfirmation,
                           FrameHouseStatusMonitorEnableConfirmation,
                           FrameHouseStatusMonitorEnableRequest,
                           FrameNodeInformationChangedNotification,
+                          FrameNodeStatePositionChangedNotification,
                           FramePasswordEnterConfirmation,
                           FramePasswordEnterRequest,
                           FrameSessionFinishedNotification,
@@ -145,5 +146,8 @@ def create_frame(command):
         return FrameHouseStatusMonitorDisableRequest()
     if command == Command.GW_HOUSE_STATUS_MONITOR_DISABLE_CFM:
         return FrameHouseStatusMonitorDisableConfirmation()
+
+    if command == Command.GW_NODE_STATE_POSITION_CHANGED_NTF:
+        return FrameNodeStatePositionChangedNotification()
 
     return None
