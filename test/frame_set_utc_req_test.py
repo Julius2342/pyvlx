@@ -1,5 +1,6 @@
 """Unit tests for FrameSetUTCRequest."""
 import unittest
+from datetime import datetime
 
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameSetUTCRequest
@@ -27,6 +28,7 @@ class TestFrameSetUTCRequest(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameSetUTCRequest."""
         frame = FrameSetUTCRequest(timestamp=1543350894)
+        test_ts = datetime.fromtimestamp(1543350894).strftime('%Y-%m-%d %H:%M:%S')
         self.assertEqual(
             str(frame),
-            '<FrameSetUTCRequest time="2018-11-27 21:34:54"/>')
+            '<FrameSetUTCRequest time="{}"/>'.format(test_ts))
