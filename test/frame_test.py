@@ -5,8 +5,8 @@ from pyvlx import PyVLXException
 from pyvlx.const import Command
 
 
-class TestString(unittest.TestCase):
-    """Test class for String encoding/decoding."""
+class TestFrame(unittest.TestCase):
+    """Test class FrameBase class."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 

@@ -5,7 +5,7 @@ from pyvlx import Blind, PyVLX, RollerShutter, Window
 
 
 # pylint: disable=too-many-public-methods,invalid-name
-class TestException(unittest.TestCase):
+class TestOpeningDevice(unittest.TestCase):
     """Test class for roller shutter."""
 
     def test_window_str(self):

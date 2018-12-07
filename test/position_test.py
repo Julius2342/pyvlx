@@ -5,7 +5,7 @@ from pyvlx.exception import PyVLXException
 from pyvlx.position import Position
 
 
-class TestSlip(unittest.TestCase):
+class TestPosition(unittest.TestCase):
     """Test class for Position class."""
 
     # pylint: disable=invalid-name
