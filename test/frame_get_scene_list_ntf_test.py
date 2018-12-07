@@ -3,6 +3,7 @@ import unittest
 
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameGetSceneListNotification
+from pyvlx import PyVLXException
 
 
 class TestFrameGetSceneListNotification(unittest.TestCase):
@@ -68,3 +69,14 @@ class TestFrameGetSceneListNotification(unittest.TestCase):
             str(frame),
             '<FrameGetSceneListNotification scenes=[(0, \'All Windows Closed\'), '
             + '(1, \'Sleeping Wide Open\'), (2, \'Bath Open\')] remaining_scenes=3>')
+
+    def test_wrong_payload(self):
+        """Test wrong payload length, 2 scenes in len, only one provided."""
+        frame = FrameGetSceneListNotification()
+        with self.assertRaises(PyVLXException) as ctx:
+            frame.from_payload(
+                b'\x02\x00XXX\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+        self.assertEqual(ctx.exception.description, 'scene_list_notification_wrong_length')

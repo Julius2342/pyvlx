@@ -4,6 +4,7 @@ import unittest
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameCommandSendRequest
 from pyvlx.position import Position
+from pyvlx import PyVLXException
 
 
 class TestFrameCommandSendRequest(unittest.TestCase):
@@ -37,3 +38,14 @@ class TestFrameCommandSendRequest(unittest.TestCase):
         self.assertEqual(
             str(frame),
             '<FrameCommandSendRequest node_ids=[1, 2, 3] position="24 %" session_id=1000/>')
+
+    def test_wrong_payload(self):
+        """Test wrong payload length, 2 scenes in len, only one provided."""
+        frame = FrameCommandSendRequest()
+        with self.assertRaises(PyVLXException) as ctx:
+            frame.from_payload(
+                b'\x03\xe8\x01\x03\x00\x00\x0009\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                b'\x00\x15\x01\x02\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                b'\x00\x00\x00\x00\x00\x00\x00')
+        self.assertEqual(ctx.exception.description, 'command_send_request_wrong_node_length')

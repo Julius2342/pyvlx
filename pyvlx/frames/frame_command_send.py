@@ -48,19 +48,17 @@ class FrameCommandSendRequest(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        if len(payload) != 66:
-            raise PyVLXException("FrameCommandSendRequest_has_invalid_payload_length")
         self.session_id = payload[0]*256 + payload[1]
 
         len_node_ids = payload[41]
         if len_node_ids > 20:
-            raise PyVLXException("FrameCommandSendRequest_has_invalid_node_id_length")
+            raise PyVLXException("command_send_request_wrong_node_length")
         self.node_ids = []
         for i in range(len_node_ids):
             self.node_ids.append(payload[42] + i)
         self.position = int(payload[7]/2)
         if self.position > 100:
-            raise PyVLXException("FrameCommandSendRequest_has_invalid_position")
+            raise PyVLXException("command_send_request_wrong_position")
 
     def __str__(self):
         """Return human readable string."""
