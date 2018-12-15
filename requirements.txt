@@ -10,3 +10,4 @@ pytest-cov
 pytest-timeout
 flake8
 pydocstyle
+twine
