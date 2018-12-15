@@ -3,7 +3,7 @@ import unittest
 
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameActivateSceneRequest
-from pyvlx.const import Originator
+from pyvlx.const import Originator, Priority
 
 
 class TestFrameActivateSceneRequest(unittest.TestCase):
@@ -25,6 +25,7 @@ class TestFrameActivateSceneRequest(unittest.TestCase):
         self.assertEqual(frame.scene_id, 4)
         self.assertEqual(frame.session_id, 1000)
         self.assertEqual(frame.originator, Originator.RAIN)
+        self.assertEqual(frame.priority, Priority.USER_LEVEL_2)
 
     def test_str(self):
         """Test string representation of FrameActivateSceneRequest."""

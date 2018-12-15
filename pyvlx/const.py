@@ -237,6 +237,19 @@ class Originator(Enum):
     EMERGENCY = 255
 
 
+class Priority(Enum):
+    """Enum class for priority."""
+
+    PROTECTION_HUMAN = 0
+    PROTECTION_ENVIRONMENT = 1
+    USER_LEVEL_1 = 2
+    USER_LEVEL_2 = 3
+    COMFORT_LEVEL_1 = 4
+    COMFORT_LEVEL_2 = 5
+    COMFORT_LEVEL_3 = 6
+    COMFORT_LEVEL_4 = 7
+
+
 class NodeTypeWithSubtype(Enum):
     """Enum class for node type plus sub type combined values."""
 

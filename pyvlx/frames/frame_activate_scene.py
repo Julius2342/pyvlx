@@ -1,7 +1,7 @@
 """Module for sending command to gw."""
 from enum import Enum
 
-from pyvlx.const import Command, Originator
+from pyvlx.const import Command, Originator, Priority
 
 from .frame import FrameBase
 
@@ -17,12 +17,13 @@ class FrameActivateSceneRequest(FrameBase):
         self.scene_id = scene_id
         self.session_id = session_id
         self.originator = originator
+        self.priority = Priority.USER_LEVEL_2
 
     def get_payload(self):
         """Return Payload."""
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
-        ret += bytes([self.originator.value])  # Originator: Triggered by User
-        ret += bytes([3])  # Priority: User level 2
+        ret += bytes([self.originator.value])
+        ret += bytes([self.priority.value])
         ret += bytes([self.scene_id])
         ret += bytes([0])  # Velocity: Default velocity
         return ret
@@ -31,6 +32,7 @@ class FrameActivateSceneRequest(FrameBase):
         """Init frame from binary data."""
         self.session_id = payload[0]*256 + payload[1]
         self.originator = Originator(payload[2])
+        self.priority = Priority(payload[3])
         self.scene_id = payload[4]
 
     def __str__(self):

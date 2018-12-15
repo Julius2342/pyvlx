@@ -1,7 +1,7 @@
 """Module for sending command to gw."""
 from enum import Enum
 
-from pyvlx.const import Command, Originator
+from pyvlx.const import Command, Originator, Priority
 from pyvlx.exception import PyVLXException
 
 from .frame import FrameBase
@@ -19,14 +19,14 @@ class FrameCommandSendRequest(FrameBase):
         self.position = position
         self.session_id = session_id
         self.originator = originator
+        self.priority = Priority.USER_LEVEL_2
 
     def get_payload(self):
         """Return Payload."""
         # Session id
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([self.originator.value])
-        # Priority
-        ret += bytes([3])
+        ret += bytes([self.priority.value])
         # Parameter active
         ret += bytes([0])
         # FPI 1+2
@@ -50,6 +50,7 @@ class FrameCommandSendRequest(FrameBase):
         """Init frame from binary data."""
         self.session_id = payload[0]*256 + payload[1]
         self.originator = Originator(payload[2])
+        self.priority = Priority(payload[3])
 
         len_node_ids = payload[41]
         if len_node_ids > 20:
