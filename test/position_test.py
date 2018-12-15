@@ -68,7 +68,7 @@ class TestPosition(unittest.TestCase):
         self.assertFalse(Position(raw=b'\xF7\xFF').known)
 
     def test_open_closed(self):
-        """Test open and closed property"""
+        """Test open and closed property."""
         position_open = Position(position_percent=0)
         self.assertFalse(position_open.closed)
         self.assertTrue(position_open.open)
