@@ -222,6 +222,21 @@ class Command(Enum):
     GW_PASSWORD_CHANGED_NTF = 0x3004
 
 
+class Originator(Enum):
+    """Enum class for originator."""
+
+    USER = 1
+    RAIN = 2
+    TIMER = 3
+    UPS = 5  # UPC unit
+    SAAC = 8  # Stand Alone Automatic Controls
+    WIND = 9
+    LOAD_SHEDDING = 11
+    LOCAL_LIGHT = 12
+    UNSPECIFIC_ENVIRONMENT_SENSOR = 13
+    EMERGENCY = 255
+
+
 class NodeTypeWithSubtype(Enum):
     """Enum class for node type plus sub type combined values."""
 

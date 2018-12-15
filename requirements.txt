@@ -1,8 +1,12 @@
+# Dependencies:
 pyyaml
+
+# For testing:
 pylint
-aiohttp
 tox
 coveralls
 pytest
 pytest-cov
 pytest-timeout
+flake8
+pydocstyle
