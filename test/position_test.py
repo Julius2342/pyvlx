@@ -67,6 +67,18 @@ class TestPosition(unittest.TestCase):
         self.assertTrue(Position(raw=b'\xC8\x00').known)
         self.assertFalse(Position(raw=b'\xF7\xFF').known)
 
+    def test_open_closed(self):
+        """Test open and closed property"""
+        position_open = Position(position_percent=0)
+        self.assertFalse(position_open.closed)
+        self.assertTrue(position_open.open)
+        position_closed = Position(position_percent=100)
+        self.assertTrue(position_closed.closed)
+        self.assertFalse(position_closed.open)
+        position_half = Position(position_percent=50)
+        self.assertFalse(position_half.closed)
+        self.assertFalse(position_half.open)
+
     def test_str(self):
         """Test string representation."""
         self.assertEqual(str(Position(raw=b'\xF7\xFF')), "UNKNOWN")
