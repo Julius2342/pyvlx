@@ -29,6 +29,16 @@ class Position():
         return self.raw != Position.UNKNOWN_POSITION
 
     @property
+    def open(self):
+        """True if position is set to fully open."""
+        return self.raw == b'\x00\x00'
+
+    @property
+    def closed(self):
+        """True if position is set to fully closed."""
+        return self.raw == bytes([self.MAX >> 8 & 255, self.MAX & 255])
+
+    @property
     def position(self):
         """Position property."""
         return self.to_int(self.raw)
@@ -41,7 +51,8 @@ class Position():
     @property
     def position_percent(self):
         """Position percent property."""
-        return self.to_percent(self.raw)
+        # inclear why it returns a <property object> here
+        return int(self.to_percent(self.raw))
 
     @position_percent.setter
     def position_percent(self, position_percent):
@@ -97,3 +108,7 @@ class Position():
         if self.raw == Position.UNKNOWN_POSITION:
             return "UNKNOWN"
         return "{} %".format(self.position_percent)
+
+    def __eq__(self, other):
+        """Equal operator."""
+        return self.raw == other.raw

@@ -8,20 +8,26 @@ from .position import Position
 class OpeningDevice(Node):
     """Meta class for opening device with one main parameter for position."""
 
-    async def set_position_percent(self, position_percent):
+    def __init__(self, pyvlx, node_id, name):
+        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name)
+        self.position = Position()
+
+    async def set_position(self, position):
         """Set window to desired position."""
-        command_send = CommandSend(pyvlx=self.pyvlx, node_id=self.node_id, position=Position(position_percent=position_percent))
+        command_send = CommandSend(pyvlx=self.pyvlx, node_id=self.node_id, position=position)
         await command_send.do_api_call()
         if not command_send.success:
             raise PyVLXException("Unable to send command")
+        self.position = position
+        await self.after_update()
 
     async def open(self):
         """Open window."""
-        await self.set_position_percent(0)
+        await self.set_position(Position(position_percent=0))
 
     async def close(self):
         """Close window."""
-        await self.set_position_percent(100)
+        await self.set_position(Position(position_percent=100))
 
 
 class Window(OpeningDevice):
