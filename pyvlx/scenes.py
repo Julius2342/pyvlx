@@ -18,11 +18,11 @@ class Scenes():
 
     def __getitem__(self, key):
         """Return scene by name or by index."""
+        if isinstance(key, int):
+            return self.__scenes[key]
         for scene in self.__scenes:
             if scene.name == key:
                 return scene
-        if isinstance(key, int):
-            return self.__scenes[key]
         raise KeyError
 
     def __len__(self):
