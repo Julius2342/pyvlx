@@ -2,7 +2,9 @@
 from .frames import FrameNodeStatePositionChangedNotification
 from .opening_device import OpeningDevice
 
+
 class NodeUpdater():
+    """Class for updating nodes via incoming frames,  usually received by house monitor."""
 
     def __init__(self, pyvlx):
         """Initialize NodeUpdater object."""
