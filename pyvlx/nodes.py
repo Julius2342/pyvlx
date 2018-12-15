@@ -20,11 +20,11 @@ class Nodes:
 
     def __getitem__(self, key):
         """Return node by name or by index."""
+        if isinstance(key, int):
+            return self.__nodes[key]
         for node in self.__nodes:
             if node.name == key:
                 return node
-        if isinstance(key, int):
-            return self.__nodes[key]
         raise KeyError
 
     def __len__(self):
