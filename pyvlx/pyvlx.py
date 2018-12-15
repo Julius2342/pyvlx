@@ -19,6 +19,7 @@ from .login import Login
 from .nodes import Nodes
 from .scenes import Scenes
 from .set_utc import set_utc
+from .node_updater import update_nodes
 
 
 class PyVLX:
@@ -33,6 +34,7 @@ class PyVLX:
         self.heartbeat.start()
         if log_frames:
             self.connection.register_frame_received_cb(self.log_frame)
+        self.connection.register_frame_received_cb(update_nodes)
         self.nodes = Nodes(self)
         self.scenes = Scenes(self)
         self.version = None
@@ -87,4 +89,4 @@ class PyVLX:
 
     async def log_frame(self, frame):
         """Log frame to logger."""
-        PYVLXLOG.warning("%s", frame)
+        PYVLXLOG.info("%s", frame)
