@@ -30,12 +30,12 @@ class Position():
 
     @property
     def open(self):
-        """True if position is set to fully open."""
+        """Return true if position is set to fully open."""
         return self.raw == b'\x00\x00'
 
     @property
     def closed(self):
-        """True if position is set to fully closed."""
+        """Return true if position is set to fully closed."""
         return self.raw == bytes([self.MAX >> 8 & 255, self.MAX & 255])
 
     @property

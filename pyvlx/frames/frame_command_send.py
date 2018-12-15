@@ -28,8 +28,7 @@ class FrameCommandSendRequest(FrameBase):
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([self.originator.value])
         ret += bytes([self.priority.value])
-        # Parameter active
-        ret += bytes([0])
+        ret += bytes([0])  # ParameterActive pointing to main parameter (MP)
         # FPI 1+2
         ret += bytes([0])
         ret += bytes([0])
@@ -41,9 +40,10 @@ class FrameCommandSendRequest(FrameBase):
         # Nodes array: Number of nodes + node array + padding
         ret += bytes([len(self.node_ids)])  # index array count
         ret += bytes(self.node_ids) + bytes(20-len(self.node_ids))
-        # Pririty Level Lock
+
+        # Priority  Level Lock
         ret += bytes([0])
-        # PLI 1+2
+        # Priority Level information 1+2
         ret += bytes([0, 0])
         # Locktime
         ret += bytes([0])

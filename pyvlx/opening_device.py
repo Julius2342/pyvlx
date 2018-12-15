@@ -9,6 +9,7 @@ class OpeningDevice(Node):
     """Meta class for opening device with one main parameter for position."""
 
     def __init__(self, pyvlx, node_id, name):
+        """Initialize opening device."""
         super().__init__(pyvlx=pyvlx, node_id=node_id, name=name)
         self.position = Position()
 
