@@ -19,7 +19,7 @@ from .login import Login
 from .nodes import Nodes
 from .scenes import Scenes
 from .set_utc import set_utc
-from .node_updater import update_nodes
+from .node_updater import NodeUpdater
 
 
 class PyVLX:
@@ -31,10 +31,11 @@ class PyVLX:
         self.config = Config(self, path, host, password)
         self.connection = Connection(loop=self.loop, config=self.config)
         self.heartbeat = Heartbeat(pyvlx=self)
+        self.node_updater = NodeUpdater(pyvlx=self)
         self.heartbeat.start()
         if log_frames:
             self.connection.register_frame_received_cb(self.log_frame)
-        self.connection.register_frame_received_cb(update_nodes)
+        self.connection.register_frame_received_cb(self.node_updater.process_frame)
         self.nodes = Nodes(self)
         self.scenes = Scenes(self)
         self.version = None
