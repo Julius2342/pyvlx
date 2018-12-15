@@ -3,7 +3,7 @@ import unittest
 from datetime import datetime
 
 from pyvlx.slip import get_next_slip
-from pyvlx.const import NodeTypeWithSubtype, NodeVariation
+from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameGetNodeInformationNotification
 from pyvlx.frames import FrameGetAllNodesInformationNotification
@@ -46,7 +46,7 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         self.assertEqual(frame.order, 4)
         self.assertEqual(frame.placement, 4)
         self.assertEqual(frame.name, 'Fenster Büro')
-        self.assertEqual(frame.velocity, 0)
+        self.assertEqual(frame.velocity, Velocity.DEFAULT)
         self.assertEqual(frame.node_type, NodeTypeWithSubtype.WINDOW_OPENER_WITH_RAIN_SENSOR)
         self.assertEqual(frame.product_group, 213)
         self.assertEqual(frame.product_type, 7)
@@ -79,7 +79,7 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         self.assertEqual(frame.order, 4)
         self.assertEqual(frame.placement, 4)
         self.assertEqual(frame.name, 'Fenster Büro')
-        self.assertEqual(frame.velocity, 0)
+        self.assertEqual(frame.velocity, Velocity.DEFAULT)
         self.assertEqual(frame.node_type, NodeTypeWithSubtype.WINDOW_OPENER_WITH_RAIN_SENSOR)
         self.assertEqual(frame.product_group, 213)
         self.assertEqual(frame.product_type, 7)

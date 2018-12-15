@@ -250,6 +250,15 @@ class Priority(Enum):
     COMFORT_LEVEL_4 = 7
 
 
+class Velocity(Enum):
+    """Enum class for velocity."""
+
+    DEFAULT = 0
+    SILENT = 1
+    FAST = 2
+    NOT_AVAILABLE = 255
+
+
 class NodeTypeWithSubtype(Enum):
     """Enum class for node type plus sub type combined values."""
 

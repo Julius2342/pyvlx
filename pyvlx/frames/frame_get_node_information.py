@@ -3,7 +3,7 @@ from enum import Enum
 from datetime import datetime
 import struct
 
-from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation
+from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.position import Position
 from pyvlx.alias_array import AliasArray
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
@@ -79,7 +79,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.order = 0
         self.placement = 0
         self.name = ""
-        self.velocity = 0
+        self.velocity = Velocity.DEFAULT
         self.node_type = NodeTypeWithSubtype.NO_TYPE
         self.product_group = 0
         self.product_type = 0
@@ -110,7 +110,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         payload += bytes([self.order >> 8 & 255, self.order & 255])
         payload += bytes([self.placement])
         payload += bytes(string_to_bytes(self.name, 64))
-        payload += bytes([self.velocity])
+        payload += bytes([self.velocity.value])
         payload += bytes([self.node_type.value >> 8 & 255, self.node_type.value & 255])
         payload += bytes([self.product_group])
         payload += bytes([self.product_type])
@@ -136,7 +136,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.order = payload[1] * 256 + payload[2]
         self.placement = payload[3]
         self.name = bytes_to_string(payload[4:68])
-        self.velocity = payload[68]
+        self.velocity = Velocity(payload[68])
         self.node_type = NodeTypeWithSubtype(payload[69] * 256 + payload[70])
         self.product_group = payload[71]
         self.product_type = payload[72]

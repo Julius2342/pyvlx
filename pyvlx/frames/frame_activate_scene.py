@@ -1,7 +1,7 @@
 """Module for sending command to gw."""
 from enum import Enum
 
-from pyvlx.const import Command, Originator, Priority
+from pyvlx.const import Command, Originator, Priority, Velocity
 
 from .frame import FrameBase
 
@@ -11,13 +11,14 @@ class FrameActivateSceneRequest(FrameBase):
 
     PAYLOAD_LEN = 6
 
-    def __init__(self, scene_id=None, session_id=None, originator=Originator.USER):
+    def __init__(self, scene_id=None, session_id=None, originator=Originator.USER, velocity=Velocity.DEFAULT):
         """Init Frame."""
         super().__init__(Command.GW_ACTIVATE_SCENE_REQ)
         self.scene_id = scene_id
         self.session_id = session_id
         self.originator = originator
         self.priority = Priority.USER_LEVEL_2
+        self.velocity = velocity
 
     def get_payload(self):
         """Return Payload."""
@@ -25,7 +26,7 @@ class FrameActivateSceneRequest(FrameBase):
         ret += bytes([self.originator.value])
         ret += bytes([self.priority.value])
         ret += bytes([self.scene_id])
-        ret += bytes([0])  # Velocity: Default velocity
+        ret += bytes([self.velocity.value])
         return ret
 
     def from_payload(self, payload):
@@ -34,10 +35,12 @@ class FrameActivateSceneRequest(FrameBase):
         self.originator = Originator(payload[2])
         self.priority = Priority(payload[3])
         self.scene_id = payload[4]
+        self.velocity = Velocity(payload[5])
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameActivateSceneRequest scene_id={} session_id={} originator={}/>'.format(self.scene_id, self.session_id, self.originator)
+        return '<FrameActivateSceneRequest scene_id={} session_id={} originator={} velocity={}/>'.format(
+            self.scene_id, self.session_id, self.originator, self.velocity)
 
 
 class ActivateSceneConfirmationStatus(Enum):

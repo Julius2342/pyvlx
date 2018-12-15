@@ -2,7 +2,7 @@
 import unittest
 from datetime import datetime
 
-from pyvlx.const import NodeTypeWithSubtype, NodeVariation
+from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameGetNodeInformationNotification
 from pyvlx.alias_array import AliasArray
@@ -18,9 +18,9 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
         b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
         b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x00\x00\x03\x00@\x17\r\x01\x01\x07\x01' \
+        b'\x00\x00\x00\x00\x00\x00\x00\x01\x00@\x17\r\x01\x01\x07\x01' \
         b'\x02\x03\x04\x05\x06\x06\x08\x01\x00\x0c\x00{\x04\xd2\t)\r\x80' \
-        b'\x11\xd7\x00\x01\x03\x03\x02\x03\x0501234567890123456789\x67'
+        b'\x11\xd7\x00\x01\x03\x03\x02\x03\x0501234567890123456789\x65'
 
     def test_bytes(self):
         """Test FrameGetNodeInformationNotification."""
@@ -29,7 +29,7 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         frame.order = 1234
         frame.placement = 2
         frame.name = "Fnord23"
-        frame.velocity = 3
+        frame.velocity = Velocity.SILENT
         frame.node_type = NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND
         frame.product_group = 23
         frame.product_type = 13
@@ -57,7 +57,7 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         self.assertEqual(frame.order, 1234)
         self.assertEqual(frame.placement, 2)
         self.assertEqual(frame.name, "Fnord23")
-        self.assertEqual(frame.velocity, 3)
+        self.assertEqual(frame.velocity, Velocity.SILENT)
         self.assertEqual(frame.node_type, NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND)
         self.assertEqual(frame.product_group, 23)
         self.assertEqual(frame.product_type, 13)
@@ -83,7 +83,7 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         self.assertEqual(
             str(frame),
             '<FrameGetNodeInformationNotification node_id=23 order=1234 placement=2 '
-            'name=\'Fnord23\' velocity=3 node_type=\'NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND\' '
+            'name=\'Fnord23\' velocity=Velocity.SILENT node_type=\'NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND\' '
             'product_group=23 product_type=13 node_variation=NodeVariation.TOPHUNG '
             'power_mode=1 build_number=7 serial_number=\'01:02:03:04:05:06:06:08\' state=1 '
             'current_position=\'0 %\' target=\'0 %\' current_position_fp1=\'2 %\' '
