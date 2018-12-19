@@ -19,6 +19,9 @@ class GetSceneList(ApiEvent):
         """Handle incoming API frame, return True if this was the expected frame."""
         if isinstance(frame, FrameGetSceneListConfirmation):
             self.count_scenes = frame.count_scenes
+            if self.count_scenes == 0:
+                self.success = True
+                return True
             # We are still waiting for FrameGetSceneListNotification(s)
             return False
         if isinstance(frame, FrameGetSceneListNotification):
