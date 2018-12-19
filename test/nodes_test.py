@@ -17,14 +17,14 @@ class TestNodes(unittest.TestCase):
         nodes.add(window)
         blind = Blind(pyvlx, 1, 'Blind')
         nodes.add(blind)
-        roller_shutter = RollerShutter(pyvlx, 2, 'Roller Shutter')
+        roller_shutter = RollerShutter(pyvlx, 4, 'Roller Shutter')
         nodes.add(roller_shutter)
         self.assertEqual(nodes['Window'], window)
         self.assertEqual(nodes['Blind'], blind)
         self.assertEqual(nodes['Roller Shutter'], roller_shutter)
         self.assertEqual(nodes[0], window)
         self.assertEqual(nodes[1], blind)
-        self.assertEqual(nodes[2], roller_shutter)
+        self.assertEqual(nodes[4], roller_shutter)
 
     def test_get_item_failed(self):
         """Test get_item with non existing object."""
@@ -34,7 +34,7 @@ class TestNodes(unittest.TestCase):
         nodes.add(window1)
         with self.assertRaises(KeyError):
             nodes['Window_2']  # pylint: disable=pointless-statement
-        with self.assertRaises(IndexError):
+        with self.assertRaises(KeyError):
             nodes[1]  # pylint: disable=pointless-statement
 
     def test_iter(self):

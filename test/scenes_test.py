@@ -17,14 +17,14 @@ class TestScenes(unittest.TestCase):
         scenes.add(scene1)
         scene2 = Scene(pyvlx, 1, 'Scene_2')
         scenes.add(scene2)
-        scene3 = Scene(pyvlx, 2, 'Scene_3')
+        scene3 = Scene(pyvlx, 4, 'Scene_3')
         scenes.add(scene3)
         self.assertEqual(scenes['Scene_1'], scene1)
         self.assertEqual(scenes['Scene_2'], scene2)
         self.assertEqual(scenes['Scene_3'], scene3)
         self.assertEqual(scenes[0], scene1)
         self.assertEqual(scenes[1], scene2)
-        self.assertEqual(scenes[2], scene3)
+        self.assertEqual(scenes[4], scene3)
 
     def test_get_item_failed(self):
         """Test get_item with non existing object."""
@@ -34,7 +34,7 @@ class TestScenes(unittest.TestCase):
         scenes.add(scene1)
         with self.assertRaises(KeyError):
             scenes['Scene_2']  # pylint: disable=pointless-statement
-        with self.assertRaises(IndexError):
+        with self.assertRaises(KeyError):
             scenes[1]  # pylint: disable=pointless-statement
 
     def test_iter(self):

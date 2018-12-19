@@ -19,7 +19,9 @@ class Scenes():
     def __getitem__(self, key):
         """Return scene by name or by index."""
         if isinstance(key, int):
-            return self.__scenes[key]
+            for scene in self.__scenes:
+                if scene.scene_id == key:
+                    return scene
         for scene in self.__scenes:
             if scene.name == key:
                 return scene

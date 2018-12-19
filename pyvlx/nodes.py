@@ -21,7 +21,9 @@ class Nodes:
     def __getitem__(self, key):
         """Return node by name or by index."""
         if isinstance(key, int):
-            return self.__nodes[key]
+            for node in self.__nodes:
+                if node.node_id == key:
+                    return node
         for node in self.__nodes:
             if node.name == key:
                 return node
