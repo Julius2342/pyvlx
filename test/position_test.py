@@ -2,7 +2,7 @@
 import unittest
 
 from pyvlx.exception import PyVLXException
-from pyvlx.position import Position
+from pyvlx import SwitchParameter, SwitchParameterOn, SwitchParameterOff, Parameter, Position, UnknownPosition, CurrentPosition
 
 
 class TestPosition(unittest.TestCase):
@@ -16,9 +16,9 @@ class TestPosition(unittest.TestCase):
 
     def test_raw(self):
         """Test raw assignement."""
-        self.assertEqual(Position(raw=b'\x00\x00').raw, b'\x00\x00')
-        self.assertEqual(Position(raw=b'\x0A\x05').raw, b'\x0A\x05')
-        self.assertEqual(Position(raw=b'\xC8\x00').raw, b'\xC8\x00')
+        self.assertEqual(Position(Parameter(raw=b'\x00\x00')).raw, b'\x00\x00')
+        self.assertEqual(Position(Parameter(raw=b'\x0A\x05')).raw, b'\x0A\x05')
+        self.assertEqual(Position(Parameter(raw=b'\xC8\x00')).raw, b'\xC8\x00')
 
     def test_position(self):
         """Test initiaization with position value."""
@@ -38,7 +38,7 @@ class TestPosition(unittest.TestCase):
 
     def test_conversion(self):
         """Test conversion from one form to other."""
-        self.assertEqual(Position(raw=b'\x0A\x05').position, 2565)
+        self.assertEqual(Position(Parameter(raw=b'\x0A\x05')).position, 2565)
         self.assertEqual(Position(position_percent=50).position, 25600)
         self.assertEqual(Position(position=12345).position_percent, 24)
 
@@ -57,15 +57,22 @@ class TestPosition(unittest.TestCase):
         with self.assertRaises(PyVLXException):
             Position(position_percent=101)
         with self.assertRaises(PyVLXException):
-            Position(raw=b'\xC8\x01')
+            Parameter(raw=b'\xC8\x01')
         with self.assertRaises(PyVLXException):
-            Position(raw=b'\xC9\x00')
+            Parameter(raw=b'\xC9\x00')
+        with self.assertRaises(PyVLXException):
+            Parameter(raw=b'\x00\x00\x00')
+        with self.assertRaises(PyVLXException):
+            Parameter(raw='\x00\x00')
 
     def test_known(self):
         """Test 'known' property."""
-        self.assertTrue(Position(raw=b'\x12\x00').known)
-        self.assertTrue(Position(raw=b'\xC8\x00').known)
-        self.assertFalse(Position(raw=b'\xF7\xFF').known)
+        self.assertTrue(Position(Parameter(raw=b'\x12\x00')).known)
+        self.assertTrue(Position(Parameter(raw=b'\xC8\x00')).known)
+        self.assertFalse(Position(Parameter(raw=b'\xF7\xFF')).known)
+
+        # Well, not really know. But at least not unknown:
+        self.assertTrue(Position(Parameter(raw=b'\xD2\x00')).known)
 
     def test_open_closed(self):
         """Test open and closed property."""
@@ -81,5 +88,44 @@ class TestPosition(unittest.TestCase):
 
     def test_str(self):
         """Test string representation."""
-        self.assertEqual(str(Position(raw=b'\xF7\xFF')), "UNKNOWN")
+        self.assertEqual(str(Position(Parameter(raw=b'\xF7\xFF'))), "UNKNOWN")
         self.assertEqual(str(Position(position_percent=50)), "50 %")
+
+    def test_unknown_position_class(self):
+        """Test UnknownPosition class."""
+        self.assertEqual(UnknownPosition().raw, b'\xF7\xFF')
+
+    def test_current_position_class(self):
+        """Test CurrentPosition class."""
+        self.assertEqual(CurrentPosition().raw, b'\xD2\x00')
+
+    def test_on_off(self):
+        """Test SwitchParameter parameter."""
+        parameter = SwitchParameter()
+        self.assertFalse(parameter.is_on())
+        self.assertFalse(parameter.is_off())
+        parameter.set_on()
+        self.assertTrue(parameter.is_on())
+        self.assertFalse(parameter.is_off())
+        parameter.set_off()
+        self.assertFalse(parameter.is_on())
+        self.assertTrue(parameter.is_off())
+
+    def test_parsing_on_off(self):
+        """Test parsing OnOFf from raw."""
+        parameter_on = SwitchParameter(Parameter(raw=b'\x00\x00'))
+        self.assertTrue(parameter_on.is_on())
+        self.assertFalse(parameter_on.is_off())
+        parameter_off = SwitchParameter(Parameter(raw=b'\xC8\x00'))
+        self.assertFalse(parameter_off.is_on())
+        self.assertTrue(parameter_off.is_off())
+
+    def test_switch_parameter_on_class(self):
+        """Test SwitchParameterOn class."""
+        self.assertTrue(SwitchParameterOn().is_on())
+        self.assertFalse(SwitchParameterOn().is_off())
+
+    def test_switch_parameter_off_class(self):
+        """Test SwitchParameterOff class."""
+        self.assertFalse(SwitchParameterOff().is_on())
+        self.assertTrue(SwitchParameterOff().is_off())

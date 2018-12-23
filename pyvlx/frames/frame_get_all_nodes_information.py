@@ -4,7 +4,7 @@ from datetime import datetime
 import struct
 
 from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
-from pyvlx.position import Position
+from pyvlx.parameter import Parameter
 from pyvlx.alias_array import AliasArray
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
 
@@ -74,12 +74,12 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.build_number = 0
         self._serial_number = bytes(8)
         self.state = 0
-        self.current_position = Position()
-        self.target = Position()
-        self.current_position_fp1 = Position()
-        self.current_position_fp2 = Position()
-        self.current_position_fp3 = Position()
-        self.current_position_fp4 = Position()
+        self.current_position = Parameter()
+        self.target = Parameter()
+        self.current_position_fp1 = Parameter()
+        self.current_position_fp2 = Parameter()
+        self.current_position_fp3 = Parameter()
+        self.current_position_fp4 = Parameter()
         self.remaining_time = 0
         self.timestamp = 0
         self.alias_array = AliasArray()
@@ -132,12 +132,12 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.build_number = payload[75]
         self._serial_number = payload[76:84]
         self.state = payload[84]
-        self.current_position = Position(payload[85:87])
-        self.target = Position(payload[87:89])
-        self.current_position_fp1 = Position(payload[89:91])
-        self.current_position_fp2 = Position(payload[91:93])
-        self.current_position_fp3 = Position(payload[93:95])
-        self.current_position_fp4 = Position(payload[95:97])
+        self.current_position = Parameter(payload[85:87])
+        self.target = Parameter(payload[87:89])
+        self.current_position_fp1 = Parameter(payload[89:91])
+        self.current_position_fp2 = Parameter(payload[91:93])
+        self.current_position_fp3 = Parameter(payload[93:95])
+        self.current_position_fp4 = Parameter(payload[95:97])
         self.remaining_time = payload[97] * 256 + payload[98]
         self.timestamp = struct.unpack(">I", payload[99:103])[0]
         self.alias_array = AliasArray(payload[103:125])

@@ -12,12 +12,12 @@ from pyvlx.session_id import get_new_session_id
 class CommandSend(ApiEvent):
     """Class for sending command to API."""
 
-    def __init__(self, pyvlx, node_id, position, wait_for_completion=True, timeout_in_seconds=60):
+    def __init__(self, pyvlx, node_id, parameter, wait_for_completion=True, timeout_in_seconds=60):
         """Initialize SceneList class."""
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
         self.success = False
         self.node_id = node_id
-        self.position = position
+        self.parameter = parameter
         self.wait_for_completion = wait_for_completion
         self.session_id = None
 
@@ -41,4 +41,4 @@ class CommandSend(ApiEvent):
     def request_frame(self):
         """Construct initiating frame."""
         self.session_id = get_new_session_id()
-        return FrameCommandSendRequest(node_ids=[self.node_id], position=self.position, session_id=self.session_id)
+        return FrameCommandSendRequest(node_ids=[self.node_id], parameter=self.parameter, session_id=self.session_id)

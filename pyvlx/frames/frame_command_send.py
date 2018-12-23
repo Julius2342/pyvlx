@@ -3,7 +3,7 @@ from enum import Enum
 
 from pyvlx.const import Command, Originator, Priority
 from pyvlx.exception import PyVLXException
-from pyvlx.position import Position
+from pyvlx.parameter import Parameter
 
 from .frame import FrameBase
 
@@ -13,11 +13,11 @@ class FrameCommandSendRequest(FrameBase):
 
     PAYLOAD_LEN = 66
 
-    def __init__(self, node_ids=None, position=Position(), session_id=None, originator=Originator.USER):
+    def __init__(self, node_ids=None, parameter=Parameter(), session_id=None, originator=Originator.USER):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_SEND_REQ)
         self.node_ids = node_ids
-        self.position = position
+        self.parameter = parameter
         self.session_id = session_id
         self.originator = originator
         self.priority = Priority.USER_LEVEL_2
@@ -33,8 +33,8 @@ class FrameCommandSendRequest(FrameBase):
         ret += bytes([0])
         ret += bytes([0])
 
-        # Main parameter + functional parameter (in our case: position)
-        ret += bytes(self.position)
+        # Main parameter + functional parameter
+        ret += bytes(self.parameter)
         ret += bytes(32)
 
         # Nodes array: Number of nodes + node array + padding
@@ -62,14 +62,12 @@ class FrameCommandSendRequest(FrameBase):
         for i in range(len_node_ids):
             self.node_ids.append(payload[42] + i)
 
-        self.position = int(payload[7]/2)
-        if self.position > 100:
-            raise PyVLXException("command_send_request_wrong_position")
+        self.parameter = Parameter(payload[7:9])
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameCommandSendRequest node_ids={} position="{}" session_id={} originator={}/>'.format(
-            self.node_ids, self.position, self.session_id,
+        return '<FrameCommandSendRequest node_ids={} parameter="{}" session_id={} originator={}/>'.format(
+            self.node_ids, self.parameter, self.session_id,
             self.originator)
 
 

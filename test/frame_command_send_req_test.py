@@ -3,7 +3,7 @@ import unittest
 
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameCommandSendRequest
-from pyvlx.position import Position
+from pyvlx import Position
 from pyvlx.const import Originator
 from pyvlx import PyVLXException
 
@@ -22,7 +22,7 @@ class TestFrameCommandSendRequest(unittest.TestCase):
 
     def test_bytes(self):
         """Test FrameCommandSendRequest with NO_TYPE."""
-        frame = FrameCommandSendRequest(node_ids=[1, 2, 3], position=Position(position_percent=75), session_id=1000, originator=Originator.RAIN)
+        frame = FrameCommandSendRequest(node_ids=[1, 2, 3], parameter=Position(position_percent=75), session_id=1000, originator=Originator.RAIN)
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
     def test_frame_from_raw(self):
@@ -30,16 +30,16 @@ class TestFrameCommandSendRequest(unittest.TestCase):
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameCommandSendRequest))
         self.assertEqual(frame.node_ids, [1, 2, 3])
-        self.assertEqual(frame.position, 75)
+        self.assertEqual(Position(frame.parameter).position_percent, 75)
         self.assertEqual(frame.session_id, 1000)
         self.assertEqual(frame.originator, Originator.RAIN)
 
     def test_str(self):
         """Test string representation of FrameCommandSendRequest."""
-        frame = FrameCommandSendRequest(node_ids=[1, 2, 3], position=Position(position=12345), session_id=1000, originator=Originator.RAIN)
+        frame = FrameCommandSendRequest(node_ids=[1, 2, 3], parameter=Position(position=12345), session_id=1000, originator=Originator.RAIN)
         self.assertEqual(
             str(frame),
-            '<FrameCommandSendRequest node_ids=[1, 2, 3] position="24 %" session_id=1000 originator=Originator.RAIN/>')
+            '<FrameCommandSendRequest node_ids=[1, 2, 3] parameter="24 %" session_id=1000 originator=Originator.RAIN/>')
 
     def test_wrong_payload(self):
         """Test wrong payload length, 2 scenes in len, only one provided."""
