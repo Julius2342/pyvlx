@@ -3,7 +3,7 @@ from enum import Enum
 
 from pyvlx.const import Command, Originator, Priority
 from pyvlx.exception import PyVLXException
-from pyvlx.position import Position
+from pyvlx.parameter import Position
 
 from .frame import FrameBase
 

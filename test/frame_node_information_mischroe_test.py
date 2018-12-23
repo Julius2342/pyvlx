@@ -7,6 +7,7 @@ from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameGetNodeInformationNotification
 from pyvlx.frames import FrameGetAllNodesInformationNotification
+from pyvlx.parameter import Position
 
 
 class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
@@ -55,12 +56,12 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         self.assertEqual(frame.build_number, 30)
         self.assertEqual(frame.serial_number, '53:36:27:26:10:2f:00:81')
         self.assertEqual(frame.state, 5)
-        self.assertEqual(str(frame.current_position), '100 %')
-        self.assertEqual(str(frame.target), '100 %')
-        self.assertEqual(str(frame.current_position_fp1), '0 %')
-        self.assertEqual(str(frame.current_position_fp2), 'UNKNOWN')
-        self.assertEqual(str(frame.current_position_fp3), 'UNKNOWN')
-        self.assertEqual(str(frame.current_position_fp4), 'UNKNOWN')
+        self.assertEqual(str(Position(frame.current_position)), '100 %')
+        self.assertEqual(str(Position(frame.target)), '100 %')
+        self.assertEqual(str(Position(frame.current_position_fp1)), '0 %')
+        self.assertEqual(str(frame.current_position_fp2), '0xF7FF')
+        self.assertEqual(str(frame.current_position_fp3), '0xF7FF')
+        self.assertEqual(str(frame.current_position_fp4), '0xF7FF')
         self.assertEqual(frame.remaining_time, 0)
         self.assertEqual(frame.timestamp, 1326315943)
         test_ts = datetime.fromtimestamp(1326315943).strftime('%Y-%m-%d %H:%M:%S')
@@ -88,12 +89,12 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         self.assertEqual(frame.build_number, 30)
         self.assertEqual(frame.serial_number, '53:36:27:26:10:2f:00:81')
         self.assertEqual(frame.state, 5)
-        self.assertEqual(str(frame.current_position), '100 %')
-        self.assertEqual(str(frame.target), '100 %')
-        self.assertEqual(str(frame.current_position_fp1), '0 %')
-        self.assertEqual(str(frame.current_position_fp2), 'UNKNOWN')
-        self.assertEqual(str(frame.current_position_fp3), 'UNKNOWN')
-        self.assertEqual(str(frame.current_position_fp4), 'UNKNOWN')
+        self.assertEqual(str(Position(frame.current_position)), '100 %')
+        self.assertEqual(str(Position(frame.target)), '100 %')
+        self.assertEqual(str(Position(frame.current_position_fp1)), '0 %')
+        self.assertEqual(str(Position(frame.current_position_fp2)), 'UNKNOWN')
+        self.assertEqual(str(Position(frame.current_position_fp3)), 'UNKNOWN')
+        self.assertEqual(str(Position(frame.current_position_fp4)), 'UNKNOWN')
         self.assertEqual(frame.remaining_time, 0)
         self.assertEqual(frame.timestamp, 1326315944)
         test_ts = datetime.fromtimestamp(1326315944).strftime('%Y-%m-%d %H:%M:%S')

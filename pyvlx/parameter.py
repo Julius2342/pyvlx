@@ -2,24 +2,91 @@
 from .exception import PyVLXException
 
 
-class Position():
-    """Class for storing a position."""
+class Parameter():
+    """General object for storing parameters."""
 
-    UNKNOWN_POSITION = 63487  # F7 FF
+    UNKNOWN_VALUE = 63487  # F7 FF
     CURRENT_POSITION = 53760  # D2 00
     MAX = 51200  # C8 00
     MIN = 0  # 00 00
+    ON = 0  # 00 00
+    OFF = 51200  # C8 00
 
-    def __init__(self, raw=None, position=None, position_percent=None):
-        """Initialize Position class."""
+    def __init__(self, raw=None):
+        """Initialize Parameter class."""
+        self.raw = self.from_int(Position.UNKNOWN_VALUE)
         if raw is not None:
             self.raw = self.from_raw(raw)
+
+    def from_parameter(self, parameter):
+        if not isinstance(parameter, Parameter):
+            raise Exception("parameter::from_parameter_wrong_object")
+        self.raw = parameter.raw
+
+    @staticmethod
+    def from_int(value):
+        """Create raw out of position vlaue."""
+        if not isinstance(value, int):
+            raise PyVLXException("value_has_to_be_int")
+        if not Parameter.is_valid_int(value):
+            raise PyVLXException("value_out_of_range")
+        return bytes([value >> 8 & 255, value & 255])
+
+    @staticmethod
+    def is_valid_int(value):
+        """Test if value can be rendered out of int."""
+        if 0 <= value <= Parameter.MAX:  # This includes ON and OFF
+            return True
+        if value == Parameter.UNKNOWN_VALUE:
+            return True
+        if value == Parameter.CURRENT_POSITION:
+            return True
+        return False
+
+    @staticmethod
+    def from_raw(raw):
+        """Test if raw packets are valid for initialization of Position."""
+        if not isinstance(raw, bytes):
+            raise PyVLXException("Position::raw_must_be_bytes")
+        if len(raw) != 2:
+            raise PyVLXException("Position::raw_must_be_two_bytes")
+        if raw != Position.from_int(Position.CURRENT_POSITION) and \
+                raw != Position.from_int(Position.UNKNOWN_VALUE) and \
+                Position.to_int(raw) > Position.MAX:
+            raise PyVLXException("position::raw_exceed_limit", raw=raw)
+        return raw
+
+    def __eq__(self, other):
+        """Equal operator."""
+        return self.raw == other.raw
+
+    def __str__(self):
+        """Return string representation of object."""
+        return '0x' + ''.join('{:02X}'.format(x) for x in self.raw)
+
+
+class OnOff(Parameter):
+    """Class for storing On or Off values."""
+
+    def __init__(self, parameter=None):
+        """Initialize Parameter class."""
+        super().__init__()
+        if parameter is not None:
+            self.from_parameter(parameter)
+
+
+class Position(Parameter):
+    """Class for storing a position."""
+
+    def __init__(self, parameter=None, position=None, position_percent=None):
+        """Initialize Position class."""
+        super().__init__()
+        if parameter is not None:
+            self.from_parameter(parameter)
         elif position is not None:
             self.position = position
         elif position_percent is not None:
             self.position_percent = position_percent
-        else:
-            self.raw = self.from_int(Position.UNKNOWN_POSITION)
 
     def __bytes__(self):
         """Convert object in byte representation."""
@@ -28,7 +95,7 @@ class Position():
     @property
     def known(self):
         """Known property, true if position is not in an unknown position."""
-        return self.raw != self.from_int(Position.UNKNOWN_POSITION)
+        return self.raw != self.from_int(Position.UNKNOWN_VALUE)
 
     @property
     def open(self):
@@ -62,26 +129,6 @@ class Position():
         self.raw = self.from_percent(position_percent)
 
     @staticmethod
-    def from_int(position):
-        """Create raw out of position vlaue."""
-        if not isinstance(position, int):
-            raise PyVLXException("Position::position_has_to_be_int")
-        if not Position.is_valid_int(position):
-            raise PyVLXException("Position::position_out_of_range")
-        return bytes([position >> 8 & 255, position & 255])
-
-    @staticmethod
-    def is_valid_int(position):
-        """Test if position can be rendered out of int."""
-        if 0 <= position <= Position.MAX:
-            return True
-        if position == Position.UNKNOWN_POSITION:
-            return True
-        if position == Position.CURRENT_POSITION:
-            return True
-        return False
-
-    @staticmethod
     def to_int(raw):
         """Create int position value out of raw."""
         return raw[0] * 256 + raw[1]
@@ -103,28 +150,11 @@ class Position():
         # The first byte has the vlue from 0 to 200. Ignoring the second one.
         return int(raw[0]/2)
 
-    @staticmethod
-    def from_raw(raw):
-        """Test if raw packets are valid for initialization of Position."""
-        if not isinstance(raw, bytes):
-            raise PyVLXException("Position::raw_must_be_bytes")
-        if len(raw) != 2:
-            raise PyVLXException("Position::raw_must_be_two_bytes")
-        if raw != Position.from_int(Position.CURRENT_POSITION) and \
-                raw != Position.from_int(Position.UNKNOWN_POSITION) and \
-                Position.to_int(raw) > Position.MAX:
-            raise PyVLXException("position::raw_exceed_limit", raw=raw)
-        return raw
-
     def __str__(self):
         """Return string representation of object."""
-        if self.raw == self.from_int(Position.UNKNOWN_POSITION):
+        if self.raw == self.from_int(Position.UNKNOWN_VALUE):
             return "UNKNOWN"
         return "{} %".format(self.position_percent)
-
-    def __eq__(self, other):
-        """Equal operator."""
-        return self.raw == other.raw
 
 
 class UnknownPosition(Position):
@@ -132,7 +162,7 @@ class UnknownPosition(Position):
 
     def __init__(self):
         """Initialize UnknownPosition class."""
-        super().__init__(position=Position.UNKNOWN_POSITION)
+        super().__init__(position=Position.UNKNOWN_VALUE)
 
 
 class CurrentPosition(Position):

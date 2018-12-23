@@ -6,6 +6,7 @@ from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameGetNodeInformationNotification
 from pyvlx.alias_array import AliasArray
+from pyvlx.parameter import Position
 
 
 class TestFrameGetNodeInformationNotification(unittest.TestCase):
@@ -38,12 +39,12 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         frame.build_number = 7
         frame._serial_number = b'\x01\x02\x03\x04\x05\x06\x06\x08'  # pylint: disable=protected-access
         frame.state = 1
-        frame.current_position.position = 12
-        frame.target.position = 123
-        frame.current_position_fp1.position = 1234
-        frame.current_position_fp2.position = 2345
-        frame.current_position_fp3.position = 3456
-        frame.current_position_fp4.position = 4567
+        frame.current_position = Position(position=12)
+        frame.target = Position(position=123)
+        frame.current_position_fp1 = Position(position=1234)
+        frame.current_position_fp2 = Position(position=2345)
+        frame.current_position_fp3 = Position(position=3456)
+        frame.current_position_fp4 = Position(position=4567)
         frame.remaining_time = 1
         frame.timestamp = 50528771
         frame.alias_array = AliasArray(raw=b'\x0501234567890123456789')
@@ -66,12 +67,12 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         self.assertEqual(frame.build_number, 7)
         self.assertEqual(frame.serial_number, '01:02:03:04:05:06:06:08')
         self.assertEqual(frame.state, 1)
-        self.assertEqual(frame.current_position.position, 12)
-        self.assertEqual(frame.target.position, 123)
-        self.assertEqual(frame.current_position_fp1.position, 1234)
-        self.assertEqual(frame.current_position_fp2.position, 2345)
-        self.assertEqual(frame.current_position_fp3.position, 3456)
-        self.assertEqual(frame.current_position_fp4.position, 4567)
+        self.assertEqual(Position(frame.current_position).position, 12)
+        self.assertEqual(Position(frame.target).position, 123)
+        self.assertEqual(Position(frame.current_position_fp1).position, 1234)
+        self.assertEqual(Position(frame.current_position_fp2).position, 2345)
+        self.assertEqual(Position(frame.current_position_fp3).position, 3456)
+        self.assertEqual(Position(frame.current_position_fp4).position, 4567)
         self.assertEqual(frame.remaining_time, 1)
         self.assertEqual(frame.timestamp, 50528771)
         self.assertEqual(str(frame.alias_array), '3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839')
@@ -86,7 +87,7 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
             'name=\'Fnord23\' velocity=Velocity.SILENT node_type=\'NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND\' '
             'product_group=23 product_type=13 node_variation=NodeVariation.TOPHUNG '
             'power_mode=1 build_number=7 serial_number=\'01:02:03:04:05:06:06:08\' state=1 '
-            'current_position=\'0 %\' target=\'0 %\' current_position_fp1=\'2 %\' '
-            'current_position_fp2=\'4 %\' current_position_fp3=\'6 %\' current_position_fp4=\'8 %\' '
+            'current_position=\'0x000C\' target=\'0x007B\' current_position_fp1=\'0x04D2\' '
+            'current_position_fp2=\'0x0929\' current_position_fp3=\'0x0D80\' current_position_fp4=\'0x11D7\' '
             'remaining_time=1 time=\'{}\' '
             'alias_array=\'3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839\'/>'.format(test_ts))

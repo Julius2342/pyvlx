@@ -3,7 +3,7 @@ import unittest
 
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameCommandSendRequest
-from pyvlx.position import Position
+from pyvlx import Position
 from pyvlx.const import Originator
 from pyvlx import PyVLXException
 
