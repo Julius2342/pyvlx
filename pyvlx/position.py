@@ -72,6 +72,7 @@ class Position():
 
     @staticmethod
     def is_valid_int(position):
+        """Test if position can be rendered out of int."""
         if 0 <= position <= Position.MAX:
             return True
         if position == Position.UNKNOWN_POSITION:
@@ -109,7 +110,7 @@ class Position():
             raise PyVLXException("Position::raw_must_be_bytes")
         if len(raw) != 2:
             raise PyVLXException("Position::raw_must_be_two_bytes")
-        if  raw != Position.from_int(Position.CURRENT_POSITION) and \
+        if raw != Position.from_int(Position.CURRENT_POSITION) and \
                 raw != Position.from_int(Position.UNKNOWN_POSITION) and \
                 Position.to_int(raw) > Position.MAX:
             raise PyVLXException("position::raw_exceed_limit", raw=raw)
