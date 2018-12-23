@@ -129,4 +129,3 @@ class TestPosition(unittest.TestCase):
         """Test SwitchParameterOff class."""
         self.assertFalse(SwitchParameterOff().is_on())
         self.assertTrue(SwitchParameterOff().is_off())
-

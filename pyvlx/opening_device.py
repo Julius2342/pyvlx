@@ -15,7 +15,7 @@ class OpeningDevice(Node):
 
     async def set_position(self, position):
         """Set window to desired position."""
-        command_send = CommandSend(pyvlx=self.pyvlx, node_id=self.node_id, position=position)
+        command_send = CommandSend(pyvlx=self.pyvlx, node_id=self.node_id, parameter=position)
         await command_send.do_api_call()
         if not command_send.success:
             raise PyVLXException("Unable to send command")
