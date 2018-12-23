@@ -1,8 +1,8 @@
 """Module for retrieving node information from API."""
 from .api_event import ApiEvent
-from .frames import (FrameGetNodeInformationConfirmation,
-                     FrameGetNodeInformationNotification,
-                     FrameGetNodeInformationRequest)
+from .frames import (
+    FrameGetNodeInformationConfirmation, FrameGetNodeInformationNotification,
+    FrameGetNodeInformationRequest)
 
 
 class GetNodeInformation(ApiEvent):

@@ -2,12 +2,13 @@
 import unittest
 from datetime import datetime
 
-from pyvlx.slip import get_next_slip
 from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameGetNodeInformationNotification
-from pyvlx.frames import FrameGetAllNodesInformationNotification
+from pyvlx.frames import (
+    FrameGetAllNodesInformationNotification,
+    FrameGetNodeInformationNotification)
 from pyvlx.parameter import Position
+from pyvlx.slip import get_next_slip
 
 
 class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):

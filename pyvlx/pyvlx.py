@@ -16,10 +16,10 @@ from .heartbeat import Heartbeat
 from .house_status_monitor import house_status_monitor_enable
 from .log import PYVLXLOG
 from .login import Login
+from .node_updater import NodeUpdater
 from .nodes import Nodes
 from .scenes import Scenes
 from .set_utc import set_utc
-from .node_updater import NodeUpdater
 
 
 class PyVLX:

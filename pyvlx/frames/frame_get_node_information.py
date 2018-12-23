@@ -1,11 +1,11 @@
 """Module for get node information from gateway."""
-from enum import Enum
-from datetime import datetime
 import struct
+from datetime import datetime
+from enum import Enum
 
+from pyvlx.alias_array import AliasArray
 from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.parameter import Parameter
-from pyvlx.alias_array import AliasArray
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
 
 from .frame import FrameBase

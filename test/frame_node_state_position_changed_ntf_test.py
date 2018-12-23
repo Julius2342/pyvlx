@@ -2,9 +2,9 @@
 import unittest
 from datetime import datetime
 
+from pyvlx import Position
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameNodeStatePositionChangedNotification
-from pyvlx import Position
 
 
 class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):

@@ -1,6 +1,7 @@
 """Just a demo of the new PyVLX module."""
 import asyncio
-from pyvlx import PyVLX, Position
+
+from pyvlx import Position, PyVLX
 
 
 async def main(loop):

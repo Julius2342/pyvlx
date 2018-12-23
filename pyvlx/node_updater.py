@@ -1,7 +1,7 @@
 """Module for updating nodes via frames."""
 from .frames import FrameNodeStatePositionChangedNotification
-from .opening_device import OpeningDevice
 from .log import PYVLXLOG
+from .opening_device import OpeningDevice
 from .parameter import Position
 
 
