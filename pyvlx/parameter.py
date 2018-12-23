@@ -19,6 +19,7 @@ class Parameter():
             self.raw = self.from_raw(raw)
 
     def from_parameter(self, parameter):
+        """Set internal raw state from parameter."""
         if not isinstance(parameter, Parameter):
             raise Exception("parameter::from_parameter_wrong_object")
         self.raw = parameter.raw
@@ -83,11 +84,11 @@ class SwitchParameter(Parameter):
         self.raw = self.from_int(Parameter.OFF)
 
     def is_on(self):
-        """Returns True if oarameter is in 'on' state."""
+        """Return True if oarameter is in 'on' state."""
         return self.raw == self.from_int(Parameter.ON)
 
     def is_off(self):
-        """Returns True if oarameter is in 'off' state."""
+        """Return True if oarameter is in 'off' state."""
         return self.raw == self.from_int(Parameter.OFF)
 
 
