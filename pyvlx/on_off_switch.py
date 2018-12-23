@@ -2,7 +2,7 @@
 from .command_send import CommandSend
 from .exception import PyVLXException
 from .node import Node
-from .parameter import SwitchParameter, SwitchParameterOn, SwitchParameterOff
+from .parameter import SwitchParameter, SwitchParameterOff, SwitchParameterOn
 
 
 class OnOffSwitch(Node):

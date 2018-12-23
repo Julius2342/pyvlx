@@ -1,6 +1,6 @@
 """Module for get node information from gateway."""
-from datetime import datetime
 import struct
+from datetime import datetime
 
 from pyvlx.const import Command
 from pyvlx.parameter import Parameter

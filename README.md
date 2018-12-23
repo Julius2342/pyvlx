@@ -5,23 +5,6 @@ PyVLX - controling VELUX windows with Python
 
 PyVLX uses the Velux KLF 200 interface to control io-Homecontrol devices, e.g. Velux Windows.
 
-NEW API!!!
-----------
-
-Velux published a new API. Connecting to the new API is still work in progress.
-
-The [current state can be found here](https://github.com/Julius2342/pyvlx/blob/master/examples/demo.py).
-
-This wrapper can already:
-
-* Login to KLF 200 with password.
-* Retrieve scene list.
-* Run/activate scene.
-* Retrieve object list.
-* Set position of specific window (50%)
-
-Stay tuned!
-
 **Note:** To use version 0.2.\* you have to install the [new Firmware](https://www.velux.com/api/klf200) on your KLF device. If you dont want to use the new firmware install pyvlx==0.1.6.
 
 Installation
@@ -57,6 +40,10 @@ async def main(loop):
     await pyvlx.nodes['Bath'].open()
     await pyvlx.nodes['Bath'].close()
     await pyvlx.nodes['Bath'].set_position(Position(position_percent=45))
+
+    # Changing of on-off switches:
+    # await pyvlx.nodes['CoffeeMaker'].set_on()
+    # await pyvlx.nodes['CoffeeMaker'].set_off()
 
     # You can easily rename nodes:
     # await pyvlx.nodes["Window 10"].rename("Window 11")

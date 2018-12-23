@@ -1,7 +1,8 @@
 """Module for handling the login to API."""
 from .api_event import ApiEvent
-from .frames import (FramePasswordEnterConfirmation, FramePasswordEnterRequest,
-                     PasswordEnterConfirmationStatus)
+from .frames import (
+    FramePasswordEnterConfirmation, FramePasswordEnterRequest,
+    PasswordEnterConfirmationStatus)
 
 
 class Login(ApiEvent):

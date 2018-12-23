@@ -1,9 +1,10 @@
 """Module for retrieving node information from API."""
 from .api_event import ApiEvent
-from .frames import (FrameGetAllNodesInformationConfirmation,
-                     FrameGetAllNodesInformationFinishedNotification,
-                     FrameGetAllNodesInformationNotification,
-                     FrameGetAllNodesInformationRequest)
+from .frames import (
+    FrameGetAllNodesInformationConfirmation,
+    FrameGetAllNodesInformationFinishedNotification,
+    FrameGetAllNodesInformationNotification,
+    FrameGetAllNodesInformationRequest)
 from .log import PYVLXLOG
 
 

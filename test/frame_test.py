@@ -1,8 +1,9 @@
 """Unit tests for frame module."""
 import unittest
-from pyvlx.frames.frame import FrameBase
+
 from pyvlx import PyVLXException
 from pyvlx.const import Command
+from pyvlx.frames.frame import FrameBase
 
 
 class TestFrame(unittest.TestCase):

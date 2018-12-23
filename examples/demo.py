@@ -1,6 +1,7 @@
 """Just a demo of the new PyVLX module."""
 import asyncio
-from pyvlx import PyVLX, Position
+
+from pyvlx import Position, PyVLX
 
 
 async def main(loop):
@@ -18,6 +19,10 @@ async def main(loop):
     await pyvlx.nodes['Bath'].open()
     await pyvlx.nodes['Bath'].close()
     await pyvlx.nodes['Bath'].set_position(Position(position_percent=45))
+
+    # Changing of on-off switches:
+    # await pyvlx.nodes['CoffeeMaker'].set_on()
+    # await pyvlx.nodes['CoffeeMaker'].set_off()
 
     # You can easily rename nodes:
     # await pyvlx.nodes["Window 10"].rename("Window 11")

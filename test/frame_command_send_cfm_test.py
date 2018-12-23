@@ -2,8 +2,8 @@
 import unittest
 
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import (CommandSendConfirmationStatus,
-                          FrameCommandSendConfirmation)
+from pyvlx.frames import (
+    CommandSendConfirmationStatus, FrameCommandSendConfirmation)
 
 
 class TestFrameCommandSendConfirmation(unittest.TestCase):

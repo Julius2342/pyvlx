@@ -1,7 +1,8 @@
 """Module for changing a node name."""
 from .api_event import ApiEvent
-from .frames import (FrameSetNodeNameConfirmation, FrameSetNodeNameRequest,
-                     SetNodeNameConfirmationStatus)
+from .frames import (
+    FrameSetNodeNameConfirmation, FrameSetNodeNameRequest,
+    SetNodeNameConfirmationStatus)
 
 
 class SetNodeName(ApiEvent):

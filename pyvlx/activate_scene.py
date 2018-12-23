@@ -1,10 +1,9 @@
 """Module for retrieving scene list from API."""
 from .api_event import ApiEvent
-from .frames import (ActivateSceneConfirmationStatus,
-                     FrameActivateSceneConfirmation, FrameActivateSceneRequest,
-                     FrameCommandRemainingTimeNotification,
-                     FrameCommandRunStatusNotification,
-                     FrameSessionFinishedNotification)
+from .frames import (
+    ActivateSceneConfirmationStatus, FrameActivateSceneConfirmation,
+    FrameActivateSceneRequest, FrameCommandRemainingTimeNotification,
+    FrameCommandRunStatusNotification, FrameSessionFinishedNotification)
 from .session_id import get_new_session_id
 
 
