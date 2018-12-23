@@ -2,7 +2,7 @@
 import unittest
 
 from pyvlx.exception import PyVLXException
-from pyvlx import Parameter, Position, UnknownPosition, CurrentPosition
+from pyvlx import SwitchParameter, SwitchParameterOn, SwitchParameterOff, Parameter, Position, UnknownPosition, CurrentPosition
 
 
 class TestPosition(unittest.TestCase):
@@ -98,3 +98,35 @@ class TestPosition(unittest.TestCase):
     def test_current_position_class(self):
         """Test CurrentPosition class."""
         self.assertEqual(CurrentPosition().raw, b'\xD2\x00')
+
+    def test_on_off(self):
+        """Test SwitchParameter parameter."""
+        parameter = SwitchParameter()
+        self.assertFalse(parameter.is_on())
+        self.assertFalse(parameter.is_off())
+        parameter.set_on()
+        self.assertTrue(parameter.is_on())
+        self.assertFalse(parameter.is_off())
+        parameter.set_off()
+        self.assertFalse(parameter.is_on())
+        self.assertTrue(parameter.is_off())
+
+    def test_parsing_on_off(self):
+        """Test parsing OnOFf from raw."""
+        parameter_on = SwitchParameter(Parameter(raw=b'\x00\x00'))
+        self.assertTrue(parameter_on.is_on())
+        self.assertFalse(parameter_on.is_off())
+        parameter_off = SwitchParameter(Parameter(raw=b'\xC8\x00'))
+        self.assertFalse(parameter_off.is_on())
+        self.assertTrue(parameter_off.is_off())
+
+    def test_switch_parameter_on_class(self):
+        """Test SwitchParameterOn class."""
+        self.assertTrue(SwitchParameterOn().is_on())
+        self.assertFalse(SwitchParameterOn().is_off())
+
+    def test_switch_parameter_off_class(self):
+        """Test SwitchParameterOff class."""
+        self.assertFalse(SwitchParameterOff().is_on())
+        self.assertTrue(SwitchParameterOff().is_off())
+

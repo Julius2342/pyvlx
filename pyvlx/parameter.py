@@ -65,7 +65,7 @@ class Parameter():
         return '0x' + ''.join('{:02X}'.format(x) for x in self.raw)
 
 
-class OnOff(Parameter):
+class SwitchParameter(Parameter):
     """Class for storing On or Off values."""
 
     def __init__(self, parameter=None):
@@ -73,6 +73,40 @@ class OnOff(Parameter):
         super().__init__()
         if parameter is not None:
             self.from_parameter(parameter)
+
+    def set_on(self):
+        """Set parameter to 'on' state."""
+        self.raw = self.from_int(Parameter.ON)
+
+    def set_off(self):
+        """Set parameter to 'off' state."""
+        self.raw = self.from_int(Parameter.OFF)
+
+    def is_on(self):
+        """Returns True if oarameter is in 'on' state."""
+        return self.raw == self.from_int(Parameter.ON)
+
+    def is_off(self):
+        """Returns True if oarameter is in 'off' state."""
+        return self.raw == self.from_int(Parameter.OFF)
+
+
+class SwitchParameterOn(SwitchParameter):
+    """Switch Parameter in switched 'on' state."""
+
+    def __init__(self):
+        """Initialize SwitchParameterOn class."""
+        super().__init__()
+        self.set_on()
+
+
+class SwitchParameterOff(SwitchParameter):
+    """Switch Parameter in switched 'off' state."""
+
+    def __init__(self):
+        """Initialize SwitchParameterOff class."""
+        super().__init__()
+        self.set_off()
 
 
 class Position(Parameter):
