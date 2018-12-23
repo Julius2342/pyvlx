@@ -2,6 +2,7 @@
 from .frames import FrameNodeStatePositionChangedNotification
 from .opening_device import OpeningDevice
 from .log import PYVLXLOG
+from .parameter import Position
 
 
 class NodeUpdater():
@@ -20,5 +21,5 @@ class NodeUpdater():
                 PYVLXLOG.warning("Could not access node with id %i", frame.node_id)
             else:
                 if isinstance(node, OpeningDevice):
-                    node.position = frame.current_position
+                    node.position = Position(frame.current_position)
                     await node.after_update()
