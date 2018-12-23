@@ -5,8 +5,10 @@ from .exception import PyVLXException
 class Position():
     """Class for storing a position."""
 
-    UNKNOWN_POSITION = b'\xF7\xFF'
-    MAX = 51200
+    UNKNOWN_POSITION = 63487  # F7 FF
+    CURRENT_POSITION = 53760  # D2 00
+    MAX = 51200  # C8 00
+    MIN = 0  # 00 00
 
     def __init__(self, raw=None, position=None, position_percent=None):
         """Initialize Position class."""
@@ -17,7 +19,7 @@ class Position():
         elif position_percent is not None:
             self.position_percent = position_percent
         else:
-            self.raw = Position.UNKNOWN_POSITION
+            self.raw = self.from_int(Position.UNKNOWN_POSITION)
 
     def __bytes__(self):
         """Convert object in byte representation."""
@@ -26,12 +28,12 @@ class Position():
     @property
     def known(self):
         """Known property, true if position is not in an unknown position."""
-        return self.raw != Position.UNKNOWN_POSITION
+        return self.raw != self.from_int(Position.UNKNOWN_POSITION)
 
     @property
     def open(self):
         """Return true if position is set to fully open."""
-        return self.raw == b'\x00\x00'
+        return self.raw == self.from_int(Position.MIN)
 
     @property
     def closed(self):
@@ -64,11 +66,19 @@ class Position():
         """Create raw out of position vlaue."""
         if not isinstance(position, int):
             raise PyVLXException("Position::position_has_to_be_int")
-        if position < 0:
-            raise PyVLXException("Position::position_has_to_be_positive")
-        if position > Position.MAX:
+        if not Position.is_valid_int(position):
             raise PyVLXException("Position::position_out_of_range")
         return bytes([position >> 8 & 255, position & 255])
+
+    @staticmethod
+    def is_valid_int(position):
+        if 0 <= position <= Position.MAX:
+            return True
+        if position == Position.UNKNOWN_POSITION:
+            return True
+        if position == Position.CURRENT_POSITION:
+            return True
+        return False
 
     @staticmethod
     def to_int(raw):
@@ -99,16 +109,34 @@ class Position():
             raise PyVLXException("Position::raw_must_be_bytes")
         if len(raw) != 2:
             raise PyVLXException("Position::raw_must_be_two_bytes")
-        if raw != Position.UNKNOWN_POSITION and Position.to_int(raw) > Position.MAX:
+        if  raw != Position.from_int(Position.CURRENT_POSITION) and \
+                raw != Position.from_int(Position.UNKNOWN_POSITION) and \
+                Position.to_int(raw) > Position.MAX:
             raise PyVLXException("position::raw_exceed_limit", raw=raw)
         return raw
 
     def __str__(self):
         """Return string representation of object."""
-        if self.raw == Position.UNKNOWN_POSITION:
+        if self.raw == self.from_int(Position.UNKNOWN_POSITION):
             return "UNKNOWN"
         return "{} %".format(self.position_percent)
 
     def __eq__(self, other):
         """Equal operator."""
         return self.raw == other.raw
+
+
+class UnknownPosition(Position):
+    """Unknown position."""
+
+    def __init__(self):
+        """Initialize UnknownPosition class."""
+        super().__init__(position=Position.UNKNOWN_POSITION)
+
+
+class CurrentPosition(Position):
+    """Current position, used to stop devices."""
+
+    def __init__(self):
+        """Initialize CurrentPosition class."""
+        super().__init__(position=Position.CURRENT_POSITION)

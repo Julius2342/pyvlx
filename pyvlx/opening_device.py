@@ -2,7 +2,7 @@
 from .command_send import CommandSend
 from .exception import PyVLXException
 from .node import Node
-from .position import Position
+from .position import Position, CurrentPosition
 
 
 class OpeningDevice(Node):
@@ -29,6 +29,10 @@ class OpeningDevice(Node):
     async def close(self):
         """Close window."""
         await self.set_position(Position(position_percent=100))
+
+    async def stop(self):
+        """Stop window."""
+        await self.set_position(CurrentPosition())
 
 
 class Window(OpeningDevice):
