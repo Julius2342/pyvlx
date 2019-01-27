@@ -37,6 +37,20 @@ class TestNodes(unittest.TestCase):
         with self.assertRaises(KeyError):
             nodes[1]  # pylint: disable=pointless-statement
 
+    def test_contains_item(self):
+        """Test contains operator."""
+        pyvlx = PyVLX()
+        nodes = Nodes(pyvlx)
+        window1 = Window(pyvlx, 23, 'Window_1')
+        nodes.add(window1)
+        window2 = Window(pyvlx, 42, 'Window_2') # not added
+        self.assertTrue('Window_1' in nodes)
+        self.assertTrue(23 in nodes)
+        self.assertTrue(window1 in nodes)
+        self.assertFalse('Window_2' in nodes)
+        self.assertFalse(42 in nodes)
+        self.assertFalse(window2 in nodes)
+
     def test_iter(self):
         """Test iterator."""
         pyvlx = PyVLX()
