@@ -62,7 +62,8 @@ class Nodes:
             raise PyVLXException("Unable to retrieve node information")
         notification_frame = get_node_information.notification_frame
         node = convert_frame_to_node(self.pyvlx, notification_frame)
-        self.add(node)
+        if node is not None:
+            self.add(node)
 
     async def _load_all_nodes(self):
         """Load all nodes via API."""
@@ -73,4 +74,5 @@ class Nodes:
         self.clear()
         for notification_frame in get_all_nodes_information.notification_frames:
             node = convert_frame_to_node(self.pyvlx, notification_frame)
-            self.add(node)
+            if node is not None:
+                self.add(node)
