@@ -29,6 +29,21 @@ class Nodes:
                 return node
         raise KeyError
 
+    def __contains__(self, key):
+        """Check if key is in index."""
+        if isinstance(key, int):
+            for node in self.__nodes:
+                if node.node_id == key:
+                    return True
+        if isinstance(key, Node):
+            for node in self.__nodes:
+                if node == key:
+                    return True
+        for node in self.__nodes:
+            if node.name == key:
+                return True
+        return False
+
     def __len__(self):
         """Return number of nodes."""
         return len(self.__nodes)

@@ -5,6 +5,7 @@ import ssl
 from .exception import PyVLXException
 from .frame_creation import frame_from_raw
 from .frames import FrameBase
+from .log import PYVLXLOG
 from .slip import get_next_slip, is_slip, slip_pack
 
 
@@ -100,6 +101,7 @@ class Connection:
         """Write frame to Bus."""
         if not isinstance(frame, FrameBase):
             raise PyVLXException("Frame not of type FrameBase", frame_type=type(frame))
+        PYVLXLOG.debug("SEND: %s", frame)
         self.transport.write(slip_pack(bytes(frame)))
 
     @staticmethod
@@ -112,6 +114,7 @@ class Connection:
 
     def frame_received_cb(self, frame):
         """Received message."""
+        PYVLXLOG.debug("REC: %s", frame)
         for frame_received_cb in self.frame_received_cbs:
             # pylint: disable=not-callable
             self.loop.create_task(frame_received_cb(frame))

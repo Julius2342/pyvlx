@@ -25,7 +25,7 @@ from .set_utc import set_utc
 class PyVLX:
     """Class for PyVLX."""
 
-    def __init__(self, path=None, host=None, password=None, log_frames=False, loop=None):
+    def __init__(self, path=None, host=None, password=None, loop=None):
         """Initialize PyVLX class."""
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
@@ -33,8 +33,6 @@ class PyVLX:
         self.heartbeat = Heartbeat(pyvlx=self)
         self.node_updater = NodeUpdater(pyvlx=self)
         self.heartbeat.start()
-        if log_frames:
-            self.connection.register_frame_received_cb(self.log_frame)
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
         self.nodes = Nodes(self)
         self.scenes = Scenes(self)
@@ -48,7 +46,7 @@ class PyVLX:
         login = Login(pyvlx=self, password=self.config.password)
         await login.do_api_call()
         if not login.success:
-            raise PyVLXException("Unable to login")
+            raise PyVLXException("Login to KLF 200 failed, check credentials")
 
     async def update_version(self):
         """Retrieve version and protocol version from API."""
@@ -87,7 +85,3 @@ class PyVLX:
     async def load_scenes(self):
         """Load scenes from KLF 200."""
         await self.scenes.load()
-
-    async def log_frame(self, frame):
-        """Log frame to logger."""
-        PYVLXLOG.info("%s", frame)
