@@ -43,7 +43,7 @@ class TestNodes(unittest.TestCase):
         nodes = Nodes(pyvlx)
         window1 = Window(pyvlx, 23, 'Window_1')
         nodes.add(window1)
-        window2 = Window(pyvlx, 42, 'Window_2') # not added
+        window2 = Window(pyvlx, 42, 'Window_2')  # not added
         self.assertTrue('Window_1' in nodes)
         self.assertTrue(23 in nodes)
         self.assertTrue(window1 in nodes)
