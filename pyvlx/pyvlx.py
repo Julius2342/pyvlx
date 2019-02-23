@@ -46,7 +46,7 @@ class PyVLX:
         login = Login(pyvlx=self, password=self.config.password)
         await login.do_api_call()
         if not login.success:
-            raise PyVLXException("Unable to login")
+            raise PyVLXException("Login to KLF 200 failed, check credentials")
 
     async def update_version(self):
         """Retrieve version and protocol version from API."""
