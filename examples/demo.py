@@ -6,7 +6,7 @@ from pyvlx import Position, PyVLX
 
 async def main(loop):
     """Demonstrate functionality of PyVLX."""
-    pyvlx = PyVLX('pyvlx.yaml', log_frames=True, loop=loop)
+    pyvlx = PyVLX('pyvlx.yaml', loop=loop)
     # Alternative:
     # pyvlx = PyVLX(host="192.168.2.127", password="velux123", loop=loop)
 

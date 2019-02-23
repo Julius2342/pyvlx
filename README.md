@@ -16,6 +16,28 @@ PyVLX can be installed via:
 pip3 install pyvlx
 ```
 
+Home Assistant Plugin
+---------------------
+
+PyVLX is used within [Home-Assistant](https://www.home-assistant.io/components/velux/). To enable it add the following lines to your ~/.home-assistant/configuration.yml:
+
+```yaml
+velux:
+    host: "192.168.0.0"
+    password: "velux123"
+```
+
+For debugging frames add:
+
+```yaml
+logger:
+  default: warning
+  logs:
+    homeassistant.components.velux: debug
+    pyvlx: debug
+```
+
+
 Basic Operations
 ----------------
 
@@ -27,7 +49,7 @@ from pyvlx import PyVLX, Position
 
 async def main(loop):
     """Demonstrate functionality of PyVLX."""
-    pyvlx = PyVLX('pyvlx.yaml', log_frames=True, loop=loop)
+    pyvlx = PyVLX('pyvlx.yaml', loop=loop)
     # Alternative:
     # pyvlx = PyVLX(host="192.168.2.127", password="velux123", loop=loop)
 
