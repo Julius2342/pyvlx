@@ -56,5 +56,9 @@ class Blind(OpeningDevice):
     """Blind objects."""
 
 
+class Awning(OpeningDevice):
+    """Awning objects."""
+
+
 class RollerShutter(OpeningDevice):
     """RollerShutter object."""

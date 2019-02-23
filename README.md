@@ -24,8 +24,10 @@ PyVLX is used within [Home-Assistant](https://www.home-assistant.io/components/v
 ```yaml
 velux:
     host: "192.168.0.0"
-    password: "velux123"
+    password: "1ADwl48dka"
 ```
+
+*Please note that this uses the WiFi password, not the web login.*
 
 For debugging frames add:
 
