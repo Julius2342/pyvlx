@@ -4,11 +4,10 @@ import logging
 
 from pyvlx import PyVLX
 from pyvlx.log import PYVLXLOG
-from pyvlx.house_status_monitor import house_status_monitor_enable
 
 
 async def main(loop):
-    """Logging daemon."""
+    """Log packets from Bus."""
     # Setting debug
     PYVLXLOG.setLevel(logging.DEBUG)
     stream_handler = logging.StreamHandler()
@@ -17,12 +16,12 @@ async def main(loop):
 
     # Connecting to KLF 200
     pyvlx = PyVLX('pyvlx.yaml', loop=loop)
-    await pyvlx.connect()
-    await pyvlx.update_version()
-    await house_status_monitor_enable(pyvlx=pyvlx)
+    await pyvlx.load_scenes()
+    await pyvlx.load_nodes()
 
-    # and wait :)
-    await asyncio.sleep(30)
+    # and wait, increase this timeout if you want to
+    # log for a longer time.:)
+    await asyncio.sleep(90)
 
     # Cleanup, KLF 200 is terrible in handling lost connections
     await pyvlx.disconnect()
