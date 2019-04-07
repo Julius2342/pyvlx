@@ -35,17 +35,24 @@ class SlipTokenizer:
 class TCPTransport(asyncio.Protocol):
     """Class for handling asyncio connection transport."""
 
+    TIMEOUT = 10
+
     def __init__(self, frame_received_cb, connection_closed_cb):
         """Init TCPTransport."""
         self.frame_received_cb = frame_received_cb
         self.connection_closed_cb = connection_closed_cb
         self.tokenizer = SlipTokenizer()
+        loop = asyncio.get_event_loop()
+        self.timeout_handle = loop.call_later(
+            self.TIMEOUT, self._timeout,
+        )
 
     def connection_made(self, transport):
         """Handle sucessful connection."""
 
     def data_received(self, data):
         """Handle data received."""
+        self.timeout_handle.cancel()
         self.tokenizer.feed(data)
         while self.tokenizer.has_tokens():
             raw = self.tokenizer.get_next_token()
@@ -56,6 +63,11 @@ class TCPTransport(asyncio.Protocol):
     def connection_lost(self, exc):
         """Handle lost connection."""
         self.connection_closed_cb()
+
+    def _timeout(self):
+        """Not connected within TIMEOUT seconds."""
+        print("TIMEOUT")
+        self.transport.close()
 
 
 class Connection:
