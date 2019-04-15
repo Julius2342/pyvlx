@@ -24,7 +24,7 @@ class Config:
         PYVLXLOG.info('Reading config file: %s', path)
         try:
             with open(path, 'r') as filehandle:
-                doc = yaml.safe_load(filehandle)
+                doc = yaml.load(filehandle)
                 self.test_configuration(doc, path)
                 self.host = doc['config']['host']
                 self.password = doc['config']['password']
