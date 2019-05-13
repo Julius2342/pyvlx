@@ -37,7 +37,8 @@ class GatewaySubState(Enum):
     PERFORMING_TASK_COMMAND = 0x80
     PERFORMING_TASK_ACTIVATE_GROUP = 0x81
     PERFORMING_TASK_ACTIVATE_SCENE = 0x82
-    RESERVED_132 = 0x84
+    RESERVED_132 = 0x84  # <-- hey @VELUX: Can you tell us what this value means?
+
 
 class FrameGetStateConfirmation(FrameBase):
     """Frame for confirmation for get state requests."""
