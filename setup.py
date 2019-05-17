@@ -5,7 +5,7 @@ import os
 from setuptools import find_packages, setup
 
 REQUIRES = [
-    'PyYAML'
+    'PyYAML>=5.1'
 ]
 
 PKG_ROOT = os.path.dirname(__file__)
