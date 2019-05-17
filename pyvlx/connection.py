@@ -66,6 +66,7 @@ class TCPTransport(asyncio.Protocol):
 
     def _timeout(self):
         """Not connected within TIMEOUT seconds."""
+        # pylint: disable=no-self-use
         PYVLXLOG.warning('Timeout while connecting to gateway.')
 
 
