@@ -41,6 +41,8 @@ class Parameter():
             return True
         if value == Parameter.UNKNOWN_VALUE:
             return True
+        if value == Parameter.IGNORE:
+            return True
         if value == Parameter.CURRENT_POSITION:
             return True
         return False
