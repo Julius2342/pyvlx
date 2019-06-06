@@ -11,6 +11,7 @@ class Parameter():
     MIN = 0  # 00 00
     ON = 0  # 00 00
     OFF = 51200  # C8 00
+    IGNORE = 54272  # D4 00
 
     def __init__(self, raw=None):
         """Initialize Parameter class."""
@@ -40,6 +41,8 @@ class Parameter():
             return True
         if value == Parameter.UNKNOWN_VALUE:
             return True
+        if value == Parameter.IGNORE:
+            return True
         if value == Parameter.CURRENT_POSITION:
             return True
         return False
@@ -52,9 +55,10 @@ class Parameter():
         if len(raw) != 2:
             raise PyVLXException("Position::raw_must_be_two_bytes")
         if raw != Position.from_int(Position.CURRENT_POSITION) and \
+                raw != Position.from_int(Position.IGNORE) and \
                 raw != Position.from_int(Position.UNKNOWN_VALUE) and \
                 Position.to_int(raw) > Position.MAX:
-            raise PyVLXException("position::raw_exceed_limit", raw=raw)
+            raise PyVLXException("parameter::raw_exceed_limit", raw=raw)
         return raw
 
     def __eq__(self, other):
