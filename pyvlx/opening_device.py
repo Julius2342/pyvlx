@@ -119,4 +119,3 @@ class RollerShutter(OpeningDevice):
 
 class GarageDoor(OpeningDevice):
     """GarageDoor object."""
-
