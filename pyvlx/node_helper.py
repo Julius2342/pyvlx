@@ -26,7 +26,7 @@ def convert_frame_to_node(pyvlx, frame):
     if frame.node_type == NodeTypeWithSubtype.ON_OFF_SWITCH:
         return OnOffSwitch(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
     if frame.node_type == NodeTypeWithSubtype.GARAGE_DOOR_OPENER:
-        return GarageDoorOpener(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
+        return GarageDoor(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
 
     PYVLXLOG.warning("%s not implemented", frame.node_type)
     return None
