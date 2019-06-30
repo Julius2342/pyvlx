@@ -2,7 +2,7 @@
 from .const import NodeTypeWithSubtype
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
-from .opening_device import Blind, RollerShutter, Window, Awning, GarageDoorOpener
+from .opening_device import Blind, RollerShutter, Window, Awning, GarageDoor
 
 
 def convert_frame_to_node(pyvlx, frame):

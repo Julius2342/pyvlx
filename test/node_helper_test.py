@@ -60,3 +60,4 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_type = NodeTypeWithSubtype.NO_TYPE
         pyvlx = PyVLX()
         self.assertEqual(convert_frame_to_node(pyvlx, frame), None)
+
