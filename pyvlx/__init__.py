@@ -6,6 +6,6 @@ from .exception import PyVLXException
 from .nodes import Nodes
 from .parameter import Parameter, SwitchParameter, SwitchParameterOn, SwitchParameterOff, \
     Position, UnknownPosition, CurrentPosition
-from .opening_device import OpeningDevice, Window, RollerShutter, Blind
+from .opening_device import OpeningDevice, Window, RollerShutter, Blind, GarageDoor
 from .scenes import Scenes
 from .scene import Scene
