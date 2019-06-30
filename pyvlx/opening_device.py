@@ -115,3 +115,6 @@ class Awning(OpeningDevice):
 
 class RollerShutter(OpeningDevice):
     """RollerShutter object."""
+
+class GarageDoorOpener(OpeningDevice):
+    """RollerShutter object."""
