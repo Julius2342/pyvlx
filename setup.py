@@ -10,7 +10,7 @@ REQUIRES = [
 
 PKG_ROOT = os.path.dirname(__file__)
 
-VERSION = '0.2.11'
+VERSION = '0.2.12'
 
 # Error-handling here is to allow package to be built w/o README included
 try:
