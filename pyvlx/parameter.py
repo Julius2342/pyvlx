@@ -88,11 +88,11 @@ class SwitchParameter(Parameter):
         self.raw = self.from_int(Parameter.OFF)
 
     def is_on(self):
-        """Return True if oarameter is in 'on' state."""
+        """Return True if parameter is in 'on' state."""
         return self.raw == self.from_int(Parameter.ON)
 
     def is_off(self):
-        """Return True if oarameter is in 'off' state."""
+        """Return True if parameter is in 'off' state."""
         return self.raw == self.from_int(Parameter.OFF)
 
 
