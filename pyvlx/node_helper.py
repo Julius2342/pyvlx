@@ -3,6 +3,7 @@ from .const import NodeTypeWithSubtype
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
 from .opening_device import Blind, RollerShutter, Window, Awning, GarageDoor
+from .lightening_device import Light
 
 
 def convert_frame_to_node(pyvlx, frame):
@@ -27,6 +28,8 @@ def convert_frame_to_node(pyvlx, frame):
         return OnOffSwitch(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
     if frame.node_type == NodeTypeWithSubtype.GARAGE_DOOR_OPENER:
         return GarageDoor(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
+    if frame.node_type == NodeTypeWithSubtype.LIGHT:
+        return Light(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
 
     PYVLXLOG.warning("%s not implemented", frame.node_type)
     return None
