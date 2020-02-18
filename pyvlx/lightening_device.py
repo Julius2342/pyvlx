@@ -64,18 +64,6 @@ class LighteningDevice(Node):
             intensity=Intensity(intensity_percent=100),
             wait_for_completion=wait_for_completion)
 
-    async def stop(self, wait_for_completion=True):
-        """Stop light.
-
-        Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target intensity.
-
-        """
-        await self.set_intensity(
-            intensity=CurrentIntensity(),
-            wait_for_completion=wait_for_completion)
-
 
 class Light(LighteningDevice):
     """Light object."""
