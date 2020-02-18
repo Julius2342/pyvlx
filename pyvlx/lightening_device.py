@@ -1,4 +1,4 @@
-"""Module for window openers."""
+"""Module for lights."""
 from .command_send import CommandSend
 from .exception import PyVLXException
 from .node import Node
