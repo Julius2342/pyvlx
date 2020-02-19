@@ -2,7 +2,7 @@
 from .command_send import CommandSend
 from .exception import PyVLXException
 from .node import Node
-from .parameter import CurrentIntensity, Intensity
+from .parameter import Intensity
 
 
 class LighteningDevice(Node):
