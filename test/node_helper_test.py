@@ -1,7 +1,7 @@
 """Unit tests _helper module."""
 import unittest
 
-from pyvlx import Blind, PyVLX, RollerShutter, Window, GarageDoor, Blade
+from pyvlx import Blind, PyVLX, RollerShutter, Window, GarageDoor, Blade, Light
 from pyvlx.const import NodeTypeWithSubtype
 from pyvlx.frames import FrameGetNodeInformationNotification
 from pyvlx.node_helper import convert_frame_to_node
@@ -80,3 +80,13 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_type = NodeTypeWithSubtype.NO_TYPE
         pyvlx = PyVLX()
         self.assertEqual(convert_frame_to_node(pyvlx, frame), None)
+
+    def test_light(self):
+        """Test convert_frame_to_node with light."""
+        frame = FrameGetNodeInformationNotification()
+        frame.node_id = 23
+        frame.name = "Fnord23"
+        frame.node_type = NodeTypeWithSubtype.LIGHT
+        pyvlx = PyVLX()
+        node = convert_frame_to_node(pyvlx, frame)
+        self.assertEqual(node, Light(pyvlx=pyvlx, name="Fnord23", node_id=23))
