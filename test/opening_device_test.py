@@ -30,7 +30,7 @@ class TestOpeningDevice(unittest.TestCase):
         """Test string representation of Blade object."""
         pyvlx = PyVLX()
         blade = Blade(pyvlx=pyvlx, node_id=23, name='Test Blade')
-        self.assertEqual(str(blade), '<Window name="Test Blade" node_id="23" rain_sensor=True/>')
+        self.assertEqual(str(blade), '<Window name="Test Blade" node_id="23"/>')
 
     def test_eq(self):
         """Testing eq method with positive results."""
