@@ -1,7 +1,7 @@
 """Unit test for lights."""
 import unittest
 
-from pyvlx import Light
+from pyvlx import PyVLX, Light
 
 
 # pylint: disable=too-many-public-methods,invalid-name
