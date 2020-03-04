@@ -1,9 +1,10 @@
 """Helper module for Node objects."""
 from .const import NodeTypeWithSubtype
+from .lightening_device import Light
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
-from .opening_device import Blind, RollerShutter, Window, Awning, GarageDoor, Blade
-from .lightening_device import Light
+from .opening_device import (
+    Awning, Blade, Blind, GarageDoor, RollerShutter, Window)
 
 
 def convert_frame_to_node(pyvlx, frame):

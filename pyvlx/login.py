@@ -1,9 +1,9 @@
 """Module for handling the login to API."""
 from .api_event import ApiEvent
-from .log import PYVLXLOG
 from .frames import (
     FramePasswordEnterConfirmation, FramePasswordEnterRequest,
     PasswordEnterConfirmationStatus)
+from .log import PYVLXLOG
 
 
 class Login(ApiEvent):

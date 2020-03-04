@@ -1,5 +1,7 @@
 """Module for updating nodes via frames."""
-from .frames import FrameNodeStatePositionChangedNotification, FrameGetAllNodesInformationNotification
+from .frames import (
+    FrameGetAllNodesInformationNotification,
+    FrameNodeStatePositionChangedNotification)
 from .opening_device import OpeningDevice
 from .parameter import Position
 
