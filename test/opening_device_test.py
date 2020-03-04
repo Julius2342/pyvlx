@@ -1,7 +1,7 @@
 """Unit test for roller shutter."""
 import unittest
 
-from pyvlx import Blind, PyVLX, RollerShutter, Window
+from pyvlx import Blind, PyVLX, RollerShutter, Window, Blade
 
 
 # pylint: disable=too-many-public-methods,invalid-name
@@ -25,6 +25,12 @@ class TestOpeningDevice(unittest.TestCase):
         pyvlx = PyVLX()
         roller_shutter = RollerShutter(pyvlx=pyvlx, node_id=23, name='Test Roller Shutter')
         self.assertEqual(str(roller_shutter), '<RollerShutter name="Test Roller Shutter" node_id="23"/>')
+
+    def test_blade_str(self):
+        """Test string representation of Blade object."""
+        pyvlx = PyVLX()
+        blade = Blade(pyvlx=pyvlx, node_id=23, name='Test Blade')
+        self.assertEqual(str(blade), '<Blade name="Test Blade" node_id="23"/>')
 
     def test_eq(self):
         """Testing eq method with positive results."""

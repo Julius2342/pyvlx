@@ -7,6 +7,7 @@ class Parameter():
 
     UNKNOWN_VALUE = 63487  # F7 FF
     CURRENT_POSITION = 53760  # D2 00
+    CURRENT_INTENSITY = 53760  # D2 00
     MAX = 51200  # C8 00
     MIN = 0  # 00 00
     ON = 0  # 00 00
@@ -88,11 +89,11 @@ class SwitchParameter(Parameter):
         self.raw = self.from_int(Parameter.OFF)
 
     def is_on(self):
-        """Return True if oarameter is in 'on' state."""
+        """Return True if parameter is in 'on' state."""
         return self.raw == self.from_int(Parameter.ON)
 
     def is_off(self):
-        """Return True if oarameter is in 'off' state."""
+        """Return True if parameter is in 'off' state."""
         return self.raw == self.from_int(Parameter.OFF)
 
 
@@ -210,3 +211,101 @@ class CurrentPosition(Position):
     def __init__(self):
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.CURRENT_POSITION)
+
+
+class Intensity(Parameter):
+    """Class for storing an intensity."""
+
+    def __init__(self, parameter=None, intensity=None, intensity_percent=None):
+        """Initialize Intensity class."""
+        super().__init__()
+        if parameter is not None:
+            self.from_parameter(parameter)
+        elif intensity is not None:
+            self.intensity = intensity
+        elif intensity_percent is not None:
+            self.intensity_percent = intensity_percent
+
+    def __bytes__(self):
+        """Convert object in byte representation."""
+        return self.raw
+
+    @property
+    def known(self):
+        """Known property, true if intensity is not in an unknown intensity."""
+        return self.raw != self.from_int(Intensity.UNKNOWN_VALUE)
+
+    @property
+    def on(self):
+        """Return true if intensity is set to fully turn on."""
+        return self.raw == self.from_int(Intensity.MIN)
+
+    @property
+    def off(self):
+        """Return true if intensity is set to fully turn off."""
+        return self.raw == bytes([self.MAX >> 8 & 255, self.MAX & 255])
+
+    @property
+    def intensity(self):
+        """Intensity property."""
+        return self.to_int(self.raw)
+
+    @intensity.setter
+    def intensity(self, intensity):
+        """Setter of internal raw via intensity."""
+        self.raw = self.from_int(intensity)
+
+    @property
+    def intensity_percent(self):
+        """Intensity percent property."""
+        # inclear why it returns a <property object> here
+        return int(self.to_percent(self.raw))
+
+    @intensity_percent.setter
+    def intensity_percent(self, intensity_percent):
+        """Setter of internal raw via percent intensity."""
+        self.raw = self.from_percent(intensity_percent)
+
+    @staticmethod
+    def to_int(raw):
+        """Create int intensity value out of raw."""
+        return raw[0] * 256 + raw[1]
+
+    @staticmethod
+    def from_percent(intensity_percent):
+        """Create raw value out of percent intensity."""
+        if not isinstance(intensity_percent, int):
+            raise PyVLXException("Intensity::intensity_percent_has_to_be_int")
+        if intensity_percent < 0:
+            raise PyVLXException("Intensity::intensity_percent_has_to_be_positive")
+        if intensity_percent > 100:
+            raise PyVLXException("Intensity::intensity_percent")
+        return bytes([intensity_percent*2, 0])
+
+    @staticmethod
+    def to_percent(raw):
+        """Create percent intensity value out of raw."""
+        # The first byte has the value from 0 to 200. Ignoring the second one.
+        return int(raw[0]/2)
+
+    def __str__(self):
+        """Return string representation of object."""
+        if self.raw == self.from_int(Intensity.UNKNOWN_VALUE):
+            return "UNKNOWN"
+        return "{} %".format(self.intensity_percent)
+
+
+class UnknownIntensity(Intensity):
+    """Unknown intensity."""
+
+    def __init__(self):
+        """Initialize UnknownIntensity class."""
+        super().__init__(intensity=Intensity.UNKNOWN_VALUE)
+
+
+class CurrentIntensity(Intensity):
+    """Current intensity, used to stop devices."""
+
+    def __init__(self):
+        """Initialize CurrentIntensity class."""
+        super().__init__(intensity=Intensity.CURRENT_INTENSITY)
