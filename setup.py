@@ -1,6 +1,6 @@
 """Module for setting up PyVLX pypi object."""
-import io
 import os
+from os import path
 
 from setuptools import find_packages, setup
 
@@ -12,10 +12,14 @@ PKG_ROOT = os.path.dirname(__file__)
 
 VERSION = '0.2.13'
 
-from os import path
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md')) as f:
-    long_description = f.read()
+
+def get_long_description():
+    """Read long description from README.md."""
+    this_directory = path.abspath(path.dirname(__file__))
+    with open(path.join(this_directory, 'README.md')) as readme:
+        long_description = readme.read()
+        return long_description
+
 
 setup(
     name='pyvlx',
@@ -25,7 +29,7 @@ setup(
     url='https://github.com/Julius2342/pyvlx',
 
     description="PyVLX is a wrapper for the Velux KLF 200 API. PyVLX enables you to run scenes and or open and close velux windows.",
-    long_description=long_description,
+    long_description=get_long_description(),
     long_description_content_type='text/markdown',
     author='Julius Mittenzwei',
     author_email='julius@mittenzwei.com',
