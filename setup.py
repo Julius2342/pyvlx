@@ -12,11 +12,10 @@ PKG_ROOT = os.path.dirname(__file__)
 
 VERSION = '0.2.13'
 
-# Error-handling here is to allow package to be built w/o README included
-try:
-    README = io.open(os.path.join(PKG_ROOT, 'README.md'), encoding='utf-8').read()
-except IOError:
-    README = ''
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md')) as f:
+    long_description = f.read()
 
 setup(
     name='pyvlx',
@@ -25,8 +24,9 @@ setup(
     download_url='https://github.com/Julius2342/pyvlx/archive/'+VERSION+'.zip',
     url='https://github.com/Julius2342/pyvlx',
 
-    description="PyVLX is a wrapper for the Velux KLF 200 API.\n\nPyVLX enables you to run scenes and or open and close velux windows.",
-    long_description=README,
+    description="PyVLX is a wrapper for the Velux KLF 200 API. PyVLX enables you to run scenes and or open and close velux windows.",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Julius Mittenzwei',
     author_email='julius@mittenzwei.com',
     license='LGPL',

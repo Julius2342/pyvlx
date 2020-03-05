@@ -5,8 +5,6 @@ PyVLX - controling VELUX windows with Python
 
 PyVLX uses the Velux KLF 200 interface to control io-Homecontrol devices, e.g. Velux Windows.
 
-**Note:** To use version 0.2.\* you have to install the [new Firmware](https://www.velux.com/api/klf200) on your KLF device. If you dont want to use the new firmware install pyvlx==0.1.6.
-
 Installation
 ------------
 
