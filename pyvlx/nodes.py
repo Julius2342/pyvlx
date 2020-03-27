@@ -15,7 +15,7 @@ class Nodes:
         self.__nodes = []
 
     def __iter__(self):
-        """Iterator."""
+        """Iterate."""
         yield from self.__nodes
 
     def __getitem__(self, key):

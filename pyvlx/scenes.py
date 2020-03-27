@@ -13,7 +13,7 @@ class Scenes():
         self.__scenes = []
 
     def __iter__(self):
-        """Iterator."""
+        """Iterate."""
         yield from self.__scenes
 
     def __getitem__(self, key):

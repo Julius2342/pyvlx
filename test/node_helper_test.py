@@ -1,7 +1,7 @@
 """Unit tests _helper module."""
 import unittest
 
-from pyvlx import Blind, PyVLX, RollerShutter, Window, GarageDoor, Blade, Light
+from pyvlx import Blade, Blind, GarageDoor, Light, PyVLX, RollerShutter, Window
 from pyvlx.const import NodeTypeWithSubtype
 from pyvlx.frames import FrameGetNodeInformationNotification
 from pyvlx.node_helper import convert_frame_to_node

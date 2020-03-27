@@ -236,7 +236,7 @@ class Intensity(Parameter):
         return self.raw != self.from_int(Intensity.UNKNOWN_VALUE)
 
     @property
-    def on(self):
+    def on(self):  # pylint: disable=invalid-name
         """Return true if intensity is set to fully turn on."""
         return self.raw == self.from_int(Intensity.MIN)
 
