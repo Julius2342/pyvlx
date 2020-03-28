@@ -23,6 +23,9 @@ class NodeUpdater():
             if isinstance(node, OpeningDevice):
                 node.position = Position(frame.current_position)
                 await node.after_update()
+            elif isinstance(node, LighteningDevice):
+                node.intensity = Intensity(frame.current_position)
+                await node.after_update()
         elif isinstance(frame, FrameGetAllNodesInformationNotification):
             if frame.node_id not in self.pyvlx.nodes:
                 return
