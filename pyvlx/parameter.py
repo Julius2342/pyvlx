@@ -6,12 +6,12 @@ class Parameter():
     """General object for storing parameters."""
 
     UNKNOWN_VALUE = 63487  # F7 FF
-    CURRENT_POSITION = 53760  # D2 00
-    CURRENT_INTENSITY = 53760  # D2 00
+    CURRENT = 53760  # D2 00
     MAX = 51200  # C8 00
     MIN = 0  # 00 00
     ON = 0  # 00 00
     OFF = 51200  # C8 00
+    TARGET = 53504 # D1 00
     IGNORE = 54272  # D4 00
 
     def __init__(self, raw=None):
@@ -44,7 +44,9 @@ class Parameter():
             return True
         if value == Parameter.IGNORE:
             return True
-        if value == Parameter.CURRENT_POSITION:
+        if value == Parameter.CURRENT:
+            return True
+        if value == Parameter.TARGET:
             return True
         return False
 
@@ -55,8 +57,9 @@ class Parameter():
             raise PyVLXException("Position::raw_must_be_bytes")
         if len(raw) != 2:
             raise PyVLXException("Position::raw_must_be_two_bytes")
-        if raw != Position.from_int(Position.CURRENT_POSITION) and \
+        if raw != Position.from_int(Position.CURRENT) and \
                 raw != Position.from_int(Position.IGNORE) and \
+                raw != Position.from_int(Position.TARGET) and \
                 raw != Position.from_int(Position.UNKNOWN_VALUE) and \
                 Position.to_int(raw) > Position.MAX:
             raise PyVLXException("parameter::raw_exceed_limit", raw=raw)
@@ -210,8 +213,14 @@ class CurrentPosition(Position):
 
     def __init__(self):
         """Initialize CurrentPosition class."""
-        super().__init__(position=Position.CURRENT_POSITION)
+        super().__init__(position=Position.CURRENT)
 
+class TargetPosition(Position):
+    """To set a functional parameter"""
+
+    def __init__(self):
+        """Initialize CurrentPosition class."""
+        super().__init__(position=Position.TARGET)
 
 class Intensity(Parameter):
     """Class for storing an intensity."""
@@ -308,4 +317,4 @@ class CurrentIntensity(Intensity):
 
     def __init__(self):
         """Initialize CurrentIntensity class."""
-        super().__init__(intensity=Intensity.CURRENT_INTENSITY)
+        super().__init__(intensity=Intensity.CURRENT)

@@ -13,14 +13,32 @@ class FrameCommandSendRequest(FrameBase):
 
     PAYLOAD_LEN = 66
 
-    def __init__(self, node_ids=None, parameter=Parameter(), session_id=None, originator=Originator.USER):
+    def __init__(self,
+                 node_ids=None,
+                 parameter=Parameter(),
+                 session_id=None,
+                 originator=Originator.USER,
+                 **functional_parameter):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_SEND_REQ)
         self.node_ids = node_ids
         self.parameter = parameter
+        self.fpi1 = 0
+        self.fpi2 = 0
+        self.functional_parameter = {}
         self.session_id = session_id
         self.originator = originator
         self.priority = Priority.USER_LEVEL_2
+        for i in range(1, 17):
+            key = 'fp%s' % (i)
+            if key in functional_parameter:
+                self.functional_parameter[key] = functional_parameter[key]
+                if i < 9:
+                    self.fpi1 += 2**(8-i)
+                if i >= 9:
+                    self.fpi2 += 2**(16-i)
+            else:
+                self.functional_parameter[key] = bytes(2)
 
     def get_payload(self):
         """Return Payload."""
@@ -30,12 +48,14 @@ class FrameCommandSendRequest(FrameBase):
         ret += bytes([self.priority.value])
         ret += bytes([0])  # ParameterActive pointing to main parameter (MP)
         # FPI 1+2
-        ret += bytes([0])
-        ret += bytes([0])
-
+        ret += bytes([self.fpi1])
+        ret += bytes([self.fpi2])
         # Main parameter + functional parameter
         ret += bytes(self.parameter)
-        ret += bytes(32)
+        ret += bytes(self.functional_parameter['fp1'])
+        ret += bytes(self.functional_parameter['fp2'])
+        ret += bytes(self.functional_parameter['fp3'])
+        ret += bytes(26)
 
         # Nodes array: Number of nodes + node array + padding
         ret += bytes([len(self.node_ids)])  # index array count
