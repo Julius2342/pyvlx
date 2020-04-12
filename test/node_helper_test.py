@@ -40,7 +40,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_type = NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
-        self.assertEqual(node, Blind(pyvlx=pyvlx, name="Fnord23", node_id=23))
+        self.assertEqual(node, RollerShutter(pyvlx=pyvlx, name="Fnord23", node_id=23))
 
     def test_roller_shutter(self):
         """Test convert_frame_to_node roller shutter."""
