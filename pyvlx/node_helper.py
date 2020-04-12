@@ -14,13 +14,15 @@ def convert_frame_to_node(pyvlx, frame):
         return Window(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name, rain_sensor=False)
     if frame.node_type == NodeTypeWithSubtype.WINDOW_OPENER_WITH_RAIN_SENSOR:
         return Window(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name, rain_sensor=True)
+    """"Roller Shutter have only position attribute"""
     if frame.node_type == NodeTypeWithSubtype.ROLLER_SHUTTER or \
-            frame.node_type == NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER:
-        return RollerShutter(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name, position=frame.current_position)
-    if frame.node_type == NodeTypeWithSubtype.EXTERIOR_VENETIAN_BLIND:
-        return Blind(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name, position=frame.current_position, orientation=frame.current_position_fp3)
-    if frame.node_type == NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND or \
+            frame.node_type == NodeTypeWithSubtype.ADJUSTABLE_SLUTS_ROLLING_SHUTTER_WITH_PROJECTION or \
             frame.node_type == NodeTypeWithSubtype.VERTICAL_INTERIOR_BLINDS or \
+            frame.node_type == NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND:
+        return RollerShutter(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
+    """"Blinds have position and orientation (inherit frame.current_position_fp3) attribute"""
+    if frame.node_type == NodeTypeWithSubtype.EXTERIOR_VENETIAN_BLIND or \
+            frame.node_type == NodeTypeWithSubtype.ADJUSTABLE_SLUTS_ROLLING_SHUTTER or \
             frame.node_type == NodeTypeWithSubtype.LOUVER_BLIND:
         return Blind(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
     if frame.node_type == NodeTypeWithSubtype.VERTICAL_EXTERIOR_AWNING or \

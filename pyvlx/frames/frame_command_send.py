@@ -3,7 +3,7 @@ from enum import Enum
 
 from pyvlx.const import Command, Originator, Priority
 from pyvlx.exception import PyVLXException
-from pyvlx.parameter import Parameter
+from pyvlx.parameter import Parameter, Position
 
 from .frame import FrameBase
 
@@ -16,6 +16,7 @@ class FrameCommandSendRequest(FrameBase):
     def __init__(self,
                  node_ids=None,
                  parameter=Parameter(),
+                 active_parameter=0,
                  session_id=None,
                  originator=Originator.USER,
                  **functional_parameter):
@@ -23,6 +24,7 @@ class FrameCommandSendRequest(FrameBase):
         super().__init__(Command.GW_COMMAND_SEND_REQ)
         self.node_ids = node_ids
         self.parameter = parameter
+        self.active_parameter = active_parameter
         self.fpi1 = 0
         self.fpi2 = 0
         self.functional_parameter = {}
@@ -46,7 +48,7 @@ class FrameCommandSendRequest(FrameBase):
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([self.originator.value])
         ret += bytes([self.priority.value])
-        ret += bytes([0])  # ParameterActive pointing to main parameter (MP)
+        ret += bytes([self.active_parameter])  # ParameterActive pointing to main parameter (MP)
         # FPI 1+2
         ret += bytes([self.fpi1])
         ret += bytes([self.fpi2])
@@ -86,9 +88,11 @@ class FrameCommandSendRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameCommandSendRequest node_ids={} parameter="{}" session_id={} originator={}/>'.format(
-            self.node_ids, self.parameter, self.session_id,
-            self.originator)
+        functional_parameter = ""
+        for key, value in self.functional_parameter.items():
+            functional_parameter += "%s: %s, " %(str(key), Position(Parameter(bytes(value))))
+        return '<FrameCommandSendRequest node_ids={} parameter="{}" functional_parameter="{}" session_id={} originator={}/>'.format(
+            self.node_ids, self.parameter, functional_parameter, self.session_id, self.originator)
 
 
 class CommandSendConfirmationStatus(Enum):

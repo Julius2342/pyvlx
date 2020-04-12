@@ -222,6 +222,13 @@ class TargetPosition(Position):
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.TARGET)
 
+class IgnorePosition(Position):
+    """To set a functional parameter"""
+
+    def __init__(self):
+        """Initialize CurrentPosition class."""
+        super().__init__(position=Position.IGNORE)
+
 class Intensity(Parameter):
     """Class for storing an intensity."""
 
