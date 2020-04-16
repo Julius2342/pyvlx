@@ -4,7 +4,7 @@ from .lightening_device import Light
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
 from .opening_device import (
-    Awning, Blade, Blind, GarageDoor, RollerShutter, Window)
+    Awning, Blade, Blind, GarageDoor, Gate, RollerShutter, Window)
 
 
 def convert_frame_to_node(pyvlx, frame):
@@ -29,6 +29,10 @@ def convert_frame_to_node(pyvlx, frame):
         return OnOffSwitch(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
     if frame.node_type == NodeTypeWithSubtype.GARAGE_DOOR_OPENER:
         return GarageDoor(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
+    if frame.node_type == NodeTypeWithSubtype.GATE_OPENER:
+        return Gate(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
+    if frame.node_type == NodeTypeWithSubtype.GATE_OPENER_ANGULAR_POSITION:
+        return Gate(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
     if frame.node_type == NodeTypeWithSubtype.BLADE_OPENER:
         return Blade(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name)
     if frame.node_type == NodeTypeWithSubtype.LIGHT:
