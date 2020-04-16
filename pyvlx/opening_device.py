@@ -120,8 +120,10 @@ class RollerShutter(OpeningDevice):
 class GarageDoor(OpeningDevice):
     """GarageDoor object."""
 
+
 class Gate(OpeningDevice):
     """Gate object."""
+
 
 class Blade(OpeningDevice):
     """Blade object."""
