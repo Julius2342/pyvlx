@@ -1,7 +1,7 @@
 """Unit tests _helper module."""
 import unittest
 
-from pyvlx import Blade, Blind, GarageDoor, Light, PyVLX, RollerShutter, Window
+from pyvlx import Blade, Blind, GarageDoor, Gate, Light, PyVLX, RollerShutter, Window
 from pyvlx.const import NodeTypeWithSubtype
 from pyvlx.frames import FrameGetNodeInformationNotification
 from pyvlx.node_helper import convert_frame_to_node
@@ -61,6 +61,26 @@ class TestNodeHelper(unittest.TestCase):
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(node, GarageDoor(pyvlx=pyvlx, name="Fnord23", node_id=23))
+
+    def test_gate(self):
+        """Test convert_frame_to_node gate."""
+        frame = FrameGetNodeInformationNotification()
+        frame.node_id = 23
+        frame.name = "Fnord23"
+        frame.node_type = NodeTypeWithSubtype.GATE_OPENER
+        pyvlx = PyVLX()
+        node = convert_frame_to_node(pyvlx, frame)
+        self.assertEqual(node, Gate(pyvlx=pyvlx, name="Fnord23", node_id=23))
+
+    def test_gate_with_angular_position(self):
+        """Test convert_frame_to_node gate."""
+        frame = FrameGetNodeInformationNotification()
+        frame.node_id = 23
+        frame.name = "Fnord23"
+        frame.node_type = NodeTypeWithSubtype.GATE_OPENER_ANGULAR_POSITION
+        pyvlx = PyVLX()
+        node = convert_frame_to_node(pyvlx, frame)
+        self.assertEqual(node, Gate(pyvlx=pyvlx, name="Fnord23", node_id=23))
 
     def test_blade(self):
         """Test convert_frame_to_node blade."""
