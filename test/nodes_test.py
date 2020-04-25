@@ -13,11 +13,11 @@ class TestNodes(unittest.TestCase):
         """Test get_item."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
-        window = Window(pyvlx, 0, 'Window')
+        window = Window(pyvlx, 0, 'Window', 'aa:bb:aa:bb:aa:bb:aa:00')
         nodes.add(window)
-        blind = Blind(pyvlx, 1, 'Blind')
+        blind = Blind(pyvlx, 1, 'Blind', 'aa:bb:aa:bb:aa:bb:aa:01')
         nodes.add(blind)
-        roller_shutter = RollerShutter(pyvlx, 4, 'Roller Shutter')
+        roller_shutter = RollerShutter(pyvlx, 4, 'Roller Shutter', 'aa:bb:aa:bb:aa:bb:aa:04')
         nodes.add(roller_shutter)
         self.assertEqual(nodes['Window'], window)
         self.assertEqual(nodes['Blind'], blind)
@@ -30,7 +30,7 @@ class TestNodes(unittest.TestCase):
         """Test get_item with non existing object."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
-        window1 = Window(pyvlx, 0, 'Window_1')
+        window1 = Window(pyvlx, 0, 'Window_1', 'aa:bb:aa:bb:aa:bb:aa:00')
         nodes.add(window1)
         with self.assertRaises(KeyError):
             nodes['Window_2']  # pylint: disable=pointless-statement
@@ -41,9 +41,9 @@ class TestNodes(unittest.TestCase):
         """Test contains operator."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
-        window1 = Window(pyvlx, 23, 'Window_1')
+        window1 = Window(pyvlx, 23, 'Window_1', 'aa:bb:aa:bb:aa:bb:aa:23')
         nodes.add(window1)
-        window2 = Window(pyvlx, 42, 'Window_2')  # not added
+        window2 = Window(pyvlx, 42, 'Window_2', 'aa:bb:aa:bb:aa:bb:aa:42')  # not added
         self.assertTrue('Window_1' in nodes)
         self.assertTrue(23 in nodes)
         self.assertTrue(window1 in nodes)
@@ -55,11 +55,11 @@ class TestNodes(unittest.TestCase):
         """Test iterator."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
-        window1 = Window(pyvlx, 0, 'Window_1')
+        window1 = Window(pyvlx, 0, 'Window_1', 'aa:bb:aa:bb:aa:bb:aa:00')
         nodes.add(window1)
-        window2 = Window(pyvlx, 1, 'Window_2')
+        window2 = Window(pyvlx, 1, 'Window_2', 'aa:bb:aa:bb:aa:bb:aa:01')
         nodes.add(window2)
-        window3 = Window(pyvlx, 2, 'Window_3')
+        window3 = Window(pyvlx, 2, 'Window_3', 'aa:bb:aa:bb:aa:bb:aa:02')
         nodes.add(window3)
         self.assertEqual(
             tuple(nodes.__iter__()),
@@ -70,10 +70,10 @@ class TestNodes(unittest.TestCase):
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
         self.assertEqual(len(nodes), 0)
-        nodes.add(Window(pyvlx, 0, 'Window_1'))
-        nodes.add(Window(pyvlx, 1, 'Window_2'))
-        nodes.add(Window(pyvlx, 2, 'Window_3'))
-        nodes.add(Window(pyvlx, 3, 'Window_4'))
+        nodes.add(Window(pyvlx, 0, 'Window_1', 'aa:bb:aa:bb:aa:bb:aa:00'))
+        nodes.add(Window(pyvlx, 1, 'Window_2', 'aa:bb:aa:bb:aa:bb:aa:01'))
+        nodes.add(Window(pyvlx, 2, 'Window_3', 'aa:bb:aa:bb:aa:bb:aa:02'))
+        nodes.add(Window(pyvlx, 3, 'Window_4', 'aa:bb:aa:bb:aa:bb:aa:03'))
         self.assertEqual(len(nodes), 4)
 
     def test_add_same_object(self):
@@ -81,10 +81,10 @@ class TestNodes(unittest.TestCase):
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
         self.assertEqual(len(nodes), 0)
-        nodes.add(Window(pyvlx, 0, 'Window_1'))
-        nodes.add(Window(pyvlx, 1, 'Window_2'))
-        nodes.add(Window(pyvlx, 2, 'Window_3'))
-        nodes.add(Window(pyvlx, 1, 'Window_2_same_id'))
+        nodes.add(Window(pyvlx, 0, 'Window_1', 'aa:bb:aa:bb:aa:bb:aa:00'))
+        nodes.add(Window(pyvlx, 1, 'Window_2', 'aa:bb:aa:bb:aa:bb:aa:01'))
+        nodes.add(Window(pyvlx, 2, 'Window_3', 'aa:bb:aa:bb:aa:bb:aa:02'))
+        nodes.add(Window(pyvlx, 1, 'Window_2_same_id', 'aa:bb:aa:bb:aa:bb:aa:01'))
         self.assertEqual(len(nodes), 3)
         self.assertEqual(nodes[1].name, 'Window_2_same_id')
 
@@ -102,7 +102,7 @@ class TestNodes(unittest.TestCase):
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
         self.assertEqual(len(nodes), 0)
-        nodes.add(Window(pyvlx, 0, 'Window_1'))
-        nodes.add(Window(pyvlx, 1, 'Window_2'))
+        nodes.add(Window(pyvlx, 0, 'Window_1', 'aa:bb:aa:bb:aa:bb:aa:00'))
+        nodes.add(Window(pyvlx, 1, 'Window_2', 'aa:bb:aa:bb:aa:bb:aa:01'))
         nodes.clear()
         self.assertEqual(len(nodes), 0)

@@ -100,11 +100,13 @@ class Window(OpeningDevice):
     def __str__(self):
         """Return object as readable string."""
         return '<{} name="{}" ' \
-            'node_id="{}" rain_sensor={}/>' \
+            'node_id="{}" rain_sensor={} ' \
+            'serial_number="{}"/>' \
             .format(
                 type(self).__name__,
                 self.name,
-                self.node_id, self.rain_sensor)
+                self.node_id, self.rain_sensor,
+                self.serial_number)
 
 
 class Blind(OpeningDevice):

@@ -68,7 +68,7 @@ class FrameGetNodeInformationConfirmation(FrameBase):
 
 
 class FrameGetNodeInformationNotification(FrameBase):
-    """Frame for notification of note information request."""
+    """Frame for notification of node information request."""
 
     PAYLOAD_LEN = 124
 
@@ -102,6 +102,10 @@ class FrameGetNodeInformationNotification(FrameBase):
     def serial_number(self):
         """Property for serial number in a human readable way."""
         return ":".join("{:02x}".format(c) for c in self._serial_number)
+
+    @serial_number.setter
+    def serial_number(self, serial_number):
+        self._serial_number = serial_number
 
     def get_payload(self):
         """Return Payload."""
