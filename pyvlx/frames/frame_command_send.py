@@ -31,6 +31,8 @@ class FrameCommandSendRequest(FrameBase):
         self.session_id = session_id
         self.originator = originator
         self.priority = Priority.USER_LEVEL_2
+        """Set the functional parameter indicator bytes and in order to show which functional parameters are included in the frame.
+        Functional parameter dictionary will be checked for keys 'fp1' to 'fp16' to set the appropriate indicator and the corresponding self.functional_parameter."""
         for i in range(1, 17):
             key = 'fp%s' % (i)
             if key in functional_parameter:
@@ -52,11 +54,12 @@ class FrameCommandSendRequest(FrameBase):
         # FPI 1+2
         ret += bytes([self.fpi1])
         ret += bytes([self.fpi2])
-        # Main parameter + functional parameter
+        # Main parameter + functional parameter fp1 to fp3
         ret += bytes(self.parameter)
         ret += bytes(self.functional_parameter['fp1'])
         ret += bytes(self.functional_parameter['fp2'])
         ret += bytes(self.functional_parameter['fp3'])
+        # Functional parameter fp4 to fp16
         ret += bytes(26)
 
         # Nodes array: Number of nodes + node array + padding

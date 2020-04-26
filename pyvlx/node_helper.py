@@ -13,7 +13,7 @@ def convert_frame_to_node(pyvlx, frame):
     if frame.node_type == NodeTypeWithSubtype.WINDOW_OPENER:
         return Window(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name, serial_number=frame.serial_number, rain_sensor=False)
     if frame.node_type == NodeTypeWithSubtype.WINDOW_OPENER_WITH_RAIN_SENSOR:
-        return Window(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name, rain_sensor=True)
+        return Window(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name, serial_number=frame.serial_number, rain_sensor=True)
     """"Roller Shutter have only position attribute"""
     if frame.node_type == NodeTypeWithSubtype.ROLLER_SHUTTER or \
             frame.node_type == NodeTypeWithSubtype.ADJUSTABLE_SLUTS_ROLLING_SHUTTER_WITH_PROJECTION or \
