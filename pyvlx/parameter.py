@@ -217,9 +217,13 @@ class CurrentPosition(Position):
 
 
 class TargetPosition(Position):
-    """It is implemented by taking the target parameter value and loads it into the execution
-    parameter buffer. When the target value is read, it holds for a given parameter always the 
-    latest stored target value about a command execution."""
+    """Class for using a target position, if another parameter is set.
+
+    It is implemented by taking the target parameter value and loads it into the execution
+    parameter buffer. When the target value is read, it holds for a given parameter always the
+    latest stored target value about a command execution.
+
+    """
 
     def __init__(self):
         """Initialize CurrentPosition class."""
