@@ -111,7 +111,7 @@ class Window(OpeningDevice):
 
 class Blind(OpeningDevice):
     """Blind objects."""
-    def __init__(self, pyvlx, node_id, name):
+    def __init__(self, pyvlx, node_id, name, serial_number):
         """Initialize Blind class.
         Parameters:
             * pyvlx: PyVLX object
@@ -119,7 +119,7 @@ class Blind(OpeningDevice):
                 Provided by KLF 200 device
             * name: node name
         """
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name)
+        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
         self.orientation = Position(position_percent=0)
         self.target_orientation = TargetPosition()
         self.target_position = TargetPosition()
