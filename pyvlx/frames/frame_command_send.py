@@ -32,7 +32,7 @@ class FrameCommandSendRequest(FrameBase):
         self.originator = originator
         self.priority = Priority.USER_LEVEL_2
         """Set the functional parameter indicator bytes in order to show which functional parameters are included in the frame.
-        Functional parameter dictionary will be checked for keys 'fp1' to 'fp16' 
+        Functional parameter dictionary will be checked for keys 'fp1' to 'fp16'
         to set the appropriate indicator and the corresponding self.functional_parameter."""
         for i in range(1, 17):
             key = 'fp%s' % (i)
