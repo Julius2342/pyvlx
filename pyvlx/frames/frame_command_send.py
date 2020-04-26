@@ -32,7 +32,8 @@ class FrameCommandSendRequest(FrameBase):
         self.originator = originator
         self.priority = Priority.USER_LEVEL_2
         """Set the functional parameter indicator bytes in order to show which functional parameters are included in the frame.
-        Functional parameter dictionary will be checked for keys 'fp1' to 'fp16' to set the appropriate indicator and the corresponding self.functional_parameter."""
+        Functional parameter dictionary will be checked for keys 'fp1' to 'fp16' 
+        to set the appropriate indicator and the corresponding self.functional_parameter."""
         for i in range(1, 17):
             key = 'fp%s' % (i)
             if key in functional_parameter:
@@ -93,7 +94,7 @@ class FrameCommandSendRequest(FrameBase):
         """Return human readable string."""
         functional_parameter = ""
         for key, value in self.functional_parameter.items():
-            functional_parameter += "%s: %s, " %(str(key), Position(Parameter(bytes(value))))
+            functional_parameter += "%s: %s, " % (str(key), Position(Parameter(bytes(value))))
         return '<FrameCommandSendRequest node_ids={} parameter="{}" functional_parameter="{}" session_id={} originator={}/>'.format(
             self.node_ids, self.parameter, functional_parameter, self.session_id, self.originator)
 
