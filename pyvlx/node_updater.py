@@ -26,13 +26,16 @@ class NodeUpdater():
             node = self.pyvlx.nodes[frame.node_id]
             position = Position(frame.current_position)
             orientation = Position(frame.current_position_fp3)
+            # KLF transmits for functional parameters basically always 'No feed-back value known’ (0xF7FF).
+            # In home assistant this cause unreasonable values like -23%. Therefore a check is implemented
+            # whether the frame parameter is inside the maximum range.
             if isinstance(node, Blind):
                 if position.position <= Parameter.MAX:
                     node.position = position
-                    PYVLXLOG.debug("%s position changed to: %s" %(node.name, position))
+                    PYVLXLOG.debug("%s position changed to: %s" % (node.name, position))
                 if orientation.position <= Parameter.MAX:
                     node.orientation = orientation
-                    PYVLXLOG.debug("%s orientation changed to: %s" %(node.name, orientation))
+                    PYVLXLOG.debug("%s orientation changed to: %s" % (node.name, orientation))
                 await node.after_update()
             elif isinstance(node, OpeningDevice):
                 if position.position <= Parameter.MAX:

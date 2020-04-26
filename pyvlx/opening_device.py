@@ -131,6 +131,9 @@ class Blind(OpeningDevice):
 
         Parameters:
             * orientation: Position object containing the target orientation.
+            + target_orientation: Position object holding the target orientation
+                                  which allows to ajust the orientation while the blind is in movement
+                                  without stopping the blind (if the position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
 
@@ -156,7 +159,10 @@ class Blind(OpeningDevice):
         """Set window to desired position.
 
         Parameters:
-            * position: Position object containing the target position.
+            * position: Position object containing the current position.
+            * target_position: Position object holding the target position
+                               which allows to ajust the position while the blind is in movement
+                               without stopping the blind (if orientation position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
 
