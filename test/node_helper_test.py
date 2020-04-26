@@ -75,7 +75,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_type = NodeTypeWithSubtype.GATE_OPENER
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
-        self.assertEqual(node, Gate(pyvlx=pyvlx, name="Fnord23", node_id=23))
+        self.assertEqual(node, Gate(pyvlx=pyvlx, name="Fnord23", node_id=23, serial_number='aa:bb:aa:bb:aa:bb:aa:23'))
 
     def test_gate_with_angular_position(self):
         """Test convert_frame_to_node gate."""
@@ -85,7 +85,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_type = NodeTypeWithSubtype.GATE_OPENER_ANGULAR_POSITION
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
-        self.assertEqual(node, Gate(pyvlx=pyvlx, name="Fnord23", node_id=23))
+        self.assertEqual(node, Gate(pyvlx=pyvlx, name="Fnord23", node_id=23, serial_number='aa:bb:aa:bb:aa:bb:aa:23'))
 
     def test_blade(self):
         """Test convert_frame_to_node blade."""
