@@ -73,6 +73,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.GATE_OPENER
+        frame.serial_number = bytes.fromhex('aa bb aa bb aa bb aa 23')
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(node, Gate(pyvlx=pyvlx, name="Fnord23", node_id=23, serial_number='aa:bb:aa:bb:aa:bb:aa:23'))
@@ -83,6 +84,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.GATE_OPENER_ANGULAR_POSITION
+        frame.serial_number = bytes.fromhex('aa bb aa bb aa bb aa 23')
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(node, Gate(pyvlx=pyvlx, name="Fnord23", node_id=23, serial_number='aa:bb:aa:bb:aa:bb:aa:23'))
