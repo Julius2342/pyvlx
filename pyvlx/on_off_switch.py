@@ -8,9 +8,9 @@ from .parameter import SwitchParameter, SwitchParameterOff, SwitchParameterOn
 class OnOffSwitch(Node):
     """Class for controlling on-off switches."""
 
-    def __init__(self, pyvlx, node_id, name):
+    def __init__(self, pyvlx, node_id, name, serial_number):
         """Initialize opening device."""
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name)
+        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
         self.parameter = SwitchParameter()
 
     async def set_state(self, parameter):

@@ -8,7 +8,7 @@ from .parameter import CurrentPosition, Position, TargetPosition
 class OpeningDevice(Node):
     """Meta class for opening device with one main parameter for position."""
 
-    def __init__(self, pyvlx, node_id, name):
+    def __init__(self, pyvlx, node_id, name, serial_number):
         """Initialize opening device.
 
         Parameters:
@@ -16,9 +16,10 @@ class OpeningDevice(Node):
             * node_id: internal id for addressing nodes.
                 Provided by KLF 200 device
             * name: node name
+            * serial_number: serial number of the node.
 
         """
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name)
+        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
         self.position = Position(position_percent=0)
 
     async def set_position(self, position, wait_for_completion=True):
@@ -80,7 +81,7 @@ class OpeningDevice(Node):
 class Window(OpeningDevice):
     """Window object."""
 
-    def __init__(self, pyvlx, node_id, name, rain_sensor=False):
+    def __init__(self, pyvlx, node_id, name, serial_number, rain_sensor=False):
         """Initialize Window class.
 
         Parameters:
@@ -88,21 +89,24 @@ class Window(OpeningDevice):
             * node_id: internal id for addressing nodes.
                 Provided by KLF 200 device
             * name: node name
+            * serial_number: serial number of the node.
             * rain_sensor: set if device is equipped with a
                 rain sensor.
 
         """
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name)
+        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
         self.rain_sensor = rain_sensor
 
     def __str__(self):
         """Return object as readable string."""
         return '<{} name="{}" ' \
-            'node_id="{}" rain_sensor={}/>' \
+            'node_id="{}" rain_sensor={} ' \
+            'serial_number="{}"/>' \
             .format(
                 type(self).__name__,
                 self.name,
-                self.node_id, self.rain_sensor)
+                self.node_id, self.rain_sensor,
+                self.serial_number)
 
 
 class Blind(OpeningDevice):
@@ -217,6 +221,10 @@ class RollerShutter(OpeningDevice):
 
 class GarageDoor(OpeningDevice):
     """GarageDoor object."""
+
+
+class Gate(OpeningDevice):
+    """Gate object."""
 
 
 class Blade(OpeningDevice):
