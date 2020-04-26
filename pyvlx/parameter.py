@@ -11,7 +11,7 @@ class Parameter():
     MIN = 0  # 00 00
     ON = 0  # 00 00
     OFF = 51200  # C8 00
-    TARGET = 53504 # D1 00
+    TARGET = 53504  # D1 00
     IGNORE = 54272  # D4 00
 
     def __init__(self, raw=None):
@@ -215,19 +215,24 @@ class CurrentPosition(Position):
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.CURRENT)
 
+
 class TargetPosition(Position):
-    """To set a functional parameter"""
+    """It is implemented by taking the target parameter value and loads it into the execution
+    parameter buffer. When the target value is read, it holds for a given parameter always the 
+    latest stored target value about a command execution."""
 
     def __init__(self):
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.TARGET)
 
+
 class IgnorePosition(Position):
-    """To set a functional parameter"""
+    """The Ignore is used where a parameter in the frame is to be ignored."""
 
     def __init__(self):
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.IGNORE)
+
 
 class Intensity(Parameter):
     """Class for storing an intensity."""
