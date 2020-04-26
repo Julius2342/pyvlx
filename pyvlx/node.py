@@ -12,11 +12,12 @@ from .set_node_name import SetNodeName
 class Node:
     """Class for node abstraction."""
 
-    def __init__(self, pyvlx, node_id, name):
+    def __init__(self, pyvlx, node_id, name, serial_number):
         """Initialize Node object."""
         self.pyvlx = pyvlx
         self.node_id = node_id
         self.name = name
+        self.serial_number = serial_number
         self.device_updated_cbs = []
 
     def register_device_updated_cb(self, device_updated_cb):
@@ -44,11 +45,13 @@ class Node:
     def __str__(self):
         """Return object as readable string."""
         return '<{} name="{}" ' \
-            'node_id="{}"/>' \
+            'node_id="{}" ' \
+            'serial_number="{}"/>' \
             .format(
                 type(self).__name__,
                 self.name,
-                self.node_id)
+                self.node_id,
+                self.serial_number)
 
     def __eq__(self, other):
         """Equal operator."""

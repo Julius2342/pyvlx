@@ -8,7 +8,7 @@ from .parameter import Intensity
 class LighteningDevice(Node):
     """Meta class for turning on device with one main parameter for intensity."""
 
-    def __init__(self, pyvlx, node_id, name):
+    def __init__(self, pyvlx, node_id, name, serial_number):
         """Initialize turning on device.
 
         Parameters:
@@ -16,9 +16,10 @@ class LighteningDevice(Node):
             * node_id: internal id for addressing nodes.
                 Provided by KLF 200 device
             * name: node name
+            * serial_number: serial number of the node.
 
         """
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name)
+        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
         self.intensity = Intensity()
 
     async def set_intensity(self, intensity, wait_for_completion=True):
@@ -68,7 +69,7 @@ class LighteningDevice(Node):
 class Light(LighteningDevice):
     """Light object."""
 
-    def __init__(self, pyvlx, node_id, name):
+    def __init__(self, pyvlx, node_id, name, serial_number):
         """Initialize Light class.
 
         Parameters:
@@ -76,15 +77,18 @@ class Light(LighteningDevice):
             * node_id: internal id for addressing nodes.
                 Provided by KLF 200 device
             * name: node name
+            * serial_number: serial number of the node.
 
         """
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name)
+        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
 
     def __str__(self):
         """Return object as readable string."""
         return '<{} name="{}" ' \
-            'node_id="{}"/>' \
+            'node_id="{}" ' \
+            'serial_number="{}"/>' \
             .format(
                 type(self).__name__,
                 self.name,
-                self.node_id)
+                self.node_id,
+                self.serial_number)
