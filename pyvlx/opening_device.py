@@ -2,13 +2,13 @@
 from .command_send import CommandSend
 from .exception import PyVLXException
 from .node import Node
-from .parameter import CurrentPosition, Position
+from .parameter import CurrentPosition, Position, Parameter
 
 
 class OpeningDevice(Node):
     """Meta class for opening device with one main parameter for position."""
 
-    def __init__(self, pyvlx, node_id, name, serial_number):
+    def __init__(self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()):
         """Initialize opening device.
 
         Parameters:
@@ -17,10 +17,11 @@ class OpeningDevice(Node):
                 Provided by KLF 200 device
             * name: node name
             * serial_number: serial number of the node.
+            * position_parameter: initial position of the opening device.
 
         """
         super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
-        self.position = Position()
+        self.position = Position(parameter=position_parameter)
 
     async def set_position(self, position, wait_for_completion=True):
         """Set window to desired position.
@@ -77,11 +78,24 @@ class OpeningDevice(Node):
             position=CurrentPosition(),
             wait_for_completion=wait_for_completion)
 
+    def __str__(self):
+        """Return object as readable string."""
+        return '<{} name="{}" ' \
+            'node_id="{}" ' \
+            'serial_number="{}" ' \
+            'position="{}"/>' \
+            .format(
+                type(self).__name__,
+                self.name,
+                self.node_id,
+                self.serial_number,
+                self.position)
+
 
 class Window(OpeningDevice):
     """Window object."""
 
-    def __init__(self, pyvlx, node_id, name, serial_number, rain_sensor=False):
+    def __init__(self, pyvlx, node_id, name, serial_number, position_parameter=Parameter(), rain_sensor=False):
         """Initialize Window class.
 
         Parameters:
@@ -90,23 +104,24 @@ class Window(OpeningDevice):
                 Provided by KLF 200 device
             * name: node name
             * serial_number: serial number of the node.
+            * position_parameter: initial position of the opening device.
             * rain_sensor: set if device is equipped with a
                 rain sensor.
 
         """
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
+        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number, position_parameter=position_parameter)
         self.rain_sensor = rain_sensor
 
     def __str__(self):
         """Return object as readable string."""
         return '<{} name="{}" ' \
             'node_id="{}" rain_sensor={} ' \
-            'serial_number="{}"/>' \
+            'serial_number="{}" position="{}"/>' \
             .format(
                 type(self).__name__,
                 self.name,
                 self.node_id, self.rain_sensor,
-                self.serial_number)
+                self.serial_number, self.position)
 
 
 class Blind(OpeningDevice):
