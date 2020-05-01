@@ -2,6 +2,7 @@
 import unittest
 
 from pyvlx import Blind, Nodes, PyVLX, RollerShutter, Window
+from pyvlx.node import Node
 
 # pylint: disable=too-many-public-methods,invalid-name
 
@@ -106,3 +107,10 @@ class TestNodes(unittest.TestCase):
         nodes.add(Window(pyvlx, 1, 'Window_2', 'aa:bb:aa:bb:aa:bb:aa:01'))
         nodes.clear()
         self.assertEqual(len(nodes), 0)
+
+    def test_node_str(self):
+        """Test string representation of node."""
+        pyvlx = PyVLX()
+        node = Node(pyvlx=pyvlx, node_id=23, name='Test Abstract Node', serial_number='aa:bb:aa:bb:aa:bb:aa:23')
+        self.assertEqual(str(node),
+                         '<Node name="Test Abstract Node" node_id="23" serial_number="aa:bb:aa:bb:aa:bb:aa:23"/>')
