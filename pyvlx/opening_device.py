@@ -2,7 +2,7 @@
 from .command_send import CommandSend
 from .exception import PyVLXException
 from .node import Node
-from .parameter import CurrentPosition, Position, Parameter, TargetPosition
+from .parameter import CurrentPosition, Parameter, Position, TargetPosition
 
 
 class OpeningDevice(Node):
@@ -109,11 +109,7 @@ class Window(OpeningDevice):
                 rain sensor.
 
         """
-        super().__init__(pyvlx=pyvlx,
-                         node_id=node_id,
-                         name=name,
-                         serial_number=serial_number,
-                         position_parameter=position_parameter)
+        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number, position_parameter=position_parameter)
         self.rain_sensor = rain_sensor
 
     def __str__(self):
