@@ -146,34 +146,6 @@ class Blind(OpeningDevice):
         self.target_orientation = TargetPosition()
         self.target_position = TargetPosition()
 
-    async def set_orientation(self, orientation, wait_for_completion=True):
-        """Set Blind shades to desired orientation.
-
-        Parameters:
-            * orientation: Position object containing the target orientation.
-            + target_orientation: Position object holding the target orientation
-                                  which allows to ajust the orientation while the blind is in movement
-                                  without stopping the blind (if the position has been changed.)
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
-        """
-        self.target_orientation = orientation
-        self.orientation = orientation
-        print("Orientation in device: %s " % (orientation))
-        command_send = CommandSend(
-            pyvlx=self.pyvlx,
-            wait_for_completion=wait_for_completion,
-            node_id=self.node_id,
-            parameter=self.target_position,
-            fp3=orientation
-        )
-        await command_send.do_api_call()
-        if not command_send.success:
-            raise PyVLXException("Unable to send command")
-        await self.after_update()
-        # KLF200 always send UNKNOWN position for functional parameter, so orientation is set directly and not via GW_NODE_STATE_POSITION_CHANGED_NTF
-
     async def set_position(self, position, wait_for_completion=True):
         """Set window to desired position.
 
@@ -202,39 +174,70 @@ class Blind(OpeningDevice):
         await self.after_update()
 
     async def open(self, wait_for_completion=True):
-        """Open window.
-
-        Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
-        """
+        """Open  Blind position."""
         await self.set_position(
             position=Position(position_percent=0),
             wait_for_completion=wait_for_completion)
 
     async def close(self, wait_for_completion=True):
-        """Close window.
-
-        Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
-        """
+        """Close Blind position."""
         await self.set_position(
             position=Position(position_percent=100),
             wait_for_completion=wait_for_completion)
 
     async def stop(self, wait_for_completion=True):
-        """Stop window.
+        """Stop Blind position."""
+        await self.set_position(
+            position=CurrentPosition(),
+            wait_for_completion=wait_for_completion)
+
+    async def set_orientation(self, orientation, wait_for_completion=True):
+        """Set Blind shades to desired orientation.
 
         Parameters:
+            * orientation: Position object containing the target orientation.
+            + target_orientation: Position object holding the target orientation
+                                  which allows to ajust the orientation while the blind is in movement
+                                  without stopping the blind (if the position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
 
         """
-        await self.set_position(
-            position=CurrentPosition(),
+        self.target_orientation = orientation
+        self.orientation = orientation
+        print("Orientation in device: %s " % (orientation))
+        command_send = CommandSend(
+            pyvlx=self.pyvlx,
+            wait_for_completion=wait_for_completion,
+            node_id=self.node_id,
+            parameter=self.target_position,
+            fp3=orientation
+        )
+        await command_send.do_api_call()
+        if not command_send.success:
+            raise PyVLXException("Unable to send command")
+        await self.after_update()
+        # KLF200 always send UNKNOWN position for functional parameter, so orientation is set directly and not via GW_NODE_STATE_POSITION_CHANGED_NTF
+
+    async def open_orientation(self, wait_for_completion=True):
+        """Open Blind slats orientation.
+
+        Blind slats with ±90° orientation are open at 50%
+        """
+        await self.set_orientation(
+            orientation=Position(position_percent=50),
+            wait_for_completion=wait_for_completion)
+
+    async def close_orientation(self, wait_for_completion=True):
+        """Close Blind slats."""
+        await self.set_orientation(
+            orientation=Position(position_percent=100),
+            wait_for_completion=wait_for_completion)
+
+    async def stop_orientation(self, wait_for_completion=True):
+        """Stop Blind slats."""
+        await self.set_orientation(
+            orientation=CurrentPosition(),
             wait_for_completion=wait_for_completion)
 
 
