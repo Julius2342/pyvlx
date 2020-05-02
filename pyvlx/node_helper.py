@@ -17,7 +17,8 @@ def convert_frame_to_node(pyvlx, frame):
                       position_parameter=frame.current_position, rain_sensor=True)
     if frame.node_type == NodeTypeWithSubtype.ROLLER_SHUTTER or \
             frame.node_type == NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER:
-        return RollerShutter(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name, serial_number=frame.serial_number, position_parameter=frame.current_position)
+        return RollerShutter(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name, serial_number=frame.serial_number,
+                             position_parameter=frame.current_position)
     if frame.node_type == NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND or \
             frame.node_type == NodeTypeWithSubtype.VERTICAL_INTERIOR_BLINDS or \
             frame.node_type == NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND:
