@@ -17,7 +17,6 @@ def convert_frame_to_node(pyvlx, frame):
         return Window(pyvlx=pyvlx, node_id=frame.node_id, name=frame.name, serial_number=frame.serial_number,
                       position_parameter=frame.current_position, rain_sensor=True)
 
-    # Roller Shutter have only position attribute
     if frame.node_type == NodeTypeWithSubtype.ROLLER_SHUTTER or \
             frame.node_type == NodeTypeWithSubtype.ADJUSTABLE_SLUTS_ROLLING_SHUTTER_WITH_PROJECTION or \
             frame.node_type == NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER:
