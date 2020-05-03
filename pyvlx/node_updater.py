@@ -2,9 +2,10 @@
 from .frames import (
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification)
-from .opening_device import OpeningDevice
+from .opening_device import OpeningDevice, Blind
 from .lightening_device import LighteningDevice
-from .parameter import Intensity, Position
+from .parameter import Intensity, Position, Parameter
+from .pyvlx import PYVLXLOG
 
 
 class NodeUpdater():
@@ -16,23 +17,30 @@ class NodeUpdater():
 
     async def process_frame(self, frame):
         """Update nodes via frame, usually received by house monitor."""
-        if isinstance(frame, FrameNodeStatePositionChangedNotification):
+        if isinstance(frame, (FrameGetAllNodesInformationNotification, FrameNodeStatePositionChangedNotification)):
+            PYVLXLOG.debug("NodeUpdater process frame: %d", frame)
             if frame.node_id not in self.pyvlx.nodes:
                 return
             node = self.pyvlx.nodes[frame.node_id]
-            if isinstance(node, OpeningDevice):
-                node.position = Position(frame.current_position)
+            position = Position(frame.current_position)
+            orientation = Position(frame.current_position_fp3)
+            # KLF transmits for functional parameters basically always 'No feed-back value known’ (0xF7FF).
+            # In home assistant this cause unreasonable values like -23%. Therefore a check is implemented
+            # whether the frame parameter is inside the maximum range.
+            if isinstance(node, Blind):
+                if position.position <= Parameter.MAX:
+                    node.position = position
+                    PYVLXLOG.debug("%d position changed to: %d", node.name, position)
+                if orientation.position <= Parameter.MAX:
+                    node.orientation = orientation
+                    PYVLXLOG.debug("%d orientation changed to: %d", node.name, orientation)
+                await node.after_update()
+            elif isinstance(node, OpeningDevice):
+                if position.position <= Parameter.MAX:
+                    node.position = position
                 await node.after_update()
             elif isinstance(node, LighteningDevice):
-                node.intensity = Intensity(frame.current_position)
-                await node.after_update()
-        elif isinstance(frame, FrameGetAllNodesInformationNotification):
-            if frame.node_id not in self.pyvlx.nodes:
-                return
-            node = self.pyvlx.nodes[frame.node_id]
-            if isinstance(node, OpeningDevice):
-                node.position = Position(frame.current_position)
-                await node.after_update()
-            elif isinstance(node, LighteningDevice):
-                node.intensity = Intensity(frame.current_position)
+                intensity = Intensity(frame.current_position)
+                if intensity.intensity <= Parameter.MAX:
+                    node.intensity = intensity
                 await node.after_update()

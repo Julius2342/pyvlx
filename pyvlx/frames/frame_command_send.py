@@ -3,7 +3,7 @@ from enum import Enum
 
 from pyvlx.const import Command, Originator, Priority
 from pyvlx.exception import PyVLXException
-from pyvlx.parameter import Parameter
+from pyvlx.parameter import Parameter, Position
 
 from .frame import FrameBase
 
@@ -13,14 +13,37 @@ class FrameCommandSendRequest(FrameBase):
 
     PAYLOAD_LEN = 66
 
-    def __init__(self, node_ids=None, parameter=Parameter(), session_id=None, originator=Originator.USER):
+    def __init__(self,
+                 node_ids=None,
+                 parameter=Parameter(),
+                 active_parameter=0,
+                 session_id=None,
+                 originator=Originator.USER,
+                 **functional_parameter):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_SEND_REQ)
         self.node_ids = node_ids
         self.parameter = parameter
+        self.active_parameter = active_parameter
+        self.fpi1 = 0
+        self.fpi2 = 0
+        self.functional_parameter = {}
         self.session_id = session_id
         self.originator = originator
         self.priority = Priority.USER_LEVEL_2
+        """Set the functional parameter indicator bytes in order to show which functional parameters are included in the frame.
+        Functional parameter dictionary will be checked for keys 'fp1' to 'fp16'
+        to set the appropriate indicator and the corresponding self.functional_parameter."""
+        for i in range(1, 17):
+            key = 'fp%s' % (i)
+            if key in functional_parameter:
+                self.functional_parameter[key] = functional_parameter[key]
+                if i < 9:
+                    self.fpi1 += 2**(8-i)
+                if i >= 9:
+                    self.fpi2 += 2**(16-i)
+            else:
+                self.functional_parameter[key] = bytes(2)
 
     def get_payload(self):
         """Return Payload."""
@@ -28,14 +51,17 @@ class FrameCommandSendRequest(FrameBase):
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([self.originator.value])
         ret += bytes([self.priority.value])
-        ret += bytes([0])  # ParameterActive pointing to main parameter (MP)
+        ret += bytes([self.active_parameter])  # ParameterActive pointing to main parameter (MP)
         # FPI 1+2
-        ret += bytes([0])
-        ret += bytes([0])
-
-        # Main parameter + functional parameter
+        ret += bytes([self.fpi1])
+        ret += bytes([self.fpi2])
+        # Main parameter + functional parameter fp1 to fp3
         ret += bytes(self.parameter)
-        ret += bytes(32)
+        ret += bytes(self.functional_parameter['fp1'])
+        ret += bytes(self.functional_parameter['fp2'])
+        ret += bytes(self.functional_parameter['fp3'])
+        # Functional parameter fp4 to fp16
+        ret += bytes(26)
 
         # Nodes array: Number of nodes + node array + padding
         ret += bytes([len(self.node_ids)])  # index array count
@@ -66,9 +92,11 @@ class FrameCommandSendRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameCommandSendRequest node_ids={} parameter="{}" session_id={} originator={}/>'.format(
-            self.node_ids, self.parameter, self.session_id,
-            self.originator)
+        functional_parameter = ""
+        for key, value in self.functional_parameter.items():
+            functional_parameter += "%s: %s, " % (str(key), Position(Parameter(bytes(value))))
+        return '<FrameCommandSendRequest node_ids={} parameter="{}" functional_parameter="{}" session_id={} originator={}/>'.format(
+            self.node_ids, self.parameter, functional_parameter, self.session_id, self.originator)
 
 
 class CommandSendConfirmationStatus(Enum):

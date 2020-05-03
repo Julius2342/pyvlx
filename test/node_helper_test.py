@@ -39,7 +39,7 @@ class TestNodeHelper(unittest.TestCase):
         frame = FrameGetNodeInformationNotification()
         frame.node_id = 23
         frame.name = "Fnord23"
-        frame.node_type = NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND
+        frame.node_type = NodeTypeWithSubtype.EXTERIOR_VENETIAN_BLIND
         frame.serial_number = bytes.fromhex('aa bb aa bb aa bb aa 23')
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
