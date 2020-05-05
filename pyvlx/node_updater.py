@@ -18,7 +18,7 @@ class NodeUpdater():
     async def process_frame(self, frame):
         """Update nodes via frame, usually received by house monitor."""
         if isinstance(frame, (FrameGetAllNodesInformationNotification, FrameNodeStatePositionChangedNotification)):
-            PYVLXLOG.debug("NodeUpdater process frame: %d", frame)
+            PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
             if frame.node_id not in self.pyvlx.nodes:
                 return
             node = self.pyvlx.nodes[frame.node_id]
