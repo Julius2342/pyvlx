@@ -10,7 +10,7 @@ REQUIRES = [
 
 PKG_ROOT = os.path.dirname(__file__)
 
-VERSION = '0.2.14'
+VERSION = '0.2.15'
 
 
 def get_long_description():
