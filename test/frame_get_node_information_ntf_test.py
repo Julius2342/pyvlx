@@ -38,8 +38,8 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         frame.node_variation = NodeVariation.TOPHUNG
         frame.power_mode = 1
         frame.build_number = 7
-        frame._serial_number = (
-            b"\x01\x02\x03\x04\x05\x06\x06\x08"  # pylint: disable=protected-access
+        frame._serial_number = (  # pylint: disable=protected-access
+            b"\x01\x02\x03\x04\x05\x06\x06\x08"
         )
         frame.state = 1
         frame.current_position = Position(position=12)
