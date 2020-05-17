@@ -62,7 +62,9 @@ class PyVLX:
         self.protocol_version = get_protocol_version.version
         PYVLXLOG.warning(
             "Connected to: %s, protocol version: %s",
-            self.version, self.protocol_version)
+            self.version,
+            self.protocol_version,
+        )
 
     async def send_frame(self, frame):
         """Send frame to API via connection."""

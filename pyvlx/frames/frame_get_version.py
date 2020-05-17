@@ -33,12 +33,13 @@ class FrameGetVersionConfirmation(FrameBase):
     def version(self):
         """Return formatted version."""
         return "{}: Software version: {}, hardware version: {}".format(
-            self.product, self.software_version, self.hardware_version)
+            self.product, self.software_version, self.hardware_version
+        )
 
     @property
     def software_version(self):
         """Return software version as human readable string."""
-        return '.'.join(str(c) for c in self._software_version)
+        return ".".join(str(c) for c in self._software_version)
 
     @property
     def product(self):
@@ -62,7 +63,9 @@ class FrameGetVersionConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetVersionConfirmation software_version="{}" ' \
+        return (
+            '<FrameGetVersionConfirmation software_version="{}" '
             'harware_version="{}" product="{}"/>'.format(
-                self.software_version, self.hardware_version,
-                self.product)
+                self.software_version, self.hardware_version, self.product
+            )
+        )

@@ -25,6 +25,4 @@ class TestFrameSetUTCConfirmation(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameSetUTCConfirmation."""
         frame = FrameSetUTCConfirmation()
-        self.assertEqual(
-            str(frame),
-            '<FrameSetUTCConfirmation/>')
+        self.assertEqual(str(frame), "<FrameSetUTCConfirmation/>")

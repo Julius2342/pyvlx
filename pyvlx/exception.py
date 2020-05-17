@@ -11,9 +11,15 @@ class PyVLXException(Exception):
         self.parameter = kwargs
 
     def _format_parameter(self):
-        return " ".join(['%s="%s"' % (key, value) for (key, value) in sorted(self.parameter.items())])
+        return " ".join(
+            [
+                '%s="%s"' % (key, value)
+                for (key, value) in sorted(self.parameter.items())
+            ]
+        )
 
     def __str__(self):
         """Return object as readable string."""
-        return '<PyVLXException description="{0}" {1}/>' \
-            .format(self.description, self._format_parameter())
+        return '<PyVLXException description="{0}" {1}/>'.format(
+            self.description, self._format_parameter()
+        )

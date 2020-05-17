@@ -31,7 +31,9 @@ class FrameSetNodeNameRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameSetNodeNameRequest node_id={} name="{}"/>'.format(self.node_id, self.name)
+        return '<FrameSetNodeNameRequest node_id={} name="{}"/>'.format(
+            self.node_id, self.name
+        )
 
 
 class SetNodeNameConfirmationStatus(Enum):
@@ -64,4 +66,6 @@ class FrameSetNodeNameConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameSetNodeNameConfirmation node_id={} status="{}"/>'.format(self.node_id, self.status)
+        return '<FrameSetNodeNameConfirmation node_id={} status="{}"/>'.format(
+            self.node_id, self.status
+        )

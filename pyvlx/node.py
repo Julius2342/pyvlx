@@ -44,16 +44,17 @@ class Node:
 
     def __str__(self):
         """Return object as readable string."""
-        return '<{} name="{}" ' \
-            'node_id="{}" ' \
-            'serial_number="{}"/>' \
-            .format(
-                type(self).__name__,
-                self.name,
-                self.node_id,
-                self.serial_number)
+        return (
+            '<{} name="{}" '
+            'node_id="{}" '
+            'serial_number="{}"/>'.format(
+                type(self).__name__, self.name, self.node_id, self.serial_number
+            )
+        )
 
     def __eq__(self, other):
         """Equal operator."""
-        return type(self).__name__ == type(other).__name__ and \
-            self.__dict__ == other.__dict__
+        return (
+            type(self).__name__ == type(other).__name__
+            and self.__dict__ == other.__dict__
+        )

@@ -10,7 +10,7 @@ class TestFrameActivationLogUpdatedNotification(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\x03\x05\x06\x00'
+    EXAMPLE_FRAME = b"\x00\x03\x05\x06\x00"
 
     def test_bytes(self):
         """Test FrameActivationLogUpdatedNotification with NO_TYPE."""
@@ -25,6 +25,4 @@ class TestFrameActivationLogUpdatedNotification(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameActivationLogUpdatedNotification."""
         frame = FrameActivationLogUpdatedNotification()
-        self.assertEqual(
-            str(frame),
-            '<FrameActivationLogUpdatedNotification/>')
+        self.assertEqual(str(frame), "<FrameActivationLogUpdatedNotification/>")

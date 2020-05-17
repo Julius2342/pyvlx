@@ -26,12 +26,17 @@ class FrameBase:
             return
         # pylint: disable=no-member
         if len(payload) != self.PAYLOAD_LEN:
-            raise PyVLXException("Invalid payload len", expected_len=self.PAYLOAD_LEN, current_len=len(payload), frame_type=type(self).__name__)
+            raise PyVLXException(
+                "Invalid payload len",
+                expected_len=self.PAYLOAD_LEN,
+                current_len=len(payload),
+                frame_type=type(self).__name__,
+            )
 
     def get_payload(self):
         """Return Payload."""
         # pylint: disable=no-self-use
-        return b''
+        return b""
 
     def from_payload(self, payload):
         """Init frame from binary data."""
@@ -39,7 +44,7 @@ class FrameBase:
 
     def __str__(self):
         """Return human readable string."""
-        return '<{}/>'.format(type(self).__name__)
+        return "<{}/>".format(type(self).__name__)
 
     @staticmethod
     def build_frame(command, payload):

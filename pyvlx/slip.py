@@ -15,16 +15,16 @@ def is_slip(raw):
 
 def decode(raw):
     """Decode SLIP message."""
-    return raw \
-        .replace(bytes([SLIP_ESC, SLIP_ESC_END]), bytes([SLIP_END])) \
-        .replace(bytes([SLIP_ESC, SLIP_ESC_ESC]), bytes([SLIP_ESC]))
+    return raw.replace(bytes([SLIP_ESC, SLIP_ESC_END]), bytes([SLIP_END])).replace(
+        bytes([SLIP_ESC, SLIP_ESC_ESC]), bytes([SLIP_ESC])
+    )
 
 
 def encode(raw):
     """Encode SLIP message."""
-    return raw \
-        .replace(bytes([SLIP_ESC]), bytes([SLIP_ESC, SLIP_ESC_ESC])) \
-        .replace(bytes([SLIP_END]), bytes([SLIP_ESC, SLIP_ESC_END]))
+    return raw.replace(bytes([SLIP_ESC]), bytes([SLIP_ESC, SLIP_ESC_ESC])).replace(
+        bytes([SLIP_END]), bytes([SLIP_ESC, SLIP_ESC_END])
+    )
 
 
 def get_next_slip(raw):
@@ -36,8 +36,8 @@ def get_next_slip(raw):
     if not is_slip(raw):
         return None, raw
     length = raw[1:].index(SLIP_END)
-    slip_packet = decode(raw[1:length+1])
-    new_raw = raw[length+2:]
+    slip_packet = decode(raw[1 : length + 1])
+    new_raw = raw[length + 2 :]
     return slip_packet, new_raw
 
 

@@ -8,7 +8,9 @@ from .parameter import CurrentPosition, Parameter, Position, TargetPosition
 class OpeningDevice(Node):
     """Meta class for opening device with one main parameter for position."""
 
-    def __init__(self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()):
+    def __init__(
+        self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()
+    ):
         """Initialize opening device.
 
         Parameters:
@@ -20,7 +22,9 @@ class OpeningDevice(Node):
             * position_parameter: initial position of the opening device.
 
         """
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
+        super().__init__(
+            pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
+        )
         self.position = Position(parameter=position_parameter)
 
     async def set_position(self, position, wait_for_completion=True):
@@ -36,7 +40,8 @@ class OpeningDevice(Node):
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
-            parameter=position)
+            parameter=position,
+        )
         await command_send.do_api_call()
         if not command_send.success:
             raise PyVLXException("Unable to send command")
@@ -52,7 +57,8 @@ class OpeningDevice(Node):
         """
         await self.set_position(
             position=Position(position_percent=0),
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+        )
 
     async def close(self, wait_for_completion=True):
         """Close window.
@@ -64,7 +70,8 @@ class OpeningDevice(Node):
         """
         await self.set_position(
             position=Position(position_percent=100),
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+        )
 
     async def stop(self, wait_for_completion=True):
         """Stop window.
@@ -75,27 +82,37 @@ class OpeningDevice(Node):
 
         """
         await self.set_position(
-            position=CurrentPosition(),
-            wait_for_completion=wait_for_completion)
+            position=CurrentPosition(), wait_for_completion=wait_for_completion
+        )
 
     def __str__(self):
         """Return object as readable string."""
-        return '<{} name="{}" ' \
-            'node_id="{}" ' \
-            'serial_number="{}" ' \
-            'position="{}"/>' \
-            .format(
+        return (
+            '<{} name="{}" '
+            'node_id="{}" '
+            'serial_number="{}" '
+            'position="{}"/>'.format(
                 type(self).__name__,
                 self.name,
                 self.node_id,
                 self.serial_number,
-                self.position)
+                self.position,
+            )
+        )
 
 
 class Window(OpeningDevice):
     """Window object."""
 
-    def __init__(self, pyvlx, node_id, name, serial_number, position_parameter=Parameter(), rain_sensor=False):
+    def __init__(
+        self,
+        pyvlx,
+        node_id,
+        name,
+        serial_number,
+        position_parameter=Parameter(),
+        rain_sensor=False,
+    ):
         """Initialize Window class.
 
         Parameters:
@@ -109,25 +126,37 @@ class Window(OpeningDevice):
                 rain sensor.
 
         """
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number, position_parameter=position_parameter)
+        super().__init__(
+            pyvlx=pyvlx,
+            node_id=node_id,
+            name=name,
+            serial_number=serial_number,
+            position_parameter=position_parameter,
+        )
         self.rain_sensor = rain_sensor
 
     def __str__(self):
         """Return object as readable string."""
-        return '<{} name="{}" ' \
-            'node_id="{}" rain_sensor={} ' \
-            'serial_number="{}" position="{}"/>' \
-            .format(
+        return (
+            '<{} name="{}" '
+            'node_id="{}" rain_sensor={} '
+            'serial_number="{}" position="{}"/>'.format(
                 type(self).__name__,
                 self.name,
-                self.node_id, self.rain_sensor,
-                self.serial_number, self.position)
+                self.node_id,
+                self.rain_sensor,
+                self.serial_number,
+                self.position,
+            )
+        )
 
 
 class Blind(OpeningDevice):
     """Blind objects."""
 
-    def __init__(self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()):
+    def __init__(
+        self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()
+    ):
         """Initialize Blind class.
 
         Parameters:
@@ -137,11 +166,13 @@ class Blind(OpeningDevice):
             * name: node name
 
         """
-        super().__init__(pyvlx=pyvlx,
-                         node_id=node_id,
-                         name=name,
-                         serial_number=serial_number,
-                         position_parameter=position_parameter)
+        super().__init__(
+            pyvlx=pyvlx,
+            node_id=node_id,
+            name=name,
+            serial_number=serial_number,
+            position_parameter=position_parameter,
+        )
         self.orientation = Position(position_percent=0)
         self.target_orientation = TargetPosition()
         self.target_position = TargetPosition()
@@ -166,7 +197,7 @@ class Blind(OpeningDevice):
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=position,
-            fp3=self.target_orientation
+            fp3=self.target_orientation,
         )
         await command_send.do_api_call()
         if not command_send.success:
@@ -183,7 +214,8 @@ class Blind(OpeningDevice):
         """
         await self.set_position(
             position=Position(position_percent=0),
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+        )
 
     async def close(self, wait_for_completion=True):
         """Close window.
@@ -194,13 +226,14 @@ class Blind(OpeningDevice):
         """
         await self.set_position(
             position=Position(position_percent=100),
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+        )
 
     async def stop(self, wait_for_completion=True):
         """Stop Blind position."""
         await self.set_position(
-            position=CurrentPosition(),
-            wait_for_completion=wait_for_completion)
+            position=CurrentPosition(), wait_for_completion=wait_for_completion
+        )
 
     async def set_orientation(self, orientation, wait_for_completion=True):
         """Set Blind shades to desired orientation.
@@ -222,7 +255,7 @@ class Blind(OpeningDevice):
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=self.target_position,
-            fp3=orientation
+            fp3=orientation,
         )
         await command_send.do_api_call()
         if not command_send.success:
@@ -237,19 +270,21 @@ class Blind(OpeningDevice):
         """
         await self.set_orientation(
             orientation=Position(position_percent=50),
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+        )
 
     async def close_orientation(self, wait_for_completion=True):
         """Close Blind slats."""
         await self.set_orientation(
             orientation=Position(position_percent=100),
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+        )
 
     async def stop_orientation(self, wait_for_completion=True):
         """Stop Blind slats."""
         await self.set_orientation(
-            orientation=CurrentPosition(),
-            wait_for_completion=wait_for_completion)
+            orientation=CurrentPosition(), wait_for_completion=wait_for_completion
+        )
 
 
 class Awning(OpeningDevice):

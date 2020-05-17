@@ -11,11 +11,16 @@ class TestFrameActivateSceneRequest(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\t\x04\x12\x03\xe8\x02\x03\x04\x01\xf0'
+    EXAMPLE_FRAME = b"\x00\t\x04\x12\x03\xe8\x02\x03\x04\x01\xf0"
 
     def test_bytes(self):
         """Test FrameActivateSceneRequest with NO_TYPE."""
-        frame = FrameActivateSceneRequest(scene_id=4, session_id=1000, originator=Originator.RAIN, velocity=Velocity.SILENT)
+        frame = FrameActivateSceneRequest(
+            scene_id=4,
+            session_id=1000,
+            originator=Originator.RAIN,
+            velocity=Velocity.SILENT,
+        )
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
     def test_frame_from_raw(self):
@@ -30,7 +35,10 @@ class TestFrameActivateSceneRequest(unittest.TestCase):
 
     def test_str(self):
         """Test string representation of FrameActivateSceneRequest."""
-        frame = FrameActivateSceneRequest(scene_id=4, session_id=1000, velocity=Velocity.FAST)
+        frame = FrameActivateSceneRequest(
+            scene_id=4, session_id=1000, velocity=Velocity.FAST
+        )
         self.assertEqual(
             str(frame),
-            '<FrameActivateSceneRequest scene_id=4 session_id=1000 originator=Originator.USER velocity=Velocity.FAST/>')
+            "<FrameActivateSceneRequest scene_id=4 session_id=1000 originator=Originator.USER velocity=Velocity.FAST/>",
+        )

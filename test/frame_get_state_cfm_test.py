@@ -2,8 +2,7 @@
 import unittest
 
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import (
-    FrameGetStateConfirmation, GatewayState, GatewaySubState)
+from pyvlx.frames import FrameGetStateConfirmation, GatewayState, GatewaySubState
 
 
 class TestFrameGetStateConfirmation(unittest.TestCase):
@@ -11,7 +10,7 @@ class TestFrameGetStateConfirmation(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\t\x00\r\x03\x80\x00\x00\x00\x00\x87'
+    EXAMPLE_FRAME = b"\x00\t\x00\r\x03\x80\x00\x00\x00\x00\x87"
 
     def test_bytes(self):
         """Test FrameGetStateConfirmation with NO_TYPE."""
@@ -25,7 +24,9 @@ class TestFrameGetStateConfirmation(unittest.TestCase):
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameGetStateConfirmation))
         self.assertEqual(frame.gateway_state, GatewayState.BEACON_MODE_NOT_CONFIGURED)
-        self.assertEqual(frame.gateway_sub_state, GatewaySubState.PERFORMING_TASK_COMMAND)
+        self.assertEqual(
+            frame.gateway_sub_state, GatewaySubState.PERFORMING_TASK_COMMAND
+        )
 
     def test_str(self):
         """Test string representation of FrameGetStateConfirmation."""
@@ -34,6 +35,7 @@ class TestFrameGetStateConfirmation(unittest.TestCase):
         frame.gateway_sub_state = GatewaySubState.PERFORMING_TASK_COMMAND
         self.assertEqual(
             str(frame),
-            '<FrameGetStateConfirmation '
+            "<FrameGetStateConfirmation "
             'gateway_state="GatewayState.BEACON_MODE_NOT_CONFIGURED" '
-            'gateway_sub_state="GatewaySubState.PERFORMING_TASK_COMMAND"/>')
+            'gateway_sub_state="GatewaySubState.PERFORMING_TASK_COMMAND"/>',
+        )

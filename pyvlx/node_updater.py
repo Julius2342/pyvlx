@@ -1,14 +1,15 @@
 """Module for updating nodes via frames."""
 from .frames import (
     FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification)
+    FrameNodeStatePositionChangedNotification,
+)
 from .lightening_device import LighteningDevice
 from .opening_device import Blind, OpeningDevice
 from .parameter import Intensity, Parameter, Position
 from .pyvlx import PYVLXLOG
 
 
-class NodeUpdater():
+class NodeUpdater:
     """Class for updating nodes via incoming frames,  usually received by house monitor."""
 
     def __init__(self, pyvlx):
@@ -17,7 +18,13 @@ class NodeUpdater():
 
     async def process_frame(self, frame):
         """Update nodes via frame, usually received by house monitor."""
-        if isinstance(frame, (FrameGetAllNodesInformationNotification, FrameNodeStatePositionChangedNotification)):
+        if isinstance(
+            frame,
+            (
+                FrameGetAllNodesInformationNotification,
+                FrameNodeStatePositionChangedNotification,
+            ),
+        ):
             PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
             if frame.node_id not in self.pyvlx.nodes:
                 return
@@ -33,7 +40,9 @@ class NodeUpdater():
                     PYVLXLOG.debug("%s position changed to: %s", node.name, position)
                 if orientation.position <= Parameter.MAX:
                     node.orientation = orientation
-                    PYVLXLOG.debug("%s orientation changed to: %s", node.name, orientation)
+                    PYVLXLOG.debug(
+                        "%s orientation changed to: %s", node.name, orientation
+                    )
                 await node.after_update()
             elif isinstance(node, OpeningDevice):
                 if position.position <= Parameter.MAX:

@@ -36,7 +36,9 @@ class FrameGetSceneListConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetSceneListConfirmation count_scenes={}/>'.format(self.count_scenes)
+        return "<FrameGetSceneListConfirmation count_scenes={}/>".format(
+            self.count_scenes
+        )
 
 
 class FrameGetSceneListNotification(FrameBase):
@@ -63,14 +65,16 @@ class FrameGetSceneListNotification(FrameBase):
         self.remaining_scenes = payload[-1]
         predicted_len = number_of_objects * 65 + 2
         if len(payload) != predicted_len:
-            raise PyVLXException('scene_list_notification_wrong_length')
+            raise PyVLXException("scene_list_notification_wrong_length")
         self.scenes = []
         for i in range(number_of_objects):
-            scene = payload[(i*65+1):(i*65+66)]
+            scene = payload[(i * 65 + 1) : (i * 65 + 66)]
             number = scene[0]
             name = bytes_to_string(scene[1:])
             self.scenes.append((number, name))
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetSceneListNotification scenes={} remaining_scenes={}>'.format(self.scenes, self.remaining_scenes)
+        return "<FrameGetSceneListNotification scenes={} remaining_scenes={}>".format(
+            self.scenes, self.remaining_scenes
+        )

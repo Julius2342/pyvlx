@@ -50,7 +50,9 @@ class FrameGetAllNodesInformationConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetAllNodesInformationConfirmation status=\'{}\' number_of_nodes={}/>'.format(self.status, self.number_of_nodes)
+        return "<FrameGetAllNodesInformationConfirmation status='{}' number_of_nodes={}/>".format(
+            self.status, self.number_of_nodes
+        )
 
 
 class FrameGetAllNodesInformationNotification(FrameBase):
@@ -145,17 +147,18 @@ class FrameGetAllNodesInformationNotification(FrameBase):
     @property
     def timestamp_formatted(self):
         """Return time as human readable string."""
-        return datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        return datetime.fromtimestamp(self.timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetAllNodesInformationNotification node_id={} order={} ' \
-            'placement={} name=\'{}\' velocity={} node_type=\'{}\' product_group={} ' \
-            'product_type={} node_variation={} power_mode={} build_number={} ' \
-            'serial_number=\'{}\' state={} current_position=\'{}\' ' \
-            'target=\'{}\' current_position_fp1=\'{}\' current_position_fp2=\'{}\' ' \
-            'current_position_fp3=\'{}\' current_position_fp4=\'{}\' ' \
-            'remaining_time={} time=\'{}\' alias_array=\'{}\'/>'.format(
+        return (
+            "<FrameGetAllNodesInformationNotification node_id={} order={} "
+            "placement={} name='{}' velocity={} node_type='{}' product_group={} "
+            "product_type={} node_variation={} power_mode={} build_number={} "
+            "serial_number='{}' state={} current_position='{}' "
+            "target='{}' current_position_fp1='{}' current_position_fp2='{}' "
+            "current_position_fp3='{}' current_position_fp4='{}' "
+            "remaining_time={} time='{}' alias_array='{}'/>".format(
                 self.node_id,
                 self.order,
                 self.placement,
@@ -177,7 +180,9 @@ class FrameGetAllNodesInformationNotification(FrameBase):
                 self.current_position_fp4,
                 self.remaining_time,
                 self.timestamp_formatted,
-                self.alias_array)
+                self.alias_array,
+            )
+        )
 
 
 class FrameGetAllNodesInformationFinishedNotification(FrameBase):

@@ -59,15 +59,16 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
     @property
     def timestamp_formatted(self):
         """Return time as human readable string."""
-        return datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        return datetime.fromtimestamp(self.timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameNodeStatePositionChangedNotification node_id={} ' \
-            'state={} current_position=\'{}\' ' \
-            'target=\'{}\' current_position_fp1=\'{}\' current_position_fp2=\'{}\' ' \
-            'current_position_fp3=\'{}\' current_position_fp4=\'{}\' ' \
-            'remaining_time={} time=\'{}\'/>'.format(
+        return (
+            "<FrameNodeStatePositionChangedNotification node_id={} "
+            "state={} current_position='{}' "
+            "target='{}' current_position_fp1='{}' current_position_fp2='{}' "
+            "current_position_fp3='{}' current_position_fp4='{}' "
+            "remaining_time={} time='{}'/>".format(
                 self.node_id,
                 self.state,
                 self.current_position,
@@ -77,4 +78,6 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
                 self.current_position_fp3,
                 self.current_position_fp4,
                 self.remaining_time,
-                self.timestamp_formatted)
+                self.timestamp_formatted,
+            )
+        )

@@ -14,16 +14,16 @@ class TestFrameNodeDiscover(unittest.TestCase):
     def test_bytes(self):
         """Test FrameDiscoverNodesRequest with NO_TYPE."""
         frame = FrameDiscoverNodesRequest()
-        self.assertEqual(bytes(frame), b'\x00\x04\x01\x03\x00\x06')
+        self.assertEqual(bytes(frame), b"\x00\x04\x01\x03\x00\x06")
 
     def test_bytes_light(self):
         """Test FrameDiscoverNodesRequest with Light."""
         frame = FrameDiscoverNodesRequest(NodeType.LIGHT)
-        self.assertEqual(bytes(frame), b'\x00\x04\x01\x03\x06\x00')
+        self.assertEqual(bytes(frame), b"\x00\x04\x01\x03\x06\x00")
 
     def test_frame_from_raw(self):
         """Test parse FrameDiscoverNodesRequest from raw."""
-        frame = frame_from_raw(b'\x00\x04\x01\x03\x06\x00')
+        frame = frame_from_raw(b"\x00\x04\x01\x03\x06\x00")
         self.assertTrue(isinstance(frame, FrameDiscoverNodesRequest))
         self.assertEqual(frame.node_type, NodeType.LIGHT)
 
@@ -31,5 +31,5 @@ class TestFrameNodeDiscover(unittest.TestCase):
         """Test string representation of FrameDiscoverNodesRequest."""
         frame = FrameDiscoverNodesRequest(NodeType.LIGHT)
         self.assertEqual(
-            str(frame),
-            '<FrameDiscoverNodesRequest node_type=\'NodeType.LIGHT\'/>')
+            str(frame), "<FrameDiscoverNodesRequest node_type='NodeType.LIGHT'/>"
+        )

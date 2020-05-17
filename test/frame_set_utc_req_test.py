@@ -11,7 +11,7 @@ class TestFrameSetUTCRequest(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\x07 \x00[\xfd\xaanE'
+    EXAMPLE_FRAME = b"\x00\x07 \x00[\xfd\xaanE"
     EXAMPLE_TS = 1543350894
 
     def test_bytes(self):
@@ -28,7 +28,5 @@ class TestFrameSetUTCRequest(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameSetUTCRequest."""
         frame = FrameSetUTCRequest(timestamp=1543350894)
-        test_ts = datetime.fromtimestamp(1543350894).strftime('%Y-%m-%d %H:%M:%S')
-        self.assertEqual(
-            str(frame),
-            '<FrameSetUTCRequest time="{}"/>'.format(test_ts))
+        test_ts = datetime.fromtimestamp(1543350894).strftime("%Y-%m-%d %H:%M:%S")
+        self.assertEqual(str(frame), '<FrameSetUTCRequest time="{}"/>'.format(test_ts))

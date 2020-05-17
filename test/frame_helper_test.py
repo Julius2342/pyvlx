@@ -12,19 +12,21 @@ class TestFrameHelper(unittest.TestCase):
 
     def test_crc(self):
         """Test crc calculation."""
-        self.assertEqual(calc_crc(b''), 0)
-        self.assertEqual(calc_crc(b'\x01'), 1)
-        self.assertEqual(calc_crc(b'\x01\x02'), 3)
-        self.assertEqual(calc_crc(b'\x01\x02\x03'), 0)
-        self.assertEqual(calc_crc(b'\x01\x02\x03\xff'), 255)
+        self.assertEqual(calc_crc(b""), 0)
+        self.assertEqual(calc_crc(b"\x01"), 1)
+        self.assertEqual(calc_crc(b"\x01\x02"), 3)
+        self.assertEqual(calc_crc(b"\x01\x02\x03"), 0)
+        self.assertEqual(calc_crc(b"\x01\x02\x03\xff"), 255)
 
     def test_extract_from_frame(self):
         """Test extract_from_frame method."""
         with self.assertRaises(PyVLXException):
             extract_from_frame(bytes(4))
         with self.assertRaises(PyVLXException):
-            extract_from_frame(bytes(b'\x01\x04\x00\x00\x02\x06'))  # invalid length (first 2 bytes)
+            extract_from_frame(
+                bytes(b"\x01\x04\x00\x00\x02\x06")
+            )  # invalid length (first 2 bytes)
         with self.assertRaises(PyVLXException):
-            extract_from_frame(bytes(b'\x00\x04\x00\x00\x02\x07'))  # invalid crc
+            extract_from_frame(bytes(b"\x00\x04\x00\x00\x02\x07"))  # invalid crc
         with self.assertRaises(PyVLXException):
-            extract_from_frame(bytes(b'\x00\x04\xFF\xFF\x02\x06'))  # invalid crc
+            extract_from_frame(bytes(b"\x00\x04\xFF\xFF\x02\x06"))  # invalid crc

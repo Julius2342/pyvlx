@@ -10,7 +10,7 @@ class TestFrameHouseStatusMonitorDisableConfirmation(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\x03\x02CB'
+    EXAMPLE_FRAME = b"\x00\x03\x02CB"
 
     def test_bytes(self):
         """Test FrameHouseStatusMonitorDisableConfirmation."""
@@ -25,6 +25,4 @@ class TestFrameHouseStatusMonitorDisableConfirmation(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameHouseStatusMonitorDisableConfirmation."""
         frame = FrameHouseStatusMonitorDisableConfirmation()
-        self.assertEqual(
-            str(frame),
-            '<FrameHouseStatusMonitorDisableConfirmation/>')
+        self.assertEqual(str(frame), "<FrameHouseStatusMonitorDisableConfirmation/>")

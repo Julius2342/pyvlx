@@ -20,7 +20,7 @@ class FrameSetUTCRequest(FrameBase):
     @property
     def timestamp_formatted(self):
         """Return time as human readable string."""
-        return datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        return datetime.fromtimestamp(self.timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
     def get_payload(self):
         """Return Payload."""

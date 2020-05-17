@@ -13,13 +13,15 @@ class FrameCommandSendRequest(FrameBase):
 
     PAYLOAD_LEN = 66
 
-    def __init__(self,
-                 node_ids=None,
-                 parameter=Parameter(),
-                 active_parameter=0,
-                 session_id=None,
-                 originator=Originator.USER,
-                 **functional_parameter):
+    def __init__(
+        self,
+        node_ids=None,
+        parameter=Parameter(),
+        active_parameter=0,
+        session_id=None,
+        originator=Originator.USER,
+        **functional_parameter
+    ):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_SEND_REQ)
         self.node_ids = node_ids
@@ -35,13 +37,13 @@ class FrameCommandSendRequest(FrameBase):
         Functional parameter dictionary will be checked for keys 'fp1' to 'fp16'
         to set the appropriate indicator and the corresponding self.functional_parameter."""
         for i in range(1, 17):
-            key = 'fp%s' % (i)
+            key = "fp%s" % (i)
             if key in functional_parameter:
                 self.functional_parameter[key] = functional_parameter[key]
                 if i < 9:
-                    self.fpi1 += 2**(8-i)
+                    self.fpi1 += 2 ** (8 - i)
                 if i >= 9:
-                    self.fpi2 += 2**(16-i)
+                    self.fpi2 += 2 ** (16 - i)
             else:
                 self.functional_parameter[key] = bytes(2)
 
@@ -51,21 +53,23 @@ class FrameCommandSendRequest(FrameBase):
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([self.originator.value])
         ret += bytes([self.priority.value])
-        ret += bytes([self.active_parameter])  # ParameterActive pointing to main parameter (MP)
+        ret += bytes(
+            [self.active_parameter]
+        )  # ParameterActive pointing to main parameter (MP)
         # FPI 1+2
         ret += bytes([self.fpi1])
         ret += bytes([self.fpi2])
         # Main parameter + functional parameter fp1 to fp3
         ret += bytes(self.parameter)
-        ret += bytes(self.functional_parameter['fp1'])
-        ret += bytes(self.functional_parameter['fp2'])
-        ret += bytes(self.functional_parameter['fp3'])
+        ret += bytes(self.functional_parameter["fp1"])
+        ret += bytes(self.functional_parameter["fp2"])
+        ret += bytes(self.functional_parameter["fp3"])
         # Functional parameter fp4 to fp16
         ret += bytes(26)
 
         # Nodes array: Number of nodes + node array + padding
         ret += bytes([len(self.node_ids)])  # index array count
-        ret += bytes(self.node_ids) + bytes(20-len(self.node_ids))
+        ret += bytes(self.node_ids) + bytes(20 - len(self.node_ids))
 
         # Priority  Level Lock
         ret += bytes([0])
@@ -77,7 +81,7 @@ class FrameCommandSendRequest(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.session_id = payload[0]*256 + payload[1]
+        self.session_id = payload[0] * 256 + payload[1]
         self.originator = Originator(payload[2])
         self.priority = Priority(payload[3])
 
@@ -94,9 +98,17 @@ class FrameCommandSendRequest(FrameBase):
         """Return human readable string."""
         functional_parameter = ""
         for key, value in self.functional_parameter.items():
-            functional_parameter += "%s: %s, " % (str(key), Position(Parameter(bytes(value))))
+            functional_parameter += "%s: %s, " % (
+                str(key),
+                Position(Parameter(bytes(value))),
+            )
         return '<FrameCommandSendRequest node_ids={} parameter="{}" functional_parameter="{}" session_id={} originator={}/>'.format(
-            self.node_ids, self.parameter, functional_parameter, self.session_id, self.originator)
+            self.node_ids,
+            self.parameter,
+            functional_parameter,
+            self.session_id,
+            self.originator,
+        )
 
 
 class CommandSendConfirmationStatus(Enum):
@@ -125,12 +137,14 @@ class FrameCommandSendConfirmation(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.session_id = payload[0]*256 + payload[1]
+        self.session_id = payload[0] * 256 + payload[1]
         self.status = CommandSendConfirmationStatus(payload[2])
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameCommandSendConfirmation session_id={} status={}/>'.format(self.session_id, self.status)
+        return "<FrameCommandSendConfirmation session_id={} status={}/>".format(
+            self.session_id, self.status
+        )
 
 
 class FrameCommandRunStatusNotification(FrameBase):
@@ -138,7 +152,14 @@ class FrameCommandRunStatusNotification(FrameBase):
 
     PAYLOAD_LEN = 13
 
-    def __init__(self, session_id=None, status_id=None, index_id=None, node_parameter=None, parameter_value=None):
+    def __init__(
+        self,
+        session_id=None,
+        status_id=None,
+        index_id=None,
+        node_parameter=None,
+        parameter_value=None,
+    ):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_RUN_STATUS_NTF)
         self.session_id = session_id
@@ -161,19 +182,24 @@ class FrameCommandRunStatusNotification(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.session_id = payload[0]*256 + payload[1]
+        self.session_id = payload[0] * 256 + payload[1]
         self.status_id = payload[2]
         self.index_id = payload[3]
         self.node_parameter = payload[4]
-        self.parameter_value = payload[5]*256 + payload[6]
+        self.parameter_value = payload[5] * 256 + payload[6]
 
     def __str__(self):
         """Return human readable string."""
-        return \
-            '<FrameCommandRunStatusNotification session_id={} status_id={} ' \
-            'index_id={} node_parameter={} parameter_value={}/>'.format(
-                self.session_id, self.status_id, self.index_id,
-                self.node_parameter, self.parameter_value)
+        return (
+            "<FrameCommandRunStatusNotification session_id={} status_id={} "
+            "index_id={} node_parameter={} parameter_value={}/>".format(
+                self.session_id,
+                self.status_id,
+                self.index_id,
+                self.node_parameter,
+                self.parameter_value,
+            )
+        )
 
 
 class FrameCommandRemainingTimeNotification(FrameBase):
@@ -199,17 +225,19 @@ class FrameCommandRemainingTimeNotification(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.session_id = payload[0]*256 + payload[1]
+        self.session_id = payload[0] * 256 + payload[1]
         self.index_id = payload[2]
         self.node_parameter = payload[3]
-        self.seconds = payload[4]*256 + payload[5]
+        self.seconds = payload[4] * 256 + payload[5]
 
     def __str__(self):
         """Return human readable string."""
-        return \
-            '<FrameCommandRemainingTimeNotification session_id={} index_id={} ' \
-            'node_parameter={} seconds={}/>'.format(
-                self.session_id, self.index_id, self.node_parameter, self.seconds)
+        return (
+            "<FrameCommandRemainingTimeNotification session_id={} index_id={} "
+            "node_parameter={} seconds={}/>".format(
+                self.session_id, self.index_id, self.node_parameter, self.seconds
+            )
+        )
 
 
 class FrameSessionFinishedNotification(FrameBase):
@@ -229,8 +257,10 @@ class FrameSessionFinishedNotification(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.session_id = payload[0]*256 + payload[1]
+        self.session_id = payload[0] * 256 + payload[1]
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameSessionFinishedNotification session_id={} />'.format(self.session_id)
+        return "<FrameSessionFinishedNotification session_id={} />".format(
+            self.session_id
+        )

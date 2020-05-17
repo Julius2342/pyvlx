@@ -86,7 +86,8 @@ class Connection:
             lambda: tcp_client,
             host=self.config.host,
             port=self.config.port,
-            ssl=self.create_ssl_context())
+            ssl=self.create_ssl_context(),
+        )
         self.connected = True
 
     def register_frame_received_cb(self, callback):

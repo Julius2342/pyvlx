@@ -10,7 +10,7 @@ class TestFrameGetStateRequest(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\x03\x00\x0c\x0f'
+    EXAMPLE_FRAME = b"\x00\x03\x00\x0c\x0f"
 
     def test_bytes(self):
         """Test FrameGetStateRequest with NO_TYPE."""
@@ -25,6 +25,4 @@ class TestFrameGetStateRequest(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameGetStateRequest."""
         frame = FrameGetStateRequest()
-        self.assertEqual(
-            str(frame),
-            '<FrameGetStateRequest/>')
+        self.assertEqual(str(frame), "<FrameGetStateRequest/>")

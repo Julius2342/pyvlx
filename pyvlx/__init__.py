@@ -4,12 +4,28 @@ from .exception import PyVLXException
 from .lightening_device import Light, LighteningDevice
 from .nodes import Nodes
 from .opening_device import (
-    Awning, Blade, Blind, GarageDoor, Gate, OpeningDevice, RollerShutter,
-    Window)
+    Awning,
+    Blade,
+    Blind,
+    GarageDoor,
+    Gate,
+    OpeningDevice,
+    RollerShutter,
+    Window,
+)
 from .parameter import (
-    CurrentIntensity, CurrentPosition, Intensity, Parameter, Position,
-    SwitchParameter, SwitchParameterOff, SwitchParameterOn, UnknownIntensity,
-    UnknownPosition)
+    CurrentIntensity,
+    CurrentPosition,
+    Intensity,
+    Parameter,
+    Position,
+    SwitchParameter,
+    SwitchParameterOff,
+    SwitchParameterOn,
+    UnknownIntensity,
+    UnknownPosition,
+)
+
 # flake8: noqa
 from .pyvlx import PyVLX
 from .scene import Scene
