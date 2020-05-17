@@ -30,10 +30,10 @@ class NodeUpdater():
             if isinstance(node, Blind):
                 if position.position <= Parameter.MAX:
                     node.position = position
-                    PYVLXLOG.debug("%d position changed to: %d", node.name, position)
+                    PYVLXLOG.debug("%s position changed to: %s", node.name, position)
                 if orientation.position <= Parameter.MAX:
                     node.orientation = orientation
-                    PYVLXLOG.debug("%d orientation changed to: %d", node.name, orientation)
+                    PYVLXLOG.debug("%s orientation changed to: %s", node.name, orientation)
                 await node.after_update()
             elif isinstance(node, OpeningDevice):
                 if position.position <= Parameter.MAX:
