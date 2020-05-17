@@ -68,7 +68,7 @@ class FrameGetSceneListNotification(FrameBase):
             raise PyVLXException("scene_list_notification_wrong_length")
         self.scenes = []
         for i in range(number_of_objects):
-            scene = payload[(i * 65 + 1) : (i * 65 + 66)]
+            scene = payload[(i*65+1):(i*65+66)]
             number = scene[0]
             name = bytes_to_string(scene[1:])
             self.scenes.append((number, name))
