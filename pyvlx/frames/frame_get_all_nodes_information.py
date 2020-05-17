@@ -89,6 +89,8 @@ class FrameGetAllNodesInformationNotification(FrameBase):
     @property
     def serial_number(self):
         """Property for serial number in a human readable way."""
+        if self._serial_number == bytes(8):
+            return None
         return ":".join("{:02x}".format(c) for c in self._serial_number)
 
     def get_payload(self):
