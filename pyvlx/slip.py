@@ -36,8 +36,8 @@ def get_next_slip(raw):
     if not is_slip(raw):
         return None, raw
     length = raw[1:].index(SLIP_END)
-    slip_packet = decode(raw[1 : length + 1])
-    new_raw = raw[length + 2 :]
+    slip_packet = decode(raw[1:length+1])
+    new_raw = raw[length+2:]
     return slip_packet, new_raw
 
 
