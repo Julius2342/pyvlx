@@ -4,7 +4,8 @@ from .exception import PyVLXException
 from .lightening_device import Light, LighteningDevice
 from .nodes import Nodes
 from .opening_device import (
-    Blade, Blind, GarageDoor, Gate, OpeningDevice, RollerShutter, Window, Awning)
+    Awning, Blade, Blind, GarageDoor, Gate, OpeningDevice, RollerShutter,
+    Window)
 from .parameter import (
     CurrentIntensity, CurrentPosition, Intensity, Parameter, Position,
     SwitchParameter, SwitchParameterOff, SwitchParameterOn, UnknownIntensity,

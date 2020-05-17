@@ -2,9 +2,9 @@
 from .frames import (
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification)
-from .opening_device import OpeningDevice, Blind
 from .lightening_device import LighteningDevice
-from .parameter import Intensity, Position, Parameter
+from .opening_device import Blind, OpeningDevice
+from .parameter import Intensity, Parameter, Position
 from .pyvlx import PYVLXLOG
 
 
