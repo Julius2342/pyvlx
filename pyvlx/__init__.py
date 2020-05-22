@@ -28,5 +28,6 @@ from .parameter import (
 
 # flake8: noqa
 from .pyvlx import PyVLX
+from .log import PYVLXLOG
 from .scene import Scene
 from .scenes import Scenes

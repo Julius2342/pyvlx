@@ -6,7 +6,7 @@ from .frames import (
 from .lightening_device import LighteningDevice
 from .opening_device import Blind, OpeningDevice
 from .parameter import Intensity, Parameter, Position
-from .pyvlx import PYVLXLOG
+from .log import PYVLXLOG
 
 
 class NodeUpdater:
