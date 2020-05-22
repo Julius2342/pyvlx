@@ -101,7 +101,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
             self._serial_number = bytes(8)
             return
         self._serial_number = b''
-        for elem in (serial_number.split(":")):
+        for elem in serial_number.split(":"):
             self._serial_number += bytes.fromhex(elem)
         if len(self._serial_number) != 8:
             raise PyVLXException("could_not_parse_serial_number")
