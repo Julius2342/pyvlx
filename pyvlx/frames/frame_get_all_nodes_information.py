@@ -7,6 +7,7 @@ from pyvlx.alias_array import AliasArray
 from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
+from pyvlx.exception import PyVLXException
 
 from .frame import FrameBase
 
@@ -92,6 +93,18 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         if self._serial_number == bytes(8):
             return None
         return ":".join("{:02x}".format(c) for c in self._serial_number)
+
+    @serial_number.setter
+    def serial_number(self, serial_number):
+        """Set serial number."""
+        if serial_number is None:
+            self._serial_number = bytes(8)
+            return
+        self._serial_number = b''
+        for elem in (serial_number.split(":")):
+            self._serial_number += bytes.fromhex(elem)
+        if len(self._serial_number) != 8:
+            raise PyVLXException("could_not_parse_serial_number")
 
     def get_payload(self):
         """Return Payload."""
