@@ -100,3 +100,16 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
                 test_ts
             ),
         )
+
+    def test_serial_number(self):
+        """Test serial number property."""
+        frame = FrameGetAllNodesInformationNotification()
+        frame._serial_number = (  # pylint: disable=protected-access
+            b"\x01\x02\x03\x04\x05\x06\x06\x08"
+        )
+        self.assertEqual(frame.serial_number, "01:02:03:04:05:06:06:08")
+
+    def test_serial_number_none(self):
+        """Test serial number property with no value set."""
+        frame = FrameGetAllNodesInformationNotification()
+        self.assertEqual(frame.serial_number, None)
