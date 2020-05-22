@@ -7,6 +7,7 @@ from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import FrameGetNodeInformationNotification
 from pyvlx.parameter import Position
+from pyvlx.exception import PyVLXException
 
 
 class TestFrameGetNodeInformationNotification(unittest.TestCase):
@@ -38,9 +39,8 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         frame.node_variation = NodeVariation.TOPHUNG
         frame.power_mode = 1
         frame.build_number = 7
-        frame._serial_number = (  # pylint: disable=protected-access
-            b"\x01\x02\x03\x04\x05\x06\x06\x08"
-        )
+        frame.serial_number = "01:02:03:04:05:06:06:08"
+
         frame.state = 1
         frame.current_position = Position(position=12)
         frame.target = Position(position=123)
@@ -100,3 +100,26 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
                 test_ts
             ),
         )
+
+    def test_serial_number(self):
+        """Test serial number property."""
+        frame = FrameGetNodeInformationNotification()
+        frame.serial_number = "01:02:03:04:05:06:06:08"
+        self.assertEqual(frame.serial_number, "01:02:03:04:05:06:06:08")
+
+    def test_serial_number_none(self):
+        """Test serial number property with no value set."""
+        frame = FrameGetNodeInformationNotification()
+        frame.serial_number = None
+        self.assertEqual(frame.serial_number, None)
+
+    def test_serial_number_not_set(self):
+        """Test serial number property with not set."""
+        frame = FrameGetNodeInformationNotification()
+        self.assertEqual(frame.serial_number, None)
+
+    def test_wrong_serial_number(self):
+        """Test setting a wrong serial number."""
+        frame = FrameGetNodeInformationNotification()
+        with self.assertRaises(PyVLXException):
+            frame.serial_number = "01:02:03:04:05:06:06"

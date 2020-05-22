@@ -18,7 +18,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.WINDOW_OPENER
-        frame.serial_number = bytes.fromhex("aa bb aa bb aa bb aa 23")
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(
@@ -37,7 +37,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.WINDOW_OPENER_WITH_RAIN_SENSOR
-        frame.serial_number = bytes.fromhex("aa bb aa bb aa bb aa 23")
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(
@@ -57,7 +57,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.EXTERIOR_VENETIAN_BLIND
-        frame.serial_number = bytes.fromhex("aa bb aa bb aa bb aa 23")
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(
@@ -76,7 +76,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.ROLLER_SHUTTER
-        frame.serial_number = bytes.fromhex("aa bb aa bb aa bb aa 23")
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(
@@ -95,7 +95,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.GARAGE_DOOR_OPENER
-        frame.serial_number = bytes.fromhex("aa bb aa bb aa bb aa 23")
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(
@@ -114,7 +114,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.GATE_OPENER
-        frame.serial_number = bytes.fromhex("aa bb aa bb aa bb aa 23")
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(
@@ -133,7 +133,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.GATE_OPENER_ANGULAR_POSITION
-        frame.serial_number = bytes.fromhex("aa bb aa bb aa bb aa 23")
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(
@@ -152,7 +152,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.BLADE_OPENER
-        frame.serial_number = bytes.fromhex("aa bb aa bb aa bb aa 23")
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(
@@ -171,7 +171,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.NO_TYPE
-        frame.serial_number = bytes.fromhex("aa bb aa bb aa bb aa 23")
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         self.assertEqual(convert_frame_to_node(pyvlx, frame), None)
 
@@ -181,7 +181,7 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.LIGHT
-        frame.serial_number = bytes.fromhex("aa bb aa bb aa bb aa 23")
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
         self.assertEqual(
