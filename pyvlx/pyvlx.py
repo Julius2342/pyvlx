@@ -18,6 +18,7 @@ from .log import PYVLXLOG
 from .login import Login
 from .node_updater import NodeUpdater
 from .nodes import Nodes
+from .reboot import Reboot
 from .scenes import Scenes
 from .set_utc import set_utc
 
@@ -47,6 +48,11 @@ class PyVLX:
         await login.do_api_call()
         if not login.success:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
+        if self.connection.connectionCounter & 1:
+            reboot = Reboot(pyvlx=self)
+            await reboot.do_api_call()
+            await asyncio.sleep(25)
+            self.connect()
 
     async def update_version(self):
         """Retrieve version and protocol version from API."""

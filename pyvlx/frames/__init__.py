@@ -69,6 +69,10 @@ from .frame_password_enter import (
     FramePasswordEnterRequest,
     PasswordEnterConfirmationStatus,
 )
+from .frame_reboot import (
+    FrameGatewayRebootRequest, 
+    FrameGatewayRebootConfirmation
+)
 from .frame_set_node_name import (
     FrameSetNodeNameConfirmation,
     FrameSetNodeNameRequest,

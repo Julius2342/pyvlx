@@ -35,6 +35,8 @@ from pyvlx.frames import (
     FrameNodeStatePositionChangedNotification,
     FramePasswordEnterConfirmation,
     FramePasswordEnterRequest,
+    FrameGatewayRebootRequest, 
+    FrameGatewayRebootConfirmation, 
     FrameSessionFinishedNotification,
     FrameSetNodeNameConfirmation,
     FrameSetNodeNameRequest,
@@ -83,6 +85,11 @@ def create_frame(command):
         return FramePasswordEnterRequest()
     if command == Command.GW_PASSWORD_ENTER_CFM:
         return FramePasswordEnterConfirmation()
+
+    if command == Command.GW_REBOOT_REQ:
+        return FrameGatewayRebootRequest()
+    if command == Command.GW_REBOOT_CFM:
+        return FrameGatewayRebootConfirmation()
 
     if command == Command.GW_CS_DISCOVER_NODES_REQ:
         return FrameDiscoverNodesRequest()

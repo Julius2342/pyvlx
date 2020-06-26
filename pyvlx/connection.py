@@ -68,6 +68,7 @@ class Connection:
         self.transport = None
         self.frame_received_cbs = []
         self.connected = False
+        self.connectionCounter = 0
 
     def __del__(self):
         """Destruct connection."""
@@ -89,6 +90,7 @@ class Connection:
             ssl=self.create_ssl_context(),
         )
         self.connected = True
+        self.connectionCounter += 1
 
     def register_frame_received_cb(self, callback):
         """Register frame received callback."""
