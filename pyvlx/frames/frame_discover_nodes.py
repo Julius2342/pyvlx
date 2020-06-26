@@ -25,7 +25,7 @@ class FrameDiscoverNodesRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameDiscoverNodesRequest node_type=\'{}\'/>'.format(self.node_type)
+        return "<FrameDiscoverNodesRequest node_type='{}'/>".format(self.node_type)
 
 
 class FrameDiscoverNodesConfirmation(FrameBase):
@@ -46,7 +46,7 @@ class FrameDiscoverNodesNotification(FrameBase):
     def __init__(self):
         """Init Frame."""
         super().__init__(Command.GW_CS_DISCOVER_NODES_NTF)
-        self.payload = b'\0' * 131
+        self.payload = b"\0" * 131
 
     def get_payload(self):
         """Return Payload."""
@@ -58,4 +58,6 @@ class FrameDiscoverNodesNotification(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameDiscoverNodesNotification payload=\'{}\'/>'.format(":".join("{:02x}".format(c) for c in self.payload))
+        return "<FrameDiscoverNodesNotification payload='{}'/>".format(
+            ":".join("{:02x}".format(c) for c in self.payload)
+        )

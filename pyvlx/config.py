@@ -21,24 +21,24 @@ class Config:
 
     def read_config(self, path):
         """Read configuration file."""
-        PYVLXLOG.info('Reading config file: %s', path)
+        PYVLXLOG.info("Reading config file: %s", path)
         try:
-            with open(path, 'r') as filehandle:
+            with open(path, "r") as filehandle:
                 doc = yaml.safe_load(filehandle)
                 self.test_configuration(doc, path)
-                self.host = doc['config']['host']
-                self.password = doc['config']['password']
-                if 'port' in doc['config']:
-                    self.port = doc['config']['port']
+                self.host = doc["config"]["host"]
+                self.password = doc["config"]["password"]
+                if "port" in doc["config"]:
+                    self.port = doc["config"]["port"]
         except FileNotFoundError as ex:
-            raise PyVLXException('file does not exist: {0}'.format(ex))
+            raise PyVLXException("file does not exist: {0}".format(ex))
 
     @staticmethod
     def test_configuration(doc, path):
         """Test if configuration file is sane."""
-        if 'config' not in doc:
-            raise PyVLXException('no element config found in: {0}'.format(path))
-        if 'host' not in doc['config']:
-            raise PyVLXException('no element host found in: {0}'.format(path))
-        if 'password' not in doc['config']:
-            raise PyVLXException('no element password found in: {0}'.format(path))
+        if "config" not in doc:
+            raise PyVLXException("no element config found in: {0}".format(path))
+        if "host" not in doc["config"]:
+            raise PyVLXException("no element host found in: {0}".format(path))
+        if "password" not in doc["config"]:
+            raise PyVLXException("no element password found in: {0}".format(path))

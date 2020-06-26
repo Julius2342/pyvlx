@@ -7,6 +7,7 @@ from pyvlx.alias_array import AliasArray
 from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
+from pyvlx.exception import PyVLXException
 
 from .frame import FrameBase
 
@@ -50,7 +51,9 @@ class FrameGetAllNodesInformationConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetAllNodesInformationConfirmation status=\'{}\' number_of_nodes={}/>'.format(self.status, self.number_of_nodes)
+        return "<FrameGetAllNodesInformationConfirmation status='{}' number_of_nodes={}/>".format(
+            self.status, self.number_of_nodes
+        )
 
 
 class FrameGetAllNodesInformationNotification(FrameBase):
@@ -87,7 +90,21 @@ class FrameGetAllNodesInformationNotification(FrameBase):
     @property
     def serial_number(self):
         """Property for serial number in a human readable way."""
+        if self._serial_number == bytes(8):
+            return None
         return ":".join("{:02x}".format(c) for c in self._serial_number)
+
+    @serial_number.setter
+    def serial_number(self, serial_number):
+        """Set serial number."""
+        if serial_number is None:
+            self._serial_number = bytes(8)
+            return
+        self._serial_number = b''
+        for elem in serial_number.split(":"):
+            self._serial_number += bytes.fromhex(elem)
+        if len(self._serial_number) != 8:
+            raise PyVLXException("could_not_parse_serial_number")
 
     def get_payload(self):
         """Return Payload."""
@@ -145,17 +162,18 @@ class FrameGetAllNodesInformationNotification(FrameBase):
     @property
     def timestamp_formatted(self):
         """Return time as human readable string."""
-        return datetime.fromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        return datetime.fromtimestamp(self.timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetAllNodesInformationNotification node_id={} order={} ' \
-            'placement={} name=\'{}\' velocity={} node_type=\'{}\' product_group={} ' \
-            'product_type={} node_variation={} power_mode={} build_number={} ' \
-            'serial_number=\'{}\' state={} current_position=\'{}\' ' \
-            'target=\'{}\' current_position_fp1=\'{}\' current_position_fp2=\'{}\' ' \
-            'current_position_fp3=\'{}\' current_position_fp4=\'{}\' ' \
-            'remaining_time={} time=\'{}\' alias_array=\'{}\'/>'.format(
+        return (
+            "<FrameGetAllNodesInformationNotification node_id={} order={} "
+            "placement={} name='{}' velocity={} node_type='{}' product_group={} "
+            "product_type={} node_variation={} power_mode={} build_number={} "
+            "serial_number='{}' state={} current_position='{}' "
+            "target='{}' current_position_fp1='{}' current_position_fp2='{}' "
+            "current_position_fp3='{}' current_position_fp4='{}' "
+            "remaining_time={} time='{}' alias_array='{}'/>".format(
                 self.node_id,
                 self.order,
                 self.placement,
@@ -177,7 +195,9 @@ class FrameGetAllNodesInformationNotification(FrameBase):
                 self.current_position_fp4,
                 self.remaining_time,
                 self.timestamp_formatted,
-                self.alias_array)
+                self.alias_array,
+            )
+        )
 
 
 class FrameGetAllNodesInformationFinishedNotification(FrameBase):

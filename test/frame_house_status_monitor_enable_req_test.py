@@ -10,7 +10,7 @@ class TestFrameHouseStatusMonitorEnableRequest(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\x03\x02@A'
+    EXAMPLE_FRAME = b"\x00\x03\x02@A"
 
     def test_bytes(self):
         """Test FrameHouseStatusMonitorEnableRequest."""
@@ -25,6 +25,4 @@ class TestFrameHouseStatusMonitorEnableRequest(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameHouseStatusMonitorEnableRequest."""
         frame = FrameHouseStatusMonitorEnableRequest()
-        self.assertEqual(
-            str(frame),
-            '<FrameHouseStatusMonitorEnableRequest/>')
+        self.assertEqual(str(frame), "<FrameHouseStatusMonitorEnableRequest/>")

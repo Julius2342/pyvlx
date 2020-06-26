@@ -5,7 +5,7 @@ from .exception import PyVLXException
 from .get_state import GetState
 
 
-class Heartbeat():
+class Heartbeat:
     """Class for sending heartbeats to API."""
 
     def __init__(self, pyvlx, timeout_in_seconds=60):
@@ -24,8 +24,7 @@ class Heartbeat():
 
     def start(self):
         """Create loop task."""
-        self.run_task = self.pyvlx.loop.create_task(
-            self.loop())
+        self.run_task = self.pyvlx.loop.create_task(self.loop())
 
     async def stop(self):
         """Stop heartbeat."""
@@ -38,7 +37,8 @@ class Heartbeat():
         """Pulse every timeout seconds until stopped."""
         while not self.stopped:
             self.timeout_handle = self.pyvlx.connection.loop.call_later(
-                self.timeout_in_seconds, self.loop_timeout)
+                self.timeout_in_seconds, self.loop_timeout
+            )
             await self.loop_event.wait()
             if not self.stopped:
                 self.loop_event.clear()

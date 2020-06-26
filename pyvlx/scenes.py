@@ -4,7 +4,7 @@ from .get_scene_list import GetSceneList
 from .scene import Scene
 
 
-class Scenes():
+class Scenes:
     """Class for storing and accessing ."""
 
     def __init__(self, pyvlx):

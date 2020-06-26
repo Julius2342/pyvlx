@@ -11,7 +11,13 @@ class FrameActivateSceneRequest(FrameBase):
 
     PAYLOAD_LEN = 6
 
-    def __init__(self, scene_id=None, session_id=None, originator=Originator.USER, velocity=Velocity.DEFAULT):
+    def __init__(
+        self,
+        scene_id=None,
+        session_id=None,
+        originator=Originator.USER,
+        velocity=Velocity.DEFAULT,
+    ):
         """Init Frame."""
         super().__init__(Command.GW_ACTIVATE_SCENE_REQ)
         self.scene_id = scene_id
@@ -31,7 +37,7 @@ class FrameActivateSceneRequest(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.session_id = payload[0]*256 + payload[1]
+        self.session_id = payload[0] * 256 + payload[1]
         self.originator = Originator(payload[2])
         self.priority = Priority(payload[3])
         self.scene_id = payload[4]
@@ -39,8 +45,9 @@ class FrameActivateSceneRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameActivateSceneRequest scene_id={} session_id={} originator={} velocity={}/>'.format(
-            self.scene_id, self.session_id, self.originator, self.velocity)
+        return "<FrameActivateSceneRequest scene_id={} session_id={} originator={} velocity={}/>".format(
+            self.scene_id, self.session_id, self.originator, self.velocity
+        )
 
 
 class ActivateSceneConfirmationStatus(Enum):
@@ -71,8 +78,10 @@ class FrameActivateSceneConfirmation(FrameBase):
     def from_payload(self, payload):
         """Init frame from binary data."""
         self.status = ActivateSceneConfirmationStatus(payload[0])
-        self.session_id = payload[1]*256 + payload[2]
+        self.session_id = payload[1] * 256 + payload[2]
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameActivateSceneConfirmation session_id={} status={}/>'.format(self.session_id, self.status)
+        return "<FrameActivateSceneConfirmation session_id={} status={}/>".format(
+            self.session_id, self.status
+        )

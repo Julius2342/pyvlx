@@ -10,11 +10,13 @@ class TestFrameGetVersionConfirmation(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\x0c\x00\t\x01\x02\x03\x04\x05\x06\x17\x0e\x03\x18'
+    EXAMPLE_FRAME = b"\x00\x0c\x00\t\x01\x02\x03\x04\x05\x06\x17\x0e\x03\x18"
 
     def test_bytes(self):
         """Test FrameGetVersionConfirmation."""
-        frame = FrameGetVersionConfirmation(software_version="1.2.3.4.5.6", hardware_version=23)
+        frame = FrameGetVersionConfirmation(
+            software_version="1.2.3.4.5.6", hardware_version=23
+        )
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
     def test_frame_from_raw(self):
@@ -27,15 +29,23 @@ class TestFrameGetVersionConfirmation(unittest.TestCase):
 
     def test_str(self):
         """Test string representation of FrameGetVersionConfirmation."""
-        frame = FrameGetVersionConfirmation(software_version="1.2.3.4.5.6", hardware_version=23)
+        frame = FrameGetVersionConfirmation(
+            software_version="1.2.3.4.5.6", hardware_version=23
+        )
         self.assertEqual(
             str(frame),
-            '<FrameGetVersionConfirmation software_version="1.2.3.4.5.6" harware_version="23" product="KLF 200"/>')
+            '<FrameGetVersionConfirmation software_version="1.2.3.4.5.6" harware_version="23" product="KLF 200"/>',
+        )
 
     def test_version(self):
         """Test version string."""
-        frame = FrameGetVersionConfirmation(software_version="1.2.3.4.5.6", hardware_version=23)
-        self.assertEqual(frame.version, "KLF 200: Software version: 1.2.3.4.5.6, hardware version: 23")
+        frame = FrameGetVersionConfirmation(
+            software_version="1.2.3.4.5.6", hardware_version=23
+        )
+        self.assertEqual(
+            frame.version,
+            "KLF 200: Software version: 1.2.3.4.5.6, hardware version: 23",
+        )
 
     def test_product(self):
         """Test formatting of product."""

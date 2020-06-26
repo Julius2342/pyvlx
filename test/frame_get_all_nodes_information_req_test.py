@@ -13,16 +13,14 @@ class TestFrameGetAllNodesInformationRequest(unittest.TestCase):
     def test_bytes(self):
         """Test FrameGetAllNodesInformationRequest with NO_TYPE."""
         frame = FrameGetAllNodesInformationRequest()
-        self.assertEqual(bytes(frame), b'\x00\x03\x02\x02\x03')
+        self.assertEqual(bytes(frame), b"\x00\x03\x02\x02\x03")
 
     def test_frame_from_raw(self):
         """Test parse FrameGetAllNodesInformationRequest from raw."""
-        frame = frame_from_raw(b'\x00\x03\x02\x02\x03')
+        frame = frame_from_raw(b"\x00\x03\x02\x02\x03")
         self.assertTrue(isinstance(frame, FrameGetAllNodesInformationRequest))
 
     def test_str(self):
         """Test string representation of FrameGetAllNodesInformationRequest."""
         frame = FrameGetAllNodesInformationRequest()
-        self.assertEqual(
-            str(frame),
-            '<FrameGetAllNodesInformationRequest/>')
+        self.assertEqual(str(frame), "<FrameGetAllNodesInformationRequest/>")

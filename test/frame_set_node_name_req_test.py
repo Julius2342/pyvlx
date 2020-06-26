@@ -10,12 +10,13 @@ class TestFrameSetNodeNameRequest(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = \
-        b'\x00D\x02\x08\x04Fnord\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x1b'
+    EXAMPLE_FRAME = (
+        b"\x00D\x02\x08\x04Fnord\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x1b"
+    )
 
     def test_bytes(self):
         """Test FrameSetNodeNameRequest with NO_TYPE."""
@@ -33,5 +34,5 @@ class TestFrameSetNodeNameRequest(unittest.TestCase):
         """Test string representation of FrameSetNodeNameRequest."""
         frame = FrameSetNodeNameRequest(node_id=4, name="Fnord")
         self.assertEqual(
-            str(frame),
-            '<FrameSetNodeNameRequest node_id=4 name="Fnord"/>')
+            str(frame), '<FrameSetNodeNameRequest node_id=4 name="Fnord"/>'
+        )

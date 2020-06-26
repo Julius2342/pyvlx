@@ -15,16 +15,16 @@ def is_slip(raw):
 
 def decode(raw):
     """Decode SLIP message."""
-    return raw \
-        .replace(bytes([SLIP_ESC, SLIP_ESC_END]), bytes([SLIP_END])) \
-        .replace(bytes([SLIP_ESC, SLIP_ESC_ESC]), bytes([SLIP_ESC]))
+    return raw.replace(bytes([SLIP_ESC, SLIP_ESC_END]), bytes([SLIP_END])).replace(
+        bytes([SLIP_ESC, SLIP_ESC_ESC]), bytes([SLIP_ESC])
+    )
 
 
 def encode(raw):
     """Encode SLIP message."""
-    return raw \
-        .replace(bytes([SLIP_ESC]), bytes([SLIP_ESC, SLIP_ESC_ESC])) \
-        .replace(bytes([SLIP_END]), bytes([SLIP_ESC, SLIP_ESC_END]))
+    return raw.replace(bytes([SLIP_ESC]), bytes([SLIP_ESC, SLIP_ESC_ESC])).replace(
+        bytes([SLIP_END]), bytes([SLIP_ESC, SLIP_ESC_END])
+    )
 
 
 def get_next_slip(raw):

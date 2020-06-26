@@ -10,7 +10,7 @@ class TestFrameGetProtocolVersionRequest(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\x03\x00\n\t'
+    EXAMPLE_FRAME = b"\x00\x03\x00\n\t"
 
     def test_bytes(self):
         """Test FrameGetProtocolVersionRequest with NO_TYPE."""
@@ -25,6 +25,4 @@ class TestFrameGetProtocolVersionRequest(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameGetProtocolVersionRequest."""
         frame = FrameGetProtocolVersionRequest()
-        self.assertEqual(
-            str(frame),
-            '<FrameGetProtocolVersionRequest/>')
+        self.assertEqual(str(frame), "<FrameGetProtocolVersionRequest/>")

@@ -11,12 +11,13 @@ class TestFrameNodeInformationChangedNotification(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = \
-        b'\x00H\x02\x0c\x17Fnord23\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' \
-        b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04' \
-        b'\xd2\x02\x01\xd4'
+    EXAMPLE_FRAME = (
+        b"\x00H\x02\x0c\x17Fnord23\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04"
+        b"\xd2\x02\x01\xd4"
+    )
 
     def test_bytes(self):
         """Test FrameNodeInformationChangedNotification."""
@@ -44,4 +45,5 @@ class TestFrameNodeInformationChangedNotification(unittest.TestCase):
         self.assertEqual(
             str(frame),
             '<FrameNodeInformationChangedNotification node_id=23 name="Fnord23" '
-            'order=1234 placement=2 node_variation="NodeVariation.TOPHUNG"/>')
+            'order=1234 placement=2 node_variation="NodeVariation.TOPHUNG"/>',
+        )

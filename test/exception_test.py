@@ -11,13 +11,12 @@ class TestException(unittest.TestCase):
     def test_str(self):
         """Test string representation of PyVLXException."""
         exception = PyVLXException("fnord fnord")
-        self.assertEqual(
-            str(exception),
-            '<PyVLXException description="fnord fnord" />')
+        self.assertEqual(str(exception), '<PyVLXException description="fnord fnord" />')
 
     def test_str_with_parameter(self):
         """Test string representation of PyVLXException with parameter."""
         exception = PyVLXException("fnord fnord", fnord="fnord", bla="blub")
         self.assertEqual(
             str(exception),
-            '<PyVLXException description="fnord fnord" bla="blub" fnord="fnord"/>')
+            '<PyVLXException description="fnord fnord" bla="blub" fnord="fnord"/>',
+        )

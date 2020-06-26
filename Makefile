@@ -31,7 +31,7 @@ pypi:
 	@twine upload dist/*
 
 pylint:
-	@pylint -j 8 --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
+	@pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
 
 pydocstyle:
 	 @pydocstyle pyvlx test/*.py test/*.py *.py examples/*.py

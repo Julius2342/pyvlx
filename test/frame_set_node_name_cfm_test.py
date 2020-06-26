@@ -2,8 +2,7 @@
 import unittest
 
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import (
-    FrameSetNodeNameConfirmation, SetNodeNameConfirmationStatus)
+from pyvlx.frames import FrameSetNodeNameConfirmation, SetNodeNameConfirmationStatus
 
 
 class TestFrameSetNodeNameConfirmation(unittest.TestCase):
@@ -11,8 +10,8 @@ class TestFrameSetNodeNameConfirmation(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\x05\x02\t\x00\x17\x19'
-    EXAMPLE_FRAME_ERR = b'\x00\x05\x02\t\x01\x17\x18'
+    EXAMPLE_FRAME = b"\x00\x05\x02\t\x00\x17\x19"
+    EXAMPLE_FRAME_ERR = b"\x00\x05\x02\t\x01\x17\x18"
 
     def test_bytes(self):
         """Test FrameSetNodeNameConfirmation."""
@@ -21,7 +20,9 @@ class TestFrameSetNodeNameConfirmation(unittest.TestCase):
 
     def test_bytes_error(self):
         """Test failed FrameSetNodeNameConfirmation."""
-        frame = FrameSetNodeNameConfirmation(node_id=23, status=SetNodeNameConfirmationStatus.ERROR_REQUEST_REJECTED)
+        frame = FrameSetNodeNameConfirmation(
+            node_id=23, status=SetNodeNameConfirmationStatus.ERROR_REQUEST_REJECTED
+        )
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME_ERR)
 
     def test_frame_from_raw(self):
@@ -36,4 +37,5 @@ class TestFrameSetNodeNameConfirmation(unittest.TestCase):
         frame = FrameSetNodeNameConfirmation(node_id=23)
         self.assertEqual(
             str(frame),
-            '<FrameSetNodeNameConfirmation node_id=23 status="SetNodeNameConfirmationStatus.OK"/>')
+            '<FrameSetNodeNameConfirmation node_id=23 status="SetNodeNameConfirmationStatus.OK"/>',
+        )

@@ -10,12 +10,16 @@ class OnOffSwitch(Node):
 
     def __init__(self, pyvlx, node_id, name, serial_number):
         """Initialize opening device."""
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
+        super().__init__(
+            pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
+        )
         self.parameter = SwitchParameter()
 
     async def set_state(self, parameter):
         """Set switch to desired state."""
-        command_send = CommandSend(pyvlx=self.pyvlx, node_id=self.node_id, parameter=parameter)
+        command_send = CommandSend(
+            pyvlx=self.pyvlx, node_id=self.node_id, parameter=parameter
+        )
         await command_send.do_api_call()
         if not command_send.success:
             raise PyVLXException("Unable to send command")

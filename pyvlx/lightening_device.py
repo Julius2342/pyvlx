@@ -19,7 +19,9 @@ class LighteningDevice(Node):
             * serial_number: serial number of the node.
 
         """
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
+        super().__init__(
+            pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
+        )
         self.intensity = Intensity()
 
     async def set_intensity(self, intensity, wait_for_completion=True):
@@ -35,7 +37,8 @@ class LighteningDevice(Node):
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
-            parameter=intensity)
+            parameter=intensity,
+        )
         await command_send.do_api_call()
         if not command_send.success:
             raise PyVLXException("Unable to send command")
@@ -51,7 +54,8 @@ class LighteningDevice(Node):
         """
         await self.set_intensity(
             intensity=Intensity(intensity_percent=0),
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+        )
 
     async def turn_off(self, wait_for_completion=True):
         """Turn off light.
@@ -63,7 +67,8 @@ class LighteningDevice(Node):
         """
         await self.set_intensity(
             intensity=Intensity(intensity_percent=100),
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+        )
 
 
 class Light(LighteningDevice):
@@ -80,15 +85,16 @@ class Light(LighteningDevice):
             * serial_number: serial number of the node.
 
         """
-        super().__init__(pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number)
+        super().__init__(
+            pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
+        )
 
     def __str__(self):
         """Return object as readable string."""
-        return '<{} name="{}" ' \
-            'node_id="{}" ' \
-            'serial_number="{}"/>' \
-            .format(
-                type(self).__name__,
-                self.name,
-                self.node_id,
-                self.serial_number)
+        return (
+            '<{} name="{}" '
+            'node_id="{}" '
+            'serial_number="{}"/>'.format(
+                type(self).__name__, self.name, self.node_id, self.serial_number
+            )
+        )
