@@ -49,7 +49,6 @@ class PyVLX:
         if not login.success:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
         if self.connection.connection_counter & 1:
-            PYVLXLOG.warning("KLF 200 reboot to be initiated")
             await self.reboot_gateway()
             await asyncio.sleep(25)
             if not self.connection.connected:
