@@ -48,11 +48,17 @@ class PyVLX:
         await login.do_api_call()
         if not login.success:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
-        if self.connection.connectionCounter & 1:
-            reboot = Reboot(pyvlx=self)
-            await reboot.do_api_call()
+        if self.connection.connection_counter & 1:
+            PYVLXLOG.warning("KLF 200 reboot to be initiated")
+            await self.reboot_gateway()
             await asyncio.sleep(25)
-            self.connect()
+            if not self.connection.connected:
+                self.connect()
+
+    async def reboot_gateway(self):
+        PYVLXLOG.warning("KLF 200 reboot initiated")
+        reboot = Reboot(pyvlx=self)
+        await reboot.do_api_call()
 
     async def update_version(self):
         """Retrieve version and protocol version from API."""
