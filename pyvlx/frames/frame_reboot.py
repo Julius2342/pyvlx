@@ -1,4 +1,4 @@
-"""Module for get version frame classes."""
+"""Module for reboot frame classes."""
 from pyvlx.const import Command
 
 from .frame import FrameBase
@@ -13,6 +13,9 @@ class FrameGatewayRebootRequest(FrameBase):
         """Init Frame."""
         super().__init__(Command.GW_REBOOT_REQ)
 
+    def __str__(self):
+        """Return human readable string."""
+        return '<FrameGatewayRebootRequest/>'
 
 class  FrameGatewayRebootConfirmation(FrameBase):
     """Frame for response for get version requests."""
