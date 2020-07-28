@@ -48,6 +48,9 @@ class PyVLX:
         await login.do_api_call()
         if not login.success:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
+        await self.update_version()
+        await set_utc(pyvlx=self)
+        await house_status_monitor_enable(pyvlx=self)
 
     async def reboot_gateway(self):
         PYVLXLOG.warning("KLF 200 reboot initiated")
@@ -76,9 +79,6 @@ class PyVLX:
         """Send frame to API via connection."""
         if not self.connection.connected:
             await self.connect()
-            await self.update_version()
-            await set_utc(pyvlx=self)
-            await house_status_monitor_enable(pyvlx=self)
         self.connection.write(frame)
 
     async def disconnect(self):
