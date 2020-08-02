@@ -35,10 +35,10 @@ class SlipTokenizer:
 class TCPTransport(asyncio.Protocol):
     """Class for handling asyncio connection transport."""
 
-    def __init__(self, frame_received_cb, connection_closed_cb):
+    def __init__(self, frame_received_cb, connection_lost_cb):
         """Init TCPTransport."""
         self.frame_received_cb = frame_received_cb
-        self.connection_closed_cb = connection_closed_cb
+        self.connection_lost_cb = connection_lost_cb
         self.tokenizer = SlipTokenizer()
 
     def connection_made(self, transport):
@@ -55,13 +55,14 @@ class TCPTransport(asyncio.Protocol):
 
     def connection_lost(self, exc):
         """Handle lost connection."""
-        self.connection_closed_cb()
+        PYVLXLOG.warning("KLF200 connection lost")
+        self.connection_lost_cb()
 
 
 class Connection:
     """Class for handling TCP connection."""
 
-    def __init__(self, loop, config):
+    def __init__(self, loop, config, connection_lost_cb):
         """Init TCP connection."""
         self.loop = loop
         self.config = config
@@ -69,6 +70,7 @@ class Connection:
         self.frame_received_cbs = []
         self.connected = False
         self.connection_counter = 0
+        self.connection_lost = connection_lost_cb
 
     def __del__(self):
         """Destruct connection."""
@@ -78,11 +80,14 @@ class Connection:
         """Disconnect connection."""
         if self.transport is not None:
             self.transport.close()
+            PYVLXLOG.debug("KLF200 transport closed")
             self.transport = None
+        self.connected = False
+        PYVLXLOG.debug("KLF200 disconnected")
 
     async def connect(self):
         """Connect to gateway via SSL."""
-        tcp_client = TCPTransport(self.frame_received_cb, self.connection_closed_cb)
+        tcp_client = TCPTransport(self.frame_received_cb, self.connection_lost_cb)
         self.transport, _ = await self.loop.create_connection(
             lambda: tcp_client,
             host=self.config.host,
@@ -91,6 +96,7 @@ class Connection:
         )
         self.connected = True
         self.connection_counter += 1
+        PYVLXLOG.debug("KLF200 connected. Amount of reconnections since pyvlx start: %d ", self.connection_counter)
 
     def register_frame_received_cb(self, callback):
         """Register frame received callback."""
@@ -122,6 +128,6 @@ class Connection:
             # pylint: disable=not-callable
             self.loop.create_task(frame_received_cb(frame))
 
-    def connection_closed_cb(self):
+    def connection_lost_cb(self):
         """Server closed connection."""
-        self.connected = False
+        self.loop.create_task(self.connection_lost())

@@ -30,10 +30,9 @@ class PyVLX:
         """Initialize PyVLX class."""
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
-        self.connection = Connection(loop=self.loop, config=self.config)
+        self.connection = Connection(loop=self.loop, config=self.config, connection_lost_cb=self.on_connection_lost)
         self.heartbeat = Heartbeat(pyvlx=self)
         self.node_updater = NodeUpdater(pyvlx=self)
-        self.heartbeat.start()
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
         self.nodes = Nodes(self)
         self.scenes = Scenes(self)
@@ -42,7 +41,7 @@ class PyVLX:
 
     async def connect(self):
         """Connect to KLF 200."""
-        PYVLXLOG.warning("Connecting to KLF 200.")
+        PYVLXLOG.debug("Connecting to KLF 200.")
         await self.connection.connect()
         login = Login(pyvlx=self, password=self.config.password)
         await login.do_api_call()
@@ -51,9 +50,10 @@ class PyVLX:
         await self.update_version()
         await set_utc(pyvlx=self)
         await house_status_monitor_enable(pyvlx=self)
+        self.heartbeat.start()
 
     async def reboot_gateway(self):
-        PYVLXLOG.warning("KLF 200 reboot initiated")
+        PYVLXLOG.debug("KLF 200 reboot initiated")
         reboot = Reboot(pyvlx=self)
         await reboot.do_api_call()
 
@@ -69,7 +69,7 @@ class PyVLX:
         if not get_protocol_version.success:
             raise PyVLXException("Unable to retrieve protocol version")
         self.protocol_version = get_protocol_version.version
-        PYVLXLOG.warning(
+        PYVLXLOG.debug(
             "Connected to: %s, protocol version: %s",
             self.version,
             self.protocol_version,
@@ -83,7 +83,7 @@ class PyVLX:
 
     async def disconnect(self):
         """Disconnect from KLF 200."""
-        await self.heartbeat.stop()
+        self.heartbeat.stop()
         self.connection.disconnect()
 
     async def load_nodes(self, node_id=None):
@@ -93,3 +93,7 @@ class PyVLX:
     async def load_scenes(self):
         """Load scenes from KLF 200."""
         await self.scenes.load()
+
+    async def on_connection_lost(self):
+        await self.disconnect()
+        await self.connect()

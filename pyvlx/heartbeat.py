@@ -3,7 +3,7 @@ import asyncio
 
 from .exception import PyVLXException
 from .get_state import GetState
-
+from .log import PYVLXLOG
 
 class Heartbeat:
     """Class for sending heartbeats to API."""
@@ -13,48 +13,40 @@ class Heartbeat:
         self.pyvlx = pyvlx
         self.timeout_in_seconds = timeout_in_seconds
         self.loop_event = asyncio.Event()
-        self.stopped = False
         self.run_task = None
         self.timeout_handle = None
-        self.stopped_event = asyncio.Event()
 
     def __del__(self):
         """Cleanup heartbeat."""
-        self.cancel_loop_timeout()
+        self.stop()
 
     def start(self):
         """Create loop task."""
         self.run_task = self.pyvlx.loop.create_task(self.loop())
 
-    async def stop(self):
+    def stop(self):
         """Stop heartbeat."""
-        self.stopped = True
-        self.loop_event.set()
-        # Waiting for shutdown of loop()
-        await self.stopped_event.wait()
-
-    async def loop(self):
-        """Pulse every timeout seconds until stopped."""
-        while not self.stopped:
-            self.timeout_handle = self.pyvlx.connection.loop.call_later(
-                self.timeout_in_seconds, self.loop_timeout
-            )
-            await self.loop_event.wait()
-            if not self.stopped:
-                self.loop_event.clear()
-                await self.pulse()
-        self.cancel_loop_timeout()
-        self.stopped_event.set()
-
-    def loop_timeout(self):
-        """Handle loop timeout."""
-        self.loop_event.set()
-
-    def cancel_loop_timeout(self):
-        """Cancel loop timeout."""
         if self.timeout_handle is not None:
             self.timeout_handle.cancel()
             self.timeout_handle = None
+        if self.run_task is not None:
+            self.run_task.cancel()
+            self.run_task = None
+
+    async def loop(self):
+        """Pulse every timeout seconds until stopped."""
+        try:
+            PYVLXLOG.debug("Heartbeat started")
+            while True:
+                self.timeout_handle = self.pyvlx.loop.call_later(
+                    self.timeout_in_seconds, self.loop_event.set
+                )
+                await self.loop_event.wait()
+                self.loop_event.clear()
+                await self.pulse()
+        except:
+            PYVLXLOG.debug("Heartbeat stopped")
+            raise
 
     async def pulse(self):
         """Send get state request to API to keep the connection alive."""
