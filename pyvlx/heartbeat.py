@@ -12,7 +12,6 @@ class Heartbeat:
         """Initialize Heartbeat object."""
         self.pyvlx = pyvlx
         self.timeout_in_seconds = timeout_in_seconds
-        self.loop_event = asyncio.Event()
         self.run_task = None
         self.timeout_handle = None
 
@@ -36,13 +35,14 @@ class Heartbeat:
     async def loop(self):
         """Pulse every timeout seconds until stopped."""
         try:
+            loop_event = asyncio.Event()
             PYVLXLOG.debug("Heartbeat started")
             while True:
                 self.timeout_handle = self.pyvlx.loop.call_later(
-                    self.timeout_in_seconds, self.loop_event.set
+                    self.timeout_in_seconds, loop_event.set
                 )
-                await self.loop_event.wait()
-                self.loop_event.clear()
+                await loop_event.wait()
+                loop_event.clear()
                 await self.pulse()
         except:
             PYVLXLOG.debug("Heartbeat stopped")
