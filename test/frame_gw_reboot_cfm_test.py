@@ -10,7 +10,7 @@ class TestFrameRebootConfirmation(unittest.TestCase):
 
     # pylint: disable=too-many-public-methods,invalid-name
 
-    EXAMPLE_FRAME = b'\x00\x03\x00\x02\x01'
+    EXAMPLE_FRAME = b"\x00\x03\x00\x02\x01"
 
     def test_bytes(self):
         """Test FrameGatewayRebootConfirmation."""

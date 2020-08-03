@@ -5,8 +5,7 @@ from .frames import (
     FrameHouseStatusMonitorDisableConfirmation,
     FrameHouseStatusMonitorDisableRequest,
     FrameHouseStatusMonitorEnableConfirmation,
-    FrameHouseStatusMonitorEnableRequest,
-)
+    FrameHouseStatusMonitorEnableRequest)
 
 
 class HouseStatusMonitorEnable(ApiEvent):

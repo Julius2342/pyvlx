@@ -6,8 +6,7 @@ from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.frame_creation import frame_from_raw
 from pyvlx.frames import (
     FrameGetAllNodesInformationNotification,
-    FrameGetNodeInformationNotification,
-)
+    FrameGetNodeInformationNotification)
 from pyvlx.parameter import Position
 from pyvlx.slip import get_next_slip
 

@@ -2,7 +2,8 @@
 import unittest
 
 from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import ActivateSceneConfirmationStatus, FrameActivateSceneConfirmation
+from pyvlx.frames import (
+    ActivateSceneConfirmationStatus, FrameActivateSceneConfirmation)
 
 
 class TestFrameActivateSceneConfirmation(unittest.TestCase):

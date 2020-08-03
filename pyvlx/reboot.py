@@ -1,6 +1,6 @@
 """Module for handling the login to API."""
 from .api_event import ApiEvent
-from .frames import FrameGatewayRebootRequest, FrameGatewayRebootConfirmation
+from .frames import FrameGatewayRebootConfirmation, FrameGatewayRebootRequest
 from .log import PYVLXLOG
 
 

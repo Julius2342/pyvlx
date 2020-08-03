@@ -1,12 +1,11 @@
 """Module for updating nodes via frames."""
 from .frames import (
     FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification,
-)
+    FrameNodeStatePositionChangedNotification)
 from .lightening_device import LighteningDevice
+from .log import PYVLXLOG
 from .opening_device import Blind, OpeningDevice
 from .parameter import Intensity, Parameter, Position
-from .log import PYVLXLOG
 
 
 class NodeUpdater:
