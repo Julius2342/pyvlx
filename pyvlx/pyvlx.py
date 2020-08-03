@@ -53,6 +53,7 @@ class PyVLX:
         await house_status_monitor_enable(pyvlx=self)
 
     async def reboot_gateway(self):
+        """Reboot gateway."""
         PYVLXLOG.warning("KLF 200 reboot initiated")
         reboot = Reboot(pyvlx=self)
         await reboot.do_api_call()
