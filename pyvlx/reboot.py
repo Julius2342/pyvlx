@@ -3,6 +3,7 @@ from .api_event import ApiEvent
 from .frames import FrameGatewayRebootRequest, FrameGatewayRebootConfirmation
 from .log import PYVLXLOG
 
+
 class Reboot(ApiEvent):
     """Class for handling login to API."""
 

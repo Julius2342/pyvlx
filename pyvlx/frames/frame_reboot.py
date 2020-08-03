@@ -17,7 +17,8 @@ class FrameGatewayRebootRequest(FrameBase):
         """Return human readable string."""
         return '<FrameGatewayRebootRequest/>'
 
-class  FrameGatewayRebootConfirmation(FrameBase):
+
+class FrameGatewayRebootConfirmation(FrameBase):
     """Frame for response for get version requests."""
 
     PAYLOAD_LEN = 0
