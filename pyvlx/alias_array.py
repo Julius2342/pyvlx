@@ -39,5 +39,5 @@ class AliasArray:
             )
         for i in range(0, nbr_of_alias):
             self.alias_array_.append(
-                (raw[i*4+1:i*4+3], raw[i*4+3:i*4+5])
+                (raw[i * 4 + 1 : i * 4 + 3], raw[i * 4 + 3 : i * 4 + 5])
             )

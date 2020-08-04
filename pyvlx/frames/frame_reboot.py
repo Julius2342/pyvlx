@@ -15,9 +15,10 @@ class FrameGatewayRebootRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGatewayRebootRequest/>'
+        return "<FrameGatewayRebootRequest/>"
 
-class  FrameGatewayRebootConfirmation(FrameBase):
+
+class FrameGatewayRebootConfirmation(FrameBase):
     """Frame for response for get version requests."""
 
     PAYLOAD_LEN = 0
@@ -28,4 +29,4 @@ class  FrameGatewayRebootConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGatewayRebootConfirmation/>'
+        return "<FrameGatewayRebootConfirmation/>"

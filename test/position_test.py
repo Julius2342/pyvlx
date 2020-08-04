@@ -2,14 +2,8 @@
 import unittest
 
 from pyvlx import (
-    CurrentPosition,
-    Parameter,
-    Position,
-    SwitchParameter,
-    SwitchParameterOff,
-    SwitchParameterOn,
-    UnknownPosition,
-)
+    CurrentPosition, Parameter, Position, SwitchParameter, SwitchParameterOff,
+    SwitchParameterOn, UnknownPosition)
 from pyvlx.exception import PyVLXException
 
 

@@ -4,8 +4,7 @@ from .frames import (
     FrameGetAllNodesInformationConfirmation,
     FrameGetAllNodesInformationFinishedNotification,
     FrameGetAllNodesInformationNotification,
-    FrameGetAllNodesInformationRequest,
-)
+    FrameGetAllNodesInformationRequest)
 from .log import PYVLXLOG
 
 

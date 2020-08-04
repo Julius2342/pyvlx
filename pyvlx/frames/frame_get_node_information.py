@@ -5,9 +5,9 @@ from enum import Enum
 
 from pyvlx.alias_array import AliasArray
 from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
+from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
-from pyvlx.exception import PyVLXException
 
 from .frame import FrameBase
 
@@ -114,7 +114,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         if serial_number is None:
             self._serial_number = bytes(8)
             return
-        self._serial_number = b''
+        self._serial_number = b""
         for elem in serial_number.split(":"):
             self._serial_number += bytes.fromhex(elem)
         if len(self._serial_number) != 8:
