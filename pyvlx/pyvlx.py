@@ -47,6 +47,14 @@ class PyVLX:
         await login.do_api_call()
         if not login.success:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
+        """
+        #  Enable this to reboot the KLF after first connection and every 2nd.
+        """
+        # if self.connection.connectionCounter % 2:
+        #     await self.reboot_gateway()
+        #     await asyncio.sleep(30)
+        #     await self.connection.connect()
+        #     await login.do_api_call()
         await self.update_version()
         await set_utc(pyvlx=self)
         await house_status_monitor_enable(pyvlx=self)
