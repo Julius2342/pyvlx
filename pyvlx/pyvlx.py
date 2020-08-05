@@ -102,6 +102,6 @@ class PyVLX:
         await self.scenes.load()
 
     async def on_connection_lost(self):
-        """Reconnect after lost connection"""
+        """Reconnect after lost connection."""
         await self.disconnect()
         await self.connect()
