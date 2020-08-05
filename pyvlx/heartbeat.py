@@ -5,6 +5,7 @@ from .exception import PyVLXException
 from .get_state import GetState
 from .log import PYVLXLOG
 
+
 class Heartbeat:
     """Class for sending heartbeats to API."""
 
@@ -44,7 +45,7 @@ class Heartbeat:
                 await loop_event.wait()
                 loop_event.clear()
                 await self.pulse()
-        except:
+        except Exception:
             PYVLXLOG.debug("Heartbeat stopped")
             raise
 
