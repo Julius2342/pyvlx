@@ -42,7 +42,7 @@ class PyVLX:
 
     async def connect(self):
         """Connect to KLF 200."""
-        PYVLXLOG.warning("Connecting to KLF 200.")
+        PYVLXLOG.debug("Connecting to KLF 200.")
         await self.connection.connect()
         login = Login(pyvlx=self, password=self.config.password)
         await login.do_api_call()
@@ -70,7 +70,7 @@ class PyVLX:
         if not get_protocol_version.success:
             raise PyVLXException("Unable to retrieve protocol version")
         self.protocol_version = get_protocol_version.version
-        PYVLXLOG.warning(
+        PYVLXLOG.debug(
             "Connected to: %s, protocol version: %s",
             self.version,
             self.protocol_version,
