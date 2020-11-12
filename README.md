@@ -17,7 +17,7 @@ pip3 install pyvlx
 Home Assistant Plugin
 ---------------------
 
-PyVLX is used within [Home-Assistant](https://www.home-assistant.io/components/velux/). To enable it add the following lines to your ~/.home-assistant/configuration.yml:
+PyVLX is used within [Home Assistant](https://www.home-assistant.io/components/velux/). To enable it add the following lines to your ~/.homeassistant/configuration.yml:
 
 ```yaml
 velux:
@@ -79,5 +79,3 @@ if __name__ == '__main__':
     # LOOP.run_forever()
     LOOP.close()
 ```
-
-
