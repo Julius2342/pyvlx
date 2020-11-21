@@ -1,6 +1,5 @@
 """Module for setting UTC time within gateway."""
 import time
-from pyvlx.exception import PyVLXException
 from .api_event import ApiEvent
 from .frames import FrameSetUTCConfirmation, FrameSetUTCRequest
 
@@ -9,7 +8,7 @@ class SetUTC(ApiEvent):
     """Class for setting UTC time within gateway."""
 
     def __init__(self, pyvlx):
-        """Initialize login class."""
+        """Initialize SetUTC class."""
         super().__init__(pyvlx=pyvlx)
         self.success = False
 
@@ -25,10 +24,3 @@ class SetUTC(ApiEvent):
         timestamp = int(time.time())
         return FrameSetUTCRequest(timestamp=timestamp)
 
-
-async def set_utc(pyvlx):
-    """Enable house status monitor."""
-    setutc = SetUTC(pyvlx=pyvlx)
-    await setutc.do_api_call()
-    if not setutc.success:
-        raise PyVLXException("Unable to set utc.")

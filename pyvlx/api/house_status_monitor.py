@@ -12,7 +12,7 @@ class HouseStatusMonitorEnable(ApiEvent):
     """Class for enabling house status monotor."""
 
     def __init__(self, pyvlx):
-        """Initialize login class."""
+        """Initialize HouseStatusMonitorEnable class."""
         super().__init__(pyvlx=pyvlx)
         self.success = False
 
@@ -32,7 +32,7 @@ class HouseStatusMonitorDisable(ApiEvent):
     """Class for disabling house status monotor."""
 
     def __init__(self, pyvlx):
-        """Initialize login class."""
+        """Initialize HouseStatusMonitorEnable class."""
         super().__init__(pyvlx=pyvlx)
         self.success = False
 
