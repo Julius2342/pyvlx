@@ -1,7 +1,7 @@
 """Unit tests for AliasArray module."""
 import unittest
 
-from pyvlx.alias_array import AliasArray
+from pyvlx.frames.alias_array import AliasArray
 from pyvlx.exception import PyVLXException
 
 

@@ -3,7 +3,7 @@ import struct
 from datetime import datetime
 from enum import Enum
 
-from pyvlx.alias_array import AliasArray
+from pyvlx.frames.alias_array import AliasArray
 from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter

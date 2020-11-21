@@ -2,6 +2,7 @@
 
 # flake8: noqa
 from .frame import FrameBase
+from .alias_array import AliasArray
 from .frame_activate_scene import (
     ActivateSceneConfirmationStatus, FrameActivateSceneConfirmation,
     FrameActivateSceneRequest)

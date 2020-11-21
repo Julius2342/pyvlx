@@ -2,7 +2,7 @@
 import unittest
 from datetime import datetime
 
-from pyvlx.alias_array import AliasArray
+from pyvlx.frames.alias_array import AliasArray
 from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.exception import PyVLXException
 from pyvlx.frame_creation import frame_from_raw
