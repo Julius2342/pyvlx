@@ -19,7 +19,7 @@ class FrameGatewayRebootRequest(FrameBase):
 
 
 class FrameGatewayRebootConfirmation(FrameBase):
-    """Frame for response for get reboot requests."""
+    """Frame for response for reboot requests."""
 
     PAYLOAD_LEN = 0
 
