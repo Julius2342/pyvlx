@@ -5,7 +5,7 @@ from .frames import (
     FrameGetAllNodesInformationFinishedNotification,
     FrameGetAllNodesInformationNotification,
     FrameGetAllNodesInformationRequest)
-from .log import PYVLXLOG
+from pyvlx.log import PYVLXLOG
 
 
 class GetAllNodesInformation(ApiEvent):

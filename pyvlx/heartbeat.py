@@ -2,7 +2,7 @@
 import asyncio
 
 from .exception import PyVLXException
-from .get_state import GetState
+from .api.get_state import GetState
 
 
 class Heartbeat:

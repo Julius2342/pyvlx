@@ -1,5 +1,5 @@
 """Module for window openers."""
-from .command_send import CommandSend
+from .api.command_send import CommandSend
 from .exception import PyVLXException
 from .node import Node
 from .parameter import CurrentPosition, Parameter, Position, TargetPosition
@@ -9,7 +9,7 @@ class OpeningDevice(Node):
     """Meta class for opening device with one main parameter for position."""
 
     def __init__(
-        self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()
+            self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()
     ):
         """Initialize opening device.
 
@@ -105,13 +105,13 @@ class Window(OpeningDevice):
     """Window object."""
 
     def __init__(
-        self,
-        pyvlx,
-        node_id,
-        name,
-        serial_number,
-        position_parameter=Parameter(),
-        rain_sensor=False,
+            self,
+            pyvlx,
+            node_id,
+            name,
+            serial_number,
+            position_parameter=Parameter(),
+            rain_sensor=False,
     ):
         """Initialize Window class.
 

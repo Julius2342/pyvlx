@@ -1,6 +1,6 @@
 """Module for storing and accessing scene list."""
 from .exception import PyVLXException
-from .get_scene_list import GetSceneList
+from .api.get_scene_list import GetSceneList
 from .scene import Scene
 
 

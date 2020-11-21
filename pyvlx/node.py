@@ -6,7 +6,7 @@ be derived by other objects like window openers
 and roller shutters.
 """
 from .exception import PyVLXException
-from .set_node_name import SetNodeName
+from .api.set_node_name import SetNodeName
 
 
 class Node:

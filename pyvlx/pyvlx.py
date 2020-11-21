@@ -10,17 +10,17 @@ import asyncio
 from .config import Config
 from .connection import Connection
 from .exception import PyVLXException
-from .get_protocol_version import GetProtocolVersion
-from .get_version import GetVersion
 from .heartbeat import Heartbeat
-from .house_status_monitor import house_status_monitor_enable
 from .log import PYVLXLOG
-from .login import Login
 from .node_updater import NodeUpdater
 from .nodes import Nodes
-from .reboot import Reboot
 from .scenes import Scenes
-from .set_utc import set_utc
+from .api.get_protocol_version import GetProtocolVersion
+from .api.get_version import GetVersion
+from .api.house_status_monitor import house_status_monitor_enable
+from .api.login import Login
+from .api.reboot import Reboot
+from .api.set_utc import set_utc
 
 
 class PyVLX:

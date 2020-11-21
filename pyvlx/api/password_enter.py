@@ -3,10 +3,10 @@ from .api_event import ApiEvent
 from .frames import (
     FramePasswordEnterConfirmation, FramePasswordEnterRequest,
     PasswordEnterConfirmationStatus)
-from .log import PYVLXLOG
+from pyvlx.log import PYVLXLOG
 
 
-class Login(ApiEvent):
+class PasswordEnter(ApiEvent):
     """Class for handling login to API."""
 
     def __init__(self, pyvlx, password):

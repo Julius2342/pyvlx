@@ -1,5 +1,5 @@
 """Module for on/off switches."""
-from .command_send import CommandSend
+from .api.command_send import CommandSend
 from .exception import PyVLXException
 from .node import Node
 from .parameter import SwitchParameter, SwitchParameterOff, SwitchParameterOn
