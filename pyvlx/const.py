@@ -219,7 +219,7 @@ class Command(Enum):
 
     GW_PASSWORD_CHANGE_REQ = 0x3002
     GW_PASSWORD_CHANGE_CFM = 0x3003
-    GW_PASSWORD_CHANGED_NTF = 0x3004
+    GW_PASSWORD_CHANGE_NTF = 0x3004
 
 
 class Originator(Enum):
