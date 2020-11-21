@@ -21,11 +21,17 @@ from pyvlx.frames import (
     FrameHouseStatusMonitorEnableConfirmation,
     FrameHouseStatusMonitorEnableRequest,
     FrameNodeInformationChangedNotification,
-    FrameNodeStatePositionChangedNotification, FramePasswordEnterConfirmation,
-    FramePasswordEnterRequest, FrameSessionFinishedNotification,
+    FrameNodeStatePositionChangedNotification,
+    FramePasswordEnterConfirmation, FramePasswordEnterRequest,
+    FramePasswordChangeRequest, FramePasswordChangeConfirmation, FramePasswordChangeNotification,
+    FrameSessionFinishedNotification,
     FrameSetNodeNameConfirmation, FrameSetNodeNameRequest,
-    FrameSetUTCConfirmation, FrameSetUTCRequest, extract_from_frame)
-
+    FrameGetNetworkSetupConfirmation, FrameGetNetworkSetupRequest,
+    FrameSetUTCConfirmation, FrameSetUTCRequest, extract_from_frame,
+    FrameLeaveLearnStateConfirmation, FrameLeaveLearnStateRequest,
+    FrameGetLocalTimeConfirmation, FrameGetLocalTimeRequest,
+    FrameGatewayFactoryDefaultConfirmation, FrameGatewayFactoryDefaultRequest
+    )
 from .const import Command
 from .log import PYVLXLOG
 
@@ -67,10 +73,29 @@ def create_frame(command):
     if command == Command.GW_PASSWORD_ENTER_CFM:
         return FramePasswordEnterConfirmation()
 
+    if command == Command.GW_PASSWORD_CHANGE_REQ:
+        return FramePasswordChangeRequest()
+    if command == Command.GW_PASSWORD_CHANGE_CFM:
+        return FramePasswordChangeConfirmation()
+    if command == Command.GW_PASSWORD_CHANGE_NTF:
+        return FramePasswordChangeNotification()
+    
+
+
     if command == Command.GW_REBOOT_REQ:
         return FrameGatewayRebootRequest()
     if command == Command.GW_REBOOT_CFM:
         return FrameGatewayRebootConfirmation()
+
+    if command == Command.GW_SET_FACTORY_DEFAULT_REQ:
+        return FrameGatewayFactoryDefaultRequest()
+    if command == Command.GW_REBOOT_CFM:
+        return FrameGatewayFactoryDefaultConfirmation()
+
+    if command == Command.GW_GET_LOCAL_TIME_REQ:
+        return FrameGetLocalTimeRequest()
+    if command == Command.GW_GET_LOCAL_TIME_CFM:
+        return FrameGetLocalTimeConfirmation()
 
     if command == Command.GW_CS_DISCOVER_NODES_REQ:
         return FrameDiscoverNodesRequest()
@@ -129,6 +154,11 @@ def create_frame(command):
     if command == Command.GW_GET_STATE_CFM:
         return FrameGetStateConfirmation()
 
+    if command == Command.GW_GET_NETWORK_SETUP_REQ:
+        return FrameGetNetworkSetupRequest()
+    if command == Command.GW_GET_NETWORK_SETUP_CFM:
+        return FrameGetNetworkSetupConfirmation()
+
     if command == Command.GW_SET_UTC_REQ:
         return FrameSetUTCRequest()
     if command == Command.GW_SET_UTC_CFM:
@@ -148,5 +178,9 @@ def create_frame(command):
 
     if command == Command.GW_NODE_STATE_POSITION_CHANGED_NTF:
         return FrameNodeStatePositionChangedNotification()
+    if command == Command.GW_LEAVE_LEARN_STATE_CFM:
+        return FrameLeaveLearnStateConfirmation()
+    if command == command.GW_LEAVE_LEARN_STATE_REQ:
+        return FrameLeaveLearnStateRequest()
 
     return None
