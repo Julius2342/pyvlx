@@ -5,7 +5,7 @@ from .frame import FrameBase
 
 
 class FrameGatewayRebootRequest(FrameBase):
-    """Frame for requesting version."""
+    """Frame for requesting reboot."""
 
     PAYLOAD_LEN = 0
 
@@ -19,7 +19,7 @@ class FrameGatewayRebootRequest(FrameBase):
 
 
 class FrameGatewayRebootConfirmation(FrameBase):
-    """Frame for response for get version requests."""
+    """Frame for response for get reboot requests."""
 
     PAYLOAD_LEN = 0
 
