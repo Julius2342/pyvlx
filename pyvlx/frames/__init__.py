@@ -55,3 +55,13 @@ from .frame_set_node_name import (
     SetNodeNameConfirmationStatus)
 from .frame_set_utc_cfm import FrameSetUTCConfirmation
 from .frame_set_utc_req import FrameSetUTCRequest
+from .frame_leave_learn_state import (
+    FrameLeaveLearnStateRequest, FrameLeaveLearnStateConfirmation,
+    LeaveLearnStateConfirmationStatus)
+from .frame_get_local_time import (
+    FrameGetLocalTimeRequest, FrameGetLocalTimeConfirmation)
+from .frame_facory_default import (
+    FrameGatewayFactoryDefaultRequest, FrameGatewayFactoryDefaultConfirmation)
+from .frame_password_change import (
+    FramePasswordChangeRequest, FramePasswordChangeConfirmation,
+    FramePasswordChangeNotification, PasswordChangeConfirmationStatus)
