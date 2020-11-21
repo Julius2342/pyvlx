@@ -1,12 +1,12 @@
 """Module for handling the login to API."""
-from enum import Enum
+from pyvlx.log import PYVLXLOG
 from .api_event import ApiEvent
 from .frames import FrameLeaveLearnStateRequest, FrameLeaveLearnStateConfirmation, LeaveLearnStateConfirmationStatus
 
-from pyvlx.log import PYVLXLOG
 
 class DtoLeaveLearnState:
-    def __init__(self, status = None):
+    """Dataobject to hold KLF200 Data"""
+    def __init__(self, status=None):
         self.status = status
     @property
     def status_name(self):

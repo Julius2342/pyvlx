@@ -1,8 +1,7 @@
 """Module for setting UTC time within gateway."""
 import time
-
+from pyvlx.exception import PyVLXException
 from .api_event import ApiEvent
-from .exception import PyVLXException
 from .frames import FrameSetUTCConfirmation, FrameSetUTCRequest
 
 
