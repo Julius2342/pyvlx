@@ -79,8 +79,6 @@ def create_frame(command):
         return FramePasswordChangeConfirmation()
     if command == Command.GW_PASSWORD_CHANGE_NTF:
         return FramePasswordChangeNotification()
-    
-
 
     if command == Command.GW_REBOOT_REQ:
         return FrameGatewayRebootRequest()
