@@ -2,8 +2,8 @@
 import struct
 from datetime import datetime
 
-from pyvlx.const import Command
-from pyvlx.parameter import Parameter
+from ...const import Command
+from ...parameter import Parameter
 
 from .frame import FrameBase
 

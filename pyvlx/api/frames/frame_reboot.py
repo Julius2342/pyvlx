@@ -1,5 +1,5 @@
 """Module for reboot frame classes."""
-from pyvlx.const import Command
+from ...const import Command
 
 from .frame import FrameBase
 

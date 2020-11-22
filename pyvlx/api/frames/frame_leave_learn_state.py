@@ -1,6 +1,6 @@
 """Module for leave learn state frame classes."""
 from enum import Enum
-from pyvlx.const import Command
+from ...const import Command
 from .frame import FrameBase
 
 class LeaveLearnStateConfirmationStatus(Enum):

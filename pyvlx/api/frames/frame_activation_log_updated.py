@@ -1,5 +1,5 @@
 """Module for error notification."""
-from pyvlx.const import Command
+from ...const import Command
 
 from .frame import FrameBase
 

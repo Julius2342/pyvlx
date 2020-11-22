@@ -1,6 +1,6 @@
 """Helper module for creating a frame out of raw data."""
-from pyvlx.log import PYVLXLOG
-from pyvlx.const import Command
+from ..log import PYVLXLOG
+from ..const import Command
 from .frames import (
     FrameActivateSceneConfirmation, FrameActivateSceneRequest,
     FrameActivationLogUpdatedNotification,

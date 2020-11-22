@@ -1,5 +1,5 @@
 """Module for requesting disabling the house status monitor."""
-from pyvlx.const import Command
+from ...const import Command
 
 from .frame import FrameBase
 

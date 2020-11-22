@@ -1,7 +1,7 @@
 """Module for sending command to gw."""
 from enum import Enum
 
-from pyvlx.const import Command, Originator, Priority, Velocity
+from ...const import Command, Originator, Priority, Velocity
 
 from .frame import FrameBase
 

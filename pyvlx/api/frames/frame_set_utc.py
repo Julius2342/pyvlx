@@ -2,7 +2,7 @@
 import struct
 from datetime import datetime
 
-from pyvlx.const import Command
+from ...const import Command
 
 from .frame import FrameBase
 

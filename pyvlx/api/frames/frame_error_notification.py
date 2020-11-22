@@ -1,7 +1,7 @@
 """Module for error notification."""
 from enum import Enum
 
-from pyvlx.const import Command
+from ...const import Command
 
 from .frame import FrameBase
 

@@ -1,8 +1,6 @@
 """Module for get local time classes."""
 #import struct
-from enum import Enum
-import time
-from pyvlx.const import Command
+from ...const import Command
 
 from .frame import FrameBase
 
