@@ -262,6 +262,6 @@ class FrameSessionFinishedNotification(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<{} session_id="{}" />'.format(
+        return '<{} session_id="{}"/>'.format(
             type(self).__name__, self.session_id
         )

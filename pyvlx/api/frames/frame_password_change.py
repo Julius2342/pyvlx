@@ -111,4 +111,4 @@ class FramePasswordChangeNotification(FrameBase):
         password_esc = (
             None if self.password is None else "{}****".format(self.password[:2])
         )
-        return '<{} password="{}" />'.format(type(self).__name__, password_esc)
+        return '<{} password="{}"/>'.format(type(self).__name__, password_esc)
