@@ -7,9 +7,10 @@ from .frames import FrameSetUTCConfirmation, FrameSetUTCRequest
 class SetUTC(ApiEvent):
     """Class for setting UTC time within gateway."""
 
-    def __init__(self, pyvlx):
+    def __init__(self, pyvlx, timestamp=time.time()):
         """Initialize SetUTC class."""
         super().__init__(pyvlx=pyvlx)
+        self.timestamp = timestamp
         self.success = False
 
     async def handle_frame(self, frame):
@@ -21,6 +22,6 @@ class SetUTC(ApiEvent):
 
     def request_frame(self):
         """Construct initiating frame."""
-        timestamp = int(time.time())
+        timestamp = int(self.timestamp)
         return FrameSetUTCRequest(timestamp=timestamp)
 

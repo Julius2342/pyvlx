@@ -18,9 +18,9 @@ from .scenes import Scenes
 from .api.get_protocol_version import GetProtocolVersion
 from .api.get_version import GetVersion
 from .api.house_status_monitor import house_status_monitor_enable
-from .api.login import Login
+from .api.password_enter import PasswordEnter
 from .api.reboot import Reboot
-from .api.set_utc import set_utc
+from .api.set_utc import SetUTC
 
 
 class PyVLX:
@@ -44,12 +44,12 @@ class PyVLX:
         """Connect to KLF 200."""
         PYVLXLOG.debug("Connecting to KLF 200.")
         await self.connection.connect()
-        login = Login(pyvlx=self, password=self.config.password)
+        login = PasswordEnter(pyvlx=self, password=self.config.password)
         await login.do_api_call()
         if not login.success:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
         await self.update_version()
-        await set_utc(pyvlx=self)
+        await SetUTC(pyvlx=self).do_api_call()
         await house_status_monitor_enable(pyvlx=self)
 
     async def reboot_gateway(self):
