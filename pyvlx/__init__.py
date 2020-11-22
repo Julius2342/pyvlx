@@ -15,4 +15,4 @@ from .parameter import (
 from .pyvlx import PyVLX
 from .scene import Scene
 from .scenes import Scenes
-
+from .klf200gateway import Klf200Gateway
