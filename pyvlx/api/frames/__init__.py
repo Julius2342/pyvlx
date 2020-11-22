@@ -56,8 +56,7 @@ from .frame_reboot import (
 from .frame_set_node_name import (
     FrameSetNodeNameConfirmation, FrameSetNodeNameRequest,
     SetNodeNameConfirmationStatus)
-from .frame_set_utc_cfm import FrameSetUTCConfirmation
-from .frame_set_utc_req import FrameSetUTCRequest
+from .frame_set_utc import (FrameSetUTCConfirmation, FrameSetUTCRequest)
 from .frame_leave_learn_state import (
     FrameLeaveLearnStateRequest, FrameLeaveLearnStateConfirmation,
     LeaveLearnStateConfirmationStatus)

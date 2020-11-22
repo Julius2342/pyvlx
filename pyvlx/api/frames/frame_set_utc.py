@@ -6,9 +6,18 @@ from pyvlx.const import Command
 
 from .frame import FrameBase
 
+class FrameSetUTCConfirmation(FrameBase):
+    """Frame for confirmation for setting UTC time."""
+
+    PAYLOAD_LEN = 0
+
+    def __init__(self):
+        """Init Frame."""
+        super().__init__(Command.GW_SET_UTC_CFM)
+
 
 class FrameSetUTCRequest(FrameBase):
-    """Frame for sending command to gw."""
+    """Frame for command for setting UTC time."""
 
     PAYLOAD_LEN = 4
 
