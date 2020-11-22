@@ -15,8 +15,8 @@ class DtoLocalTime:
     def __str__(self):
         """Return human readable string."""
         return (
-            '<"{}" utctime = "{}" localtime = "{}" />'.format(
-                self.__class__.__name__, self.utctime, self.localtime
+            '<{} utctime="{}" localtime="{}"/>'.format(
+                type(self).__name__, self.utctime, self.localtime
             )
         )
 
@@ -40,8 +40,13 @@ class GetLocalTime(ApiEvent):
             weekday = 6
         else:
             weekday = frame.weekday -1
-        self.time = DtoLocalTime(datetime.fromtimestamp(frame.utctime),
-                                 datetime.fromtimestamp(time.mktime((frame.year+1900, frame.month, frame.dayofmonth, frame.hour, frame.minute, frame.second, weekday, frame.dayofyear, frame.daylightsavingflag))))
+        self.time = DtoLocalTime(
+            datetime.fromtimestamp(frame.utctime),
+            datetime.fromtimestamp(time.mktime(
+                (frame.year+1900, frame.month, frame.dayofmonth,
+                 frame.hour, frame.minute, frame.second,
+                 weekday, frame.dayofyear, frame.daylightsavingflag)
+                )))
         self.success = True
 
         return True

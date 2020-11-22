@@ -24,4 +24,3 @@ class SetUTC(ApiEvent):
         """Construct initiating frame."""
         timestamp = int(self.timestamp)
         return FrameSetUTCRequest(timestamp=timestamp)
-

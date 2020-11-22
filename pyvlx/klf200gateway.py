@@ -132,5 +132,6 @@ class Klf200Gateway:
         """Return object as readable string."""
         return (
             '<{} state="{}" network_setup="{}"  version="{}"  protocol_version="{}"/>'.format(
-                type(self).__name__, str(self.state), str(self.network_setup), str(self.version), str(self.protocol_version))
+                type(self).__name__, str(self.state), str(self.network_setup),
+                str(self.version), str(self.protocol_version))
             )

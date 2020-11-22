@@ -1,7 +1,8 @@
 """Module for handling the login to API."""
 from ..log import PYVLXLOG
 from .api_event import ApiEvent
-from .frames import FrameLeaveLearnStateRequest, FrameLeaveLearnStateConfirmation, LeaveLearnStateConfirmationStatus
+from .frames import (FrameLeaveLearnStateRequest,
+                     FrameLeaveLearnStateConfirmation, LeaveLearnStateConfirmationStatus)
 
 
 class DtoLeaveLearnState:
@@ -17,8 +18,8 @@ class DtoLeaveLearnState:
     def __str__(self):
         """Return human readable string."""
         return (
-            '<"{}" status = "{}" status = "{}" />'.format(
-                self.__class__.__name__, self.status, self.status_name
+            '<{} status="{}" status_name="{}"/>'.format(
+                type(self).__name__, self.status, self.status_name
             )
         )
 

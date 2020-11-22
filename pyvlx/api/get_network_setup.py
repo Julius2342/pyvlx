@@ -17,8 +17,9 @@ class DtoNetworkSetup:
 
     def __str__(self):
         """Return human readable string."""
-        return '<DtoNetworkSetup ipaddress="{}" gateway="{}" gateway="{}"  dhcp="{}" dhcp_name="{}"/>'.format(
-            self.ipaddress, self.gateway, self.gateway, self.dhcp, self.dhcp_name
+        return '<{} ipaddress="{}" gateway="{}" gateway="{}"  dhcp="{}" dhcp_name="{}"/>'.format(
+            type(self).__name__, self.ipaddress, self.gateway,
+            self.gateway, self.dhcp, self.dhcp_name
         )
 
 class GetNetworkSetup(ApiEvent):
@@ -35,7 +36,9 @@ class GetNetworkSetup(ApiEvent):
         if not isinstance(frame, FrameGetNetworkSetupConfirmation):
             return False
         self.success = True
-        self.networksetup = DtoNetworkSetup(frame.ipaddress, frame.gateway, frame.netmask, frame.dhcp)
+        self.networksetup = DtoNetworkSetup(
+            frame.ipaddress, frame.gateway, frame.netmask, frame.dhcp
+            )
         return True
 
     def request_frame(self):

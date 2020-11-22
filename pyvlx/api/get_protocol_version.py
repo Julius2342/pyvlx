@@ -12,8 +12,8 @@ class DtoProtocolVersion:
     def __str__(self):
         """Return human readable string."""
         return (
-            '<{} majorversion = "{}" minorversion = "{}" />'.format(
-                self.__class__.__name__, self.majorversion, self.minorversion
+            '<{} majorversion="{}" minorversion="{}"/>'.format(
+                type(self).__name__, self.majorversion, self.minorversion
             )
         )
 

@@ -88,15 +88,8 @@ class OpeningDevice(Node):
     def __str__(self):
         """Return object as readable string."""
         return (
-            '<{} name="{}" '
-            'node_id="{}" '
-            'serial_number="{}" '
-            'position="{}"/>'.format(
-                type(self).__name__,
-                self.name,
-                self.node_id,
-                self.serial_number,
-                self.position,
+            '<{} name="{}" node_id="{}" serial_number="{}" position="{}"/>'.format(
+                type(self).__name__, self.name, self.node_id, self.serial_number, self.position
             )
         )
 
@@ -138,15 +131,9 @@ class Window(OpeningDevice):
     def __str__(self):
         """Return object as readable string."""
         return (
-            '<{} name="{}" '
-            'node_id="{}" rain_sensor={} '
-            'serial_number="{}" position="{}"/>'.format(
-                type(self).__name__,
-                self.name,
-                self.node_id,
-                self.rain_sensor,
-                self.serial_number,
-                self.position,
+            '<{} name="{}" node_id="{}" rain_sensor={} serial_number="{}" position="{}"/>'.format(
+                type(self).__name__, self.name, self.node_id,
+                self.rain_sensor, self.serial_number, self.position
             )
         )
 
@@ -155,7 +142,7 @@ class Blind(OpeningDevice):
     """Blind objects."""
 
     def __init__(
-        self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()
+            self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()
     ):
         """Initialize Blind class.
 
@@ -183,8 +170,8 @@ class Blind(OpeningDevice):
         Parameters:
             * position: Position object containing the current position.
             * target_position: Position object holding the target position
-                               which allows to ajust the position while the blind is in movement
-                               without stopping the blind (if orientation position has been changed.)
+                which allows to ajust the position while the blind is in movement
+                without stopping the blind (if orientation position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
 
@@ -241,8 +228,8 @@ class Blind(OpeningDevice):
         Parameters:
             * orientation: Position object containing the target orientation.
             + target_orientation: Position object holding the target orientation
-                                  which allows to ajust the orientation while the blind is in movement
-                                  without stopping the blind (if the position has been changed.)
+                which allows to ajust the orientation while the blind is in movement
+                without stopping the blind (if the position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
 
@@ -261,7 +248,8 @@ class Blind(OpeningDevice):
         if not command_send.success:
             raise PyVLXException("Unable to send command")
         await self.after_update()
-        # KLF200 always send UNKNOWN position for functional parameter, so orientation is set directly and not via GW_NODE_STATE_POSITION_CHANGED_NTF
+        # KLF200 always send UNKNOWN position for functional parameter,
+        # so orientation is set directly and not via GW_NODE_STATE_POSITION_CHANGED_NTF
 
     async def open_orientation(self, wait_for_completion=True):
         """Open Blind slats orientation.

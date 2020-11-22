@@ -22,11 +22,10 @@ class DtoState:
     def __str__(self):
         """Return human readable string."""
         return (
-            '<DtoState gateway_state="{}" '
-            'gateway_state_name="{}" />'
-            'gateway_sub_state="{}" />'
-            'gateway_sub_state=_name"{}" />'.format(
-                self.gateway_sub_state_name, self.gateway_state_name, self.gateway_sub_state, self.gateway_sub_state_name
+            '<{} gateway_state="{}" gateway_state_name="{}" gateway_sub_state="{}" '
+            'gateway_sub_state=_name"{}"/>'.format(
+                type(self).__name__, self.gateway_state, self.gateway_state_name,
+                self.gateway_sub_state, self.gateway_sub_state_name
             )
         )
 
