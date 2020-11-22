@@ -41,4 +41,4 @@ class FrameSetUTCRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameSetUTCRequest time="{}"/>'.format(self.timestamp_formatted)
+        return '<{} time="{}"/>'.format(type(self).__name__, self.timestamp_formatted)

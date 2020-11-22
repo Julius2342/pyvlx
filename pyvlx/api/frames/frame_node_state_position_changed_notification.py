@@ -64,11 +64,12 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
     def __str__(self):
         """Return human readable string."""
         return (
-            "<FrameNodeStatePositionChangedNotification node_id={} "
-            "state={} current_position='{}' "
-            "target='{}' current_position_fp1='{}' current_position_fp2='{}' "
-            "current_position_fp3='{}' current_position_fp4='{}' "
-            "remaining_time={} time='{}'/>".format(
+            '<{} node_id="{}" '
+            'state="{}" current_position="{}" '
+            'target="{}" current_position_fp1="{}" current_position_fp2="{}" '
+            'current_position_fp3="{}" current_position_fp4="{}" '
+            'remaining_time="{}" time="{}"/>'.format(
+                type(self).__name__,
                 self.node_id,
                 self.state,
                 self.current_position,

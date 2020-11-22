@@ -40,19 +40,23 @@ class FrameGetLocalTimeConfirmation(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.utctime =  int.from_bytes(payload[0:4], byteorder='big', signed=True)
+        self.utctime = int.from_bytes(payload[0:4], byteorder='big', signed=True)
         self.second = payload[4]
         self.minute = payload[5]
         self.hour = payload[6]
         self.dayofmonth = payload[7]
         self.month = payload[8]
-        self.year =  int.from_bytes(payload[9:11], byteorder='big', signed=True)
+        self.year = int.from_bytes(payload[9:11], byteorder='big', signed=True)
         self.weekday = payload[11]
-        self.dayofyear =int.from_bytes( payload[12:14], byteorder='big', signed=True)
+        self.dayofyear = int.from_bytes(payload[12:14], byteorder='big', signed=True)
         self.daylightsavingflag = int.from_bytes(payload[14:15], byteorder='big', signed=True)
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetLocalTimeConfirmation utctime="{}" second="{}" minute="{}" hour="{}" dayofmonth="{}" month="{}" year="{}" weekday="{}" dayofyear="{}" daylightsavingflag="{}"/>'.format(
-            self.utctime, self.second, self.minute, self.hour, self.dayofmonth, self.month, self.year, self.weekday ,self.dayofyear, self.daylightsavingflag
-        )
+        return ('<{} utctime="{}" second="{}" minute="{}" hour="{}" dayofmonth="{}" '
+                'month="{}" year="{}" weekday="{}" dayofyear="{}" daylightsavingflag="{}"/>'.format(
+                    type(self).__name__, self.utctime, self.second, self.minute, self.hour,
+                    self.dayofmonth, self.month, self.year, self.weekday, self.dayofyear,
+                    self.daylightsavingflag
+                    )
+                )

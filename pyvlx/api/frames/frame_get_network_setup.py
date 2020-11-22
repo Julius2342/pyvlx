@@ -27,7 +27,8 @@ class FrameGetNetworkSetupConfirmation(FrameBase):
 
     PAYLOAD_LEN = 13
 
-    def __init__(self, ipaddress = bytes(4), netmask = bytes(4), gateway = bytes(4), dhcp = DHCPParameter.DISABLE):
+    def __init__(self, ipaddress=bytes(4), netmask=bytes(4), gateway=bytes(4),
+                 dhcp=DHCPParameter.DISABLE):
         """Init Frame."""
         super().__init__(Command.GW_GET_NETWORK_SETUP_CFM)
         self._ipaddress = ipaddress
@@ -45,14 +46,15 @@ class FrameGetNetworkSetupConfirmation(FrameBase):
         """Return ipaddress as human readable string."""
         return ".".join(str(c) for c in self._netmask)
 
-    @property    
+    @property
     def gateway(self):
         """Return ipaddress as human readable string."""
         return ".".join(str(c) for c in self._gateway)
 
     def get_payload(self):
         """Return Payload."""
-        payload = bytes([self._ipaddress.value, self._netmask.value, self._gateway.value, self.dhcp.value])
+        payload = bytes([self._ipaddress.value, self._netmask.value,
+                         self._gateway.value, self.dhcp.value])
         return payload
 
     def from_payload(self, payload):
@@ -66,6 +68,6 @@ class FrameGetNetworkSetupConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetNetworkSetupConfirmation ipaddress="{}" netmask="{}" gateway="{}" dhcp="{}"/>'.format(
-            self.ipaddress, self.netmask, self.gateway, self.dhcp
+        return '<{} ipaddress="{}" netmask="{}" gateway="{}" dhcp="{}"/>'.format(
+            type(self).__name__, self.ipaddress, self.netmask, self.gateway, self.dhcp
         )

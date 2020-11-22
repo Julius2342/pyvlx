@@ -11,12 +11,12 @@ class FrameNodeInformationChangedNotification(FrameBase):
     PAYLOAD_LEN = 69
 
     def __init__(
-        self,
-        node_id=0,
-        name=None,
-        order=0,
-        placement=0,
-        node_variation=NodeVariation.NOT_SET,
+            self,
+            node_id=0,
+            name=None,
+            order=0,
+            placement=0,
+            node_variation=NodeVariation.NOT_SET,
     ):
         """Init Frame."""
         super().__init__(Command.GW_NODE_INFORMATION_CHANGED_NTF)
@@ -46,8 +46,9 @@ class FrameNodeInformationChangedNotification(FrameBase):
     def __str__(self):
         """Return human readable string."""
         return (
-            '<FrameNodeInformationChangedNotification node_id={} name="{}" order={} '
-            'placement={} node_variation="{}"/>'.format(
-                self.node_id, self.name, self.order, self.placement, self.node_variation
+            '<{} node_id="{}" name="{}" order="{}" '
+            'placement="{}" node_variation="{}"/>'.format(
+                type(self).__name__, self.node_id, self.name,
+                self.order, self.placement, self.node_variation
             )
         )

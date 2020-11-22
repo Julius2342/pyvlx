@@ -48,6 +48,6 @@ class FrameGetProtocolVersionConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetProtocolVersionConfirmation version="{}"/>'.format(
-            self.version
+        return '<{} version="{}"/>'.format(
+            type(self).__name__, self.version
         )

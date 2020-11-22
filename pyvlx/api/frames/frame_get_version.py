@@ -64,8 +64,7 @@ class FrameGetVersionConfirmation(FrameBase):
     def __str__(self):
         """Return human readable string."""
         return (
-            '<FrameGetVersionConfirmation software_version="{}" '
-            'harware_version="{}" product="{}"/>'.format(
-                self.software_version, self.hardware_version, self.product
+            '<{} software_version="{}" hardware_version="{}" product="{}"/>'.format(
+                type(self).__name__, self.software_version, self.hardware_version, self.product
             )
         )

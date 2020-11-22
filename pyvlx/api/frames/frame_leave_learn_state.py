@@ -19,7 +19,7 @@ class FrameLeaveLearnStateRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return "<FrameLeaveLearnStateRequest/>"
+        return '<{}/>'.format(type(self).__name__)
 
 
 
@@ -43,4 +43,4 @@ class FrameLeaveLearnStateConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return "<{} status={}/>".format(self.__class__.__name__, self.status)
+        return '<{} status="{}"/>'.format(type(self).__name__, self.status)

@@ -31,8 +31,8 @@ class FrameSetNodeNameRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameSetNodeNameRequest node_id={} name="{}"/>'.format(
-            self.node_id, self.name
+        return '<{} node_id="{}" name="{}"/>'.format(
+            type(self).__name__, self.node_id, self.name
         )
 
 
@@ -66,6 +66,6 @@ class FrameSetNodeNameConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameSetNodeNameConfirmation node_id={} status="{}"/>'.format(
-            self.node_id, self.status
+        return '<{} node_id="{}" status="{}"/>'.format(
+            type(self).__name__, self.node_id, self.status
         )

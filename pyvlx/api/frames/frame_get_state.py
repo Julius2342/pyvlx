@@ -46,9 +46,9 @@ class FrameGetStateConfirmation(FrameBase):
     PAYLOAD_LEN = 6
 
     def __init__(
-        self,
-        gateway_state=GatewayState.TEST_MODE,
-        gateway_sub_state=GatewaySubState.IDLE,
+            self,
+            gateway_state=GatewayState.TEST_MODE,
+            gateway_sub_state=GatewaySubState.IDLE,
     ):
         """Init Frame."""
         super().__init__(Command.GW_GET_STATE_CFM)
@@ -68,6 +68,6 @@ class FrameGetStateConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return '<FrameGetStateConfirmation gateway_state="{}" gateway_sub_state="{}"/>'.format(
-            self.gateway_state, self.gateway_sub_state
+        return '<{} gateway_state="{}" gateway_sub_state="{}"/>'.format(
+            type(self).__name__, self.gateway_state, self.gateway_sub_state
         )

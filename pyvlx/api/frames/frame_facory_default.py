@@ -15,7 +15,7 @@ class FrameGatewayFactoryDefaultRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return "<FrameGatewayFactoryDefaultRequest/>"
+        return '<{}/>'.format(type(self).__name__)
 
 
 class FrameGatewayFactoryDefaultConfirmation(FrameBase):
@@ -29,4 +29,4 @@ class FrameGatewayFactoryDefaultConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return "<FrameGatewayFactoryDefaultConfirmation/>"
+        return '<{}/>'.format(type(self).__name__)

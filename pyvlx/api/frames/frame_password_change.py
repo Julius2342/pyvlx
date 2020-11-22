@@ -31,7 +31,8 @@ class FramePasswordChangeRequest(FrameBase):
         if len(self.newpassword) > self.MAX_SIZE:
             raise PyVLXException("newpassword is too long")
 
-        return string_to_bytes(self.currentpassword, self.MAX_SIZE)+string_to_bytes(self.newpassword, self.MAX_SIZE)
+        return string_to_bytes(self.currentpassword,
+                               self.MAX_SIZE)+string_to_bytes(self.newpassword, self.MAX_SIZE)
 
     def from_payload(self, payload):
         """Init frame from binary data."""
@@ -46,7 +47,9 @@ class FramePasswordChangeRequest(FrameBase):
         newpassword_esc = (
             None if self.newpassword is None else "{}****".format(self.newpassword[:2])
         )
-        return "<{} currentpassword={} newpassword={}/>".format(self.__class__.__name__,currentpassword_esc, newpassword_esc)
+        return ('<{} currentpassword="{}" newpassword="{}"/>'
+                .format(type(self).__name__, currentpassword_esc, newpassword_esc)
+               )
 
 
 class PasswordChangeConfirmationStatus(Enum):
@@ -76,7 +79,7 @@ class FramePasswordChangeConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return "<{} status='{}'/>".format(self.__class__.__name__, self.status)
+        return '<{} status="{}"/>'.format(type(self).__name__, self.status)
 
 
 
@@ -85,9 +88,9 @@ class FramePasswordChangeNotification(FrameBase):
     MAX_SIZE = 32
     PAYLOAD_LEN = 32
 
-    def __init__(self, currentpassword=None):
+    def __init__(self):
         """Init Frame."""
-        super().__init__(Command.GW_PASSWORD_CHANGED_NTF)
+        super().__init__(Command.GW_PASSWORD_CHANGE_NTF)
         self.password = None
 
     def get_payload(self):
@@ -108,4 +111,4 @@ class FramePasswordChangeNotification(FrameBase):
         password_esc = (
             None if self.password is None else "{}****".format(self.password[:2])
         )
-        return "<{} password={} />".format(self.__class__.__name__,password_esc)
+        return '<{} password="{}" />'.format(type(self).__name__, password_esc)

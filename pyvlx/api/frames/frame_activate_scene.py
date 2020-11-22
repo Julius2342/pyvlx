@@ -12,11 +12,11 @@ class FrameActivateSceneRequest(FrameBase):
     PAYLOAD_LEN = 6
 
     def __init__(
-        self,
-        scene_id=None,
-        session_id=None,
-        originator=Originator.USER,
-        velocity=Velocity.DEFAULT,
+            self,
+            scene_id=None,
+            session_id=None,
+            originator=Originator.USER,
+            velocity=Velocity.DEFAULT,
     ):
         """Init Frame."""
         super().__init__(Command.GW_ACTIVATE_SCENE_REQ)
@@ -45,8 +45,8 @@ class FrameActivateSceneRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return "<FrameActivateSceneRequest scene_id={} session_id={} originator={} velocity={}/>".format(
-            self.scene_id, self.session_id, self.originator, self.velocity
+        return '<{} scene_id="{}" session_id="{}" originator="{}" velocity="{}"/>'.format(
+            type(self).__name__, self.scene_id, self.session_id, self.originator, self.velocity
         )
 
 
@@ -82,6 +82,6 @@ class FrameActivateSceneConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return "<FrameActivateSceneConfirmation session_id={} status={}/>".format(
-            self.session_id, self.status
+        return '<{} session_id="{}" status="{}"/>'.format(
+            type(self).__name__, self.session_id, self.status
         )

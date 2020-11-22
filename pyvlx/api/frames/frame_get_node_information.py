@@ -32,7 +32,7 @@ class FrameGetNodeInformationRequest(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return "<FrameGetNodeInformationRequest node_id={}/>".format(self.node_id)
+        return '<{} node_id="{}"/>'.format(type(self).__name__, self.node_id)
 
 
 class NodeInformationStatus(Enum):
@@ -65,8 +65,8 @@ class FrameGetNodeInformationConfirmation(FrameBase):
 
     def __str__(self):
         """Return human readable string."""
-        return "<FrameGetNodeInformationConfirmation node_id={} status='{}'/>".format(
-            self.node_id, self.status
+        return '<{} node_id="{}" status="{}"/>'.format(
+            type(self).__name__, self.node_id, self.status
         )
 
 
@@ -184,13 +184,14 @@ class FrameGetNodeInformationNotification(FrameBase):
     def __str__(self):
         """Return human readable string."""
         return (
-            "<FrameGetNodeInformationNotification node_id={} order={} "
-            "placement={} name='{}' velocity={} node_type='{}' product_group={} "
-            "product_type={} node_variation={} power_mode={} build_number={} "
-            "serial_number='{}' state={} current_position='{}' "
-            "target='{}' current_position_fp1='{}' current_position_fp2='{}' "
-            "current_position_fp3='{}' current_position_fp4='{}' "
-            "remaining_time={} time='{}' alias_array='{}'/>".format(
+            '<{} node_id="{}" order="{}" '
+            'placement="{}" name="{}" velocity="{}" node_type="{}" product_group="{}" '
+            'product_type="{}" node_variation="{}" power_mode="{}" build_number="{}" '
+            'serial_number="{}" state="{}" current_position="{}" '
+            'target="{}" current_position_fp1="{}" current_position_fp2="{}" '
+            'current_position_fp3="{}" current_position_fp4="{}" '
+            'remaining_time="{}" time="{}" alias_array="{}"/>'.format(
+                type(self).__name__,
                 self.node_id,
                 self.order,
                 self.placement,
