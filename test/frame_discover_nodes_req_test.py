@@ -31,5 +31,5 @@ class TestFrameNodeDiscover(unittest.TestCase):
         """Test string representation of FrameDiscoverNodesRequest."""
         frame = FrameDiscoverNodesRequest(NodeType.LIGHT)
         self.assertEqual(
-            str(frame), "<FrameDiscoverNodesRequest node_type='NodeType.LIGHT'/>"
+            str(frame), '<FrameDiscoverNodesRequest node_type="NodeType.LIGHT"/>'
         )

@@ -42,5 +42,5 @@ class TestFrameActivateSceneConfirmation(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            "<FrameActivateSceneConfirmation session_id=1000 status=ActivateSceneConfirmationStatus.ACCEPTED/>",
+            '<FrameActivateSceneConfirmation session_id="1000" status="ActivateSceneConfirmationStatus.ACCEPTED"/>',
         )

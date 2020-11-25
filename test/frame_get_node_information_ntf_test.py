@@ -89,20 +89,20 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         test_ts = datetime.fromtimestamp(50528771).strftime("%Y-%m-%d %H:%M:%S")
         self.assertEqual(
             str(frame),
-            "<FrameGetNodeInformationNotification node_id=23 order=1234 placement=2 "
-            "name='Fnord23' velocity=Velocity.SILENT node_type='NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND' "
-            "product_group=23 product_type=13 node_variation=NodeVariation.TOPHUNG "
-            "power_mode=1 build_number=7 serial_number='01:02:03:04:05:06:06:08' state=1 "
-            "current_position='0x000C' target='0x007B' current_position_fp1='0x04D2' "
-            "current_position_fp2='0x0929' current_position_fp3='0x0D80' current_position_fp4='0x11D7' "
-            "remaining_time=1 time='{}' "
-            "alias_array='3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839'/>".format(
+            '<FrameGetNodeInformationNotification node_id="23" order="1234" placement="2" '
+            'name="Fnord23" velocity="Velocity.SILENT" node_type="NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND" '
+            'product_group="23" product_type="13" node_variation="NodeVariation.TOPHUNG" '
+            'power_mode="1" build_number="7" serial_number="01:02:03:04:05:06:06:08" state="1" '
+            'current_position="0x000C" target="0x007B" current_position_fp1="0x04D2" '
+            'current_position_fp2="0x0929" current_position_fp3="0x0D80" current_position_fp4="0x11D7" '
+            'remaining_time=1 time="{}" '
+            'alias_array="3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839"/>'.format(
                 test_ts
             ),
         )
 
     def test_serial_number(self):
-        """Test serial number property."""
+        '""Test serial number property."""
         frame = FrameGetNodeInformationNotification()
         frame.serial_number = "01:02:03:04:05:06:06:08"
         self.assertEqual(frame.serial_number, "01:02:03:04:05:06:06:08")

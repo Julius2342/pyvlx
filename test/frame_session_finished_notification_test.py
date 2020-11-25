@@ -25,5 +25,5 @@ class TestFrameSessionFinishedNotification(unittest.TestCase):
         """Test string representation of FrameSessionFinishedNotification."""
         frame = FrameSessionFinishedNotification(session_id=1000)
         self.assertEqual(
-            str(frame), "<FrameSessionFinishedNotification session_id=1000 />"
+            str(frame), '<FrameSessionFinishedNotification session_id="1000" />'
         )

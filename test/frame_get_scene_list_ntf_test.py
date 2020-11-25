@@ -80,8 +80,8 @@ class TestFrameGetSceneListNotification(unittest.TestCase):
         frame.remaining_scenes = 3
         self.assertEqual(
             str(frame),
-            "<FrameGetSceneListNotification scenes=[(0, 'All Windows Closed'), "
-            + "(1, 'Sleeping Wide Open'), (2, 'Bath Open')] remaining_scenes=3>",
+            '<FrameGetSceneListNotification scenes="[(0, \'All Windows Closed\')", '
+            + '"(1, \'Sleeping Wide Open\')", (2, \'Bath Open\')] remaining_scenes="3">',
         )
 
     def test_wrong_payload(self):

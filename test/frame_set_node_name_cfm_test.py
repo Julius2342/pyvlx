@@ -38,5 +38,5 @@ class TestFrameSetNodeNameConfirmation(unittest.TestCase):
         frame = FrameSetNodeNameConfirmation(node_id=23)
         self.assertEqual(
             str(frame),
-            '<FrameSetNodeNameConfirmation node_id=23 status="SetNodeNameConfirmationStatus.OK"/>',
+            '<FrameSetNodeNameConfirmation node_id="23" status="SetNodeNameConfirmationStatus.OK"/>',
         )

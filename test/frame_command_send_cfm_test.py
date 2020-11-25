@@ -39,5 +39,5 @@ class TestFrameCommandSendConfirmation(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            "<FrameCommandSendConfirmation session_id=1000 status=CommandSendConfirmationStatus.ACCEPTED/>",
+            '<FrameCommandSendConfirmation session_id="1000" status="CommandSendConfirmationStatus.ACCEPTED"/>',
         )

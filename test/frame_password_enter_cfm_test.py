@@ -34,5 +34,5 @@ class TestFramePasswordEnterConfirmation(unittest.TestCase):
         frame = FramePasswordEnterConfirmation()
         self.assertEqual(
             str(frame),
-            "<FramePasswordEnterConfirmation status='PasswordEnterConfirmationStatus.SUCCESSFUL'/>",
+            '<FramePasswordEnterConfirmation status="PasswordEnterConfirmationStatus.SUCCESSFUL"/>',
         )

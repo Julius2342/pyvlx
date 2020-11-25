@@ -20,4 +20,4 @@ class TestScene(unittest.TestCase):
         """Test string representation of Scene object."""
         pyvlx = PyVLX()
         scene = Scene(pyvlx, 2, "Scene 1")
-        self.assertEqual(str(scene), '<Scene name="Scene 1" id="2" />')
+        self.assertEqual(str(scene), '<Scene name="Scene 1" id="2"/>')

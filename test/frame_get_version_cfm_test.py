@@ -34,7 +34,7 @@ class TestFrameGetVersionConfirmation(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            '<FrameGetVersionConfirmation software_version="1.2.3.4.5.6" harware_version="23" product="KLF 200"/>',
+            '<FrameGetVersionConfirmation software_version="1.2.3.4.5.6" hardware_version="23" product="KLF 200"/>',
         )
 
     def test_version(self):

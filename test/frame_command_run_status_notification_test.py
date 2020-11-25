@@ -46,5 +46,5 @@ class TestFrameCommandRunStatusNotification(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            "<FrameCommandRunStatusNotification session_id=1000 status_id=7 index_id=23 node_parameter=42 parameter_value=1337/>",
+            '<FrameCommandRunStatusNotification session_id="1000" status_id="7" index_id="23" node_parameter="42" parameter_value="1337"/>',
         )

@@ -24,4 +24,4 @@ class TestFrameGetNodeInformationRequest(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameGetNodeInformationRequest."""
         frame = FrameGetNodeInformationRequest(node_id=23)
-        self.assertEqual(str(frame), "<FrameGetNodeInformationRequest node_id=23/>")
+        self.assertEqual(str(frame), '<FrameGetNodeInformationRequest node_id="23"/>')

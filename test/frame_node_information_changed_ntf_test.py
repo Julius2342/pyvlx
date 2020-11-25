@@ -44,6 +44,6 @@ class TestFrameNodeInformationChangedNotification(unittest.TestCase):
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertEqual(
             str(frame),
-            '<FrameNodeInformationChangedNotification node_id=23 name="Fnord23" '
-            'order=1234 placement=2 node_variation="NodeVariation.TOPHUNG"/>',
+            '<FrameNodeInformationChangedNotification node_id="23" name="Fnord23" '
+            'order="1234" placement="2" node_variation="NodeVariation.TOPHUNG"/>',
         )

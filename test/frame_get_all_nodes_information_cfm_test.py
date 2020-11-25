@@ -26,5 +26,5 @@ class TestFrameGetAllNodesInformationConfirmation(unittest.TestCase):
         frame = FrameGetAllNodesInformationConfirmation(number_of_nodes=23)
         self.assertEqual(
             str(frame),
-            "<FrameGetAllNodesInformationConfirmation status='AllNodesInformationStatus.OK' number_of_nodes=23/>",
+            '<FrameGetAllNodesInformationConfirmation status="AllNodesInformationStatus.OK" number_of_nodes="23"/>',
         )

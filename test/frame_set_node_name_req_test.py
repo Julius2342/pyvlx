@@ -34,5 +34,5 @@ class TestFrameSetNodeNameRequest(unittest.TestCase):
         """Test string representation of FrameSetNodeNameRequest."""
         frame = FrameSetNodeNameRequest(node_id=4, name="Fnord")
         self.assertEqual(
-            str(frame), '<FrameSetNodeNameRequest node_id=4 name="Fnord"/>'
+            str(frame), '<FrameSetNodeNameRequest node_id="4" name="Fnord"/>'
         )

@@ -24,4 +24,4 @@ class TestFrameGetSceneListConfirmation(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameGetSceneListConfirmation."""
         frame = FrameGetSceneListConfirmation(count_scenes=12)
-        self.assertEqual(str(frame), "<FrameGetSceneListConfirmation count_scenes=12/>")
+        self.assertEqual(str(frame), '<FrameGetSceneListConfirmation count_scenes="12"/>')

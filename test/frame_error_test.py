@@ -26,5 +26,5 @@ class TestErrorNotification(unittest.TestCase):
         frame = FrameErrorNotification(error_type=ErrorType.ErrorOnFrameStructure)
         self.assertEqual(
             str(frame),
-            "<FrameErrorNotification error_type='ErrorType.ErrorOnFrameStructure'/>",
+            '<FrameErrorNotification error_type="ErrorType.ErrorOnFrameStructure"/>',
         )
