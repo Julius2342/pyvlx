@@ -104,7 +104,7 @@ class FrameCommandSendRequest(FrameBase):
                 Position(Parameter(bytes(value))),
             )
         return (
-            '<{} node_ids="{}"parameter="{}" functional_parameter="{}" '
+            '<{} node_ids="{}" parameter="{}" functional_parameter="{}" '
             'session_id="{}" originator="{}"/>'.format(
                 type(self).__name__, self.node_ids,
                 self.parameter, functional_parameter,
