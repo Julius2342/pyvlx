@@ -1,8 +1,8 @@
 """Unit tests for FrameGetSceneListConfirmation."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameGetSceneListConfirmation
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameGetSceneListConfirmation
 
 
 class TestFrameGetSceneListConfirmation(unittest.TestCase):

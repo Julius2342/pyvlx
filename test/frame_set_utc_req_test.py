@@ -2,8 +2,8 @@
 import unittest
 from datetime import datetime
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameSetUTCRequest
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameSetUTCRequest
 
 
 class TestFrameSetUTCRequest(unittest.TestCase):

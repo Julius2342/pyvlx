@@ -1,8 +1,8 @@
 """Unit tests for FrameGetProtocolVersionRequest."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameGetProtocolVersionRequest
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameGetProtocolVersionRequest
 
 
 class TestFrameGetProtocolVersionRequest(unittest.TestCase):

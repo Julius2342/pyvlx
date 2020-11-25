@@ -1,8 +1,8 @@
 """Unit tests for FrameGatewayRebootRequest."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameGatewayRebootRequest
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameGatewayRebootRequest
 
 
 class TestFrameRebootRequest(unittest.TestCase):

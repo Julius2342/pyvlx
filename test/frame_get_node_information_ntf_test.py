@@ -2,11 +2,11 @@
 import unittest
 from datetime import datetime
 
-from pyvlx.frames.alias_array import AliasArray
+from pyvlx.api.frames.alias_array import AliasArray
 from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.exception import PyVLXException
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameGetNodeInformationNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameGetNodeInformationNotification
 from pyvlx.parameter import Position
 
 

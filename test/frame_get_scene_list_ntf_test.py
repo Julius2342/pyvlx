@@ -2,8 +2,8 @@
 import unittest
 
 from pyvlx import PyVLXException
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameGetSceneListNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameGetSceneListNotification
 
 
 class TestFrameGetSceneListNotification(unittest.TestCase):

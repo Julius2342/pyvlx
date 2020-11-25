@@ -1,8 +1,8 @@
 """Unit tests for FrameHouseStatusMonitorEnableRequest."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameHouseStatusMonitorEnableRequest
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameHouseStatusMonitorEnableRequest
 
 
 class TestFrameHouseStatusMonitorEnableRequest(unittest.TestCase):

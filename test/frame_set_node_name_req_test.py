@@ -1,8 +1,8 @@
 """Unit tests for FrameSetNodeNameRequest."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameSetNodeNameRequest
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameSetNodeNameRequest
 
 
 class TestFrameSetNodeNameRequest(unittest.TestCase):

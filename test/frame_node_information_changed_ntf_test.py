@@ -2,8 +2,8 @@
 import unittest
 
 from pyvlx.const import NodeVariation
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameNodeInformationChangedNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameNodeInformationChangedNotification
 
 
 class TestFrameNodeInformationChangedNotification(unittest.TestCase):

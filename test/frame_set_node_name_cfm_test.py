@@ -1,8 +1,8 @@
 """Unit tests for FrameSetNodeNameConfirmation."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import (
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import (
     FrameSetNodeNameConfirmation, SetNodeNameConfirmationStatus)
 
 

@@ -1,8 +1,8 @@
 """Unit tests for FrameActivationLogUpdatedNotification."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameActivationLogUpdatedNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameActivationLogUpdatedNotification
 
 
 class TestFrameActivationLogUpdatedNotification(unittest.TestCase):
