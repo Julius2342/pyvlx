@@ -102,7 +102,7 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         )
 
     def test_serial_number(self):
-        '""Test serial number property."""
+        """Test serial number property."""
         frame = FrameGetNodeInformationNotification()
         frame.serial_number = "01:02:03:04:05:06:06:08"
         self.assertEqual(frame.serial_number, "01:02:03:04:05:06:06:08")
