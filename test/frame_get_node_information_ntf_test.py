@@ -95,7 +95,7 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
             'power_mode="1" build_number="7" serial_number="01:02:03:04:05:06:06:08" state="1" '
             'current_position="0x000C" target="0x007B" current_position_fp1="0x04D2" '
             'current_position_fp2="0x0929" current_position_fp3="0x0D80" current_position_fp4="0x11D7" '
-            'remaining_time=1 time="{}" '
+            'remaining_time="1" time="{}" '
             'alias_array="3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839"/>'.format(
                 test_ts
             ),
