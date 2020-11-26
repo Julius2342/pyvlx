@@ -2,10 +2,12 @@
 from .api_event import ApiEvent
 from .frames import FrameGetStateConfirmation, FrameGetStateRequest, GatewayState, GatewaySubState
 
+
 class DtoState:
     """Data Object for Gateway State."""
 
     def __init__(self, gateway_state=None, gateway_sub_state=None):
+        """Initialize DtoState class."""
         self.gateway_state = gateway_state
         self.gateway_sub_state = gateway_sub_state
 
@@ -60,4 +62,3 @@ class GetState(ApiEvent):
     def gateway_sub_state(self):
         """Deprecated: Return Gateway Sub State as human readable string."""
         return self.state.gateway_sub_state
-        

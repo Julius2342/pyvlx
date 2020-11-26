@@ -2,15 +2,17 @@
 from .api_event import ApiEvent
 from .frames import FrameGetVersionConfirmation, FrameGetVersionRequest
 
+
 class DtoVersion:
     """Object for KLF200 Data"""
+
     def __init__(self,
                  softwareversion=None, hardwareversion=None, productgroup=None, producttype=None):
+        """Initialize DtoVersion class."""
         self.softwareversion = softwareversion
         self.hardwareversion = hardwareversion
         self.productgroup = productgroup
         self.producttype = producttype
-
 
     def __str__(self):
         """Return human readable string."""
@@ -21,6 +23,8 @@ class DtoVersion:
                 self.softwareversion, self.hardwareversion, self.productgroup, self.producttype
             )
         )
+
+
 class GetVersion(ApiEvent):
     """Class for retrieving firmware version from API."""
 

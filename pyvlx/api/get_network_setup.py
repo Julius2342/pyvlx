@@ -2,9 +2,12 @@
 from .api_event import ApiEvent
 from .frames import FrameGetNetworkSetupConfirmation, FrameGetNetworkSetupRequest, DHCPParameter
 
+
 class DtoNetworkSetup:
-    """Dataobject to hold KLF200 Data"""
+    """Dataobject to hold KLF200 Data."""
+
     def __init__(self, ipaddress=None, gateway=None, netmask=None, dhcp=None):
+        """Initialize DtoNetworkSetup class."""
         self.ipaddress = ipaddress
         self.gateway = gateway
         self.netmask = netmask
@@ -22,6 +25,7 @@ class DtoNetworkSetup:
             self.gateway, self.dhcp, self.dhcp_name
         )
 
+
 class GetNetworkSetup(ApiEvent):
     """Class for retrieving gateway state from API."""
 
@@ -37,8 +41,7 @@ class GetNetworkSetup(ApiEvent):
             return False
         self.success = True
         self.networksetup = DtoNetworkSetup(
-            frame.ipaddress, frame.gateway, frame.netmask, frame.dhcp
-            )
+            frame.ipaddress, frame.gateway, frame.netmask, frame.dhcp)
         return True
 
     def request_frame(self):

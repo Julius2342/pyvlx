@@ -3,9 +3,12 @@ from .api_event import ApiEvent
 from .frames import (
     FrameGetProtocolVersionConfirmation, FrameGetProtocolVersionRequest)
 
+
 class DtoProtocolVersion:
-    """KLF 200 Dataobject """
+    """KLF 200 Dataobject."""
+
     def __init__(self, majorversion=None, minorversion=None):
+        """Initialize DtoProtocolVersion class."""
         self.majorversion = majorversion
         self.minorversion = minorversion
 
@@ -41,5 +44,5 @@ class GetProtocolVersion(ApiEvent):
 
     @property
     def version(self):
-        """Deprecated: Return Protocol Version as human readable string."""
+        """Return Protocol Version as human readable string."""
         return "{}.{}".format(self.protocolversion.majorversion, self.protocolversion.minorversion)

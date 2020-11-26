@@ -18,6 +18,7 @@ class FrameGetNetworkSetupRequest(FrameBase):
 
 class DHCPParameter(Enum):
     """Enum class for dncp network setup of gateway."""
+
     DISABLE = 0x00
     ENABLE = 0x01
 
@@ -59,15 +60,12 @@ class FrameGetNetworkSetupConfirmation(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-
         self._ipaddress = payload[0:4]
         self._netmask = payload[4:8]
         self._gateway = payload[8:12]
         self.dhcp = DHCPParameter(payload[12])
 
-
     def __str__(self):
         """Return human readable string."""
         return '<{} ipaddress="{}" netmask="{}" gateway="{}" dhcp="{}"/>'.format(
-            type(self).__name__, self.ipaddress, self.netmask, self.gateway, self.dhcp
-        )
+            type(self).__name__, self.ipaddress, self.netmask, self.gateway, self.dhcp)

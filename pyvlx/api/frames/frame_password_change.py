@@ -36,8 +36,8 @@ class FramePasswordChangeRequest(FrameBase):
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.currentpassword = bytes_to_string(payload[0:33])
-        self.newpassword = bytes_to_string(payload[33:])
+        self.currentpassword = bytes_to_string(payload[0:32])
+        self.newpassword = bytes_to_string(payload[32:])
 
     def __str__(self):
         """Return human readable string."""
@@ -48,8 +48,7 @@ class FramePasswordChangeRequest(FrameBase):
             None if self.newpassword is None else "{}****".format(self.newpassword[:2])
         )
         return ('<{} currentpassword="{}" newpassword="{}"/>'
-                .format(type(self).__name__, currentpassword_esc, newpassword_esc)
-               )
+                .format(type(self).__name__, currentpassword_esc, newpassword_esc))
 
 
 class PasswordChangeConfirmationStatus(Enum):
@@ -82,33 +81,33 @@ class FramePasswordChangeConfirmation(FrameBase):
         return '<{} status="{}"/>'.format(type(self).__name__, self.status)
 
 
-
 class FramePasswordChangeNotification(FrameBase):
     """Frame for sending password changed notification request."""
+
     MAX_SIZE = 32
     PAYLOAD_LEN = 32
 
-    def __init__(self):
+    def __init__(self, newpassword=None):
         """Init Frame."""
         super().__init__(Command.GW_PASSWORD_CHANGE_NTF)
-        self.password = None
+        self.newpassword = newpassword
 
     def get_payload(self):
         """Return Payload."""
-        if self.password is None:
-            raise PyVLXException("password is none")
-        if len(self.password) > self.MAX_SIZE:
-            raise PyVLXException("password is too long")
+        if self.newpassword is None:
+            raise PyVLXException("newpassword is none")
+        if len(self.newpassword) > self.MAX_SIZE:
+            raise PyVLXException("newpassword is too long")
 
-        return string_to_bytes(self.password, self.MAX_SIZE)
+        return string_to_bytes(self.newpassword, self.MAX_SIZE)
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.password = bytes_to_string(payload)
+        self.newpassword = bytes_to_string(payload)
 
     def __str__(self):
         """Return human readable string."""
-        password_esc = (
-            None if self.password is None else "{}****".format(self.password[:2])
+        newpassword_esc = (
+            None if self.newpassword is None else "{}****".format(self.newpassword[:2])
         )
-        return '<{} password="{}"/>'.format(type(self).__name__, password_esc)
+        return '<{} newpassword="{}"/>'.format(type(self).__name__, newpassword_esc)

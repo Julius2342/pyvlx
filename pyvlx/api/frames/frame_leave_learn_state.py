@@ -3,10 +3,13 @@ from enum import Enum
 from ...const import Command
 from .frame import FrameBase
 
+
 class LeaveLearnStateConfirmationStatus(Enum):
     """Enum class for status of password enter confirmation."""
+
     FAILED = 0
     SUCCESSFUL = 1
+
 
 class FrameLeaveLearnStateRequest(FrameBase):
     """Frame for leaving learn state request."""
@@ -20,7 +23,6 @@ class FrameLeaveLearnStateRequest(FrameBase):
     def __str__(self):
         """Return human readable string."""
         return '<{}/>'.format(type(self).__name__)
-
 
 
 class FrameLeaveLearnStateConfirmation(FrameBase):

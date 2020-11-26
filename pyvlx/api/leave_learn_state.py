@@ -6,14 +6,16 @@ from .frames import (FrameLeaveLearnStateRequest,
 
 
 class DtoLeaveLearnState:
-    """Dataobject to hold KLF200 Data"""
+    """Dataobject to hold KLF200 Data."""
+
     def __init__(self, status=None):
+        """Initialize DtoLeaveLearnState class."""
         self.status = status
+
     @property
     def status_name(self):
         """Return status as human readable string."""
         return LeaveLearnStateConfirmationStatus(self.status_name).name
-
 
     def __str__(self):
         """Return human readable string."""
@@ -22,6 +24,7 @@ class DtoLeaveLearnState:
                 type(self).__name__, self.status, self.status_name
             )
         )
+
 
 class LeaveLearnState(ApiEvent):
     """Class for handling leave learn state to API."""

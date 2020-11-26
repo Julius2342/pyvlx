@@ -4,22 +4,21 @@ import time
 from .api_event import ApiEvent
 from .frames import FrameGetLocalTimeConfirmation, FrameGetLocalTimeRequest
 
+
 class DtoLocalTime:
-    """Dataobject to hold KLF200 Data"""
+    """Dataobject to hold KLF200 Data."""
 
     def __init__(self, utctime=None, localtime=None):
+        """Initialize DtoLocalTime class."""
         self.utctime = utctime
         self.localtime = localtime
-
 
     def __str__(self):
         """Return human readable string."""
         return (
             '<{} utctime="{}" localtime="{}"/>'.format(
-                type(self).__name__, self.utctime, self.localtime
-            )
+                type(self).__name__, self.utctime, self.localtime)
         )
-
 
 
 class GetLocalTime(ApiEvent):
@@ -39,14 +38,14 @@ class GetLocalTime(ApiEvent):
         if frame.weekday == 0:
             weekday = 6
         else:
-            weekday = frame.weekday -1
+            weekday = frame.weekday - 1
         self.time = DtoLocalTime(
             datetime.fromtimestamp(frame.utctime),
             datetime.fromtimestamp(time.mktime(
-                (frame.year+1900, frame.month, frame.dayofmonth,
+                (frame.year + 1900, frame.month, frame.dayofmonth,
                  frame.hour, frame.minute, frame.second,
-                 weekday, frame.dayofyear, frame.daylightsavingflag)
-                )))
+                 weekday, frame.dayofyear, frame.daylightsavingflag)))
+            )
         self.success = True
 
         return True

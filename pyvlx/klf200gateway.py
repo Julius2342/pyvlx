@@ -1,12 +1,11 @@
-"""
-Module for basic klf200 gateway functions.
-"""
+"""Module for basic klf200 gateway functions."""
 from .exception import PyVLXException
 
 from .api import (GetState, GetNetworkSetup, GetProtocolVersion, GetVersion,
                   GetLocalTime, LeaveLearnState, FactoryDefault, PasswordEnter,
                   SetUTC, Reboot)
 from .log import PYVLXLOG
+
 
 class Klf200Gateway:
     """Class for node abstraction."""
@@ -90,9 +89,9 @@ class Klf200Gateway:
 
     async def set_rtc_time_zone(self):
         """Set the RTC Time Zone."""
-        #idontwant = setrtctimezone(pyvlx=self.pyvlx)
+        # idontwant = setrtctimezone(pyvlx=self.pyvlx)
         raise PyVLXException("KLF 200 RTC Timezone Set not implemented")
-        #return setrtctimezone.success
+        # return setrtctimezone.success
 
     async def reboot(self):
         """Reboot gateway."""
@@ -102,8 +101,8 @@ class Klf200Gateway:
             PYVLXLOG.warning("Unable to reboot gateway.")
         return reboot.success
 
-    async def factory_default(self):
-        """Factory Default Reset gateway."""
+    async def set_factory_default(self):
+        """Sets Factory Default gateway."""
         factorydefault = FactoryDefault(pyvlx=self.pyvlx)
         await factorydefault.do_api_call()
         if not factorydefault.success:
@@ -111,7 +110,7 @@ class Klf200Gateway:
         return factorydefault.success
 
     async def get_local_time(self):
-        """get local time from gateway."""
+        """Get local time from gateway."""
         getlocaltime = GetLocalTime(pyvlx=self.pyvlx)
         await getlocaltime.do_api_call()
         if not getlocaltime.success:
@@ -120,7 +119,7 @@ class Klf200Gateway:
         return getlocaltime.success
 
     async def password_enter(self, password):
-        """get enter Password for gateway."""
+        """Get enter Password for gateway."""
         self.password = password
         passwordenter = PasswordEnter(pyvlx=self.pyvlx, password=self.password)
         await passwordenter.do_api_call()
@@ -133,5 +132,4 @@ class Klf200Gateway:
         return (
             '<{} state="{}" network_setup="{}"  version="{}"  protocol_version="{}"/>'.format(
                 type(self).__name__, str(self.state), str(self.network_setup),
-                str(self.version), str(self.protocol_version))
-            )
+                str(self.version), str(self.protocol_version)))

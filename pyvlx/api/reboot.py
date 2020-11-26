@@ -4,7 +4,6 @@ from .api_event import ApiEvent
 from .frames import FrameGatewayRebootConfirmation, FrameGatewayRebootRequest
 
 
-
 class Reboot(ApiEvent):
     """Class for handling Reboot to API."""
 
@@ -13,7 +12,6 @@ class Reboot(ApiEvent):
         super().__init__(pyvlx=pyvlx)
         self.pyvlx = pyvlx
         self.success = False
-
 
     async def handle_frame(self, frame):
         """Handle incoming API frame, return True if this was the expected frame."""
