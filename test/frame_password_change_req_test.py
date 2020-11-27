@@ -27,14 +27,16 @@ class TestFramePasswordChange(unittest.TestCase):
         """Test FramePasswordChangeRequest with long new password."""
         frame = FramePasswordChangeRequest(currentpassword="fnord", newpassword="x" * 32)
         self.assertEqual(
-            bytes(frame), b"\x00C0\x02fnord\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\x00"
+            bytes(frame), b"\x00C0\x02fnord\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+            + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\x00"
         )
 
     def test_bytes_long_oldpw(self):
         """Test FramePasswordChangeRequest with long old password."""
         frame = FramePasswordChangeRequest(currentpassword="x" * 32, newpassword="bfeld")
         self.assertEqual(
-            bytes(frame), b"\x00C0\x02xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxbfeld\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x18"
+            bytes(frame), b"\x00C0\x02xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxbfeld\x00\x00\x00"
+            + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x18"
         )
 
     def test_bytes_long_bothpw(self):

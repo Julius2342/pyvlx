@@ -17,8 +17,8 @@ class TestFramePasswordChange(unittest.TestCase):
         self.assertEqual(
             bytes(frame),
             b"\x00#0\x04fnord\x00\x00\x00\x00\x00\x00"
-            +b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
-            +b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00f",
+            + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+            + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00f",
         )
 
     def test_bytes_long_pw(self):
@@ -32,8 +32,8 @@ class TestFramePasswordChange(unittest.TestCase):
         """Test parsing FramePasswordChangeNotification from raw bytes."""
         frame = frame_from_raw(
             b"\x00#0\x04fnord\x00\x00\x00\x00\x00\x00"
-            +b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
-            +b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00f",
+            + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+            + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00f",
         )
         self.assertTrue(isinstance(frame, FramePasswordChangeNotification))
         self.assertEqual(frame.newpassword, "fnord")
@@ -44,7 +44,6 @@ class TestFramePasswordChange(unittest.TestCase):
             bytes(FramePasswordChangeNotification())
         with self.assertRaises(PyVLXException):
             bytes(FramePasswordChangeNotification(newpassword="x" * 33))
-
 
     def test_str(self):
         """Test string representation of FramePasswordChangeNotification."""
