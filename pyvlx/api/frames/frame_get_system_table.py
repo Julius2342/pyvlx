@@ -41,39 +41,39 @@ class FrameGetSystemTableUpdateNotification(FrameBase):
         #XXX: bitbanging to be improved
         for index, item in enumerate(payload[:26]):
             if item & 0x01:
-                self.addednodeids.append(index * 8 + 1)
+                self.addednodeids.append(index * 8)
             if item & 0x02:
-                self.addednodeids.append(index * 8 + 2)
+                self.addednodeids.append(index * 8 + 1)
             if item & 0x04:
-                self.addednodeids.append(index * 8 + 3)
+                self.addednodeids.append(index * 8 + 2)
             if item & 0x08:
-                self.addednodeids.append(index * 8 + 4)
+                self.addednodeids.append(index * 8 + 3)
             if item & 0x10:
-                self.addednodeids.append(index * 8 + 5)
+                self.addednodeids.append(index * 8 + 4)
             if item & 0x20:
-                self.addednodeids.append(index * 8 + 6)
+                self.addednodeids.append(index * 8 + 5)
             if item & 0x40:
-                self.addednodeids.append(index * 8 + 7)
+                self.addednodeids.append(index * 8 + 6)
             if item & 0x80:
-                self.addednodeids.append(index * 8 + 8)
+                self.addednodeids.append(index * 8 + 7)
 
         for index, item in enumerate(payload[26:]):
             if item & 0x01:
-                self.removednodeids.append(index * 8 + 1)
+                self.removednodeids.append(index * 8)
             if item & 0x02:
-                self.removednodeids.append(index * 8 + 2)
+                self.removednodeids.append(index * 8 + 1)
             if item & 0x04:
-                self.removednodeids.append(index * 8 + 3)
+                self.removednodeids.append(index * 8 + 2)
             if item & 0x08:
-                self.removednodeids.append(index * 8 + 4)
+                self.removednodeids.append(index * 8 + 3)
             if item & 0x10:
-                self.removednodeids.append(index * 8 + 5)
+                self.removednodeids.append(index * 8 + 4)
             if item & 0x20:
-                self.removednodeids.append(index * 8 + 6)
+                self.removednodeids.append(index * 8 + 5)
             if item & 0x40:
-                self.removednodeids.append(index * 8 + 7)
+                self.removednodeids.append(index * 8 + 6)
             if item & 0x80:
-                self.removednodeids.append(index * 8 + 8)
+                self.removednodeids.append(index * 8 + 7)
 
     def __str__(self):
         """Return human readable string."""
