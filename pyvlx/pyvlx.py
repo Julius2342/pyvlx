@@ -48,7 +48,7 @@ class PyVLX:
             str(self.klf200.version),
             str(self.klf200.protocol_version)
         )
-
+        await self.klf200.get_systemtable()
         await self.klf200.get_state()
         await self.klf200.get_network_setup()
         await self.klf200.set_utc()

@@ -32,7 +32,9 @@ from .frames import (
     FrameSetUTCConfirmation, FrameSetUTCRequest, extract_from_frame,
     FrameLeaveLearnStateConfirmation, FrameLeaveLearnStateRequest,
     FrameGetLocalTimeConfirmation, FrameGetLocalTimeRequest,
-    FrameGatewayFactoryDefaultConfirmation, FrameGatewayFactoryDefaultRequest
+    FrameGatewayFactoryDefaultConfirmation, FrameGatewayFactoryDefaultRequest,
+    FrameGetSystemTableDataRequest, FrameGetSystemTableDataConfirmation,
+    FrameGetSystemTableDataNotification
     )
 
 
@@ -181,4 +183,10 @@ def create_frame(command):
     if command == command.GW_LEAVE_LEARN_STATE_REQ:
         return FrameLeaveLearnStateRequest()
 
+    if command == command.GW_CS_GET_SYSTEMTABLE_DATA_REQ:
+        return FrameGetSystemTableDataRequest()
+    if command == command.GW_CS_GET_SYSTEMTABLE_DATA_CFM:
+        return FrameGetSystemTableDataConfirmation()
+    if command == command.GW_CS_GET_SYSTEMTABLE_DATA_NTF:
+        return FrameGetSystemTableDataNotification()
     return None

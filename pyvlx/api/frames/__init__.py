@@ -67,3 +67,5 @@ from .frame_facory_default import (
 from .frame_password_change import (
     FramePasswordChangeRequest, FramePasswordChangeConfirmation,
     FramePasswordChangeNotification, PasswordChangeConfirmationStatus)
+from .frame_get_system_table import (FrameGetSystemTableDataRequest,
+    FrameGetSystemTableDataConfirmation, FrameGetSystemTableDataNotification)

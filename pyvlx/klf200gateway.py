@@ -3,7 +3,7 @@ from .exception import PyVLXException
 
 from .api import (GetState, GetNetworkSetup, GetProtocolVersion, GetVersion,
                   GetLocalTime, LeaveLearnState, FactoryDefault, PasswordEnter,
-                  SetUTC, Reboot)
+                  SetUTC, Reboot, GetSystemTable)
 from .log import PYVLXLOG
 
 
@@ -20,6 +20,7 @@ class Klf200Gateway:
         self.protocol_version = None
         self.version = None
         self.device_updated_cbs = []
+        self.systemtable = []
 
     def register_device_updated_cb(self, device_updated_cb):
         """Register device updated callback."""
@@ -40,16 +41,25 @@ class Klf200Gateway:
         get_state = GetState(pyvlx=self.pyvlx)
         await get_state.do_api_call()
         if not get_state.success:
-            raise PyVLXException("Unable to retrieve state")
+            PYVLXLOG.warning("Unable to retrieve state")
         self.state = get_state.state
         return get_state.success
+
+    async def get_systemtable(self):
+        """Retrieve state from API."""
+        get_systemtable = GetSystemTable(pyvlx=self.pyvlx)
+        await get_systemtable.do_api_call()
+        if not get_systemtable.success:
+            PYVLXLOG.warning("Unable to retrieve system table")
+        self.systemtable = get_systemtable.systemtableentries
+        return get_systemtable.success
 
     async def get_network_setup(self):
         """Retrieve network setup from API."""
         get_network_setup = GetNetworkSetup(pyvlx=self.pyvlx)
         await get_network_setup.do_api_call()
         if not get_network_setup.success:
-            raise PyVLXException("Unable to retrieve network setup")
+            PYVLXLOG.warning("Unable to retrieve network setup")
         self.network_setup = get_network_setup.networksetup
         return get_network_setup.success
 
@@ -58,7 +68,7 @@ class Klf200Gateway:
         get_version = GetVersion(pyvlx=self.pyvlx)
         await get_version.do_api_call()
         if not get_version.success:
-            raise PyVLXException("Unable to retrieve version")
+            PYVLXLOG.warning("Unable to retrieve version")
         self.version = get_version.version
         return get_version.success
 
@@ -67,7 +77,7 @@ class Klf200Gateway:
         get_protocol_version = GetProtocolVersion(pyvlx=self.pyvlx)
         await get_protocol_version.do_api_call()
         if not get_protocol_version.success:
-            raise PyVLXException("Unable to retrieve protocol version")
+            PYVLXLOG.warning("Unable to retrieve protocol version")
         self.protocol_version = get_protocol_version.version
         return get_protocol_version.success
 
