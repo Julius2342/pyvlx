@@ -4,6 +4,9 @@ from .exception import PyVLXException
 from .api import (GetState, GetNetworkSetup, GetProtocolVersion, GetVersion,
                   GetLocalTime, LeaveLearnState, FactoryDefault, PasswordEnter,
                   SetUTC, Reboot, GetSystemTable)
+
+from .api.frames import (FrameGetSystemTableUpdateNotification)
+
 from .log import PYVLXLOG
 
 
@@ -21,6 +24,14 @@ class Klf200Gateway:
         self.version = None
         self.device_updated_cbs = []
         self.systemtable = []
+        pyvlx.connection.register_frame_received_cb(self.process_frame)
+
+    async def process_frame(self, frame):
+        """Update nodes via frame, usually received by house monitor."""
+        if isinstance(frame, FrameGetSystemTableUpdateNotification):
+            PYVLXLOG.debug("KLFNodeUpdater process frame: %s", frame)
+            await self.get_systemtable()
+
 
     def register_device_updated_cb(self, device_updated_cb):
         """Register device updated callback."""

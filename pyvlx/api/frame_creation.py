@@ -34,7 +34,7 @@ from .frames import (
     FrameGetLocalTimeConfirmation, FrameGetLocalTimeRequest,
     FrameGatewayFactoryDefaultConfirmation, FrameGatewayFactoryDefaultRequest,
     FrameGetSystemTableDataRequest, FrameGetSystemTableDataConfirmation,
-    FrameGetSystemTableDataNotification
+    FrameGetSystemTableDataNotification, FrameGetSystemTableUpdateNotification
     )
 
 
@@ -189,4 +189,7 @@ def create_frame(command):
         return FrameGetSystemTableDataConfirmation()
     if command == command.GW_CS_GET_SYSTEMTABLE_DATA_NTF:
         return FrameGetSystemTableDataNotification()
+    if command == command.GW_CS_SYSTEM_TABLE_UPDATE_NTF:
+        return FrameGetSystemTableUpdateNotification()
+
     return None
