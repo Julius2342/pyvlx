@@ -15,7 +15,7 @@ from .node_updater import NodeUpdater
 from .nodes import Nodes
 from .scenes import Scenes
 from .klf200gateway import Klf200Gateway
-from .api.house_status_monitor import house_status_monitor_enable
+from .api import house_status_monitor_enable
 
 
 class PyVLX:

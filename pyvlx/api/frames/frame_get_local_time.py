@@ -56,5 +56,4 @@ class FrameGetLocalTimeConfirmation(FrameBase):
                 'month="{}" year="{}" weekday="{}" dayofyear="{}" daylightsavingflag="{}"/>'.format(
                     type(self).__name__, self.utctime, self.second, self.minute, self.hour,
                     self.dayofmonth, self.month, self.year, self.weekday, self.dayofyear,
-                    self.daylightsavingflag)
-               )
+                    self.daylightsavingflag))

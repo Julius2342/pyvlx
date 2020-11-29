@@ -44,8 +44,7 @@ class GetLocalTime(ApiEvent):
             datetime.fromtimestamp(time.mktime(
                 (frame.year + 1900, frame.month, frame.dayofmonth,
                  frame.hour, frame.minute, frame.second,
-                 weekday, frame.dayofyear, frame.daylightsavingflag)))
-            )
+                 weekday, frame.dayofyear, frame.daylightsavingflag))))
         self.success = True
 
         return True

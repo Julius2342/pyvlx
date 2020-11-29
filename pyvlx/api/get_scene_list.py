@@ -6,7 +6,6 @@ from .frames import (
     FrameGetSceneListRequest)
 
 
-
 class GetSceneList(ApiEvent):
     """Class for retrieving scene list from API."""
 
