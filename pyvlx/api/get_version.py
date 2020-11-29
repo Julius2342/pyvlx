@@ -4,7 +4,7 @@ from .frames import FrameGetVersionConfirmation, FrameGetVersionRequest
 
 
 class DtoVersion:
-    """Object for KLF200 Data"""
+    """Object for KLF200 Data."""
 
     def __init__(self,
                  softwareversion=None, hardwareversion=None, productgroup=None, producttype=None):

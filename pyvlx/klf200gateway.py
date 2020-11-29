@@ -102,7 +102,7 @@ class Klf200Gateway:
         return reboot.success
 
     async def set_factory_default(self):
-        """Sets Factory Default gateway."""
+        """Set Gateway to Factory Default."""
         factorydefault = FactoryDefault(pyvlx=self.pyvlx)
         await factorydefault.do_api_call()
         if not factorydefault.success:

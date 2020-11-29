@@ -55,10 +55,10 @@ class GetState(ApiEvent):
 
     @property
     def gateway_state(self):
-        """Deprecated: Return Gateway State as human readable string."""
+        """Return Gateway State as human readable string. Deprecated."""
         return self.state.gateway_state
 
     @property
     def gateway_sub_state(self):
-        """Deprecated: Return Gateway Sub State as human readable string."""
+        """Return Gateway Sub State as human readable string. Deprecated."""
         return self.state.gateway_sub_state
