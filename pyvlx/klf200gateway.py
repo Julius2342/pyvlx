@@ -5,8 +5,10 @@ from .api import (GetState, GetNetworkSetup, GetProtocolVersion, GetVersion,
                   GetLocalTime, LeaveLearnState, FactoryDefault, PasswordEnter,
                   SetUTC, Reboot, GetSystemTable)
 
-from .api.frames import (FrameGetSystemTableUpdateNotification)
+from .api.frames import (FrameGetSystemTableUpdateNotification,
+                         FrameDiscoverNodesNotification)
 
+from .const import (DiscoverStatus)
 from .log import PYVLXLOG
 
 
@@ -31,6 +33,11 @@ class Klf200Gateway:
         if isinstance(frame, FrameGetSystemTableUpdateNotification):
             PYVLXLOG.debug("KLFNodeUpdater process frame: %s", frame)
             await self.get_systemtable()
+        if isinstance(frame, FrameDiscoverNodesNotification):
+            PYVLXLOG.debug("KLFNodeUpdater process frame: %s", frame)
+            if ((frame.discoverstatus == DiscoverStatus.OK) &
+                    (len(frame.addednodes) > 0 | len(frame.removed) > 0)):
+                await self.get_systemtable()
 
 
     def register_device_updated_cb(self, device_updated_cb):

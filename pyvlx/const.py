@@ -249,6 +249,13 @@ class Priority(Enum):
     COMFORT_LEVEL_3 = 6
     COMFORT_LEVEL_4 = 7
 
+class DiscoverStatus(Enum):
+    """Enum class for DiscoverStatus."""
+
+    OK = 0
+    FAILED_CS_NOT_READY = 5
+    OK_NOT_ADDED = 6
+    CS_BUSY = 7
 
 class Velocity(Enum):
     """Enum class for velocity."""

@@ -1,8 +1,9 @@
 """Module for discover nodes requests."""
-from ...const import Command, NodeType
+from ...const import Command, NodeType, DiscoverStatus
 
 from .frame import FrameBase
 
+from ...string_helper import (statusflags_from_bytes, bytes_from_statusflags)
 
 class FrameDiscoverNodesRequest(FrameBase):
     """Frame for discover nodes request."""
@@ -46,19 +47,42 @@ class FrameDiscoverNodesNotification(FrameBase):
     def __init__(self):
         """Init Frame."""
         super().__init__(Command.GW_CS_DISCOVER_NODES_NTF)
-        self.payload = b"\0" * 131
+        self.addednodes = []
+        self.rfconnectionerror = []
+        self.iokeyerrorexistingnode = []
+        self.removed = []
+        self.open = []
+        self.discoverstatus = DiscoverStatus.OK
+        self.payload = self.get_payload()
 
     def get_payload(self):
         """Return Payload."""
-        return self.payload
+        payload = bytes_from_statusflags(self.addednodes, 26)
+        payload += bytes_from_statusflags(self.rfconnectionerror, 26)
+        payload += bytes_from_statusflags(self.iokeyerrorexistingnode, 26)
+        payload += bytes_from_statusflags(self.removed, 26)
+        payload += bytes_from_statusflags(self.open, 26)
+        payload += bytes([self.discoverstatus.value])
+        return payload
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.payload = payload
+        self.addednodes = statusflags_from_bytes(payload[:26])
+        self.rfconnectionerror = statusflags_from_bytes(payload[26:53])
+        self.iokeyerrorexistingnode = statusflags_from_bytes(payload[53:79])
+        self.removed = statusflags_from_bytes(payload[79:105])
+        self.open = statusflags_from_bytes(payload[105:131])
+        self.discoverstatus = DiscoverStatus(payload[130])
 
     def __str__(self):
         """Return human readable string."""
-        return '<{} payload="{}"/>'.format(
-            type(self).__name__,
-            ':'.join('{:02x}'.format(c) for c in self.payload)
-        )
+        return ('<{} addednodes="{}" rfconnectionerror="{}" iokeyerrorexistingnode="{}"'
+                'removed="{}" open="{}" discoverstatus="{}"/>'.format(
+                    type(self).__name__,
+                    self.addednodes,
+                    self.rfconnectionerror,
+                    self.iokeyerrorexistingnode,
+                    self.removed,
+                    self.open,
+                    self.discoverstatus)
+               )
