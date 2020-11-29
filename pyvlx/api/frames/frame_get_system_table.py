@@ -5,7 +5,7 @@ from ...const import (Command, NodeTypeWithSubtype, NodePowerMode,
 from ...exception import PyVLXException
 
 from .frame import FrameBase
-
+from ...string_helper import (statusflags_from_bytes, bytes_from_statusflags)
 
 class FrameGetSystemTableUpdateNotification(FrameBase):
     """Frame for Notifications of System Table."""
@@ -20,60 +20,14 @@ class FrameGetSystemTableUpdateNotification(FrameBase):
 
     def get_payload(self):
         """Return Payload."""
-        #XXX: bitbanging to be improved
-        payload = b''
-        for targetbyte in range(0, 26):
-            i = 0
-            for targetbit in range(0, 8):
-                if targetbyte*8 + targetbit in self.addednodeids:
-                    i |= (1<<targetbit)
-            payload = payload + i.to_bytes(1, "big")
-        for targetbyte in range(0, 26):
-            i = 0
-            for targetbit in range(0, 8):
-                if targetbyte*8 + targetbit in self.removednodeids:
-                    i |= (1<<targetbit)
-            payload = payload + i.to_bytes(1, "big")
+        payload = (bytes_from_statusflags(self.addednodeids, 26) +
+                   bytes_from_statusflags(self.removednodeids, 26))
         return payload
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        #XXX: bitbanging to be improved
-        for index, item in enumerate(payload[:26]):
-            if item & 0x01:
-                self.addednodeids.append(index * 8)
-            if item & 0x02:
-                self.addednodeids.append(index * 8 + 1)
-            if item & 0x04:
-                self.addednodeids.append(index * 8 + 2)
-            if item & 0x08:
-                self.addednodeids.append(index * 8 + 3)
-            if item & 0x10:
-                self.addednodeids.append(index * 8 + 4)
-            if item & 0x20:
-                self.addednodeids.append(index * 8 + 5)
-            if item & 0x40:
-                self.addednodeids.append(index * 8 + 6)
-            if item & 0x80:
-                self.addednodeids.append(index * 8 + 7)
-
-        for index, item in enumerate(payload[26:]):
-            if item & 0x01:
-                self.removednodeids.append(index * 8)
-            if item & 0x02:
-                self.removednodeids.append(index * 8 + 1)
-            if item & 0x04:
-                self.removednodeids.append(index * 8 + 2)
-            if item & 0x08:
-                self.removednodeids.append(index * 8 + 3)
-            if item & 0x10:
-                self.removednodeids.append(index * 8 + 4)
-            if item & 0x20:
-                self.removednodeids.append(index * 8 + 5)
-            if item & 0x40:
-                self.removednodeids.append(index * 8 + 6)
-            if item & 0x80:
-                self.removednodeids.append(index * 8 + 7)
+        self.addednodeids = statusflags_from_bytes(payload[:26])
+        self.removednodeids = statusflags_from_bytes(payload[26:])
 
     def __str__(self):
         """Return human readable string."""
