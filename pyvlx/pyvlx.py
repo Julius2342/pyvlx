@@ -7,6 +7,8 @@ and roller shutters.
 """
 import asyncio
 
+
+from pyvlx.api import house_status_monitor_enable
 from .config import Config
 from .connection import Connection
 from .heartbeat import Heartbeat
@@ -15,7 +17,6 @@ from .node_updater import NodeUpdater
 from .nodes import Nodes
 from .scenes import Scenes
 from .klf200gateway import Klf200Gateway
-from .api import house_status_monitor_enable
 
 
 class PyVLX:

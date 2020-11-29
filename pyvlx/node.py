@@ -5,8 +5,8 @@ Node object is an interface class and should
 be derived by other objects like window openers
 and roller shutters.
 """
+from pyvlx.api import SetNodeName
 from .exception import PyVLXException
-from .api import SetNodeName
 
 
 class Node:
