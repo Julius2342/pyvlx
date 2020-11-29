@@ -13,7 +13,6 @@ from pyvlx.parameter import Position
 class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
     """Test class for FrameGetAllNodesInformationNotification."""
 
-
     # pylint: disable=too-many-public-methods,invalid-name
 
     EXAMPLE_FRAME = (
