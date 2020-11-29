@@ -3,7 +3,7 @@ from .exception import PyVLXException
 
 from .api import (GetState, GetNetworkSetup, GetProtocolVersion, GetVersion,
                   GetLocalTime, LeaveLearnState, FactoryDefault, PasswordEnter,
-                  SetUTC, Reboot, GetSystemTable)
+                  SetUTC, Reboot, GetSystemTable, DiscoverNodes)
 
 from .api.frames import (FrameGetSystemTableUpdateNotification,
                          FrameDiscoverNodesNotification)
@@ -154,6 +154,15 @@ class Klf200Gateway:
         if not passwordenter.success:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
         return passwordenter.success
+
+    async def discover_nodes(self):
+        """start Node Discovery."""
+        discovernodes = DiscoverNodes(pyvlx=self.pyvlx)
+        await discovernodes.do_api_call()
+        if not discovernodes.success:
+            PYVLXLOG.warning("Unable to start node Discovery.")
+        return discovernodes.success
+
 
     def __str__(self):
         """Return object as readable string."""
