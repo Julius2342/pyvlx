@@ -5,6 +5,7 @@ from pyvlx.api.frames import FrameGetSystemTableDataNotification
 from pyvlx.const import (NodeTypeWithSubtype, NodePowerMode, NodeRfSupport,
                          ActuatorTurnaroundTime, IoManufacturerId)
 
+
 class TestFrameGetSystemTableDataNotification(unittest.TestCase):
     """Test class for FrameGetSystemTableDataNotification."""
     # pylint: disable=too-many-public-methods,invalid-name
@@ -25,7 +26,6 @@ class TestFrameGetSystemTableDataNotification(unittest.TestCase):
         self.assertEqual(len(frame.systemtableobjects), 0,)
         self.assertEqual(frame.numberofentry, 0)
         self.assertEqual(frame.remainingnumberofentry, 0)
-
 
     def test_frame_from_payload(self):
         """Test parse FrameGetSystemTableDataNotification from raw."""

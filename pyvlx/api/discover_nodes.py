@@ -4,7 +4,6 @@ from .frames import (
     FrameDiscoverNodesRequest, FrameDiscoverNodesConfirmation)
 
 
-
 class DiscoverNodes(ApiEvent):
     """Class for starting Node Discovery from API."""
 

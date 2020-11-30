@@ -9,13 +9,13 @@ class TestFrameDiscoverNodesNotification(unittest.TestCase):
     """Test class for FrameDiscoverNodesNotification."""
     maxDiff = None
     # pylint: disable=too-many-public-methods,invalid-name
-    EXAMPLE1 = (bytes.fromhex('02006f254c0080dd01000000019c62990080dd01000000000AF0') +
-                bytes.fromhex('02006f254c0080dd01000000019c62990080dd01000000000AF0') +
-                bytes.fromhex('02006f254c0080dd01000000019c62990080dd01000000000AF0') +
-                bytes.fromhex('02006f254c0080dd01000000019c62990080dd01000000000AF0') +
-                bytes.fromhex('02006f254c0080dd01000000019c62990080dd01000000000AF0') +
-                b"\x00"
-               )
+    EXAMPLE1 = (bytes.fromhex('02006f254c0080dd01000000019c62990080dd01000000000AF0')
+                + bytes.fromhex('02006f254c0080dd01000000019c62990080dd01000000000AF0')
+                + bytes.fromhex('02006f254c0080dd01000000019c62990080dd01000000000AF0')
+                + bytes.fromhex('02006f254c0080dd01000000019c62990080dd01000000000AF0')
+                + bytes.fromhex('02006f254c0080dd01000000019c62990080dd01000000000AF0')
+                + b"\x00")
+
     def test_bytes(self):
         """Test FrameDiscoverNodesNotification."""
         frame = FrameDiscoverNodesNotification()

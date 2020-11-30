@@ -5,6 +5,7 @@ from .frame import FrameBase
 
 from ...string_helper import (statusflags_from_bytes, bytes_from_statusflags)
 
+
 class FrameDiscoverNodesRequest(FrameBase):
     """Frame for discover nodes request."""
 
@@ -84,5 +85,4 @@ class FrameDiscoverNodesNotification(FrameBase):
                     self.iokeyerrorexistingnode,
                     self.removed,
                     self.open,
-                    self.discoverstatus)
-               )
+                    self.discoverstatus))

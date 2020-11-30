@@ -7,6 +7,7 @@ from ...exception import PyVLXException
 from .frame import FrameBase
 from ...string_helper import (statusflags_from_bytes, bytes_from_statusflags)
 
+
 class FrameGetSystemTableUpdateNotification(FrameBase):
     """Frame for Notifications of System Table."""
 
@@ -20,8 +21,8 @@ class FrameGetSystemTableUpdateNotification(FrameBase):
 
     def get_payload(self):
         """Return Payload."""
-        payload = (bytes_from_statusflags(self.addednodeids, 26) +
-                   bytes_from_statusflags(self.removednodeids, 26))
+        payload = (bytes_from_statusflags(self.addednodeids, 26)
+                   + bytes_from_statusflags(self.removednodeids, 26))
         return payload
 
     def from_payload(self, payload):
@@ -47,7 +48,6 @@ class FrameGetSystemTableDataRequest(FrameBase):
     def __str__(self):
         """Return human readable string."""
         return '<{}/>'.format(type(self).__name__)
-
 
 
 class FrameGetSystemTableDataConfirmation(FrameBase):
@@ -100,8 +100,8 @@ class DtoSystemTableEntry:
         payload = bytes(self.systemtableindex)
         payload += self.actuatoraddress.to_bytes(3, 'big')
         payload += bytes(self.actuatortype.value)
-        payload += (bytes(self.powersavemode.value) | bytes(self.iomembership << 2) |
-                    bytes(self.rfsupport.value << 3) | bytes(self.turnaroundtime.value << 6))
+        payload += (bytes(self.powersavemode.value) | bytes(self.iomembership << 2)
+                    | bytes(self.rfsupport.value << 3) | bytes(self.turnaroundtime.value << 6))
         payload += bytes(self.iomanufacturerid.value)
         payload += self.backbonereferencenumber.to_bytes(3, 'big')
         return payload
@@ -118,6 +118,7 @@ class DtoSystemTableEntry:
                 self.backbonereferencenumber
             )
         )
+
 
 class FrameGetSystemTableDataNotification(FrameBase):
     """Frame for notification of node information request."""

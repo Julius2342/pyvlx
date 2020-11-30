@@ -3,14 +3,14 @@ import unittest
 
 from pyvlx.api.frames import FrameGetSystemTableUpdateNotification
 
+
 class TestFrameGetSystemTableUpdateNotification(unittest.TestCase):
     """Test class for FrameGetSystemTableDataNotification."""
     # pylint: disable=too-many-public-methods,invalid-name
     maxDiff = None
     EXAMPLE_PAYLOAD = bytes.fromhex(
         '0102040810204080010204081020408001020408102040800102'
-        'FF00000000000000000000000000000000000000000000000000'
-        )
+        'FF00000000000000000000000000000000000000000000000000')
 
     def test_frame_from_payload(self):
         """Test parse FrameGetSystemTableDataNotification from raw."""
