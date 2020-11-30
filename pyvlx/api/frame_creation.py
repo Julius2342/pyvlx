@@ -86,7 +86,7 @@ def create_frame(command):
 
     if command == Command.GW_SET_FACTORY_DEFAULT_REQ:
         return FrameGatewayFactoryDefaultRequest()
-    if command == Command.GW_REBOOT_CFM:
+    if command == Command.GW_SET_FACTORY_DEFAULT_CFM:
         return FrameGatewayFactoryDefaultConfirmation()
 
     if command == Command.GW_GET_LOCAL_TIME_REQ:

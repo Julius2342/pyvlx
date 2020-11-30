@@ -1,6 +1,6 @@
 """Module for get local time classes."""
+import struct
 from ...const import Command
-
 from .frame import FrameBase
 
 
@@ -35,11 +35,21 @@ class FrameGetLocalTimeConfirmation(FrameBase):
 
     def get_payload(self):
         """Return Payload."""
-        return
+        payload = struct.pack(">I", self.utctime)
+        payload += self.second.to_bytes(1, byteorder="big")
+        payload += self.minute.to_bytes(1, byteorder="big")
+        payload += self.hour.to_bytes(1, byteorder="big")
+        payload += self.dayofmonth.to_bytes(1, byteorder="big")
+        payload += self.month.to_bytes(1, byteorder="big")
+        payload += self.year.to_bytes(2, byteorder="big")
+        payload += self.weekday.to_bytes(1, byteorder="big")
+        payload += self.dayofyear.to_bytes(2, byteorder="big")
+        payload += self.daylightsavingflag.to_bytes(1, byteorder="big")
+        return payload
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        self.utctime = int.from_bytes(payload[0:4], byteorder='big', signed=True)
+        self.utctime = struct.unpack(">I", payload[0:4])[0]
         self.second = payload[4]
         self.minute = payload[5]
         self.hour = payload[6]
