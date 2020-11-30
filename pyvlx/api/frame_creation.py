@@ -53,7 +53,7 @@ def frame_from_raw(raw):
 
 def create_frame(command):
     """Create and return empty Frame from Command."""
-    # pylint: disable=too-many-branches,too-many-return-statements
+    # pylint: disable=too-many-branches,too-many-return-statements,too-many-statements
     if command == Command.GW_ERROR_NTF:
         return FrameErrorNotification()
     if command == Command.GW_COMMAND_SEND_REQ:
