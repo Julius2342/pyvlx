@@ -1,8 +1,8 @@
 """Module for basic klf200 gateway functions."""
 
 from .api import (GetState, GetNetworkSetup, GetProtocolVersion, GetVersion,
-                       GetLocalTime, LeaveLearnState, FactoryDefault, PasswordEnter,
-                       SetUTC, Reboot)
+                  GetLocalTime, LeaveLearnState, FactoryDefault, PasswordEnter,
+                  SetUTC, Reboot)
 
 from .exception import PyVLXException
 
