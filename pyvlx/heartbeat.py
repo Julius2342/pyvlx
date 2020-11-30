@@ -1,7 +1,7 @@
 """Module for sending get state requests to API in regular periods."""
 import asyncio
 
-from pyvlx.api import GetState
+from .api import GetState
 from .exception import PyVLXException
 
 

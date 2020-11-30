@@ -2,8 +2,8 @@
 import asyncio
 import ssl
 
-from pyvlx.api.frame_creation import frame_from_raw
-from pyvlx.api.frames import FrameBase
+from .api.frame_creation import frame_from_raw
+from .api.frames import FrameBase
 
 from .exception import PyVLXException
 from .log import PYVLXLOG

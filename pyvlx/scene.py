@@ -1,5 +1,5 @@
 """Module for scene."""
-from pyvlx.api import ActivateScene
+from .api import ActivateScene
 from .exception import PyVLXException
 
 

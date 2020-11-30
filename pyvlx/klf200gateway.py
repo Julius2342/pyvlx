@@ -1,6 +1,6 @@
 """Module for basic klf200 gateway functions."""
 
-from pyvlx.api import (GetState, GetNetworkSetup, GetProtocolVersion, GetVersion,
+from .api import (GetState, GetNetworkSetup, GetProtocolVersion, GetVersion,
                        GetLocalTime, LeaveLearnState, FactoryDefault, PasswordEnter,
                        SetUTC, Reboot)
 

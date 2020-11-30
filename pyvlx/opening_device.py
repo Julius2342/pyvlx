@@ -1,5 +1,5 @@
 """Module for window openers."""
-from pyvlx.api.command_send import CommandSend
+from .api.command_send import CommandSend
 from .exception import PyVLXException
 from .node import Node
 from .parameter import CurrentPosition, Parameter, Position, TargetPosition

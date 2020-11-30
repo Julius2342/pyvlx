@@ -8,7 +8,7 @@ and roller shutters.
 import asyncio
 
 
-from pyvlx.api import house_status_monitor_enable
+from .api import house_status_monitor_enable
 from .config import Config
 from .connection import Connection
 from .heartbeat import Heartbeat

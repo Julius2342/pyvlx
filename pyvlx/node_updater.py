@@ -1,5 +1,5 @@
 """Module for updating nodes via frames."""
-from pyvlx.api.frames import (
+from .api.frames import (
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification)
 from .lightening_device import LighteningDevice

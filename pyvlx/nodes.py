@@ -1,5 +1,5 @@
 """Module for storing nodes."""
-from pyvlx.api import (GetAllNodesInformation, GetNodeInformation)
+from .api import (GetAllNodesInformation, GetNodeInformation)
 from .exception import PyVLXException
 from .node import Node
 from .node_helper import convert_frame_to_node

@@ -33,6 +33,6 @@ def extract_from_frame(data):
     payload = data[4:-1]
     try:
         command = Command(data[2] * 256 + data[3])
-    except ValueError:
-        raise PyVLXException("could_not_extract_from_frame_command", data=data)
+    except ValueError as type_error:
+        raise PyVLXException("could_not_extract_from_frame_command", data=data) from type_error
     return command, payload
