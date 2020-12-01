@@ -7,6 +7,7 @@ from pyvlx.api.frames import FrameGetLocalTimeConfirmation
 
 class TestFrameGetLocalTimeConfirmation(unittest.TestCase):
     """Test class for FrameGetLocalTimeConfirmation."""
+    
     # pylint: disable=too-many-public-methods,invalid-name
 
     def test_bytes(self):
@@ -23,5 +24,5 @@ class TestFrameGetLocalTimeConfirmation(unittest.TestCase):
         """Test string representation of FrameGetLocalTimeConfirmation."""
         frame = FrameGetLocalTimeConfirmation()
 
-        self.assertEqual(str(frame),'<FrameGetLocalTimeConfirmation utctime="0" second="0" minute="0" hour="0" dayofmonth="0" '
+        self.assertEqual(str(frame), '<FrameGetLocalTimeConfirmation utctime="0" second="0" minute="0" hour="0" dayofmonth="0" '
                          'month="0" year="0" weekday="0" dayofyear="0" daylightsavingflag="0"/>')
