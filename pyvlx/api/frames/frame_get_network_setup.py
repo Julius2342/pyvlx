@@ -35,7 +35,7 @@ class FrameGetNetworkSetupConfirmation(FrameBase):
         self._ipaddress = ipaddress
         self._netmask = netmask
         self._gateway = gateway
-        self.dhcp = DHCPParameter(dhcp)
+        self.dhcp = dhcp
 
     @property
     def ipaddress(self):
@@ -54,8 +54,10 @@ class FrameGetNetworkSetupConfirmation(FrameBase):
 
     def get_payload(self):
         """Return Payload."""
-        payload = bytes([self._ipaddress.value, self._netmask.value,
-                         self._gateway.value, self.dhcp.value])
+        payload = self._ipaddress
+        payload += self._netmask
+        payload += self._gateway
+        payload += bytes(self.dhcp.value)
         return payload
 
     def from_payload(self, payload):
