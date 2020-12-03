@@ -647,8 +647,10 @@ class StatusId(Enum):
     STATUS_EMERGENCY = 0x0C        # The status is from an emergency or a security generated action.
     STATUS_UNKNOWN = 0xFF          # The status is from from an unknown command originator action.
 
+
 class RunStatus(Enum):
     """Enum Class for Node Runstatus."""
+
     EXECUTION_COMPLETED = 0  # Execution is completed with no errors.
     EXECUTION_FAILED = 1     # Execution has failed. (Get specifics in the following error code)
     EXECUTION_ACTIVE = 2     # Execution is still active.
