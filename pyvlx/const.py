@@ -629,3 +629,26 @@ class StatusReply(Enum):
     LIMITATION_BY_MYSELF = 0xEC                       # Indicates the parameter was limited by the node itself.
     LIMITATION_BY_AUTOMATIC_CYCLE = 0xED              # Indicates the parameter was limited by an automatic cycle.
     LIMITATION_BY_EMERGENCY = 0xEE                    # Indicates the parameter was limited by an emergency.
+
+
+class StatusId(Enum):
+    """Enum Class for Status ID Reply."""
+
+    # pylint: disable=line-too-long
+
+    STATUS_USER = 0x01             # The status is from a user activation.
+    STATUS_RAIN = 0x02             # The status is from a rain sensor activation.
+    STATUS_TIMER = 0x03            # The status is from a timer generated action.
+    STATUS_UPS = 0x05              # The status is from a UPS generated action.
+    STATUS_PROGRAM = 0x08          # The status is from an automatic program generated action. (SAAC)
+    STATUS_WIND = 0x09             # The status is from a Wind sensor generated action.
+    STATUS_MYSELF = 0x0A           # The status is from an actuator generated action.
+    STATUS_AUTOMATIC_CYCLE = 0x0B  # The status is from a automatic cycle generated action.
+    STATUS_EMERGENCY = 0x0C        # The status is from an emergency or a security generated action.
+    STATUS_UNKNOWN = 0xFF          # The status is from from an unknown command originator action.
+
+class RunStatus(Enum):
+    """Enum Class for Node Runstatus."""
+    EXECUTION_COMPLETED = 0  # Execution is completed with no errors.
+    EXECUTION_FAILED = 1     # Execution has failed. (Get specifics in the following error code)
+    EXECUTION_ACTIVE = 2     # Execution is still active.
