@@ -2,7 +2,7 @@
 import unittest
 
 from pyvlx.api.frame_creation import frame_from_raw
-from pyvlx.api.frames import FrameGetNetworkSetupConfirmation , DHCPParameter
+from pyvlx.api.frames import FrameGetNetworkSetupConfirmation, DHCPParameter
 
 
 class TestFrameGetNetworkSetupConfirmation(unittest.TestCase):

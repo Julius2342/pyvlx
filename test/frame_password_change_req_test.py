@@ -64,6 +64,8 @@ class TestFramePasswordChange(unittest.TestCase):
         with self.assertRaises(PyVLXException):
             bytes(FramePasswordChangeRequest())
         with self.assertRaises(PyVLXException):
+            bytes(FramePasswordChangeRequest(currentpassword="fnord"))
+        with self.assertRaises(PyVLXException):
             bytes(FramePasswordChangeRequest(currentpassword="fnord", newpassword="x" * 33))
         with self.assertRaises(PyVLXException):
             bytes(FramePasswordChangeRequest(newpassword="fnord", currentpassword="x" * 33))
