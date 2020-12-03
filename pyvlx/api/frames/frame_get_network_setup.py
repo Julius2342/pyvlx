@@ -1,8 +1,5 @@
 """Frames for receiving network setup from gateway."""
-from enum import Enum
-
-from ...const import Command
-
+from ...const import Command, DHCPParameter
 from .frame import FrameBase
 
 
@@ -14,13 +11,6 @@ class FrameGetNetworkSetupRequest(FrameBase):
     def __init__(self):
         """Init Frame."""
         super().__init__(Command.GW_GET_NETWORK_SETUP_REQ)
-
-
-class DHCPParameter(Enum):
-    """Enum class for dncp network setup of gateway."""
-
-    DISABLE = 0x00
-    ENABLE = 0x01
 
 
 class FrameGetNetworkSetupConfirmation(FrameBase):

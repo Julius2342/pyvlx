@@ -1,35 +1,7 @@
 """Module for retrieving gateway state from API."""
 from .api_event import ApiEvent
-from .frames import FrameGetStateConfirmation, FrameGetStateRequest, GatewayState, GatewaySubState
-
-
-class DtoState:
-    """Data Object for Gateway State."""
-
-    def __init__(self, gateway_state=None, gateway_sub_state=None):
-        """Initialize DtoState class."""
-        self.gateway_state = gateway_state
-        self.gateway_sub_state = gateway_sub_state
-
-    @property
-    def gateway_state_name(self):
-        """Return gateway_state as human readable string."""
-        return GatewayState(self.gateway_state).name
-
-    @property
-    def gateway_sub_state_name(self):
-        """Return gateway_sub_state as human readable string."""
-        return GatewaySubState(self.gateway_sub_state).name
-
-    def __str__(self):
-        """Return human readable string."""
-        return (
-            '<{} gateway_state="{}" gateway_state_name="{}" gateway_sub_state="{}" '
-            'gateway_sub_state=_name"{}"/>'.format(
-                type(self).__name__, self.gateway_state, self.gateway_state_name,
-                self.gateway_sub_state, self.gateway_sub_state_name
-            )
-        )
+from .frames import FrameGetStateConfirmation, FrameGetStateRequest
+from ..dataobjects import DtoState
 
 
 class GetState(ApiEvent):

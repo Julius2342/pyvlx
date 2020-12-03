@@ -1,5 +1,6 @@
 """Unit tests for FrameGetLocalTimeConfirmation."""
 import unittest
+from datetime import datetime
 
 from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import FrameGetLocalTimeConfirmation
@@ -13,7 +14,9 @@ class TestFrameGetLocalTimeConfirmation(unittest.TestCase):
     def test_bytes(self):
         """Test FrameGetLocalTimeConfirmation."""
         frame = FrameGetLocalTimeConfirmation()
-        self.assertEqual(bytes(frame), b"\x00\x12 \x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x007")
+        frame.time.localtime = datetime.strptime("2020-12-03 18:19:19.176900", "%Y-%m-%d %H:%M:%S.%f")
+        frame.time.utctime = datetime.strptime("2020-12-03 18:19:19.176900", "%Y-%m-%d %H:%M:%S.%f")
+        self.assertEqual(bytes(frame), b"\x00\x12 \x05_\xc9\x1e\x17\x13\x13\x12\x03\x0c\x00x\x04\x01R\xffe")
 
     def test_frame_from_raw(self):
         """Test parse FrameGetLocalTimeConfirmation from raw."""
@@ -23,6 +26,9 @@ class TestFrameGetLocalTimeConfirmation(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameGetLocalTimeConfirmation."""
         frame = FrameGetLocalTimeConfirmation()
-
-        self.assertEqual(str(frame), '<FrameGetLocalTimeConfirmation utctime="0" second="0" minute="0" hour="0" dayofmonth="0" '
-                         'month="0" year="0" weekday="0" dayofyear="0" daylightsavingflag="0"/>')
+        frame.time.localtime = datetime.strptime("2020-12-03 18:19:19.176900", "%Y-%m-%d %H:%M:%S.%f")
+        frame.time.utctime = datetime.strptime("2020-12-03 18:19:19.176900", "%Y-%m-%d %H:%M:%S.%f")
+        self.assertEqual(str(frame), '<FrameGetLocalTimeConfirmation><DtoLocalTime '
+                                     'utctime="2020-12-03 18:19:19.176900" '
+                                     'localtime="2020-12-03 18:19:19.176900"/>'
+                                     '</FrameGetLocalTimeConfirmation>')

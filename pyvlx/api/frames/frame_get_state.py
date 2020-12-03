@@ -1,8 +1,5 @@
 """Frames for receiving state from gateway."""
-from enum import Enum
-
-from ...const import Command
-
+from ...const import Command, GatewayState, GatewaySubState
 from .frame import FrameBase
 
 
@@ -14,30 +11,6 @@ class FrameGetStateRequest(FrameBase):
     def __init__(self):
         """Init Frame."""
         super().__init__(Command.GW_GET_STATE_REQ)
-
-
-class GatewayState(Enum):
-    """Enum class for status if gateway."""
-
-    TEST_MODE = 0
-    GATEWAY_MODE_NO_ACTUATOR = 1
-    GATEWAY_MODE_WITH_ACTUATORS = 2
-    BEACON_MODE_NOT_CONFIGURED = 3
-    BEACON_MODE_CONFIGURED = 4
-
-
-class GatewaySubState(Enum):
-    """Enum class for substate if gateway."""
-
-    IDLE = 0x00
-    PERFORMING_TASK_CONFIGURATION_SERVICE_HANDLER = 0x01
-    PERFORMING_TASK_SCENE_CONFIGURATION = 0x02
-    PERFORMING_TASK_INFORMATION_SERVICE_CONFIGURATION = 0x03
-    PERFORMING_TASK_CONTACT_INPUT_CONFIGURATION = 0x04
-    PERFORMING_TASK_COMMAND = 0x80
-    PERFORMING_TASK_ACTIVATE_GROUP = 0x81
-    PERFORMING_TASK_ACTIVATE_SCENE = 0x82
-    RESERVED_132 = 0x84  # <-- hey @VELUX: Can you tell us what this value means?
 
 
 class FrameGetStateConfirmation(FrameBase):

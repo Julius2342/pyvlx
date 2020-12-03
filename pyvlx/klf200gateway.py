@@ -18,7 +18,7 @@ class Klf200Gateway:
         self.state = None
         self.network_setup = None
         self.password = None
-        self.localtime = None
+        self.time = None
         self.protocol_version = None
         self.version = None
         self.device_updated_cbs = []
@@ -117,7 +117,7 @@ class Klf200Gateway:
         await getlocaltime.do_api_call()
         if not getlocaltime.success:
             PYVLXLOG.warning("Unable to get local time.")
-        self.localtime = getlocaltime.localtime
+        self.time = getlocaltime.localtime
         return getlocaltime.success
 
     async def password_enter(self, password):

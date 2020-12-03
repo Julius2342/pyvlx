@@ -1,14 +1,6 @@
 """Module for leave learn state frame classes."""
-from enum import Enum
-from ...const import Command
+from ...const import Command, LeaveLearnStateConfirmationStatus
 from .frame import FrameBase
-
-
-class LeaveLearnStateConfirmationStatus(Enum):
-    """Enum class for status of password enter confirmation."""
-
-    FAILED = 0
-    SUCCESSFUL = 1
 
 
 class FrameLeaveLearnStateRequest(FrameBase):
