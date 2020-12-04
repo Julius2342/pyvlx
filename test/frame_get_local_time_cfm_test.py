@@ -1,6 +1,6 @@
 """Unit tests for FrameGetLocalTimeConfirmation."""
 import unittest
-from datetime import datetime
+from datetime import datetime, timezone
 
 from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import FrameGetLocalTimeConfirmation
@@ -14,13 +14,14 @@ class TestFrameGetLocalTimeConfirmation(unittest.TestCase):
     def test_bytes(self):
         """Test FrameGetLocalTimeConfirmation."""
         frame = FrameGetLocalTimeConfirmation()
-        frame.time.localtime = datetime.strptime("2020-12-03 18:19:19.176900", "%Y-%m-%d %H:%M:%S.%f")
-        frame.time.utctime = datetime.strptime("2020-12-03 18:19:19.176900", "%Y-%m-%d %H:%M:%S.%f")
-        self.assertEqual(bytes(frame), b"\x00\x12 \x05_\xc9\x1e\x17\x13\x13\x12\x03\x0c\x00x\x04\x01R\xffe")
-
+        frame.time.localtime = datetime(2020, 12, 3, 18, 19, 19, 176900)
+        frame.time.utctime = datetime(2020, 12, 3, 18, 19, 19, 176900, tzinfo=timezone.utc)
+        self.assertEqual(bytes(frame), b"\x00\x12 \x05_\xc9,'\x13\x13\x12\x03\x0c\x00x\x04\x01R\xffg")
+                                       
+                                        
     def test_frame_from_raw(self):
         """Test parse FrameGetLocalTimeConfirmation from raw."""
-        frame = frame_from_raw(b"\x00\x12 \x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x007")
+        frame = frame_from_raw(b'\x00\x12 \x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x007')
         self.assertTrue(isinstance(frame, FrameGetLocalTimeConfirmation))
 
     def test_str(self):
