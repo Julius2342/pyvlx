@@ -1,7 +1,8 @@
 """Module for retrieving gateway state from API."""
+from pyvlx.dataobjects import DtoState
+
 from .api_event import ApiEvent
 from .frames import FrameGetStateConfirmation, FrameGetStateRequest
-from ..dataobjects import DtoState
 
 
 class GetState(ApiEvent):

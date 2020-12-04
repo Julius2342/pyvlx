@@ -1,7 +1,7 @@
 """Module for get scene list frame classes."""
-from ...const import Command
-from ...exception import PyVLXException
-from ...string_helper import bytes_to_string, string_to_bytes
+from pyvlx.const import Command
+from pyvlx.exception import PyVLXException
+from pyvlx.string_helper import bytes_to_string, string_to_bytes
 
 from .frame import FrameBase
 

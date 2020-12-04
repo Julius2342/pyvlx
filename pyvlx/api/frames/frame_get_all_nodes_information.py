@@ -3,13 +3,13 @@ import struct
 from datetime import datetime
 from enum import Enum
 
-from .alias_array import AliasArray
-from ...const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
-from ...exception import PyVLXException
-from ...parameter import Parameter
-from ...string_helper import bytes_to_string, string_to_bytes
+from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
+from pyvlx.exception import PyVLXException
+from pyvlx.parameter import Parameter
+from pyvlx.string_helper import bytes_to_string, string_to_bytes
 
 from .frame import FrameBase
+from .alias_array import AliasArray
 
 
 class FrameGetAllNodesInformationRequest(FrameBase):

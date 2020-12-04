@@ -1,5 +1,5 @@
 """Frames for receiving network setup from gateway."""
-from ...const import Command, DHCPParameter
+from pyvlx.const import Command, DHCPParameter
 from .frame import FrameBase
 
 

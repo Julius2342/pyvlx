@@ -1,5 +1,5 @@
 """Module for storing alias array."""
-from ...exception import PyVLXException
+from pyvlx.exception import PyVLXException
 
 
 class AliasArray:

@@ -1,6 +1,6 @@
 """Module for get local time classes."""
-from ...const import Command
-from ...dataobjects import DtoLocalTime
+from pyvlx.const import Command
+from pyvlx.dataobjects import DtoLocalTime
 from .frame import FrameBase
 
 

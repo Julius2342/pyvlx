@@ -1,9 +1,10 @@
 """Module for handling the login to API."""
-from ..log import PYVLXLOG
+from pyvlx.dataobjects import DtoLeaveLearnState
+from pyvlx.log import PYVLXLOG
+
 from .api_event import ApiEvent
 from .frames import (FrameLeaveLearnStateRequest,
                      FrameLeaveLearnStateConfirmation, LeaveLearnStateConfirmationStatus)
-from ..dataobjects import DtoLeaveLearnState
 
 
 class LeaveLearnState(ApiEvent):

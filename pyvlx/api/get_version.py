@@ -1,7 +1,8 @@
 """Module for retrieving firmware version from API."""
+from pyvlx.dataobjects import DtoVersion
+
 from .api_event import ApiEvent
 from .frames import FrameGetVersionConfirmation, FrameGetVersionRequest
-from ..dataobjects import DtoVersion
 
 
 class GetVersion(ApiEvent):

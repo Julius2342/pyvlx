@@ -1,7 +1,8 @@
 """Module for local time firmware version from API."""
+from pyvlx.dataobjects import DtoLocalTime
+
 from .api_event import ApiEvent
 from .frames import FrameGetLocalTimeConfirmation, FrameGetLocalTimeRequest
-from ..dataobjects import DtoLocalTime
 
 
 class GetLocalTime(ApiEvent):

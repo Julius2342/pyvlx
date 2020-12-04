@@ -1,7 +1,8 @@
 """Module for retrieving gateway state from API."""
+from pyvlx.dataobjects import DtoNetworkSetup
+
 from .api_event import ApiEvent
 from .frames import FrameGetNetworkSetupConfirmation, FrameGetNetworkSetupRequest
-from ..dataobjects import DtoNetworkSetup
 
 
 class GetNetworkSetup(ApiEvent):

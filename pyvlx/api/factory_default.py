@@ -1,5 +1,5 @@
 """Module for handling the FactoryDefault to API."""
-from ..log import PYVLXLOG
+from pyvlx.log import PYVLXLOG
 from .api_event import ApiEvent
 from .frames import FrameGatewayFactoryDefaultConfirmation, FrameGatewayFactoryDefaultRequest
 

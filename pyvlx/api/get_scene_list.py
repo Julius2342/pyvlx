@@ -1,5 +1,5 @@
 """Module for retrieving scene list from API."""
-from ..log import PYVLXLOG
+from pyvlx.log import PYVLXLOG
 from .api_event import ApiEvent
 from .frames import (
     FrameGetSceneListConfirmation, FrameGetSceneListNotification,

@@ -1,6 +1,6 @@
 """Helper module for SLIP Frames."""
-from ...const import Command
-from ...exception import PyVLXException
+from pyvlx.const import Command
+from pyvlx.exception import PyVLXException
 
 
 def calc_crc(raw):

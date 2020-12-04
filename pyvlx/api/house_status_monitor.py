@@ -1,5 +1,5 @@
 """Module for house status monitor."""
-from ..exception import PyVLXException
+from pyvlx.exception import PyVLXException
 from .api_event import ApiEvent
 from .frames import (
     FrameHouseStatusMonitorDisableConfirmation,

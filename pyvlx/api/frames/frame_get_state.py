@@ -1,5 +1,5 @@
 """Frames for receiving state from gateway."""
-from ...const import Command, GatewayState, GatewaySubState
+from pyvlx.const import Command, GatewayState, GatewaySubState
 from .frame import FrameBase
 
 
