@@ -17,8 +17,7 @@ class TestFrameGetLocalTimeConfirmation(unittest.TestCase):
         frame.time.localtime = datetime(2020, 12, 3, 18, 19, 19, 176900)
         frame.time.utctime = datetime(2020, 12, 3, 18, 19, 19, 176900, tzinfo=timezone.utc)
         self.assertEqual(bytes(frame), b"\x00\x12 \x05_\xc9,'\x13\x13\x12\x03\x0c\x00x\x04\x01R\xffg")
-                                       
-                                        
+
     def test_frame_from_raw(self):
         """Test parse FrameGetLocalTimeConfirmation from raw."""
         frame = frame_from_raw(b'\x00\x12 \x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x007')
