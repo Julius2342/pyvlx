@@ -17,7 +17,6 @@ class FactoryDefault(ApiEvent):
         """Handle incoming API frame, return True if this was the expected frame."""
         if isinstance(frame, FrameGatewayFactoryDefaultConfirmation):
             PYVLXLOG.warning("KLF200 is factory resetting")
-            self.pyvlx.connection.connected = False
             self.success = True
             return True
         return False
