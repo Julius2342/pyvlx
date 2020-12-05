@@ -21,13 +21,7 @@ class LeaveLearnState(ApiEvent):
         if not isinstance(frame, FrameLeaveLearnStateConfirmation):
             return False
         self.status = frame.status
-        if self.status == LeaveLearnStateConfirmationStatus.FAILED:
-            PYVLXLOG.warning(
-                'Failed to leave learn state'
-            )
-            self.success = False
-        if self.status == LeaveLearnStateConfirmationStatus.SUCCESSFUL:
-            self.success = True
+        self.success = True
         return True
 
     def request_frame(self):
