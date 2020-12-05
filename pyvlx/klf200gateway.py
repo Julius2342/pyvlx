@@ -70,7 +70,7 @@ class Klf200Gateway:
         await get_protocol_version.do_api_call()
         if not get_protocol_version.success:
             raise PyVLXException("Unable to retrieve protocol version")
-        self.protocol_version = get_protocol_version.version
+        self.protocol_version = get_protocol_version.protocolversion
         return get_protocol_version.success
 
     async def leave_learn_state(self):

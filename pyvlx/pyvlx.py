@@ -39,13 +39,13 @@ class PyVLX:
 
     async def connect(self):
         """Connect to KLF 200."""
-        PYVLXLOG.warning("Connecting to KLF 200.")
+        PYVLXLOG.debug("Connecting to KLF 200.")
         await self.connection.connect()
         await self.klf200.password_enter(password=self.config.password)
         await self.klf200.get_version()
         await self.klf200.get_protocol_version()
-        PYVLXLOG.warning(
-            "Connected to: %s, protocol version: %s",
+        PYVLXLOG.debug(
+            "Connected to: %s,  %s",
             str(self.klf200.version),
             str(self.klf200.protocol_version)
         )
@@ -59,11 +59,6 @@ class PyVLX:
         """For Compatibility: Reboot the KLF 200."""
         PYVLXLOG.warning("KLF 200 reboot initiated")
         await self.klf200.reboot()
-
-    async def update_version(self):
-        """For Compatibility: Retrieve version and protocol version from API."""
-        await self.klf200.get_version()
-        await self.klf200.get_protocol_version()
 
     async def send_frame(self, frame):
         """Send frame to API via connection."""
