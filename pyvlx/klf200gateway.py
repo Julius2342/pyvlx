@@ -6,8 +6,6 @@ from .api import (GetState, GetNetworkSetup, GetProtocolVersion, GetVersion,
 
 from .exception import PyVLXException
 
-from .log import PYVLXLOG
-
 
 class Klf200Gateway:
     """Class for node abstraction."""
@@ -78,7 +76,7 @@ class Klf200Gateway:
         leave_learn_state = LeaveLearnState(pyvlx=self.pyvlx)
         await leave_learn_state.do_api_call()
         if not leave_learn_state.success:
-            PYVLXLOG.warning("Unable to leave learn state")
+            raise PyVLXException("Unable to leave learn state")
         return leave_learn_state.success
 
     async def set_utc(self):
@@ -86,7 +84,7 @@ class Klf200Gateway:
         setutc = SetUTC(pyvlx=self.pyvlx)
         await setutc.do_api_call()
         if not setutc.success:
-            PYVLXLOG.warning("Unable to set utc.")
+            raise PyVLXException("Unable to set utc.")
         return setutc.success
 
     async def set_rtc_time_zone(self):
@@ -100,7 +98,7 @@ class Klf200Gateway:
         reboot = Reboot(pyvlx=self.pyvlx)
         await reboot.do_api_call()
         if not reboot.success:
-            PYVLXLOG.warning("Unable to reboot gateway.")
+            raise PyVLXException("Unable to reboot gateway.")
         return reboot.success
 
     async def set_factory_default(self):
@@ -108,7 +106,7 @@ class Klf200Gateway:
         factorydefault = FactoryDefault(pyvlx=self.pyvlx)
         await factorydefault.do_api_call()
         if not factorydefault.success:
-            PYVLXLOG.warning("Unable to factory Default Reset gateway.")
+            raise PyVLXException("Unable to factory Default Reset gateway.")
         return factorydefault.success
 
     async def get_local_time(self):
@@ -116,7 +114,7 @@ class Klf200Gateway:
         getlocaltime = GetLocalTime(pyvlx=self.pyvlx)
         await getlocaltime.do_api_call()
         if not getlocaltime.success:
-            PYVLXLOG.warning("Unable to get local time.")
+            raise PyVLXException("Unable to get local time.")
         self.time = getlocaltime.localtime
         return getlocaltime.success
 
