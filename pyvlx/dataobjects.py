@@ -1,8 +1,6 @@
 """Module for Dataobjects."""
 from datetime import datetime
 import time
-from .const import (DHCPParameter, GatewayState,
-                    GatewaySubState, LeaveLearnStateConfirmationStatus)
 
 
 class DtoLocalTime:
@@ -71,16 +69,11 @@ class DtoNetworkSetup:
         self.netmask = netmask
         self.dhcp = dhcp
 
-    @property
-    def dhcp_name(self):
-        """Return dhcp as human readable string."""
-        return DHCPParameter(self.dhcp).name
-
     def __str__(self):
         """Return human readable string."""
-        return '<{} ipaddress="{}" gateway="{}" gateway="{}"  dhcp="{}" dhcp_name="{}"/>'.format(
+        return '<{} ipaddress="{}" gateway="{}" gateway="{}"  dhcp="{}"/>'.format(
             type(self).__name__, self.ipaddress, self.gateway,
-            self.gateway, self.dhcp, self.dhcp_name
+            self.gateway, self.dhcp
         )
 
 
@@ -109,23 +102,11 @@ class DtoState:
         self.gateway_state = gateway_state
         self.gateway_sub_state = gateway_sub_state
 
-    @property
-    def gateway_state_name(self):
-        """Return gateway_state as human readable string."""
-        return GatewayState(self.gateway_state).name
-
-    @property
-    def gateway_sub_state_name(self):
-        """Return gateway_sub_state as human readable string."""
-        return GatewaySubState(self.gateway_sub_state).name
-
     def __str__(self):
         """Return human readable string."""
         return (
-            '<{} gateway_state="{}" gateway_state_name="{}" gateway_sub_state="{}" '
-            'gateway_sub_state=_name"{}"/>'.format(
-                type(self).__name__, self.gateway_state, self.gateway_state_name,
-                self.gateway_sub_state, self.gateway_sub_state_name
+            '<{} gateway_state="{}" gateway_sub_state="{}"/>'.format(
+                type(self).__name__, self.gateway_state, self.gateway_sub_state
             )
         )
 
@@ -159,15 +140,10 @@ class DtoLeaveLearnState:
         """Initialize DtoLeaveLearnState class."""
         self.status = status
 
-    @property
-    def status_name(self):
-        """Return status as human readable string."""
-        return LeaveLearnStateConfirmationStatus(self.status_name).name
-
     def __str__(self):
         """Return human readable string."""
         return (
-            '<{} status="{}" status_name="{}"/>'.format(
-                type(self).__name__, self.status, self.status_name
+            '<{} status="{}"/>'.format(
+                type(self).__name__, self.status
             )
         )
