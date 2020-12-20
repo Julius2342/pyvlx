@@ -2,9 +2,14 @@
 
 from .api import (GetState, GetNetworkSetup, GetProtocolVersion, GetVersion,
                   GetLocalTime, LeaveLearnState, FactoryDefault, PasswordEnter,
-                  SetUTC, Reboot)
+                  SetUTC, Reboot, GetSystemTable, DiscoverNodes)
 
+from .api.frames import (FrameGetSystemTableUpdateNotification,
+                         FrameDiscoverNodesNotification)
+
+from .const import (DiscoverStatus)
 from .exception import PyVLXException
+from .log import PYVLXLOG
 
 
 class Klf200Gateway:
@@ -20,6 +25,20 @@ class Klf200Gateway:
         self.protocol_version = None
         self.version = None
         self.device_updated_cbs = []
+        self.systemtable = []
+        pyvlx.connection.register_frame_received_cb(self.process_frame)
+
+    async def process_frame(self, frame):
+        """Update nodes via frame, usually received by house monitor."""
+        if isinstance(frame, FrameGetSystemTableUpdateNotification):
+            PYVLXLOG.debug("KLFNodeUpdater process frame: %s", frame)
+            await self.get_systemtable()
+        if isinstance(frame, FrameDiscoverNodesNotification):
+            PYVLXLOG.debug("KLFNodeUpdater process frame: %s", frame)
+            if ((frame.discoverstatus == DiscoverStatus.OK) &
+                    (len(frame.addednodes) > 0 | len(frame.removed) > 0)):
+                await self.get_systemtable()
+
 
     def register_device_updated_cb(self, device_updated_cb):
         """Register device updated callback."""
@@ -40,16 +59,25 @@ class Klf200Gateway:
         get_state = GetState(pyvlx=self.pyvlx)
         await get_state.do_api_call()
         if not get_state.success:
-            raise PyVLXException("Unable to retrieve state")
+            PYVLXLOG.warning("Unable to retrieve state")
         self.state = get_state.state
         return get_state.success
+
+    async def get_systemtable(self):
+        """Retrieve state from API."""
+        get_systemtable = GetSystemTable(pyvlx=self.pyvlx)
+        await get_systemtable.do_api_call()
+        if not get_systemtable.success:
+            PYVLXLOG.warning("Unable to retrieve system table")
+        self.systemtable = get_systemtable.systemtableentries
+        return get_systemtable.success
 
     async def get_network_setup(self):
         """Retrieve network setup from API."""
         get_network_setup = GetNetworkSetup(pyvlx=self.pyvlx)
         await get_network_setup.do_api_call()
         if not get_network_setup.success:
-            raise PyVLXException("Unable to retrieve network setup")
+            PYVLXLOG.warning("Unable to retrieve network setup")
         self.network_setup = get_network_setup.networksetup
         return get_network_setup.success
 
@@ -58,7 +86,7 @@ class Klf200Gateway:
         get_version = GetVersion(pyvlx=self.pyvlx)
         await get_version.do_api_call()
         if not get_version.success:
-            raise PyVLXException("Unable to retrieve version")
+            PYVLXLOG.warning("Unable to retrieve version")
         self.version = get_version.version
         return get_version.success
 
@@ -126,6 +154,15 @@ class Klf200Gateway:
         if not passwordenter.success:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
         return passwordenter.success
+
+    async def discover_nodes(self):
+        """start Node Discovery."""
+        discovernodes = DiscoverNodes(pyvlx=self.pyvlx)
+        await discovernodes.do_api_call()
+        if not discovernodes.success:
+            PYVLXLOG.warning("Unable to start node Discovery.")
+        return discovernodes.success
+
 
     def __str__(self):
         """Return object as readable string."""
