@@ -20,6 +20,6 @@ class PyVLXException(Exception):
 
     def __str__(self):
         """Return object as readable string."""
-        return '<PyVLXException description="{0}" {1}/>'.format(
-            self.description, self._format_parameter()
+        return '<{} description="{}" {}/>'.format(
+            type(self).__name__, self.description, self._format_parameter()
         )

@@ -1,8 +1,8 @@
 """Unit tests for FrameGetVersionConfirmation."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameGetVersionConfirmation
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameGetVersionConfirmation
 
 
 class TestFrameGetVersionConfirmation(unittest.TestCase):
@@ -34,7 +34,7 @@ class TestFrameGetVersionConfirmation(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            '<FrameGetVersionConfirmation software_version="1.2.3.4.5.6" harware_version="23" product="KLF 200"/>',
+            '<FrameGetVersionConfirmation software_version="1.2.3.4.5.6" hardware_version="23" product="KLF 200"/>',
         )
 
     def test_version(self):

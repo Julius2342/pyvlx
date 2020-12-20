@@ -1,8 +1,8 @@
 """Unit tests for FrameActivateSceneConfirmation."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import (
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import (
     ActivateSceneConfirmationStatus, FrameActivateSceneConfirmation)
 
 
@@ -42,5 +42,5 @@ class TestFrameActivateSceneConfirmation(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            "<FrameActivateSceneConfirmation session_id=1000 status=ActivateSceneConfirmationStatus.ACCEPTED/>",
+            '<FrameActivateSceneConfirmation session_id="1000" status="ActivateSceneConfirmationStatus.ACCEPTED"/>',
         )

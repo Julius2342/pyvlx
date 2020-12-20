@@ -1,8 +1,8 @@
 """Unit tests for FrameSessionFinishedNotification."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameSessionFinishedNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameSessionFinishedNotification
 
 
 class TestFrameSessionFinishedNotification(unittest.TestCase):
@@ -25,5 +25,5 @@ class TestFrameSessionFinishedNotification(unittest.TestCase):
         """Test string representation of FrameSessionFinishedNotification."""
         frame = FrameSessionFinishedNotification(session_id=1000)
         self.assertEqual(
-            str(frame), "<FrameSessionFinishedNotification session_id=1000 />"
+            str(frame), '<FrameSessionFinishedNotification session_id="1000"/>'
         )

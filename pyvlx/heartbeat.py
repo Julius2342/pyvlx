@@ -1,9 +1,8 @@
 """Module for sending get state requests to API in regular periods."""
 import asyncio
 
+from .api import GetState
 from .exception import PyVLXException
-from .get_state import GetState
-from .log import PYVLXLOG
 
 
 class Heartbeat:

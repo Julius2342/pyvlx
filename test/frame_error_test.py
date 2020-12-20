@@ -1,8 +1,8 @@
 """Unit tests for FrameErrorNotification."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import ErrorType, FrameErrorNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import ErrorType, FrameErrorNotification
 
 
 class TestErrorNotification(unittest.TestCase):
@@ -26,5 +26,5 @@ class TestErrorNotification(unittest.TestCase):
         frame = FrameErrorNotification(error_type=ErrorType.ErrorOnFrameStructure)
         self.assertEqual(
             str(frame),
-            "<FrameErrorNotification error_type='ErrorType.ErrorOnFrameStructure'/>",
+            '<FrameErrorNotification error_type="ErrorType.ErrorOnFrameStructure"/>',
         )

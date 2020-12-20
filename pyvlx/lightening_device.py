@@ -1,5 +1,5 @@
 """Module for lights."""
-from .command_send import CommandSend
+from .api import CommandSend
 from .exception import PyVLXException
 from .node import Node
 from .parameter import Intensity

@@ -2,8 +2,8 @@
 import unittest
 
 from pyvlx.const import NodeType
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameDiscoverNodesRequest
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameDiscoverNodesRequest
 
 
 class TestFrameNodeDiscover(unittest.TestCase):
@@ -31,5 +31,5 @@ class TestFrameNodeDiscover(unittest.TestCase):
         """Test string representation of FrameDiscoverNodesRequest."""
         frame = FrameDiscoverNodesRequest(NodeType.LIGHT)
         self.assertEqual(
-            str(frame), "<FrameDiscoverNodesRequest node_type='NodeType.LIGHT'/>"
+            str(frame), '<FrameDiscoverNodesRequest node_type="NodeType.LIGHT"/>'
         )

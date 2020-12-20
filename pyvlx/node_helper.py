@@ -31,8 +31,8 @@ def convert_frame_to_node(pyvlx, frame):
         )
 
     if (
-        frame.node_type == NodeTypeWithSubtype.ROLLER_SHUTTER
-        or frame.node_type == NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER
+            frame.node_type == NodeTypeWithSubtype.ROLLER_SHUTTER
+            or frame.node_type == NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER
     ):
         return RollerShutter(
             pyvlx=pyvlx,
@@ -43,9 +43,9 @@ def convert_frame_to_node(pyvlx, frame):
         )
 
     if (
-        frame.node_type == NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND
-        or frame.node_type == NodeTypeWithSubtype.VERTICAL_INTERIOR_BLINDS
-        or frame.node_type == NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND
+            frame.node_type == NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND
+            or frame.node_type == NodeTypeWithSubtype.VERTICAL_INTERIOR_BLINDS
+            or frame.node_type == NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND
     ):
         return RollerShutter(
             pyvlx=pyvlx,
@@ -56,9 +56,9 @@ def convert_frame_to_node(pyvlx, frame):
 
     # Blinds have position and orientation (inherit frame.current_position_fp3) attribute
     if (
-        frame.node_type == NodeTypeWithSubtype.EXTERIOR_VENETIAN_BLIND
-        or frame.node_type == NodeTypeWithSubtype.ADJUSTABLE_SLUTS_ROLLING_SHUTTER
-        or frame.node_type == NodeTypeWithSubtype.LOUVER_BLIND
+            frame.node_type == NodeTypeWithSubtype.EXTERIOR_VENETIAN_BLIND
+            or frame.node_type == NodeTypeWithSubtype.ADJUSTABLE_SLUTS_ROLLING_SHUTTER
+            or frame.node_type == NodeTypeWithSubtype.LOUVER_BLIND
     ):
         return Blind(
             pyvlx=pyvlx,
@@ -69,8 +69,8 @@ def convert_frame_to_node(pyvlx, frame):
         )
 
     if (
-        frame.node_type == NodeTypeWithSubtype.VERTICAL_EXTERIOR_AWNING
-        or frame.node_type == NodeTypeWithSubtype.HORIZONTAL_AWNING
+            frame.node_type == NodeTypeWithSubtype.VERTICAL_EXTERIOR_AWNING
+            or frame.node_type == NodeTypeWithSubtype.HORIZONTAL_AWNING
     ):
         return Awning(
             pyvlx=pyvlx,

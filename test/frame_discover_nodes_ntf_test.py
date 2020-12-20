@@ -1,8 +1,8 @@
 """Unit tests for FrameDiscoverNodesNotification."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameDiscoverNodesNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameDiscoverNodesNotification
 
 
 class TestFrameDiscoverNodesNotification(unittest.TestCase):
@@ -46,11 +46,11 @@ class TestFrameDiscoverNodesNotification(unittest.TestCase):
         frame = FrameDiscoverNodesNotification()
         self.assertEqual(
             str(frame),
-            "<FrameDiscoverNodesNotification payload='00:00:00:00:00:00:00:00:"
-            + "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:"
-            + "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:"
-            + "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:"
-            + "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:"
-            + "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:"
-            + "00:00:00:00:00:00:00:00:00:00:00:00:00'/>",
+            '<FrameDiscoverNodesNotification payload="00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:'
+            + '00:00:00:00:00:00:00:00:00:00:00:00:00"/>',
         )

@@ -1,8 +1,8 @@
 """Unit tests for FrameCommandSendConfirmation."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import (
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import (
     CommandSendConfirmationStatus, FrameCommandSendConfirmation)
 
 
@@ -39,5 +39,5 @@ class TestFrameCommandSendConfirmation(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            "<FrameCommandSendConfirmation session_id=1000 status=CommandSendConfirmationStatus.ACCEPTED/>",
+            '<FrameCommandSendConfirmation session_id="1000" status="CommandSendConfirmationStatus.ACCEPTED"/>',
         )

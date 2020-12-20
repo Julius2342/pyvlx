@@ -1,8 +1,8 @@
 """Unit tests for FrameHouseStatusMonitorDisableConfirmation."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameHouseStatusMonitorDisableConfirmation
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameHouseStatusMonitorDisableConfirmation
 
 
 class TestFrameHouseStatusMonitorDisableConfirmation(unittest.TestCase):

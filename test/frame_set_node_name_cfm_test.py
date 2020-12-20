@@ -1,8 +1,8 @@
 """Unit tests for FrameSetNodeNameConfirmation."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import (
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import (
     FrameSetNodeNameConfirmation, SetNodeNameConfirmationStatus)
 
 
@@ -38,5 +38,5 @@ class TestFrameSetNodeNameConfirmation(unittest.TestCase):
         frame = FrameSetNodeNameConfirmation(node_id=23)
         self.assertEqual(
             str(frame),
-            '<FrameSetNodeNameConfirmation node_id=23 status="SetNodeNameConfirmationStatus.OK"/>',
+            '<FrameSetNodeNameConfirmation node_id="23" status="SetNodeNameConfirmationStatus.OK"/>',
         )

@@ -1,8 +1,8 @@
 """Unit tests for FrameGetSceneListConfirmation."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameGetSceneListConfirmation
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameGetSceneListConfirmation
 
 
 class TestFrameGetSceneListConfirmation(unittest.TestCase):
@@ -24,4 +24,4 @@ class TestFrameGetSceneListConfirmation(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameGetSceneListConfirmation."""
         frame = FrameGetSceneListConfirmation(count_scenes=12)
-        self.assertEqual(str(frame), "<FrameGetSceneListConfirmation count_scenes=12/>")
+        self.assertEqual(str(frame), '<FrameGetSceneListConfirmation count_scenes="12"/>')

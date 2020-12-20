@@ -1,8 +1,8 @@
 """Unit tests for FrameSetUTCConfirmation."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameSetUTCConfirmation
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameSetUTCConfirmation
 
 
 class TestFrameSetUTCConfirmation(unittest.TestCase):

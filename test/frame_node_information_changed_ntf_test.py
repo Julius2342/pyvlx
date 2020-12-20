@@ -2,8 +2,8 @@
 import unittest
 
 from pyvlx.const import NodeVariation
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameNodeInformationChangedNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameNodeInformationChangedNotification
 
 
 class TestFrameNodeInformationChangedNotification(unittest.TestCase):
@@ -44,6 +44,6 @@ class TestFrameNodeInformationChangedNotification(unittest.TestCase):
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertEqual(
             str(frame),
-            '<FrameNodeInformationChangedNotification node_id=23 name="Fnord23" '
-            'order=1234 placement=2 node_variation="NodeVariation.TOPHUNG"/>',
+            '<FrameNodeInformationChangedNotification node_id="23" name="Fnord23" '
+            'order="1234" placement="2" node_variation="NodeVariation.TOPHUNG"/>',
         )
