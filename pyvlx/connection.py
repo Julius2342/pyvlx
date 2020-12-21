@@ -2,9 +2,10 @@
 import asyncio
 import ssl
 
+from .api.frame_creation import frame_from_raw
+from .api.frames import FrameBase
+
 from .exception import PyVLXException
-from .frame_creation import frame_from_raw
-from .frames import FrameBase
 from .log import PYVLXLOG
 from .slip import get_next_slip, is_slip, slip_pack
 

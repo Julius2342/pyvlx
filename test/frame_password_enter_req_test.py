@@ -2,8 +2,8 @@
 import unittest
 
 from pyvlx.exception import PyVLXException
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FramePasswordEnterRequest
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FramePasswordEnterRequest
 
 
 class TestFramePasswordEnter(unittest.TestCase):
@@ -54,9 +54,9 @@ class TestFramePasswordEnter(unittest.TestCase):
     def test_str(self):
         """Test string representation of FramePasswordEnterRequest."""
         frame = FramePasswordEnterRequest(password="fnord")
-        self.assertEqual(str(frame), "<FramePasswordEnterRequest password=fn****/>")
+        self.assertEqual(str(frame), '<FramePasswordEnterRequest password="fn****"/>')
 
     def test_str_no_password(self):
         """Test string representation of FramePasswordEnterRequest with no password."""
         frame = FramePasswordEnterRequest()
-        self.assertEqual(str(frame), "<FramePasswordEnterRequest password=None/>")
+        self.assertEqual(str(frame), '<FramePasswordEnterRequest password="None"/>')

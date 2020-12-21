@@ -1,5 +1,5 @@
 """Module for updating nodes via frames."""
-from .frames import (
+from .api.frames import (
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification)
 from .lightening_device import LighteningDevice
@@ -18,11 +18,11 @@ class NodeUpdater:
     async def process_frame(self, frame):
         """Update nodes via frame, usually received by house monitor."""
         if isinstance(
-            frame,
-            (
-                FrameGetAllNodesInformationNotification,
-                FrameNodeStatePositionChangedNotification,
-            ),
+                frame,
+                (
+                    FrameGetAllNodesInformationNotification,
+                    FrameNodeStatePositionChangedNotification,
+                ),
         ):
             PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
             if frame.node_id not in self.pyvlx.nodes:

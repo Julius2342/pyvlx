@@ -3,8 +3,8 @@ import unittest
 from datetime import datetime
 
 from pyvlx import Position
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameNodeStatePositionChangedNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameNodeStatePositionChangedNotification
 
 
 class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
@@ -53,10 +53,10 @@ class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
         test_ts = datetime.fromtimestamp(1288634368).strftime("%Y-%m-%d %H:%M:%S")
         self.assertEqual(
             str(frame),
-            "<FrameNodeStatePositionChangedNotification node_id=5 state=5 "
-            "current_position='0xC800' target='0xC800' current_position_fp1='0xF7FF' "
-            "current_position_fp2='0xF7FF' current_position_fp3='0xF7FF' "
-            "current_position_fp4='0xF7FF' remaining_time=0 time='{}'/>".format(
+            '<FrameNodeStatePositionChangedNotification node_id="5" state="5" '
+            'current_position="0xC800" target="0xC800" current_position_fp1="0xF7FF" '
+            'current_position_fp2="0xF7FF" current_position_fp3="0xF7FF" '
+            'current_position_fp4="0xF7FF" remaining_time="0" time="{}"/>'.format(
                 test_ts
             ),
         )

@@ -2,8 +2,8 @@
 import unittest
 
 from pyvlx.const import Originator, Priority, Velocity
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameActivateSceneRequest
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameActivateSceneRequest
 
 
 class TestFrameActivateSceneRequest(unittest.TestCase):
@@ -40,5 +40,6 @@ class TestFrameActivateSceneRequest(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            "<FrameActivateSceneRequest scene_id=4 session_id=1000 originator=Originator.USER velocity=Velocity.FAST/>",
+            '<FrameActivateSceneRequest scene_id="4" session_id="1000" '
+            'originator="Originator.USER" velocity="Velocity.FAST"/>',
         )

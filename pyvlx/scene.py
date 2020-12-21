@@ -1,5 +1,5 @@
 """Module for scene."""
-from .activate_scene import ActivateScene
+from .api import ActivateScene
 from .exception import PyVLXException
 
 
@@ -39,7 +39,9 @@ class Scene:
 
     def __str__(self):
         """Return object as readable string."""
-        return '<Scene name="{0}" ' 'id="{1}" />'.format(self.name, self.scene_id)
+        return '<{} name="{}" id="{}"/>'.format(
+            type(self).__name__, self.name, self.scene_id
+        )
 
     def __eq__(self, other):
         """Equal operator."""

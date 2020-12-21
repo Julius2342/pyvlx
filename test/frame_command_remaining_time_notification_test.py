@@ -1,8 +1,8 @@
 """Unit tests for FrameCommandRemainingTimeNotification."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameCommandRemainingTimeNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameCommandRemainingTimeNotification
 
 
 class TestFrameCommandRemainingTimeNotification(unittest.TestCase):
@@ -33,5 +33,5 @@ class TestFrameCommandRemainingTimeNotification(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            "<FrameCommandRemainingTimeNotification session_id=1000 index_id=23 node_parameter=42 seconds=1337/>",
+            '<FrameCommandRemainingTimeNotification session_id="1000" index_id="23" node_parameter="42" seconds="1337"/>',
         )

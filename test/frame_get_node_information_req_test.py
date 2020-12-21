@@ -1,8 +1,8 @@
 """Unit tests for FrameGetNodeInformationRequest."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameGetNodeInformationRequest
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameGetNodeInformationRequest
 
 
 class TestFrameGetNodeInformationRequest(unittest.TestCase):
@@ -24,4 +24,4 @@ class TestFrameGetNodeInformationRequest(unittest.TestCase):
     def test_str(self):
         """Test string representation of FrameGetNodeInformationRequest."""
         frame = FrameGetNodeInformationRequest(node_id=23)
-        self.assertEqual(str(frame), "<FrameGetNodeInformationRequest node_id=23/>")
+        self.assertEqual(str(frame), '<FrameGetNodeInformationRequest node_id="23"/>')

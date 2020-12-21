@@ -7,20 +7,16 @@ and roller shutters.
 """
 import asyncio
 
+
+from .api import house_status_monitor_enable
 from .config import Config
 from .connection import Connection
-from .exception import PyVLXException
-from .get_protocol_version import GetProtocolVersion
-from .get_version import GetVersion
 from .heartbeat import Heartbeat
-from .house_status_monitor import house_status_monitor_enable
 from .log import PYVLXLOG
-from .login import Login
 from .node_updater import NodeUpdater
 from .nodes import Nodes
-from .reboot import Reboot
 from .scenes import Scenes
-from .set_utc import set_utc
+from .klf200gateway import Klf200Gateway
 
 
 class PyVLX:
@@ -39,42 +35,30 @@ class PyVLX:
         self.scenes = Scenes(self)
         self.version = None
         self.protocol_version = None
+        self.klf200 = Klf200Gateway(pyvlx=self)
 
     async def connect(self):
         """Connect to KLF 200."""
         PYVLXLOG.debug("Connecting to KLF 200.")
         await self.connection.connect()
-        login = Login(pyvlx=self, password=self.config.password)
-        await login.do_api_call()
-        if not login.success:
-            raise PyVLXException("Login to KLF 200 failed, check credentials")
-        await self.update_version()
-        await set_utc(pyvlx=self)
+        await self.klf200.password_enter(password=self.config.password)
+        await self.klf200.get_version()
+        await self.klf200.get_protocol_version()
+        PYVLXLOG.debug(
+            "Connected to: %s,  %s",
+            str(self.klf200.version),
+            str(self.klf200.protocol_version)
+        )
+
+        await self.klf200.get_state()
+        await self.klf200.set_utc()
+        await self.klf200.get_network_setup()
         await house_status_monitor_enable(pyvlx=self)
 
     async def reboot_gateway(self):
-        """Reboot gateway."""
+        """For Compatibility: Reboot the KLF 200."""
         PYVLXLOG.warning("KLF 200 reboot initiated")
-        reboot = Reboot(pyvlx=self)
-        await reboot.do_api_call()
-
-    async def update_version(self):
-        """Retrieve version and protocol version from API."""
-        get_version = GetVersion(pyvlx=self)
-        await get_version.do_api_call()
-        if not get_version.success:
-            raise PyVLXException("Unable to retrieve version")
-        self.version = get_version.version
-        get_protocol_version = GetProtocolVersion(pyvlx=self)
-        await get_protocol_version.do_api_call()
-        if not get_protocol_version.success:
-            raise PyVLXException("Unable to retrieve protocol version")
-        self.protocol_version = get_protocol_version.version
-        PYVLXLOG.debug(
-            "Connected to: %s, protocol version: %s",
-            self.version,
-            self.protocol_version,
-        )
+        await self.klf200.reboot()
 
     async def send_frame(self, frame):
         """Send frame to API via connection."""

@@ -1,8 +1,8 @@
 """Unit tests for FrameSetNodeNameRequest."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameSetNodeNameRequest
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameSetNodeNameRequest
 
 
 class TestFrameSetNodeNameRequest(unittest.TestCase):
@@ -34,5 +34,5 @@ class TestFrameSetNodeNameRequest(unittest.TestCase):
         """Test string representation of FrameSetNodeNameRequest."""
         frame = FrameSetNodeNameRequest(node_id=4, name="Fnord")
         self.assertEqual(
-            str(frame), '<FrameSetNodeNameRequest node_id=4 name="Fnord"/>'
+            str(frame), '<FrameSetNodeNameRequest node_id="4" name="Fnord"/>'
         )

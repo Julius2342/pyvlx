@@ -2,7 +2,7 @@
 import unittest
 
 from pyvlx.exception import PyVLXException
-from pyvlx.frames import calc_crc, extract_from_frame
+from pyvlx.api.frames import calc_crc, extract_from_frame
 
 
 class TestFrameHelper(unittest.TestCase):

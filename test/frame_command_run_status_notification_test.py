@@ -1,8 +1,8 @@
 """Unit tests for FrameCommandRunStatusNotification."""
 import unittest
 
-from pyvlx.frame_creation import frame_from_raw
-from pyvlx.frames import FrameCommandRunStatusNotification
+from pyvlx.api.frame_creation import frame_from_raw
+from pyvlx.api.frames import FrameCommandRunStatusNotification
 
 
 class TestFrameCommandRunStatusNotification(unittest.TestCase):
@@ -46,5 +46,5 @@ class TestFrameCommandRunStatusNotification(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            "<FrameCommandRunStatusNotification session_id=1000 status_id=7 index_id=23 node_parameter=42 parameter_value=1337/>",
+            '<FrameCommandRunStatusNotification session_id="1000" status_id="7" index_id="23" node_parameter="42" parameter_value="1337"/>',
         )
