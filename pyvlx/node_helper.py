@@ -88,7 +88,10 @@ def convert_frame_to_node(pyvlx, frame):
             serial_number=frame.serial_number,
         )
 
-    if frame.node_type == NodeTypeWithSubtype.GARAGE_DOOR_OPENER:
+    if (
+            frame.node_type == NodeTypeWithSubtype.GARAGE_DOOR_OPENER
+            or frame.node_type == NodeTypeWithSubtype.LINAR_ANGULAR_POSITION_OF_GARAGE_DOOR
+    ):
         return GarageDoor(
             pyvlx=pyvlx,
             node_id=frame.node_id,
@@ -124,7 +127,10 @@ def convert_frame_to_node(pyvlx, frame):
             position_parameter=frame.current_position,
         )
 
-    if frame.node_type == NodeTypeWithSubtype.LIGHT:
+    if (
+        frame.node_type == NodeTypeWithSubtype.LIGHT
+        or frame.node_type == NodeTypeWithSubtype.LIGHT_ON_OFF
+    ):
         return Light(
             pyvlx=pyvlx,
             node_id=frame.node_id,
