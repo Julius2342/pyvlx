@@ -109,6 +109,25 @@ class TestNodeHelper(unittest.TestCase):
             ),
         )
 
+    def test_linar_angular_position_of_garage_door(self):
+        """Test convert_frame_to_node linar angular position of garage door."""
+        frame = FrameGetNodeInformationNotification()
+        frame.node_id = 23
+        frame.name = "Fnord23"
+        frame.node_type = NodeTypeWithSubtype.LINAR_ANGULAR_POSITION_OF_GARAGE_DOOR
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
+        pyvlx = PyVLX()
+        node = convert_frame_to_node(pyvlx, frame)
+        self.assertEqual(
+            node,
+            GarageDoor(
+                pyvlx=pyvlx,
+                name="Fnord23",
+                node_id=23,
+                serial_number="aa:bb:aa:bb:aa:bb:aa:23",
+            ),
+        )
+
     def test_gate(self):
         """Test convert_frame_to_node gate."""
         frame = FrameGetNodeInformationNotification()
@@ -182,6 +201,25 @@ class TestNodeHelper(unittest.TestCase):
         frame.node_id = 23
         frame.name = "Fnord23"
         frame.node_type = NodeTypeWithSubtype.LIGHT
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
+        pyvlx = PyVLX()
+        node = convert_frame_to_node(pyvlx, frame)
+        self.assertEqual(
+            node,
+            Light(
+                pyvlx=pyvlx,
+                name="Fnord23",
+                node_id=23,
+                serial_number="aa:bb:aa:bb:aa:bb:aa:23",
+            ),
+        )
+
+    def test_light_on_off(self):
+        """Test convert_frame_to_node with light_on_off."""
+        frame = FrameGetNodeInformationNotification()
+        frame.node_id = 23
+        frame.name = "Fnord23"
+        frame.node_type = NodeTypeWithSubtype.LIGHT_ON_OFF
         frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         pyvlx = PyVLX()
         node = convert_frame_to_node(pyvlx, frame)
