@@ -177,7 +177,7 @@ def create_frame(command):
         return FrameNodeStatePositionChangedNotification()
     if command == Command.GW_LEAVE_LEARN_STATE_CFM:
         return FrameLeaveLearnStateConfirmation()
-    if command == command.GW_LEAVE_LEARN_STATE_REQ:
+    if command == Command.GW_LEAVE_LEARN_STATE_REQ:
         return FrameLeaveLearnStateRequest()
 
     return None
