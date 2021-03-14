@@ -1,5 +1,6 @@
 """Module for house status monitor."""
 from pyvlx.exception import PyVLXException
+from pyvlx.log import PYVLXLOG
 from .api_event import ApiEvent
 from .frames import (
     FrameHouseStatusMonitorDisableConfirmation,
@@ -21,6 +22,7 @@ class HouseStatusMonitorEnable(ApiEvent):
         if not isinstance(frame, FrameHouseStatusMonitorEnableConfirmation):
             return False
         self.success = True
+        PYVLXLOG.debug("House status monitor enabled")
         return True
 
     def request_frame(self):
@@ -41,6 +43,7 @@ class HouseStatusMonitorDisable(ApiEvent):
         if not isinstance(frame, FrameHouseStatusMonitorDisableConfirmation):
             return False
         self.success = True
+        PYVLXLOG.debug("House status monitor disabled")
         return True
 
     def request_frame(self):

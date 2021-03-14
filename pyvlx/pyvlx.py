@@ -8,7 +8,7 @@ and roller shutters.
 import asyncio
 
 
-from .api import house_status_monitor_enable
+from .api import house_status_monitor_enable, house_status_monitor_disable
 from .config import Config
 from .connection import Connection
 from .heartbeat import Heartbeat
@@ -68,6 +68,7 @@ class PyVLX:
 
     async def disconnect(self):
         """Disconnect from KLF 200."""
+        await house_status_monitor_disable(pyvlx=self)
         await self.heartbeat.stop()
         self.connection.disconnect()
 
