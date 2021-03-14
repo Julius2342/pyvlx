@@ -68,6 +68,7 @@ class PyVLX:
 
     async def disconnect(self):
         """Disconnect from KLF 200."""
+        # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
         await house_status_monitor_disable(pyvlx=self)
         await self.heartbeat.stop()
         self.connection.disconnect()
