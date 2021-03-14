@@ -22,7 +22,6 @@ class HouseStatusMonitorEnable(ApiEvent):
         if not isinstance(frame, FrameHouseStatusMonitorEnableConfirmation):
             return False
         self.success = True
-        PYVLXLOG.debug("House status monitor enabled")
         return True
 
     def request_frame(self):
@@ -43,7 +42,6 @@ class HouseStatusMonitorDisable(ApiEvent):
         if not isinstance(frame, FrameHouseStatusMonitorDisableConfirmation):
             return False
         self.success = True
-        PYVLXLOG.debug("House status monitor disabled")
         return True
 
     def request_frame(self):
