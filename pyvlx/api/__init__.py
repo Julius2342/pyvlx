@@ -1,7 +1,7 @@
 """Module for all KLF 200 API frames."""
 # flake8: noqa
 
-from .house_status_monitor import (house_status_monitor_enable)
+from .house_status_monitor import (house_status_monitor_enable, house_status_monitor_disable)
 from .command_send import (CommandSend)
 from .get_local_time import (FrameGetLocalTimeRequest, FrameGetLocalTimeConfirmation)
 from .get_state import (GetState)
