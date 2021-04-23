@@ -23,7 +23,6 @@ cache:
     - $HOME/.cache/pip
 language: python
 script: travis_wait tox
-after_success: coveralls
 
 install:
   - sudo apt-get update -q 
