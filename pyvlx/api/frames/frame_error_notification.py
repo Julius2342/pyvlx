@@ -7,6 +7,7 @@ from .frame import FrameBase
 
 
 class ErrorType(Enum):
+    # pylint: disable=invalid-name
     """Enum class for error types."""
 
     NotFurtherDefined = 0

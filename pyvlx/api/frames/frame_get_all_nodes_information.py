@@ -23,9 +23,10 @@ class FrameGetAllNodesInformationRequest(FrameBase):
 
 
 class AllNodesInformationStatus(Enum):
+    # pylint: disable=invalid-name
     """Enum for node information status."""
 
-    OK = 0  # pylint: disable=invalid-name
+    OK = 0
     Error_System_Table_Empty = 1
 
 
