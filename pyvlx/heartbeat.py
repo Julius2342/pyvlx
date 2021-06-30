@@ -24,6 +24,7 @@ class Heartbeat:
 
     def start(self):
         """Create loop task."""
+        self.stopped = False
         self.run_task = self.pyvlx.loop.create_task(self.loop())
 
     async def stop(self):
@@ -42,7 +43,10 @@ class Heartbeat:
             await self.loop_event.wait()
             if not self.stopped:
                 self.loop_event.clear()
-                await self.pulse()
+                try:
+                    await self.pulse()
+                except PyVLXException as e:
+                    pass
         self.cancel_loop_timeout()
         self.stopped_event.set()
 
