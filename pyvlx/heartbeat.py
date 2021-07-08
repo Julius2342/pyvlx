@@ -25,6 +25,7 @@ class Heartbeat:
     def start(self):
         """Create loop task."""
         self.stopped = False
+        self.stopped_event.clear()
         self.run_task = self.pyvlx.loop.create_task(self.loop())
 
     async def stop(self):
