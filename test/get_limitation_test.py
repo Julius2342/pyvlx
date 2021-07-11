@@ -1,0 +1,92 @@
+"""Unit test for limitation."""
+
+import unittest
+
+import pytest
+
+from pyvlx import PyVLX
+from pyvlx.api.frames.frame_get_limitation import (
+    FrameGetLimitationStatus, FrameGetLimitationStatusConfirmation,
+    FrameGetLimitationStatusNotification)
+from pyvlx.api.get_limitation import GetLimitation
+from pyvlx.const import LimitationType, Originator
+
+
+# pylint: disable=too-many-public-methods,invalid-name
+class TestGetLimitation(unittest.TestCase):
+    """Test class for Limitation."""
+
+    def setUp(self):
+        self.pyvlx = PyVLX()
+
+    def test_get_name(self):
+        """Test get_name()."""
+        self.pyvlx = PyVLX()
+        limit = GetLimitation(self.pyvlx, 1)
+        self.assertEqual(limit.node_id, 1)
+        self.assertEqual(limit.limitation_type, LimitationType.MIN_LIMITATION)
+        limit = GetLimitation(self.pyvlx, 2, LimitationType.MAX_LIMITATION)
+        self.assertEqual(limit.node_id, 2)
+        self.assertEqual(limit.limitation_type, LimitationType.MAX_LIMITATION)
+
+    def test_max_value(self):
+        self.pyvlx = PyVLX()
+        limit = GetLimitation(self.pyvlx, 1)
+        limit.max_value_raw = b'\xf7'
+        self.assertEqual(limit.max_value, 123)
+
+    def test_min_value(self):
+        self.pyvlx = PyVLX()
+        limit = GetLimitation(self.pyvlx, 1)
+        limit.min_value_raw = b'\xba'
+        self.assertEqual(limit.min_value, 93)
+
+    @pytest.mark.asyncio
+    async def test_handle_frame(self):
+        self.pyvlx = PyVLX()
+        limit = GetLimitation(self.pyvlx, 1)
+
+        frame = FrameGetLimitationStatus()
+        self.assertFalse(await limit.handle_frame(frame))
+        self.assertFalse(limit.success)
+
+        frame = FrameGetLimitationStatusConfirmation()
+        self.assertFalse(await limit.handle_frame(frame))
+        self.assertFalse(limit.success)
+
+        frame = FrameGetLimitationStatusNotification()
+        frame.session_id = 1
+        frame.node_id = 1
+        frame.min_value = b'\xf7'
+        frame.max_value = b'\xba'
+        frame.limit_originator = Originator.USER
+        frame.limit_time = 1
+
+        limit.session_id = 0
+        self.assertFalse(await limit.handle_frame(frame))
+        self.assertFalse(limit.success)  # Session id is wrong
+
+        limit.session_id = frame.session_id
+        self.assertTrue(await limit.handle_frame(frame))
+        self.assertTrue(limit.success)
+        self.assertEqual(limit.node_id, frame.node_id)
+        self.assertEqual(limit.session_id, frame.session_id)
+        self.assertEqual(limit.min_value, 123)
+        self.assertEqual(limit.max_value, 93)
+        self.assertEqual(limit.originator, frame.limit_originator)
+        self.assertEqual(limit.limit_time, frame.limit_time)
+
+    def test_request_frame(self):
+        self.pyvlx = PyVLX()
+        """test initiating frame."""
+        limit = GetLimitation(self.pyvlx, 1)
+        req_frame = limit.request_frame()
+        self.assertIsInstance(req_frame, FrameGetLimitationStatus)
+        self.assertTrue(req_frame.session_id, 1)
+        self.assertTrue(req_frame.node_ids, [1])
+        self.assertTrue(req_frame.limitations_type, limit.limitation_type)
+
+        limit.limitation_type = LimitationType.MAX_LIMITATION
+        self.assertIsInstance(req_frame, FrameGetLimitationStatus)
+        self.assertTrue(req_frame.session_id, 1)
+        self.assertTrue(req_frame.limitations_type, limit.limitation_type)

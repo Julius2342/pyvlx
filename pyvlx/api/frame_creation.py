@@ -32,7 +32,8 @@ from .frames import (
     FrameSetUTCConfirmation, FrameSetUTCRequest, extract_from_frame,
     FrameLeaveLearnStateConfirmation, FrameLeaveLearnStateRequest,
     FrameGetLocalTimeConfirmation, FrameGetLocalTimeRequest,
-    FrameGatewayFactoryDefaultConfirmation, FrameGatewayFactoryDefaultRequest)
+    FrameGatewayFactoryDefaultConfirmation, FrameGatewayFactoryDefaultRequest,
+    FrameGetLimitationStatus, FrameGetLimitationStatusConfirmation, FrameGetLimitationStatusNotification)
 
 
 def frame_from_raw(raw):
@@ -150,6 +151,13 @@ def create_frame(command):
         return FrameGetStateRequest()
     if command == Command.GW_GET_STATE_CFM:
         return FrameGetStateConfirmation()
+
+    if command == Command.GW_GET_LIMITATION_STATUS_REQ:
+        return FrameGetLimitationStatus()
+    if command == Command.GW_GET_LIMITATION_STATUS_CFM:
+        return FrameGetLimitationStatusConfirmation()
+    if command == Command.GW_LIMITATION_STATUS_NTF:
+        return FrameGetLimitationStatusNotification()
 
     if command == Command.GW_GET_NETWORK_SETUP_REQ:
         return FrameGetNetworkSetupRequest()

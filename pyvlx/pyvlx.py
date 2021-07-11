@@ -7,8 +7,8 @@ and roller shutters.
 """
 import asyncio
 
-
-from .api import house_status_monitor_enable, house_status_monitor_disable
+from .api import (
+    get_limitation, house_status_monitor_disable, house_status_monitor_enable)
 from .config import Config
 from .connection import Connection
 from .heartbeat import Heartbeat
@@ -80,3 +80,7 @@ class PyVLX:
     async def load_scenes(self):
         """Load scenes from KLF 200."""
         await self.scenes.load()
+
+    async def get_limitation(self, node_id):
+        l = get_limitation.GetLimitation(self, [node_id])
+        await l.do_api_call()
