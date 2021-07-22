@@ -64,8 +64,9 @@ async def main(loop):
     await pyvlx.nodes['Bath'].set_position(Position(position_percent=45))
 
     # Read limits of windows
-    # await pyvlx.nodes['Bath'].get_limitation().min_value
-    # await pyvlx.nodes['Bath'].get_limitation().max_value
+    # limit = await pyvlx.nodes['Bath'].get_limitation()
+    # limit.min_value
+    # limit.max_value
     
     # Changing of on-off switches:
     # await pyvlx.nodes['CoffeeMaker'].set_on()

@@ -12,11 +12,11 @@ from .api import (
 from .config import Config
 from .connection import Connection
 from .heartbeat import Heartbeat
+from .klf200gateway import Klf200Gateway
 from .log import PYVLXLOG
 from .node_updater import NodeUpdater
 from .nodes import Nodes
 from .scenes import Scenes
-from .klf200gateway import Klf200Gateway
 
 
 class PyVLX:
