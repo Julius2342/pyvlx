@@ -1,5 +1,6 @@
 """Module for leave learn state frame classes."""
 from pyvlx.const import Command, LeaveLearnStateConfirmationStatus
+
 from .frame import FrameBase
 
 

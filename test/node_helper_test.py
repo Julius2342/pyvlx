@@ -3,8 +3,8 @@ import unittest
 
 from pyvlx import (
     Blade, Blind, GarageDoor, Gate, Light, PyVLX, RollerShutter, Window)
-from pyvlx.const import NodeTypeWithSubtype
 from pyvlx.api.frames import FrameGetNodeInformationNotification
+from pyvlx.const import NodeTypeWithSubtype
 from pyvlx.node_helper import convert_frame_to_node
 
 

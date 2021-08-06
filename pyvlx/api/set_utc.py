@@ -1,5 +1,6 @@
 """Module for setting UTC time within gateway."""
 import time
+
 from .api_event import ApiEvent
 from .frames import FrameSetUTCConfirmation, FrameSetUTCRequest
 

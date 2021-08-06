@@ -1,9 +1,9 @@
 """Unit tests for PyVLX PasswordEnterRequest."""
 import unittest
 
-from pyvlx.exception import PyVLXException
 from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import FramePasswordEnterRequest
+from pyvlx.exception import PyVLXException
 
 
 class TestFramePasswordEnter(unittest.TestCase):

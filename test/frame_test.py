@@ -2,8 +2,8 @@
 import unittest
 
 from pyvlx import PyVLXException
-from pyvlx.const import Command
 from pyvlx.api.frames.frame import FrameBase
+from pyvlx.const import Command
 
 
 class TestFrame(unittest.TestCase):

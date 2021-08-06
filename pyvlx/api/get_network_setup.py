@@ -2,7 +2,8 @@
 from pyvlx.dataobjects import DtoNetworkSetup
 
 from .api_event import ApiEvent
-from .frames import FrameGetNetworkSetupConfirmation, FrameGetNetworkSetupRequest
+from .frames import (
+    FrameGetNetworkSetupConfirmation, FrameGetNetworkSetupRequest)
 
 
 class GetNetworkSetup(ApiEvent):

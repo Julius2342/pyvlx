@@ -1,5 +1,6 @@
 """Module for retrieving node information from API."""
 from pyvlx.log import PYVLXLOG
+
 from .api_event import ApiEvent
 from .frames import (
     FrameGetAllNodesInformationConfirmation,

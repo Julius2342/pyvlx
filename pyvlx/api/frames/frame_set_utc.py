@@ -1,7 +1,9 @@
 """Module for sending command to gw."""
 import struct
 from datetime import datetime
+
 from pyvlx.const import Command
+
 from .frame import FrameBase
 
 
