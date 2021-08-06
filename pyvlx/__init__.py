@@ -1,6 +1,7 @@
 """Module for accessing KLF 200 gateway with python."""
 
 from .exception import PyVLXException
+from .klf200gateway import Klf200Gateway
 from .lightening_device import Light, LighteningDevice
 from .log import PYVLXLOG
 from .nodes import Nodes
@@ -15,4 +16,3 @@ from .parameter import (
 from .pyvlx import PyVLX
 from .scene import Scene
 from .scenes import Scenes
-from .klf200gateway import Klf200Gateway

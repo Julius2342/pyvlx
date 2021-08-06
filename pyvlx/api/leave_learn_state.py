@@ -2,8 +2,8 @@
 from pyvlx.dataobjects import DtoLeaveLearnState
 
 from .api_event import ApiEvent
-from .frames import (FrameLeaveLearnStateRequest,
-                     FrameLeaveLearnStateConfirmation)
+from .frames import (
+    FrameLeaveLearnStateConfirmation, FrameLeaveLearnStateRequest)
 
 
 class LeaveLearnState(ApiEvent):

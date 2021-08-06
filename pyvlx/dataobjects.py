@@ -1,6 +1,6 @@
 """Module for Dataobjects."""
-from datetime import datetime
 import time
+from datetime import datetime
 
 
 class DtoLocalTime:

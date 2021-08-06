@@ -2,9 +2,9 @@
 import unittest
 
 from pyvlx import Position, PyVLXException
-from pyvlx.const import Originator
 from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import FrameCommandSendRequest
+from pyvlx.const import Originator
 
 
 class TestFrameCommandSendRequest(unittest.TestCase):
