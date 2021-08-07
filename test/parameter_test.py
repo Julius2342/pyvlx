@@ -1,8 +1,7 @@
 """Test for Position class."""
 import unittest
 
-from pyvlx import (Position, Parameter)
-from pyvlx.exception import PyVLXException
+from pyvlx import Parameter, Position
 
 
 class TestParameterPosition(unittest.TestCase):
