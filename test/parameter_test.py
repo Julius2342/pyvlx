@@ -1,9 +1,8 @@
 """Test for Position class."""
-from pyvlx.parameter import Parameter
 import unittest
 
 from pyvlx import (Position, Parameter)
-#from pyvlx.exception import PyVLXException
+from pyvlx.exception import PyVLXException
 
 
 class TestParameterPosition(unittest.TestCase):
@@ -34,4 +33,3 @@ class TestParameterPosition(unittest.TestCase):
         self.assertEqual(Position.to_percent(Position.from_percent(75)), 75)
         self.assertEqual(Position.to_percent(Position.from_percent(99)), 99)
         self.assertEqual(Position.to_percent(Position.from_percent(100)), 100)
-        
