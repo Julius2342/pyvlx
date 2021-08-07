@@ -2,7 +2,7 @@
 import asyncio
 import logging
 
-from pyvlx import PyVLX, PYVLXLOG
+from pyvlx import PYVLXLOG, PyVLX
 
 
 async def main(loop):

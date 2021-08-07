@@ -1,8 +1,8 @@
 """Unit tests frame_creation module."""
 import unittest
 
-from pyvlx.exception import PyVLXException
 from pyvlx.api.frames import calc_crc, extract_from_frame
+from pyvlx.exception import PyVLXException
 
 
 class TestFrameHelper(unittest.TestCase):
