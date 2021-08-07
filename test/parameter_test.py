@@ -34,3 +34,4 @@ class TestParameterPosition(unittest.TestCase):
         self.assertEqual(Position.to_percent(Position.from_percent(75)), 75)
         self.assertEqual(Position.to_percent(Position.from_percent(99)), 99)
         self.assertEqual(Position.to_percent(Position.from_percent(100)), 100)
+        
