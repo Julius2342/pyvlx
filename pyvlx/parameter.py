@@ -193,7 +193,8 @@ class Position(Parameter):
     def to_percent(raw):
         """Create percent position value out of raw."""
         # The first byte has the vlue from 0 to 200. Ignoring the second one.
-        return int(raw[0] / 2)
+        # Adding 0.5 allows a slight tolerance for devices (e.g. Velux SML) that do not return exactly 51200 as final position when closed.
+        return int(raw[0] / 2 + 0.5)
 
     def __str__(self):
         """Return string representation of object."""
