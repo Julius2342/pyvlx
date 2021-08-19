@@ -9,5 +9,5 @@ pytest==6.2.4
 pytest-cov==2.12.1
 pytest-timeout==1.4.2
 setuptools==57.4.0
-tox==3.24.1
+tox==3.24.2
 twine==3.4.2
