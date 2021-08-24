@@ -46,7 +46,7 @@ class Heartbeat:
                 self.loop_event.clear()
                 try:
                     await self.pulse()
-                except PyVLXException as e:
+                except PyVLXException:
                     pass
         self.cancel_loop_timeout()
         self.stopped_event.set()

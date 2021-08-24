@@ -1,6 +1,7 @@
 """Module for retrieving protocol version from API."""
 
 from pyvlx.dataobjects import DtoProtocolVersion
+
 from .api_event import ApiEvent
 from .frames import (
     FrameGetProtocolVersionConfirmation, FrameGetProtocolVersionRequest)

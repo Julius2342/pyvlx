@@ -2,11 +2,11 @@
 import unittest
 from datetime import datetime
 
-from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import (
     FrameGetAllNodesInformationNotification,
     FrameGetNodeInformationNotification)
+from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.parameter import Position
 from pyvlx.slip import get_next_slip
 

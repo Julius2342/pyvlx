@@ -1,9 +1,9 @@
 """Unit tests for PyVLX PasswordChangeNotification."""
 import unittest
 
-from pyvlx.exception import PyVLXException
 from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import FramePasswordChangeNotification
+from pyvlx.exception import PyVLXException
 
 
 class TestFramePasswordChange(unittest.TestCase):

@@ -8,8 +8,8 @@ from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
 
-from .frame import FrameBase
 from .alias_array import AliasArray
+from .frame import FrameBase
 
 
 class FrameGetNodeInformationRequest(FrameBase):
