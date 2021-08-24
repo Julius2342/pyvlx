@@ -82,5 +82,5 @@ class PyVLX:
         await self.scenes.load()
 
     async def get_limitation(self, node_id):
-        l = get_limitation.GetLimitation(self, [node_id])
-        await l.do_api_call()
+        limit = get_limitation.GetLimitation(self, [node_id])
+        await limit.do_api_call()

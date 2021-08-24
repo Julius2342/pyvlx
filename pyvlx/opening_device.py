@@ -129,7 +129,6 @@ class Window(OpeningDevice):
         )
         self.rain_sensor = rain_sensor
 
-
     def __str__(self):
         """Return object as readable string."""
         return (

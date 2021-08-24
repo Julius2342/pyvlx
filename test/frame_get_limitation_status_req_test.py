@@ -14,14 +14,17 @@ class TestFrameGetLimitationStatus(unittest.TestCase):
     def test_bytes(self):
         """Test FrameGetLimitationStatus bytes."""
         frame = FrameGetLimitationStatus(node_ids=[1], session_id=1, limitation_type=LimitationType.MIN_LIMITATION)
-        self.assertEqual(bytes(frame), b'\x00\x1c\x03\x12\x00\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0c')
+        self.assertEqual(bytes(frame), b'\x00\x1c\x03\x12\x00\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                                       b'\x00\x00\x0c')
 
-        frame = FrameGetLimitationStatus(node_ids=[1,2], session_id=2, limitation_type=LimitationType.MAX_LIMITATION)
-        self.assertEqual(bytes(frame), b'\x00\x1c\x03\x12\x00\x02\x02\x01\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x0f')
+        frame = FrameGetLimitationStatus(node_ids=[1, 2], session_id=2, limitation_type=LimitationType.MAX_LIMITATION)
+        self.assertEqual(bytes(frame), b'\x00\x1c\x03\x12\x00\x02\x02\x01\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                                       b'\x00\x01\x0f')
 
     def test_frame_from_raw(self):
         """Test parse FrameGetLimitationStatus from raw."""
-        frame = frame_from_raw(b'\x00\x1c\x03\x12\x00\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x0c')
+        frame = frame_from_raw(b'\x00\x1c\x03\x12\x00\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+                               b'\x0c')
         self.assertTrue(isinstance(frame, FrameGetLimitationStatus))
 
     def test_str(self):

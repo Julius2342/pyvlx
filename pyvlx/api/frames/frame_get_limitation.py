@@ -61,15 +61,15 @@ class FrameGetLimitationStatusConfirmation(FrameBase):
     def __str__(self):
         """Return human readable string."""
         return '<{} session_id="{}" status="{}"/>'.format(
-                type(self).__name__, self.session_id, self.data
+            type(self).__name__, self.session_id, self.data
         )
 
 
 class FrameGetLimitationStatusNotification(FrameBase):
     """Frame for notification of note information request."""
-    
+
     PAYLOAD_LEN = 10
-    
+
     def __init__(self):
         """Init Frame."""
         super().__init__(Command.GW_LIMITATION_STATUS_NTF)
@@ -80,7 +80,7 @@ class FrameGetLimitationStatusNotification(FrameBase):
         self.max_value = None
         self.limit_originator = None
         self.limit_time = None
-    
+
     def get_payload(self):
         """Return Payload."""
         payload = bytes([self.session_id >> 8 & 255, self.session_id & 255])
@@ -91,7 +91,7 @@ class FrameGetLimitationStatusNotification(FrameBase):
         payload += bytes([self.limit_originator])
         payload += bytes([self.limit_time])
         return payload
-    
+
     def from_payload(self, payload):
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
@@ -107,8 +107,8 @@ class FrameGetLimitationStatusNotification(FrameBase):
         return (
             '<{} node_id="{}" session_id="{}" min_value="{}" '
             'max_value="{}" originator="{}" limit_time="{}"/>'.format(
-                    type(self).__name__, self.node_id, self.session_id,
-                    self.min_value, self.max_value, self.limit_originator,
-                    self.limit_time
+                type(self).__name__, self.node_id, self.session_id,
+                self.min_value, self.max_value, self.limit_originator,
+                self.limit_time
             )
         )
