@@ -33,7 +33,7 @@ class TestGetLimitation(unittest.TestCase):
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         limit.max_value_raw = b'\xf7'
-        self.assertEqual(limit.max_value, 123)
+        self.assertEqual(limit.max_value, 124)
 
     def test_min_value(self):
         self.pyvlx = PyVLX()

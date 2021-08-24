@@ -11,6 +11,7 @@ class SessionIdSlip(unittest.TestCase):
 
     def test_session_id(self):
         """Decode encoded, encode decoded and test results."""
+        set_session_id(0)  # Reset session id
         self.assertEqual(get_new_session_id(), 1)
         self.assertEqual(get_new_session_id(), 2)
         self.assertEqual(get_new_session_id(), 3)
