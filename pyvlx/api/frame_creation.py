@@ -14,13 +14,15 @@ from .frames import (
     FrameGetAllNodesInformationConfirmation,
     FrameGetAllNodesInformationFinishedNotification,
     FrameGetAllNodesInformationNotification,
-    FrameGetAllNodesInformationRequest, FrameGetLocalTimeConfirmation,
-    FrameGetLocalTimeRequest, FrameGetNetworkSetupConfirmation,
-    FrameGetNetworkSetupRequest, FrameGetNodeInformationConfirmation,
-    FrameGetNodeInformationNotification, FrameGetNodeInformationRequest,
-    FrameGetProtocolVersionConfirmation, FrameGetProtocolVersionRequest,
-    FrameGetSceneListConfirmation, FrameGetSceneListNotification,
-    FrameGetSceneListRequest, FrameGetStateConfirmation, FrameGetStateRequest,
+    FrameGetAllNodesInformationRequest, FrameGetLimitationStatus,
+    FrameGetLimitationStatusConfirmation, FrameGetLimitationStatusNotification,
+    FrameGetLocalTimeConfirmation, FrameGetLocalTimeRequest,
+    FrameGetNetworkSetupConfirmation, FrameGetNetworkSetupRequest,
+    FrameGetNodeInformationConfirmation, FrameGetNodeInformationNotification,
+    FrameGetNodeInformationRequest, FrameGetProtocolVersionConfirmation,
+    FrameGetProtocolVersionRequest, FrameGetSceneListConfirmation,
+    FrameGetSceneListNotification, FrameGetSceneListRequest,
+    FrameGetStateConfirmation, FrameGetStateRequest,
     FrameGetVersionConfirmation, FrameGetVersionRequest,
     FrameHouseStatusMonitorDisableConfirmation,
     FrameHouseStatusMonitorDisableRequest,
@@ -150,6 +152,13 @@ def create_frame(command):
         return FrameGetStateRequest()
     if command == Command.GW_GET_STATE_CFM:
         return FrameGetStateConfirmation()
+
+    if command == Command.GW_GET_LIMITATION_STATUS_REQ:
+        return FrameGetLimitationStatus()
+    if command == Command.GW_GET_LIMITATION_STATUS_CFM:
+        return FrameGetLimitationStatusConfirmation()
+    if command == Command.GW_LIMITATION_STATUS_NTF:
+        return FrameGetLimitationStatusNotification()
 
     if command == Command.GW_GET_NETWORK_SETUP_REQ:
         return FrameGetNetworkSetupRequest()

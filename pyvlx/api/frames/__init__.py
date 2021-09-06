@@ -22,6 +22,9 @@ from .frame_get_all_nodes_information import (
     FrameGetAllNodesInformationFinishedNotification,
     FrameGetAllNodesInformationNotification,
     FrameGetAllNodesInformationRequest)
+from .frame_get_limitation import (
+    FrameGetLimitationStatus, FrameGetLimitationStatusConfirmation,
+    FrameGetLimitationStatusNotification)
 from .frame_get_local_time import (
     FrameGetLocalTimeConfirmation, FrameGetLocalTimeRequest)
 from .frame_get_network_setup import (

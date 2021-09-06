@@ -1,5 +1,6 @@
 """Module for window openers."""
 from .api.command_send import CommandSend
+from .api.get_limitation import GetLimitation
 from .exception import PyVLXException
 from .node import Node
 from .parameter import CurrentPosition, Parameter, Position, TargetPosition
@@ -136,6 +137,13 @@ class Window(OpeningDevice):
                 self.rain_sensor, self.serial_number, self.position
             )
         )
+
+    async def get_limitation(self):
+        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
+        await get_limitation.do_api_call()
+        if not get_limitation.success:
+            raise PyVLXException("Unable to send command")
+        return get_limitation
 
 
 class Blind(OpeningDevice):
