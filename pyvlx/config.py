@@ -23,7 +23,7 @@ class Config:
         """Read configuration file."""
         PYVLXLOG.info("Reading config file: %s", path)
         try:
-            with open(path, "r") as filehandle:
+            with open(path, "r", encoding="utf-8") as filehandle:
                 doc = yaml.safe_load(filehandle)
                 self.test_configuration(doc, path)
                 self.host = doc["config"]["host"]

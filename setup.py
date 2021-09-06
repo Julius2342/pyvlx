@@ -14,7 +14,7 @@ VERSION = "0.2.19"
 def get_long_description():
     """Read long description from README.md."""
     this_directory = path.abspath(path.dirname(__file__))
-    with open(path.join(this_directory, "README.md")) as readme:
+    with open(path.join(this_directory, "README.md"), encoding="utf-8") as readme:
         long_description = readme.read()
         return long_description
 
