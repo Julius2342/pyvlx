@@ -71,3 +71,6 @@ from .frame_set_node_name import (
     FrameSetNodeNameConfirmation, FrameSetNodeNameRequest,
     SetNodeNameConfirmationStatus)
 from .frame_set_utc import FrameSetUTCConfirmation, FrameSetUTCRequest
+from .frame_status_request import (
+    FrameStatusRequestConfirmation, FrameStatusRequestNotification,
+    FrameStatusRequestRequest)
