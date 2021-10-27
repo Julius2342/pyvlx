@@ -208,7 +208,7 @@ class Blind(OpeningDevice):
             raise PyVLXException("Unable to send command")
         await self.after_update()
 
-    async def open(self, wait_for_completion=TCurrentPositionzrue):
+    async def open(self, wait_for_completion=True):
         """Open window.
 
         Parameters:
