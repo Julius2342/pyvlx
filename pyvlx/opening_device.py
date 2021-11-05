@@ -187,7 +187,7 @@ class Blind(OpeningDevice):
         """
         self.target_position = position
         self.position = position
-        PYVLXLOG.debug("Target position changed to: %s while target orientation is: %s", self.target_position, self.target_orientation)
+        PYVLXLOG.debug("%s: target position changed to: %s while target orientation is: %s", self.name self.target_position, self.target_orientation)
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
