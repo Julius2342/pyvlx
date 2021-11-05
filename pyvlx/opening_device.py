@@ -2,6 +2,7 @@
 from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .exception import PyVLXException
+from .log import PYVLXLOG
 from .node import Node
 from .parameter import CurrentPosition, Parameter, Position, TargetPosition
 
@@ -186,7 +187,7 @@ class Blind(OpeningDevice):
         """
         self.target_position = position
         self.position = position
-
+        PYVLXLOG.debug("Target position changed to: %s while target orientation is: %s", self.target_position, self.target_orientation)
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
@@ -244,7 +245,7 @@ class Blind(OpeningDevice):
         """
         self.target_orientation = orientation
         self.orientation = orientation
-        print("Orientation in device: %s " % (orientation))
+        PYVLXLOG.debug("Target orientation changed to: %s while target position is: %s", self.target_orientation, self.target_position)
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
