@@ -187,7 +187,7 @@ class Blind(OpeningDevice):
         """
         self.target_position = position
         self.position = position
-        PYVLXLOG.debug("%s: target position changed to: %s while target orientation is: %s", self.name self.target_position, self.target_orientation)
+        PYVLXLOG.debug("%s: target position changed to: %s while target orientation is: %s", self.name, self.target_position, self.target_orientation)
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
@@ -245,7 +245,7 @@ class Blind(OpeningDevice):
         """
         self.target_orientation = orientation
         self.orientation = orientation
-        PYVLXLOG.debug("Target orientation changed to: %s while target position is: %s", self.target_orientation, self.target_position)
+        PYVLXLOG.debug("%s: target orientation changed to: %s while target position is: %s", self.name, self.target_orientation, self.target_position)
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
