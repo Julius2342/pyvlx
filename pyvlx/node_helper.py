@@ -75,10 +75,10 @@ def convert_frame_to_node(pyvlx, frame):
             position_parameter=frame.current_position,
         )
 
-    if (
-        frame.node_type == NodeTypeWithSubtype.VERTICAL_EXTERIOR_AWNING
-        or frame.node_type == NodeTypeWithSubtype.HORIZONTAL_AWNING
-    ):
+    if frame.node_type in [
+        NodeTypeWithSubtype.VERTICAL_EXTERIOR_AWNING,
+        NodeTypeWithSubtype.HORIZONTAL_AWNING,
+    ]:
         return Awning(
             pyvlx=pyvlx,
             node_id=frame.node_id,
