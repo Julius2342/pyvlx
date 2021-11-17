@@ -3,7 +3,8 @@ from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .exception import PyVLXException
 from .node import Node
-from .parameter import CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition
+from .parameter import (
+    CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition)
 
 
 class OpeningDevice(Node):
