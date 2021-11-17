@@ -18,7 +18,7 @@ class TestFrameStatusRequestRequest(unittest.TestCase):
 
     def test_bytes(self):
         """Test FrameStatusRequestRequest with nodes 1,2 and session_id 0xAB."""
-        frame = FrameStatusRequestRequest(node_ids=[1,2], session_id=0xAB)
+        frame = FrameStatusRequestRequest(node_ids=[1, 2], session_id=0xAB)
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
     def test_frame_from_raw(self):
@@ -28,7 +28,7 @@ class TestFrameStatusRequestRequest(unittest.TestCase):
 
     def test_str(self):
         """Test string representation of FrameStatusRequestRequest."""
-        frame = FrameStatusRequestRequest(node_ids=[1,2], session_id=0xAB)
+        frame = FrameStatusRequestRequest(node_ids=[1, 2], session_id=0xAB)
         self.assertEqual(str(frame), "<FrameStatusRequestRequest session_id=\"171\" node_ids=\"[1, 2]\" "
                                      "status_type=\"StatusType.REQUEST_CURRENT_POSITION\" fpi1=\"254\" fpi2=\"0\"/>")
 
