@@ -64,7 +64,7 @@ class Parameter:
                 and raw != Position.from_int(Position.UNKNOWN_VALUE)
                 and Position.to_int(raw) > Position.MAX
         ):
-            return Position.from_int(Position.UNKNOWN_VALUE)
+            raise PyVLXException("parameter::raw_exceed_limit", raw=raw)
         return raw
 
     def __eq__(self, other):
