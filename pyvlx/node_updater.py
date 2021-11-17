@@ -16,6 +16,29 @@ class NodeUpdater:
         """Initialize NodeUpdater object."""
         self.pyvlx = pyvlx
 
+    async def process_frame_status_request_notification(self, frame: FrameStatusRequestNotification):
+        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
+        if frame.node_id not in self.pyvlx.nodes:
+            return
+        node = self.pyvlx.nodes[frame.node_id]
+        if isinstance(node, Blind):
+            if NodeParameter(0) not in frame.parameter_data:    # MP missing in frame
+                return
+            if NodeParameter(3) not in frame.parameter_data:    # FP3 missing in frame
+                return
+            position = Position(frame.parameter_data[NodeParameter(0)])
+            orientation = Position(frame.parameter_data[NodeParameter(3)])
+            if position.position <= Parameter.MAX:
+                node.position = position
+                PYVLXLOG.debug("%s position changed to: %s", node.name, position)
+            if orientation.position <= Parameter.MAX:
+                node.orientation = orientation
+                PYVLXLOG.debug(
+                    "%s orientation changed to: %s", node.name, orientation
+                )
+
+            await node.after_update()
+
     async def process_frame(self, frame):
         """Update nodes via frame, usually received by house monitor."""
         if isinstance(
@@ -55,26 +78,5 @@ class NodeUpdater:
                 if intensity.intensity <= Parameter.MAX:
                     node.intensity = intensity
                 await node.after_update()
-
         elif isinstance(frame, FrameStatusRequestNotification):
-            PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
-            if frame.node_id not in self.pyvlx.nodes:
-                return
-            node = self.pyvlx.nodes[frame.node_id]
-            if isinstance(node, Blind):
-                if NodeParameter(0) not in frame.parameter_data:    # MP missing in frame
-                    return
-                if NodeParameter(3) not in frame.parameter_data:    # FP3 missing in frame
-                    return
-                position = Position(frame.parameter_data[NodeParameter(0)])
-                orientation = Position(frame.parameter_data[NodeParameter(3)])
-                if position.position <= Parameter.MAX:
-                    node.position = position
-                    PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-                if orientation.position <= Parameter.MAX:
-                    node.orientation = orientation
-                    PYVLXLOG.debug(
-                        "%s orientation changed to: %s", node.name, orientation
-                    )
-
-                await node.after_update()
+            await self.process_frame_status_request_notification(frame)
