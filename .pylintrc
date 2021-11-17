@@ -2,7 +2,7 @@
 reports=no
 
 [MESSAGES CONTROL]
-disable=E1101,C0111,bad-continuation,duplicate-code,fixme,locally-disabled,too-few-public-methods,too-many-arguments,too-many-instance-attributes
+disable=E1101,C0111,bad-continuation,duplicate-code,fixme,locally-disabled,too-few-public-methods,too-many-arguments,too-many-instance-attributes,consider-using-f-string
 
 [REPORTS]
 output-format=colorized

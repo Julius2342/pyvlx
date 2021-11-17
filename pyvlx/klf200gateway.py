@@ -86,7 +86,7 @@ class Klf200Gateway:
             raise PyVLXException("Unable to set utc.")
         return setutc.success
 
-    async def set_rtc_time_zone(self):
+    async def set_rtc_time_zone(self):  # pylint: disable=no-self-use
         """Set the RTC Time Zone."""
         # idontwant = setrtctimezone(pyvlx=self.pyvlx)
         raise PyVLXException("KLF 200 RTC Timezone Set not implemented")
@@ -128,7 +128,10 @@ class Klf200Gateway:
 
     def __str__(self):
         """Return object as readable string."""
-        return (
-            '<{} state="{}" network_setup="{}"  version="{}"  protocol_version="{}"/>'.format(
-                type(self).__name__, str(self.state), str(self.network_setup),
-                str(self.version), str(self.protocol_version)))
+        return '<{} state="{}" network_setup="{}"  version="{}"  protocol_version="{}"/>'.format(
+            type(self).__name__,
+            str(self.state),
+            str(self.network_setup),
+            str(self.version),
+            str(self.protocol_version),
+        )

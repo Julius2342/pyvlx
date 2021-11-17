@@ -30,11 +30,11 @@ def convert_frame_to_node(pyvlx, frame):
             rain_sensor=True,
         )
 
-    if (
-            frame.node_type == NodeTypeWithSubtype.ROLLER_SHUTTER
-            or frame.node_type == NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER
-            or frame.node_type == NodeTypeWithSubtype.SWINGING_SHUTTERS
-    ):
+    if frame.node_type in [
+        NodeTypeWithSubtype.ROLLER_SHUTTER,
+        NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER,
+        NodeTypeWithSubtype.SWINGING_SHUTTERS
+    ]:
         return RollerShutter(
             pyvlx=pyvlx,
             node_id=frame.node_id,
@@ -43,11 +43,11 @@ def convert_frame_to_node(pyvlx, frame):
             position_parameter=frame.current_position,
         )
 
-    if (
-            frame.node_type == NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND
-            or frame.node_type == NodeTypeWithSubtype.VERTICAL_INTERIOR_BLINDS
-            or frame.node_type == NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND
-    ):
+    if frame.node_type in [
+        NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND,
+        NodeTypeWithSubtype.VERTICAL_INTERIOR_BLINDS,
+        NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND,
+    ]:
         return RollerShutter(
             pyvlx=pyvlx,
             node_id=frame.node_id,
@@ -56,11 +56,11 @@ def convert_frame_to_node(pyvlx, frame):
         )
 
     # Blinds have position and orientation (inherit frame.current_position_fp3) attribute
-    if (
-            frame.node_type == NodeTypeWithSubtype.EXTERIOR_VENETIAN_BLIND
-            or frame.node_type == NodeTypeWithSubtype.ADJUSTABLE_SLUTS_ROLLING_SHUTTER
-            or frame.node_type == NodeTypeWithSubtype.LOUVER_BLIND
-    ):
+    if frame.node_type in [
+        NodeTypeWithSubtype.EXTERIOR_VENETIAN_BLIND,
+        NodeTypeWithSubtype.ADJUSTABLE_SLUTS_ROLLING_SHUTTER,
+        NodeTypeWithSubtype.LOUVER_BLIND,
+    ]:
         return Blind(
             pyvlx=pyvlx,
             node_id=frame.node_id,
@@ -69,10 +69,10 @@ def convert_frame_to_node(pyvlx, frame):
             position_parameter=frame.current_position,
         )
 
-    if (
-            frame.node_type == NodeTypeWithSubtype.VERTICAL_EXTERIOR_AWNING
-            or frame.node_type == NodeTypeWithSubtype.HORIZONTAL_AWNING
-    ):
+    if frame.node_type in [
+        NodeTypeWithSubtype.VERTICAL_EXTERIOR_AWNING,
+        NodeTypeWithSubtype.HORIZONTAL_AWNING,
+    ]:
         return Awning(
             pyvlx=pyvlx,
             node_id=frame.node_id,
@@ -89,10 +89,10 @@ def convert_frame_to_node(pyvlx, frame):
             serial_number=frame.serial_number,
         )
 
-    if (
-            frame.node_type == NodeTypeWithSubtype.GARAGE_DOOR_OPENER
-            or frame.node_type == NodeTypeWithSubtype.LINAR_ANGULAR_POSITION_OF_GARAGE_DOOR
-    ):
+    if frame.node_type in [
+        NodeTypeWithSubtype.GARAGE_DOOR_OPENER,
+        NodeTypeWithSubtype.LINAR_ANGULAR_POSITION_OF_GARAGE_DOOR,
+    ]:
         return GarageDoor(
             pyvlx=pyvlx,
             node_id=frame.node_id,
@@ -128,10 +128,7 @@ def convert_frame_to_node(pyvlx, frame):
             position_parameter=frame.current_position,
         )
 
-    if (
-        frame.node_type == NodeTypeWithSubtype.LIGHT
-        or frame.node_type == NodeTypeWithSubtype.LIGHT_ON_OFF
-    ):
+    if frame.node_type in [NodeTypeWithSubtype.LIGHT, NodeTypeWithSubtype.LIGHT_ON_OFF]:
         return Light(
             pyvlx=pyvlx,
             node_id=frame.node_id,
