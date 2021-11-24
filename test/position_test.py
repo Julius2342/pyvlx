@@ -44,6 +44,12 @@ class TestPosition(unittest.TestCase):
         self.assertEqual(Position(position_percent=50).position, 25600)
         self.assertEqual(Position(position=12345).position_percent, 24)
 
+    def test_fallback_to_unknown(self):
+        self.assertEqual(Parameter(raw=b"\xC8\x01"), Parameter(raw=Parameter.from_int(Parameter.UNKNOWN_VALUE)))
+        self.assertEqual(Parameter(raw=b"\xC9\x00"), Parameter(raw=Parameter.from_int(Parameter.UNKNOWN_VALUE)))
+        self.assertEqual(Parameter(raw=b"\xD8\x00"), Parameter(raw=Parameter.from_int(Parameter.UNKNOWN_VALUE)))
+        self.assertEqual(Parameter(raw=b"\xfe\x01"), Parameter(raw=Parameter.from_int(Parameter.UNKNOWN_VALUE)))
+
     def test_exception(self):
         """Test wrong initialization of Position."""
         with self.assertRaises(PyVLXException):
@@ -58,10 +64,6 @@ class TestPosition(unittest.TestCase):
             Position(position_percent=-1)
         with self.assertRaises(PyVLXException):
             Position(position_percent=101)
-        with self.assertRaises(PyVLXException):
-            Parameter(raw=b"\xC8\x01")
-        with self.assertRaises(PyVLXException):
-            Parameter(raw=b"\xC9\x00")
         with self.assertRaises(PyVLXException):
             Parameter(raw=b"\x00\x00\x00")
         with self.assertRaises(PyVLXException):
