@@ -3,7 +3,8 @@ from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .exception import PyVLXException
 from .node import Node
-from .parameter import CurrentPosition, Parameter, Position, TargetPosition
+from .parameter import (
+    CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition)
 
 
 class OpeningDevice(Node):
@@ -172,6 +173,44 @@ class Blind(OpeningDevice):
         self.target_orientation = TargetPosition()
         self.target_position = TargetPosition()
 
+    async def set_position_and_orientation(self, position, wait_for_completion=True, orientation=None):
+        """Set window to desired position.
+
+        Parameters:
+            * position: Position object containing the current position.
+            * target_position: Position object holding the target position
+                which allows to ajust the position while the blind is in movement
+                without stopping the blind (if orientation position has been changed.)
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+            * orientation: If set, the orientation of the device will be set in the same request.
+                Note, that, if the position is set to 0, the orientation will be set to 0 too.
+
+        """
+        self.target_position = position
+        self.position = position
+
+        kwargs = {}
+
+        if orientation is not None:
+            kwargs['fp3'] = orientation
+        elif self.target_position == Position(position_percent=0):
+            kwargs['fp3'] = Position(position_percent=0)
+        else:
+            kwargs['fp3'] = IgnorePosition()
+
+        command_send = CommandSend(
+            pyvlx=self.pyvlx,
+            wait_for_completion=wait_for_completion,
+            node_id=self.node_id,
+            parameter=position,
+            **kwargs
+        )
+        await command_send.do_api_call()
+        if not command_send.success:
+            raise PyVLXException("Unable to send command")
+        await self.after_update()
+
     async def set_position(self, position, wait_for_completion=True):
         """Set window to desired position.
 
@@ -184,20 +223,8 @@ class Blind(OpeningDevice):
                 after device has reached target position.
 
         """
-        self.target_position = position
-        self.position = position
 
-        command_send = CommandSend(
-            pyvlx=self.pyvlx,
-            wait_for_completion=wait_for_completion,
-            node_id=self.node_id,
-            parameter=position,
-            fp3=self.target_orientation,
-        )
-        await command_send.do_api_call()
-        if not command_send.success:
-            raise PyVLXException("Unable to send command")
-        await self.after_update()
+        await self.set_position_and_orientation(position, wait_for_completion)
 
     async def open(self, wait_for_completion=True):
         """Open window.
@@ -226,8 +253,8 @@ class Blind(OpeningDevice):
 
     async def stop(self, wait_for_completion=True):
         """Stop Blind position."""
-        await self.set_position(
-            position=CurrentPosition(), wait_for_completion=wait_for_completion
+        await self.set_position_and_orientation(
+            position=CurrentPosition(), wait_for_completion=wait_for_completion, orientation=self.target_orientation
         )
 
     async def set_orientation(self, orientation, wait_for_completion=True):
@@ -244,13 +271,18 @@ class Blind(OpeningDevice):
         """
         self.target_orientation = orientation
         self.orientation = orientation
+
+        fp3 = Position(position_percent=0)\
+            if self.target_position == Position(position_percent=0)\
+            else self.target_orientation
+
         print("Orientation in device: %s " % (orientation))
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
-            parameter=self.target_position,
-            fp3=orientation,
+            parameter=IgnorePosition(),
+            fp3=fp3,
         )
         await command_send.do_api_call()
         if not command_send.success:

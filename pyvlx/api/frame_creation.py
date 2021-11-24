@@ -34,7 +34,8 @@ from .frames import (
     FramePasswordEnterConfirmation, FramePasswordEnterRequest,
     FrameSessionFinishedNotification, FrameSetNodeNameConfirmation,
     FrameSetNodeNameRequest, FrameSetUTCConfirmation, FrameSetUTCRequest,
-    extract_from_frame)
+    FrameStatusRequestConfirmation, FrameStatusRequestNotification,
+    FrameStatusRequestRequest, extract_from_frame)
 
 
 def frame_from_raw(raw):
@@ -188,5 +189,12 @@ def create_frame(command):
         return FrameLeaveLearnStateConfirmation()
     if command == Command.GW_LEAVE_LEARN_STATE_REQ:
         return FrameLeaveLearnStateRequest()
+
+    if command == Command.GW_STATUS_REQUEST_REQ:
+        return FrameStatusRequestRequest()
+    if command == Command.GW_STATUS_REQUEST_CFM:
+        return FrameStatusRequestConfirmation()
+    if command == Command.GW_STATUS_REQUEST_NTF:
+        return FrameStatusRequestNotification()
 
     return None

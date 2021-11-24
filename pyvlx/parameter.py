@@ -5,14 +5,14 @@ from .exception import PyVLXException
 class Parameter:
     """General object for storing parameters."""
 
-    UNKNOWN_VALUE = 63487  # F7 FF
-    CURRENT = 53760  # D2 00
-    MAX = 51200  # C8 00
-    MIN = 0  # 00 00
-    ON = 0  # 00 00
-    OFF = 51200  # C8 00
-    TARGET = 53504  # D1 00
-    IGNORE = 54272  # D4 00
+    UNKNOWN_VALUE = 0xF7FF  # F7 FF
+    CURRENT = 0xD200  # D2 00
+    MAX = 0xC800  # C8 00
+    MIN = 0x0000  # 00 00
+    ON = 0x0000  # 00 00
+    OFF = 0xC800  # C8 00
+    TARGET = 0xD100  # D1 00
+    IGNORE = 0xD400  # D4 00
 
     def __init__(self, raw=None):
         """Initialize Parameter class."""
@@ -150,7 +150,8 @@ class Position(Parameter):
     @property
     def closed(self):
         """Return true if position is set to fully closed."""
-        return self.raw == bytes([self.MAX >> 8 & 255, self.MAX & 255])
+        # Consider closed even if raw is not exactly 51200 (tolerance for devices like Velux SML)
+        return self.position_percent == 100
 
     @property
     def position(self):
@@ -193,7 +194,8 @@ class Position(Parameter):
     def to_percent(raw):
         """Create percent position value out of raw."""
         # The first byte has the vlue from 0 to 200. Ignoring the second one.
-        # Adding 0.5 allows a slight tolerance for devices (e.g. Velux SML) that do not return exactly 51200 as final position when closed.
+        # Adding 0.5 allows a slight tolerance for devices (e.g. Velux SML) that
+        # do not return exactly 51200 as final position when closed.
         return int(raw[0] / 2 + 0.5)
 
     def __str__(self):
