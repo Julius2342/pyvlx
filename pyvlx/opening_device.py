@@ -172,8 +172,8 @@ class Blind(OpeningDevice):
         self.orientation = Position(position_percent=0)
         self.target_orientation = TargetPosition()
         self.target_position = TargetPosition()
-        self.open_orientation: float = 50
-        self.close_orientation: float = 100
+        self.open_orientation_target: float = 50
+        self.close_orientation_target: float = 100
 
     async def set_position_and_orientation(self, position, wait_for_completion=True, orientation=None):
         """Set window to desired position.
@@ -299,14 +299,14 @@ class Blind(OpeningDevice):
         Blind slats with ±90° orientation are open at 50%
         """
         await self.set_orientation(
-            orientation=Position(position_percent=self.open_orientation),
+            orientation=Position(position_percent=self.open_orientation_target),
             wait_for_completion=wait_for_completion,
         )
 
     async def close_orientation(self, wait_for_completion=True):
         """Close Blind slats."""
         await self.set_orientation(
-            orientation=Position(position_percent=self.close_orientation),
+            orientation=Position(position_percent=self.close_orientation_target),
             wait_for_completion=wait_for_completion,
         )
 
