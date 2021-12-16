@@ -7,7 +7,7 @@ pydocstyle==6.1.1
 pylint==2.12.2
 pytest==6.2.5
 pytest-cov==3.0.0
-pytest-timeout==2.0.1
+pytest-timeout==2.0.2
 setuptools==59.6.0
 tox==3.24.4
 twine==3.7.1
