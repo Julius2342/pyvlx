@@ -2,7 +2,9 @@
 import asyncio
 
 from .api import GetState
+from .api.status_request import StatusRequest
 from .exception import PyVLXException
+from .opening_device import Blind
 
 
 class Heartbeat:
@@ -67,3 +69,10 @@ class Heartbeat:
         await get_state.do_api_call()
         if not get_state.success:
             raise PyVLXException("Unable to send get state.")
+
+        # If nodes contain Blind device, refresh orientation because House Monitoring
+        # delivers wrong values for FP3 parameter
+        for node in self.pyvlx.nodes:
+            if isinstance(node, Blind):
+                status_request = StatusRequest(self.pyvlx, node.node_id)
+                await status_request.do_api_call()
