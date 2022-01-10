@@ -33,6 +33,7 @@ def convert_frame_to_node(pyvlx, frame):
     if frame.node_type in [
         NodeTypeWithSubtype.ROLLER_SHUTTER,
         NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER,
+        NodeTypeWithSubtype.SWINGING_SHUTTERS
     ]:
         return RollerShutter(
             pyvlx=pyvlx,
