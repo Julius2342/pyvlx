@@ -2,7 +2,6 @@
 from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .exception import PyVLXException
-from .log import PYVLXLOG
 from .node import Node
 from .parameter import (
     CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition)
