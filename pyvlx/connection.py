@@ -91,6 +91,7 @@ class Connection:
         )
         self.connected = True
         self.connection_counter += 1
+        PYVLXLOG.debug("Amount of connections since last HA start: %s", self.connection_counter)
 
     def register_frame_received_cb(self, callback):
         """Register frame received callback."""
