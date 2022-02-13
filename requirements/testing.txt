@@ -4,10 +4,10 @@ coveralls==3.3.1
 flake8==4.0.1
 flake8-isort==4.1.1
 pydocstyle==6.1.1
-pylint==2.11.1
-pytest==6.2.5
+pylint==2.12.2
+pytest==7.0.0
 pytest-cov==3.0.0
-pytest-timeout==2.0.1
-setuptools==59.2.0
-tox==3.24.4
-twine==3.6.0
+pytest-timeout==2.1.0
+setuptools==60.8.2
+tox==3.24.5
+twine==3.8.0
