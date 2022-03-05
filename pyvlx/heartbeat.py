@@ -73,6 +73,6 @@ class Heartbeat:
         # If nodes contain Blind device, refresh orientation because House Monitoring
         # delivers wrong values for FP3 parameter
         for node in self.pyvlx.nodes:
-            if isinstance(node, Blind):
+            # if isinstance(node, Blind):
                 status_request = StatusRequest(self.pyvlx, node.node_id)
                 await status_request.do_api_call()
