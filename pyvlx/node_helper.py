@@ -41,6 +41,7 @@ def convert_frame_to_node(pyvlx, frame):
             name=frame.name,
             serial_number=frame.serial_number,
             position_parameter=frame.current_position,
+            target_position_parameter=frame.target,
         )
 
     if frame.node_type in [

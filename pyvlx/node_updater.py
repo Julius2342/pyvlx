@@ -71,6 +71,9 @@ class NodeUpdater:
             elif isinstance(node, OpeningDevice):
                 if position.position <= Parameter.MAX:
                     node.position = position
+                target_position = Position(frame.target)
+                if target_position.position <= Parameter.MAX:
+                    node.target_position = target_position
                 await node.after_update()
             elif isinstance(node, LighteningDevice):
                 intensity = Intensity(frame.current_position)
