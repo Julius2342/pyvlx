@@ -8,6 +8,6 @@ pylint==2.12.2
 pytest==7.1.1
 pytest-cov==3.0.0
 pytest-timeout==2.1.0
-setuptools==60.9.3
+setuptools==62.1.0
 tox==3.25.0
 twine==4.0.0
