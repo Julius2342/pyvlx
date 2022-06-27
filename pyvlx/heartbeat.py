@@ -33,10 +33,10 @@ class Heartbeat:
 
     async def stop(self):
         """Stop heartbeat."""
+        self.stopped = True
         self.loop_event.set()
         # Waiting for shutdown of loop()
         await self.stopped_event.wait()
-        self.stopped = True
 
     async def loop(self):
         """Pulse every timeout seconds until stopped."""
@@ -46,11 +46,7 @@ class Heartbeat:
             )
             await self.loop_event.wait()
             if not self.stopped:
-                self.loop_event.clear()
-                try:
-                    await self.pulse()
-                except PyVLXException:
-                    pass
+                await self.pulse()
         self.cancel_loop_timeout()
         self.stopped_event.set()
 
@@ -69,7 +65,7 @@ class Heartbeat:
         get_state = GetState(pyvlx=self.pyvlx)
         await get_state.do_api_call()
         if not get_state.success:
-            raise PyVLXException("Unable to send get state.")
+            raise PyVLXException("Unable to send get state, heartbeat stopped")
 
         # If nodes contain Blind device, refresh orientation because House Monitoring
         # delivers wrong values for FP3 parameter
