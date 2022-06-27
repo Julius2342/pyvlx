@@ -16,11 +16,11 @@ class GetState(ApiEvent):
 
     async def handle_frame(self, frame):
         """Handle incoming API frame, return True if this was the expected frame."""
-        if not isinstance(frame, FrameGetStateConfirmation):
-            return False
-        self.success = True
-        self.state = DtoState(frame.gateway_state, frame.gateway_sub_state)
-        return True
+        if isinstance(frame, FrameGetStateConfirmation):
+            self.success = True
+            self.state = DtoState(frame.gateway_state, frame.gateway_sub_state)
+            return True
+        return False
 
     def request_frame(self):
         """Construct initiating frame."""
