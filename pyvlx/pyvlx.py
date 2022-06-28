@@ -39,7 +39,7 @@ class PyVLX:
 
     async def connect(self):
         """Connect to KLF 200."""
-        PYVLXLOG.debug("Connecting to KLF 200.")
+        PYVLXLOG.debug("TEST Connecting to KLF 200.")
         await self.connection.connect()
         await self.klf200.password_enter(password=self.config.password)
         await self.klf200.get_version()
