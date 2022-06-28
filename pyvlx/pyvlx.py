@@ -45,7 +45,7 @@ class PyVLX:
         await self.klf200.get_version()
         await self.klf200.get_protocol_version()
         PYVLXLOG.debug(
-            "Connected to: %s,  %s",
+            "TEST Connected to: %s,  %s",
             str(self.klf200.version),
             str(self.klf200.protocol_version)
         )
