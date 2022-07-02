@@ -15,7 +15,7 @@ class Heartbeat:
         self.pyvlx = pyvlx
         self.timeout_in_seconds = timeout_in_seconds
         self.loop_event = asyncio.Event()
-        self.stopped = True
+        self.stopped = False
         self.run_task = None
         self.timeout_handle = None
         self.stopped_event = asyncio.Event()
@@ -26,10 +26,9 @@ class Heartbeat:
 
     def start(self):
         """Create loop task."""
-        if self.stopped:
-            self.stopped_event.clear()
-            self.run_task = self.pyvlx.loop.create_task(self.loop())
-            self.stopped = False
+        self.stopped = False
+        self.stopped_event.clear()
+        self.run_task = self.pyvlx.loop.create_task(self.loop())
 
     async def stop(self):
         """Stop heartbeat."""

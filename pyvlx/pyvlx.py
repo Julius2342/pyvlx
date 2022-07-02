@@ -29,6 +29,7 @@ class PyVLX:
         self.connection = Connection(loop=self.loop, config=self.config)
         self.heartbeat = Heartbeat(pyvlx=self)
         self.node_updater = NodeUpdater(pyvlx=self)
+        self.heartbeat.start()
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
         self.nodes = Nodes(self)
         self.scenes = Scenes(self)
@@ -49,11 +50,11 @@ class PyVLX:
             str(self.klf200.version),
             str(self.klf200.protocol_version)
         )
+
         await self.klf200.get_state()
         await self.klf200.set_utc()
         await self.klf200.get_network_setup()
         await house_status_monitor_enable(pyvlx=self)
-        self.heartbeat.start()
 
     async def reboot_gateway(self):
         """For Compatibility: Reboot the KLF 200."""
