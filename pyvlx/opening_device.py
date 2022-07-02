@@ -283,7 +283,7 @@ class Blind(OpeningDevice):
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
-            parameter=self.target_position,
+            parameter=IgnorePosition(),
             fp3=fp3,
         )
         await command_send.do_api_call()
