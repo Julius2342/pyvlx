@@ -3,6 +3,7 @@ import asyncio
 
 from .api import GetState
 from .api.status_request import StatusRequest
+from .log import PYVLXLOG
 from .exception import PyVLXException
 from .opening_device import Blind
 
@@ -29,7 +30,11 @@ class Heartbeat:
         if self.stopped:
             self.stopped_event.clear()
             self.run_task = self.pyvlx.loop.create_task(self.loop())
-            self.stopped = False
+            self.stopped = False  
+            PYVLXLOG.debug("Heartbeat started")
+        else:
+            PYVLXLOG.debug("Heartbeat already running")
+        
 
     async def stop(self):
         """Stop heartbeat."""
@@ -37,16 +42,17 @@ class Heartbeat:
         self.loop_event.set()
         # Waiting for shutdown of loop()
         await self.stopped_event.wait()
+        PYVLXLOG.debug("Heartbeat stopped")
 
     async def loop(self):
         """Pulse every timeout seconds until stopped."""
         while not self.stopped:
+            await self.pulse()
+            self.loop_event.clear()
             self.timeout_handle = self.pyvlx.connection.loop.call_later(
                 self.timeout_in_seconds, self.loop_timeout
             )
             await self.loop_event.wait()
-            if not self.stopped:
-                await self.pulse()
         self.cancel_loop_timeout()
         self.stopped_event.set()
 
