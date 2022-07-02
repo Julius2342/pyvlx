@@ -43,6 +43,9 @@ class PyVLX:
         PYVLXLOG.debug("Connecting to KLF 200.")
         await self.connection.connect()
         await self.klf200.password_enter(password=self.config.password)
+        # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
+        # Test: Disable HSM on every new connection and enable again, may this helps to solve SSL handshake issue. 
+        await house_status_monitor_disable(pyvlx=self)        
         await self.klf200.get_version()
         await self.klf200.get_protocol_version()
         PYVLXLOG.debug(
