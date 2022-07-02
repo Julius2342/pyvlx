@@ -29,18 +29,17 @@ class PyVLX:
         self.connection = Connection(loop=self.loop, config=self.config)
         self.heartbeat = Heartbeat(pyvlx=self)
         self.node_updater = NodeUpdater(pyvlx=self)
-        self.heartbeat.start()
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
         self.nodes = Nodes(self)
         self.scenes = Scenes(self)
         self.version = None
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
-        PYVLXLOG.debug("Loading https://github.com/pawlizio/pyvlx.git@master v0.1.24")
+        PYVLXLOG.debug("Loading https://github.com/pawlizio/pyvlx.git@master v0.1.25")
 
     async def connect(self):
         """Connect to KLF 200."""
-        PYVLXLOG.debug("Connecting to KLF 200.")
+        PYVLXLOG.debug("Connecting to KLF 200 on %s", self)
         await self.connection.connect()
         await self.klf200.password_enter(password=self.config.password)
         # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
@@ -53,10 +52,10 @@ class PyVLX:
             str(self.klf200.version),
             str(self.klf200.protocol_version)
         )
-
         await self.klf200.get_state()
         await self.klf200.set_utc()
         await self.klf200.get_network_setup()
+        self.heartbeat.start()
         await house_status_monitor_enable(pyvlx=self)
 
     async def reboot_gateway(self):
