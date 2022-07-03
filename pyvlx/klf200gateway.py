@@ -2,7 +2,7 @@
 
 from .api import (
     FactoryDefault, GetLocalTime, GetNetworkSetup, GetProtocolVersion,
-    GetState, GetVersion, LeaveLearnState, PasswordEnter, Reboot, SetUTC, HouseStatusMonitorEnable, HouseStatusMonitorDisable)
+    GetState, GetVersion,  HouseStatusMonitorDisable, HouseStatusMonitorEnable,LeaveLearnState, PasswordEnter, Reboot, SetUTC)
 from .exception import PyVLXException
 
 

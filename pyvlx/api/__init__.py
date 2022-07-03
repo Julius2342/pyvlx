@@ -14,7 +14,7 @@ from .get_scene_list import GetSceneList
 from .get_state import GetState
 from .get_version import GetVersion
 from .house_status_monitor import (
-    HouseStatusMonitorEnable, HouseStatusMonitorDisable)
+    HouseStatusMonitorDisable, HouseStatusMonitorEnable)
 from .leave_learn_state import LeaveLearnState
 from .password_enter import PasswordEnter
 from .reboot import Reboot
