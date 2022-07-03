@@ -7,8 +7,7 @@ and roller shutters.
 """
 import asyncio
 
-from .api import (
-    get_limitation, house_status_monitor_disable, house_status_monitor_enable)
+from .api import (get_limitation)
 from .config import Config
 from .connection import Connection
 from .heartbeat import Heartbeat
@@ -35,7 +34,7 @@ class PyVLX:
         self.version = None
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
-        PYVLXLOG.debug("Loading https://github.com/pawlizio/pyvlx.git@master v0.1.26")
+        PYVLXLOG.debug("Loading https://github.com/pawlizio/pyvlx.git@master v0.1.27")
 
     async def connect(self):
         """Connect to KLF 200."""
@@ -70,7 +69,7 @@ class PyVLX:
     async def disconnect(self):
         """Disconnect from KLF 200."""
         # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
-        await house_status_monitor_disable(pyvlx=self)
+        await self.klf200.house_status_monitor_disable(pyvlx=self)
         await self.heartbeat.stop()
         self.connection.disconnect()
 
