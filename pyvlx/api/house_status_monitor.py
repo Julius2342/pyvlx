@@ -47,19 +47,3 @@ class HouseStatusMonitorDisable(ApiEvent):
     def request_frame(self):
         """Construct initiating frame."""
         return FrameHouseStatusMonitorDisableRequest()
-
-
-async def house_status_monitor_enable(pyvlx):
-    """Enable house status monitor."""
-    status_monitor_enable = HouseStatusMonitorEnable(pyvlx=pyvlx)
-    await status_monitor_enable.do_api_call()
-    if not status_monitor_enable.success:
-        raise PyVLXException("Unable enable house status monitor.")
-
-
-async def house_status_monitor_disable(pyvlx):
-    """Disable house status monitor."""
-    status_monitor_disable = HouseStatusMonitorDisable(pyvlx=pyvlx)
-    await status_monitor_disable.do_api_call()
-    if not status_monitor_disable.success:
-        raise PyVLXException("Unable disable house status monitor.")
