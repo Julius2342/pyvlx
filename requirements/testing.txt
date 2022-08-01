@@ -1,7 +1,7 @@
 -r production.txt
 isort==5.10.1
 coveralls==3.3.1
-flake8==4.0.1
+flake8==5.0.1
 flake8-isort==4.1.1
 pydocstyle==6.1.1
 pylint==2.13.9
