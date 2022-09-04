@@ -4,7 +4,7 @@ from .api.get_limitation import GetLimitation
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition)
+    CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition, DualRollerShutterPosition)
 
 
 class OpeningDevice(Node):
@@ -323,6 +323,49 @@ class Awning(OpeningDevice):
 
 class RollerShutter(OpeningDevice):
     """RollerShutter object."""
+
+    
+class DualRollerShutter(RollerShutter):
+    """Dual RollerShutter object."""
+
+    async def set_dual_roller_shutter_position(self, position, wait_for_completion=True, curtain="both"):
+        """Set dual roller shutter to the desired position.
+        Parameters:
+            * position: Position object containing the target position.
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+            * curtain: specifies the curtain (both, upper, lower) to be positioned on dual roller shutters
+        """
+        if curtain == "upper":
+            command_send = CommandSend(
+                pyvlx=self.pyvlx,
+                wait_for_completion=wait_for_completion,
+                node_id=self.node_id,
+                parameter=Position(DualRollerShutterPosition()),
+                fp1=position,
+                fp2=TargetPosition()
+            )
+        elif curtain == "lower":
+            command_send = CommandSend(
+                pyvlx=self.pyvlx,
+                wait_for_completion=wait_for_completion,
+                node_id=self.node_id,
+                parameter=Position(DualRollerShutterPosition()),
+                fp1=TargetPosition(),
+                fp2=position
+            )
+        else:
+            command_send = CommandSend(
+                pyvlx=self.pyvlx,
+                wait_for_completion=wait_for_completion,
+                node_id=self.node_id,
+                parameter=position
+            )
+
+        await command_send.do_api_call()
+        if not command_send.success:
+            raise PyVLXException("Unable to send command")
+        await self.after_update()
 
 
 class GarageDoor(OpeningDevice):
