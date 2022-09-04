@@ -7,11 +7,11 @@ from .log import PYVLXLOG
 from .nodes import Nodes
 from .opening_device import (
     Awning, Blade, Blind, GarageDoor, Gate, OpeningDevice, RollerShutter,
-    Window)
+    Window, DualRollerShutter)
 from .parameter import (
     CurrentIntensity, CurrentPosition, Intensity, Parameter, Position,
     SwitchParameter, SwitchParameterOff, SwitchParameterOn, UnknownIntensity,
-    UnknownPosition)
+    UnknownPosition, DualRollerShutterPosition)
 # flake8: noqa
 from .pyvlx import PyVLX
 from .scene import Scene
