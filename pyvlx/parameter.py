@@ -13,6 +13,7 @@ class Parameter:
     OFF = 0xC800  # C8 00
     TARGET = 0xD100  # D1 00
     IGNORE = 0xD400  # D4 00
+    DUAL_SHUTTER_CURTAINS = 0xD808  # D8 08
 
     def __init__(self, raw=None):
         """Initialize Parameter class."""
@@ -48,6 +49,8 @@ class Parameter:
             return True
         if value == Parameter.TARGET:
             return True
+        if value == Parameter.DUAL_SHUTTER_CURTAINS:
+            return True 
         return False
 
     @staticmethod
@@ -241,6 +244,14 @@ class IgnorePosition(Position):
     def __init__(self):
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.IGNORE)
+
+        
+class DualRollerShutterPosition(Position):
+    """Position to be provided when addressing the upper or lower curtain of a dual roller shutter by using FP1 or FP2."""
+
+    def __init__(self):
+        """Initialize CurrentPosition class."""
+        super().__init__(position=Position.DUAL_SHUTTER_CURTAINS)
 
 
 class Intensity(Parameter):
