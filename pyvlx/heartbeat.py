@@ -26,14 +26,18 @@ class Heartbeat:
         self.cancel_loop_timeout()
 
     def start(self):
+        asyncio.run_coroutine_threadsafe(self._start(), self.pyvlx.loop)
+
+    async def _start(self):
         """Create loop task."""
-        if self.stopped:
-            self.stopped_event.clear()
-            self.run_task = self.pyvlx.loop.create_task(self.loop())
-            self.stopped = False  
-            PYVLXLOG.debug("Heartbeat started")
-        else:
-            PYVLXLOG.debug("Heartbeat already running")
+        if not self.stopped:
+            PYVLXLOG.debug("Heartbeat restarting")
+            self.stop()
+
+        self.stopped_event.clear()
+        self.stopped = False
+        self.run_task = self.pyvlx.loop.create_task(self.loop())
+        PYVLXLOG.debug("Heartbeat started")
         
 
     async def stop(self):
@@ -47,12 +51,18 @@ class Heartbeat:
     async def loop(self):
         """Pulse every timeout seconds until stopped."""
         while not self.stopped:
-            await self.pulse()
-            self.loop_event.clear()
-            self.timeout_handle = self.pyvlx.connection.loop.call_later(
-                self.timeout_in_seconds, self.loop_timeout
-            )
-            await self.loop_event.wait()
+            try:
+                await self.pulse()
+                self.loop_event.clear()
+                self.timeout_handle = self.pyvlx.connection.loop.call_later(
+                    self.timeout_in_seconds, self.loop_timeout
+                )
+                await self.loop_event.wait()
+            except asyncio.exceptions.CancelledError:
+                PYVLXLOG.debug("Heartbeat cancelled")
+            except Exception as e:
+                PYVLXLOG.debug("Heartbeat error: %s" % str(e))
+        PYVLXLOG.debug("Heartbeat stopped")
         self.cancel_loop_timeout()
         self.stopped_event.set()
 
