@@ -21,12 +21,12 @@ from .scenes import Scenes
 class PyVLX:
     """Class for PyVLX."""
 
-    def __init__(self, path=None, host=None, password=None, loop=None):
+    def __init__(self, path=None, host=None, password=None, loop=None, heartbeat_timeout_in_seconds=30):
         """Initialize PyVLX class."""
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
         self.connection = Connection(loop=self.loop, config=self.config)
-        self.heartbeat = Heartbeat(pyvlx=self)
+        self.heartbeat = Heartbeat(pyvlx=self, timeout_in_seconds=heartbeat_timeout_in_seconds)
         self.node_updater = NodeUpdater(pyvlx=self)
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
         self.nodes = Nodes(self)
