@@ -32,7 +32,7 @@ class Heartbeat:
         """Create loop task."""
         if not self.stopped:
             PYVLXLOG.debug("Heartbeat restarting")
-            self.stop()
+            await self.stop()
 
         self.stopped_event.clear()
         self.stopped = False
