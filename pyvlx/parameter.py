@@ -85,6 +85,10 @@ class SwitchParameter(Parameter):
         if parameter is not None:
             self.from_parameter(parameter)
 
+    def __bytes__(self):
+        """Convert object in byte representation."""
+        return self.raw
+
     def set_on(self):
         """Set parameter to 'on' state."""
         self.raw = self.from_int(Parameter.ON)

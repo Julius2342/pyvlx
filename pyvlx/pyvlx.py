@@ -34,7 +34,7 @@ class PyVLX:
         self.version = None
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
-        PYVLXLOG.debug("Loading https://github.com/pawlizio/pyvlx.git@master v0.1.32")
+        PYVLXLOG.debug("Loading https://github.com/pawlizio/pyvlx.git@master v0.1.33")
 
     async def connect(self):
         """Connect to KLF 200."""
