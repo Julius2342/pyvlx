@@ -79,16 +79,33 @@ class Parameter:
 class SwitchParameter(Parameter):
     """Class for storing On or Off values."""
 
-    def __init__(self, parameter=None):
+    def __init__(self, parameter=None, state=None):
         """Initialize Parameter class."""
         super().__init__()
         if parameter is not None:
             self.from_parameter(parameter)
+        elif state is not None:
+            self.state = state
 
     def __bytes__(self):
         """Convert object in byte representation."""
         return self.raw
 
+    @property
+    def state(self):
+        """Position property."""
+        return self.to_int(self.raw)
+
+    @state.setter
+    def state(self, state):
+        """Setter of internal raw via state."""
+        self.raw = self.from_int(state)
+
+    @staticmethod
+    def to_int(raw):
+        """Create int position value out of raw."""
+        return raw[0] * 256 + raw[1]
+    
     def set_on(self):
         """Set parameter to 'on' state."""
         self.raw = self.from_int(Parameter.ON)
@@ -105,14 +122,21 @@ class SwitchParameter(Parameter):
         """Return True if parameter is in 'off' state."""
         return self.raw == self.from_int(Parameter.OFF)
 
+    def __str__(self):
+        """Return string representation of object."""         
+        if self.raw == self.from_int(Parameter.ON):
+            return "ON"
+        elif self.raw == self.from_int(Parameter.OFF):
+            return "OFF"
+        else:
+            return "UNKNOWN"
 
 class SwitchParameterOn(SwitchParameter):
     """Switch Parameter in switched 'on' state."""
 
     def __init__(self):
         """Initialize SwitchParameterOn class."""
-        super().__init__()
-        self.set_on()
+        super().__init__(state=Parameter.ON)
 
 
 class SwitchParameterOff(SwitchParameter):
@@ -120,8 +144,7 @@ class SwitchParameterOff(SwitchParameter):
 
     def __init__(self):
         """Initialize SwitchParameterOff class."""
-        super().__init__()
-        self.set_off()
+        super().__init__(state=Parameter.OFF)
 
 
 class Position(Parameter):

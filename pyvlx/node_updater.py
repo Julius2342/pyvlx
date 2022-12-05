@@ -5,8 +5,9 @@ from .api.frames import (
 from .const import NodeParameter
 from .lightening_device import LighteningDevice
 from .log import PYVLXLOG
+from .on_off_switch import OnOffSwitch
 from .opening_device import Blind, OpeningDevice
-from .parameter import Intensity, Parameter, Position
+from .parameter import Intensity, Parameter, Position, SwitchParameter
 
 
 class NodeUpdater:
@@ -76,6 +77,15 @@ class NodeUpdater:
                 intensity = Intensity(frame.current_position)
                 if intensity.intensity <= Parameter.MAX:
                     node.intensity = intensity
+                await node.after_update()
+            elif isinstance(node, OnOffSwitch):
+                state = SwitchParameter(frame.current_position) 
+                if state.state == Parameter.ON:
+                    node.parameter = state
+                    PYVLXLOG.debug("%s state changed to: %s", node.name, state)
+                elif state.state == Parameter.OFF:
+                    node.parameter = state
+                    PYVLXLOG.debug("%s state changed to: %s", node.name, state)
                 await node.after_update()
         elif isinstance(frame, FrameStatusRequestNotification):
             await self.process_frame_status_request_notification(frame)
