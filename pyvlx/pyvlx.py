@@ -16,7 +16,6 @@ from .log import PYVLXLOG
 from .node_updater import NodeUpdater
 from .nodes import Nodes
 from .scenes import Scenes
-from ..setup import VERSION
 
 
 class PyVLX:
@@ -35,7 +34,7 @@ class PyVLX:
         self.version = None
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
-        PYVLXLOG.debug("Loading https://github.com/pawlizio/pyvlx.git@master v %s", VERSION)
+        PYVLXLOG.debug("Loading https://github.com/pawlizio/pyvlx.git@master v0.1.34")
 
     async def connect(self):
         """Connect to KLF 200."""
