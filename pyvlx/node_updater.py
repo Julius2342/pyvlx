@@ -80,12 +80,14 @@ class NodeUpdater:
                 await node.after_update()
             elif isinstance(node, OnOffSwitch):
                 state = SwitchParameter(frame.current_position) 
-                if state.state == Parameter.ON:
-                    node.parameter = state
-                    PYVLXLOG.debug("%s state changed to: %s", node.name, state)
-                elif state.state == Parameter.OFF:
-                    node.parameter = state
-                    PYVLXLOG.debug("%s state changed to: %s", node.name, state)
-                await node.after_update()
+                target = SwitchParameter(frame.target)
+                if state.state == target.state:
+                    if state.state == Parameter.ON:
+                        node.parameter = state
+                        PYVLXLOG.debug("%s state changed to: %s", node.name, state)
+                    elif state.state == Parameter.OFF:
+                        node.parameter = state
+                        PYVLXLOG.debug("%s state changed to: %s", node.name, state)
+                    await node.after_update()
         elif isinstance(frame, FrameStatusRequestNotification):
             await self.process_frame_status_request_notification(frame)
