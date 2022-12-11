@@ -63,11 +63,17 @@ class NodeUpdater:
             if isinstance(node, OpeningDevice):
                 if position.position > target.position:
                     node.is_opening = True
+                    PYVLXLOG.debug("%s is opening", node.name)
                 elif position.position < target.position:
                     node.is_closing = True
+                    PYVLXLOG.debug("%s is closing", node.name)
                 else:
-                    node.is_closing = False
-                    node.is_opening = False
+                    if node.is_opening:
+                        node.is_opening = False
+                        PYVLXLOG.debug("%s stops opening", node.name)
+                    if node.is_closing:
+                        node.is_closing = False
+                        PYVLXLOG.debug("%s stops closing", node.name)
 
             if isinstance(node, Blind):
                 if position.position <= Parameter.MAX:
