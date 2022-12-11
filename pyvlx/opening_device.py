@@ -28,6 +28,8 @@ class OpeningDevice(Node):
             pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
         )
         self.position = Position(parameter=position_parameter)
+        self.is_opening = False
+        self.is_closing = False
 
     async def set_position(self, position, wait_for_completion=True):
         """Set window to desired position.

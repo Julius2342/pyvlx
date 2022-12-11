@@ -54,9 +54,21 @@ class NodeUpdater:
                 return
             node = self.pyvlx.nodes[frame.node_id]
             position = Position(frame.current_position)
+            target = Position(frame.target)
             # KLF transmits for functional parameters basically always 'No feed-back value known’ (0xF7FF).
             # In home assistant this cause unreasonable values like -23%. Therefore a check is implemented
             # whether the frame parameter is inside the maximum range.
+            
+            # Set opening device status
+            if isinstance(node, OpeningDevice):
+                if position.position > target.position:
+                    node.is_opening = True
+                elif position.position < target.position:
+                    node.is_closing = True
+                else:
+                    node.is_closing = False
+                    node.is_opening = False
+
             if isinstance(node, Blind):
                 if position.position <= Parameter.MAX:
                     node.position = position
