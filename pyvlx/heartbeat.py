@@ -5,7 +5,7 @@ from .api import GetState
 from .api.status_request import StatusRequest
 from .log import PYVLXLOG
 from .exception import PyVLXException
-from .opening_device import Blind
+from .opening_device import Blind, DualRollerShutter
 
 
 class Heartbeat:
@@ -60,9 +60,9 @@ class Heartbeat:
         if not get_state.success:
             raise PyVLXException("Unable to send get state.")
 
-        # If nodes contain Blind device, refresh orientation because House Monitoring
-        # delivers wrong values for FP3 parameter
+        # If nodes contain Blind or DualRollerShutter device, refresh orientation or upper/lower curtain positions because House Monitoring
+        # delivers wrong values for FP1, FP2 and FP3 parameter
         for node in self.pyvlx.nodes:
-            if isinstance(node, Blind):
+            if isinstance(node, Blind) or isinstance(node, DualRollerShutter):
                 status_request = StatusRequest(self.pyvlx, node.node_id)
                 await status_request.do_api_call()

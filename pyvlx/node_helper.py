@@ -4,7 +4,7 @@ from .lightening_device import Light
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
 from .opening_device import (
-    Awning, Blade, Blind, GarageDoor, Gate, RollerShutter, Window)
+    Awning, Blade, Blind, DualRollerShutter, GarageDoor, Gate, RollerShutter, Window)
 
 
 def convert_frame_to_node(pyvlx, frame):
@@ -30,9 +30,18 @@ def convert_frame_to_node(pyvlx, frame):
             rain_sensor=True,
         )
 
+
+    if frame.node_type == NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER:
+        return DualRollerShutter(
+            pyvlx=pyvlx,
+            node_id=frame.node_id,
+            name=frame.name,
+            serial_number=frame.serial_number,
+            position_parameter=frame.current_position,
+        )
+
     if frame.node_type in [
         NodeTypeWithSubtype.ROLLER_SHUTTER,
-        NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER,
         NodeTypeWithSubtype.SWINGING_SHUTTERS
     ]:
         return RollerShutter(

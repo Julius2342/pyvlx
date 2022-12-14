@@ -323,6 +323,194 @@ class Awning(OpeningDevice):
     """Awning objects."""
 
 
+class DualRollerShutter(OpeningDevice):
+    """DualRollerShutter object."""
+
+    def __init__(
+            self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()
+    ):
+        """Initialize Blind class.
+
+        Parameters:
+            * pyvlx: PyVLX object
+            * node_id: internal id for addressing nodes.
+                Provided by KLF 200 device
+            * name: node name
+
+        """
+        super().__init__(
+            pyvlx=pyvlx,
+            node_id=node_id,
+            name=name,
+            serial_number=serial_number,
+            position_parameter=position_parameter,
+        )
+        self.position_upper_curtain = Position(position_percent=0)
+        self.position_lower_curtain = Position(position_percent=0)
+        self.target_position = TargetPosition()
+        self.target_position_upper_curtain = TargetPosition()
+        self.target_position_lower_curtain = TargetPosition()
+
+
+    async def set_position(self, position=None, wait_for_completion=True, position_upper_curtain=None, position_lower_curtain=None):
+        """Set window to desired position.
+
+        Parameters:
+            * position: Position object containing the current position.
+            * target_position: Position object holding the target position
+                which allows to ajust the position while the blind is in movement
+                without stopping the blind (if orientation position has been changed.)
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+            * orientation: If set, the orientation of the device will be set in the same request.
+                Note, that, if the position is set to 0, the orientation will be set to 0 too.
+
+        """
+        kwargs = {}
+
+        if position is not None:
+            self.target_position = position
+            self.position = position
+        else:
+            position = IgnorePosition()
+        
+        if position_upper_curtain is not None:
+            self.target_position_upper_curtain = position_upper_curtain
+            self.position_upper_curtain = position_upper_curtain
+            kwargs['fp1'] = position_upper_curtain
+        else:
+            kwargs['fp1'] = IgnorePosition()
+
+        if position_lower_curtain is not None:
+            self.target_position_upper_curtain = position_lower_curtain
+            self.position_lower_curtain = position_lower_curtain
+            kwargs['fp2'] = position_lower_curtain
+        else:
+            kwargs['fp2'] = IgnorePosition()
+    
+        command_send = CommandSend(
+            pyvlx=self.pyvlx,
+            wait_for_completion=wait_for_completion,
+            node_id=self.node_id,
+            parameter=position,
+            **kwargs
+        )
+        await command_send.do_api_call()
+        if not command_send.success:
+            raise PyVLXException("Unable to send command")
+        await self.after_update()
+
+    async def open(self, wait_for_completion=True):
+        """Open window.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        await self.set_position(
+            position=Position(position_percent=0),
+            wait_for_completion=wait_for_completion,
+        )
+
+    async def close(self, wait_for_completion=True):
+        """Close window.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+        """
+        await self.set_position(
+            position=Position(position_percent=100),
+            wait_for_completion=wait_for_completion,
+        )
+
+    async def stop(self, wait_for_completion=True):
+        """Stop Blind position."""
+        await self.set_position_and_orientation(
+            position=CurrentPosition(), 
+            wait_for_completion=wait_for_completion
+        )
+
+    async def open_upper_curtain(self, wait_for_completion=True):
+        """Open upper curtain.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        await self.set_position(
+            position_upper_curtain=Position(position_percent=0),
+            wait_for_completion=wait_for_completion,
+        )
+
+    async def close_upper_curtain(self, wait_for_completion=True):
+        """Open upper curtain.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        await self.set_position(
+            position_upper_curtain=Position(position_percent=100),
+            wait_for_completion=wait_for_completion,
+        )
+
+    async def stop_upper_curtain(self, wait_for_completion=True):
+        """Stop upper curtain.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        await self.set_position(
+            position_upper_curtain=CurrentPosition(),
+            wait_for_completion=wait_for_completion
+        )
+
+    async def open_lower_curtain(self, wait_for_completion=True):
+        """Open upper curtain.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        await self.set_position(
+            position_lower_curtain=Position(position_percent=0),
+            wait_for_completion=wait_for_completion,
+        )
+
+    async def close_lower_curtain(self, wait_for_completion=True):
+        """Open upper curtain.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        await self.set_position(
+            position_lower_curtain=Position(position_percent=100),
+            wait_for_completion=wait_for_completion,
+        )
+
+    async def stop_lower_curtain(self, wait_for_completion=True):
+        """Stop upper curtain.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        await self.set_position(
+            position_lower_curtain=CurrentPosition(),
+            wait_for_completion=wait_for_completion
+        )
+
+
 class RollerShutter(OpeningDevice):
     """RollerShutter object."""
 

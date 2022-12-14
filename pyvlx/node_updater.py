@@ -6,7 +6,7 @@ from .const import NodeParameter
 from .lightening_device import LighteningDevice
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
-from .opening_device import Blind, OpeningDevice
+from .opening_device import Blind, DualRollerShutter, OpeningDevice
 from .parameter import Intensity, Parameter, Position, SwitchParameter
 
 
@@ -37,7 +37,31 @@ class NodeUpdater:
                 PYVLXLOG.debug(
                     "%s orientation changed to: %s", node.name, orientation
                 )
+            await node.after_update()
 
+        if isinstance(node, DualRollerShutter):
+            if NodeParameter(0) not in frame.parameter_data:    # MP missing in frame
+                return
+            if NodeParameter(1) not in frame.parameter_data:    # MP missing in frame
+                return
+            if NodeParameter(2) not in frame.parameter_data:    # FP3 missing in frame
+                return
+            position = Position(frame.parameter_data[NodeParameter(0)])
+            position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
+            position_lower_curtain = Position(frame.parameter_data[NodeParameter(2)])
+            if position.position <= Parameter.MAX:
+                node.position = position
+                PYVLXLOG.debug("%s position changed to: %s", node.name, position)
+            if position_upper_curtain.position <= Parameter.MAX:
+                node.position_upper_curtain = position_upper_curtain
+                PYVLXLOG.debug(
+                    "%s position upper curtain changed to: %s", node.name, position_upper_curtain
+                )
+            if position_lower_curtain.position <= Parameter.MAX:
+                node.position_upper_curtain = position_lower_curtain
+                PYVLXLOG.debug(
+                    "%s position lower curtain changed to: %s", node.name, position_lower_curtain
+                )
             await node.after_update()
 
     async def process_frame(self, frame):
@@ -75,26 +99,17 @@ class NodeUpdater:
                         node.is_closing = False
                         PYVLXLOG.debug("%s stops closing", node.name)
 
-            if isinstance(node, Blind):
+            # Set main parameter 
+            if isinstance(node, OpeningDevice):
                 if position.position <= Parameter.MAX:
                     node.position = position
                     PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-                # House Monitor delivers wrong values for FP3 parameter
-                # Orientation is updated in pulse() in heartbeat.py
-                # if orientation.position <= Parameter.MAX:
-                #     node.orientation = orientation
-                #     PYVLXLOG.debug(
-                #         "%s orientation changed to: %s", node.name, orientation
-                #     )
-                await node.after_update()
-            elif isinstance(node, OpeningDevice):
-                if position.position <= Parameter.MAX:
-                    node.position = position
                 await node.after_update()
             elif isinstance(node, LighteningDevice):
                 intensity = Intensity(frame.current_position)
                 if intensity.intensity <= Parameter.MAX:
                     node.intensity = intensity
+                    PYVLXLOG.debug("%s intensity changed to: %s", node.name, intensity)
                 await node.after_update()
             elif isinstance(node, OnOffSwitch):
                 state = SwitchParameter(frame.current_position) 
