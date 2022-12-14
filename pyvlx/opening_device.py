@@ -359,12 +359,8 @@ class DualRollerShutter(OpeningDevice):
             * position: Position object containing the current position.
             * target_position: Position object holding the target position
                 which allows to ajust the position while the blind is in movement
-                without stopping the blind (if orientation position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * orientation: If set, the orientation of the device will be set in the same request.
-                Note, that, if the position is set to 0, the orientation will be set to 0 too.
-
         """
         kwargs = {}
 
@@ -427,7 +423,7 @@ class DualRollerShutter(OpeningDevice):
 
     async def stop(self, wait_for_completion=True):
         """Stop Blind position."""
-        await self.set_position_and_orientation(
+        await self.set_position(
             position=CurrentPosition(), 
             wait_for_completion=wait_for_completion
         )
