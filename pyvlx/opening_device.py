@@ -350,6 +350,7 @@ class DualRollerShutter(OpeningDevice):
         self.target_position = TargetPosition()
         self.target_position_upper_curtain = TargetPosition()
         self.target_position_lower_curtain = TargetPosition()
+        self.active_parameter=0
 
 
     async def set_position(self, position=None, wait_for_completion=True, position_upper_curtain=None, position_lower_curtain=None):
@@ -363,17 +364,12 @@ class DualRollerShutter(OpeningDevice):
                 after device has reached target position.
         """
         kwargs = {}
-
-        if position is not None:
-            self.target_position = position
-            self.position = position
-        else:
-            position = IgnorePosition()
         
         if position_upper_curtain is not None:
             self.target_position_upper_curtain = position_upper_curtain
             self.position_upper_curtain = position_upper_curtain
             kwargs['fp1'] = position_upper_curtain
+            self.active_parameter=1
         else:
             kwargs['fp1'] = IgnorePosition()
 
@@ -381,14 +377,23 @@ class DualRollerShutter(OpeningDevice):
             self.target_position_upper_curtain = position_lower_curtain
             self.position_lower_curtain = position_lower_curtain
             kwargs['fp2'] = position_lower_curtain
+            self.active_parameter=2
         else:
             kwargs['fp2'] = IgnorePosition()
+
+        if position is not None:
+            self.target_position = position
+            self.position = position
+            self.active_parameter=0
+        else:
+            position = IgnorePosition()
     
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=position,
+            active_parameter=self.active_parameter,
             **kwargs
         )
         await command_send.do_api_call()

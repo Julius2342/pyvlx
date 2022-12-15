@@ -73,8 +73,15 @@ class Parameter:
 
     def __str__(self):
         """Return string representation of object."""
-        return "0x" + "".join("{:02X}".format(x) for x in self.raw)
-
+        if self.raw == self.from_int(Position.UNKNOWN_VALUE):
+            return "UNKNOWN"
+        if self.raw == self.from_int(Position.CURRENT):
+            return "CURRENT"
+        if self.raw == self.from_int(Position.TARGET):
+            return "TARGET"
+        if self.raw == self.from_int(Position.IGNORE):
+            return "IGNORE"
+        return "{} %".format(int(self.to_percent(self.raw)))
 
 class SwitchParameter(Parameter):
     """Class for storing On or Off values."""
@@ -229,6 +236,12 @@ class Position(Parameter):
         """Return string representation of object."""
         if self.raw == self.from_int(Position.UNKNOWN_VALUE):
             return "UNKNOWN"
+        if self.raw == self.from_int(Position.CURRENT):
+            return "CURRENT"
+        if self.raw == self.from_int(Position.TARGET):
+            return "TARGET"
+        if self.raw == self.from_int(Position.IGNORE):
+            return "IGNORE"
         return "{} %".format(self.position_percent)
 
 
