@@ -370,16 +370,16 @@ class DualRollerShutter(OpeningDevice):
             self.position_upper_curtain = position_upper_curtain
             kwargs['fp1'] = position_upper_curtain
             self.active_parameter=1
-        else:
-            kwargs['fp1'] = IgnorePosition()
+        # else:
+        #     kwargs['fp1'] = IgnorePosition()
 
         if position_lower_curtain is not None:
             self.target_position_upper_curtain = position_lower_curtain
             self.position_lower_curtain = position_lower_curtain
             kwargs['fp2'] = position_lower_curtain
             self.active_parameter=2
-        else:
-            kwargs['fp2'] = IgnorePosition()
+        # else:
+        #     kwargs['fp2'] = IgnorePosition()
 
         if position is not None:
             self.target_position = position
