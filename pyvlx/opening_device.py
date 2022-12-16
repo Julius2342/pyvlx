@@ -4,7 +4,7 @@ from .api.get_limitation import GetLimitation
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition)
+    CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition, DualRollerShutterPosition)
 
 
 class OpeningDevice(Node):
@@ -348,12 +348,10 @@ class DualRollerShutter(OpeningDevice):
         self.position_upper_curtain = Position(position_percent=0)
         self.position_lower_curtain = Position(position_percent=0)
         self.target_position = TargetPosition()
-        self.target_position_upper_curtain = TargetPosition()
-        self.target_position_lower_curtain = TargetPosition()
         self.active_parameter=0
 
 
-    async def set_position(self, position=None, wait_for_completion=True, position_upper_curtain=None, position_lower_curtain=None):
+    async def set_position(self, position, wait_for_completion=True, curtain="dual"):
         """Set window to desired position.
 
         Parameters:
@@ -365,43 +363,40 @@ class DualRollerShutter(OpeningDevice):
         """
         kwargs = {}
         
-        if position_upper_curtain is not None:
-            self.target_position_upper_curtain = position_upper_curtain
-            self.position_upper_curtain = position_upper_curtain
-            kwargs['fp1'] = position_upper_curtain
+        if curtain == "upper":
+            self.target_position = DualRollerShutterPosition()
             self.active_parameter=1
-        else:
-            kwargs['fp1'] = TargetPosition()
-
-        if position_lower_curtain is not None:
-            self.target_position_upper_curtain = position_lower_curtain
-            self.position_lower_curtain = position_lower_curtain
-            kwargs['fp2'] = position_lower_curtain
-            self.active_parameter=2
-        else:
+            kwargs['fp1'] = position
             kwargs['fp2'] = TargetPosition()
-
-        if position is not None:
-            self.target_position = position
-            self.position = position
-            self.active_parameter=0
+        elif curtain == "lower":
+            self.target_position = DualRollerShutterPosition()
+            self.active_parameter=2
+            kwargs['fp1'] = TargetPosition()
+            kwargs['fp2'] = position
         else:
-            position = TargetPosition()
+            self.target_position = position
+            self.active_parameter=0
     
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
-            parameter=position,
+            parameter=self.target_position,
             active_parameter=self.active_parameter,
             **kwargs
         )
         await command_send.do_api_call()
         if not command_send.success:
             raise PyVLXException("Unable to send command")
+        if curtain == "upper":
+            self.position_upper_curtain = self.target_position
+        elif curtain == "lower":
+            self.position_lower_curtain = self.target_position
+        else: 
+            self.position = self.target_position
         await self.after_update()
 
-    async def open(self, wait_for_completion=True):
+    async def open(self, wait_for_completion=True, curtain="dual"):
         """Open window.
 
         Parameters:
@@ -412,9 +407,9 @@ class DualRollerShutter(OpeningDevice):
         await self.set_position(
             position=Position(position_percent=0),
             wait_for_completion=wait_for_completion,
+            curtain=curtain
         )
-
-    async def close(self, wait_for_completion=True):
+    async def close(self, wait_for_completion=True, curtain="dual"):
         """Close window.
 
         Parameters:
@@ -424,91 +419,15 @@ class DualRollerShutter(OpeningDevice):
         await self.set_position(
             position=Position(position_percent=100),
             wait_for_completion=wait_for_completion,
+            curtain=curtain
         )
 
-    async def stop(self, wait_for_completion=True):
+    async def stop(self, wait_for_completion=True, curtain="dual"):
         """Stop Blind position."""
         await self.set_position(
             position=CurrentPosition(), 
-            wait_for_completion=wait_for_completion
-        )
-
-    async def open_upper_curtain(self, wait_for_completion=True):
-        """Open upper curtain.
-
-        Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
-        """
-        await self.set_position(
-            position_upper_curtain=Position(position_percent=0),
-            wait_for_completion=wait_for_completion,
-        )
-
-    async def close_upper_curtain(self, wait_for_completion=True):
-        """Open upper curtain.
-
-        Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
-        """
-        await self.set_position(
-            position_upper_curtain=Position(position_percent=100),
-            wait_for_completion=wait_for_completion,
-        )
-
-    async def stop_upper_curtain(self, wait_for_completion=True):
-        """Stop upper curtain.
-
-        Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
-        """
-        await self.set_position(
-            position_upper_curtain=CurrentPosition(),
-            wait_for_completion=wait_for_completion
-        )
-
-    async def open_lower_curtain(self, wait_for_completion=True):
-        """Open upper curtain.
-
-        Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
-        """
-        await self.set_position(
-            position_lower_curtain=Position(position_percent=0),
-            wait_for_completion=wait_for_completion,
-        )
-
-    async def close_lower_curtain(self, wait_for_completion=True):
-        """Open upper curtain.
-
-        Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
-        """
-        await self.set_position(
-            position_lower_curtain=Position(position_percent=100),
-            wait_for_completion=wait_for_completion,
-        )
-
-    async def stop_lower_curtain(self, wait_for_completion=True):
-        """Stop upper curtain.
-
-        Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
-        """
-        await self.set_position(
-            position_lower_curtain=CurrentPosition(),
-            wait_for_completion=wait_for_completion
+            wait_for_completion=wait_for_completion, 
+            curtain=curtain
         )
 
 
