@@ -49,6 +49,8 @@ class Parameter:
             return True
         if value == Parameter.TARGET:
             return True
+        if value == Parameter.DUAL_SHUTTER_CURTAINS:
+            return True
         return False
 
     @staticmethod
