@@ -84,6 +84,8 @@ class Parameter:
             return "TARGET"
         if self.raw == self.from_int(Position.IGNORE):
             return "IGNORE"
+        if self.raw == self.from_int(Position.DUAL_SHUTTER_CURTAINS):
+            return "DUAL"
         return "{} %".format(int(self.to_percent(self.raw)))
 
 class SwitchParameter(Parameter):
