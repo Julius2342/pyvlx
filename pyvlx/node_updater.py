@@ -42,9 +42,9 @@ class NodeUpdater:
         if isinstance(node, DualRollerShutter):
             if NodeParameter(0) not in frame.parameter_data:    # MP missing in frame
                 return
-            if NodeParameter(1) not in frame.parameter_data:    # MP missing in frame
+            if NodeParameter(1) not in frame.parameter_data:    # FP1 missing in frame
                 return
-            if NodeParameter(2) not in frame.parameter_data:    # FP3 missing in frame
+            if NodeParameter(2) not in frame.parameter_data:    # FP2 missing in frame
                 return
             position = Position(frame.parameter_data[NodeParameter(0)])
             position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
