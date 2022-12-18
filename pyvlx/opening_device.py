@@ -389,11 +389,11 @@ class DualRollerShutter(OpeningDevice):
         if not command_send.success:
             raise PyVLXException("Unable to send command")
         if curtain == "upper":
-            self.position_upper_curtain = self.target_position
+            self.position_upper_curtain = position
         elif curtain == "lower":
-            self.position_lower_curtain = self.target_position
+            self.position_lower_curtain = position
         else: 
-            self.position = self.target_position
+            self.position = position
         await self.after_update()
 
     async def open(self, wait_for_completion=True, curtain="dual"):
