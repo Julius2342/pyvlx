@@ -351,7 +351,7 @@ class DualRollerShutter(OpeningDevice):
         self.active_parameter=0
 
 
-    async def set_position(self, position, wait_for_completion=True, curtain="dual"):
+    async def set_position(self, position: Position, wait_for_completion=True, curtain="dual"):
         """Set window to desired position.
 
         Parameters:
@@ -388,12 +388,13 @@ class DualRollerShutter(OpeningDevice):
         await command_send.do_api_call()
         if not command_send.success:
             raise PyVLXException("Unable to send command")
-        if curtain == "upper":
-            self.position_upper_curtain = position
-        elif curtain == "lower":
-            self.position_lower_curtain = position
-        else: 
-            self.position = position
+        if position.position <= Position.MAX:
+            if curtain == "upper":
+                self.position_upper_curtain = position
+            elif curtain == "lower":
+                self.position_lower_curtain = position
+            else: 
+                self.position = position
         await self.after_update()
 
     async def open(self, wait_for_completion=True, curtain="dual"):
