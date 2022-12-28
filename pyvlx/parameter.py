@@ -21,6 +21,10 @@ class Parameter:
         if raw is not None:
             self.raw = self.from_raw(raw)
 
+    def __bytes__(self):
+        """Convert object in byte representation."""
+        return self.raw
+
     def from_parameter(self, parameter):
         """Set internal raw state from parameter."""
         if not isinstance(parameter, Parameter):
@@ -35,6 +39,11 @@ class Parameter:
         if not Parameter.is_valid_int(value):
             raise PyVLXException("value_out_of_range")
         return bytes([value >> 8 & 255, value & 255])
+
+    @staticmethod
+    def to_int(raw):
+        """Create int position value out of raw."""
+        return raw[0] * 256 + raw[1]
 
     @staticmethod
     def is_valid_int(value):
@@ -70,6 +79,25 @@ class Parameter:
             return Position.from_int(Position.UNKNOWN_VALUE)
         return raw
 
+    @staticmethod
+    def from_percent(position_percent):
+        """Create raw value out of percent position."""
+        if not isinstance(position_percent, int):
+            raise PyVLXException("Position::position_percent_has_to_be_int")
+        if position_percent < 0:
+            raise PyVLXException("Position::position_percent_has_to_be_positive")
+        if position_percent > 100:
+            raise PyVLXException("Position::position_percent_out_of_range")
+        return bytes([position_percent * 2, 0])
+
+    @staticmethod
+    def to_percent(raw):
+        """Create percent position value out of raw."""
+        # The first byte has the vlue from 0 to 200. Ignoring the second one.
+        # Adding 0.5 allows a slight tolerance for devices (e.g. Velux SML) that
+        # do not return exactly 51200 as final position when closed.
+        return int(raw[0] / 2 + 0.5)
+
     def __eq__(self, other):
         """Equal operator."""
         return self.raw == other.raw
@@ -99,10 +127,6 @@ class SwitchParameter(Parameter):
         elif state is not None:
             self.state = state
 
-    def __bytes__(self):
-        """Convert object in byte representation."""
-        return self.raw
-
     @property
     def state(self):
         """Position property."""
@@ -112,11 +136,6 @@ class SwitchParameter(Parameter):
     def state(self, state):
         """Setter of internal raw via state."""
         self.raw = self.from_int(state)
-
-    @staticmethod
-    def to_int(raw):
-        """Create int position value out of raw."""
-        return raw[0] * 256 + raw[1]
     
     def set_on(self):
         """Set parameter to 'on' state."""
@@ -142,6 +161,7 @@ class SwitchParameter(Parameter):
             return "OFF"
         else:
             return "UNKNOWN"
+
 
 class SwitchParameterOn(SwitchParameter):
     """Switch Parameter in switched 'on' state."""
@@ -172,10 +192,6 @@ class Position(Parameter):
         elif position_percent is not None:
             self.position_percent = position_percent
 
-    def __bytes__(self):
-        """Convert object in byte representation."""
-        return self.raw
-
     @property
     def known(self):
         """Known property, true if position is not in an unknown position."""
@@ -190,7 +206,7 @@ class Position(Parameter):
     def closed(self):
         """Return true if position is set to fully closed."""
         # Consider closed even if raw is not exactly 51200 (tolerance for devices like Velux SML)
-        return self.position_percent == 100
+        return self.raw == self.from_int(Position.MAX)
 
     @property
     def position(self):
@@ -212,42 +228,6 @@ class Position(Parameter):
     def position_percent(self, position_percent):
         """Setter of internal raw via percent position."""
         self.raw = self.from_percent(position_percent)
-
-    @staticmethod
-    def to_int(raw):
-        """Create int position value out of raw."""
-        return raw[0] * 256 + raw[1]
-
-    @staticmethod
-    def from_percent(position_percent):
-        """Create raw value out of percent position."""
-        if not isinstance(position_percent, int):
-            raise PyVLXException("Position::position_percent_has_to_be_int")
-        if position_percent < 0:
-            raise PyVLXException("Position::position_percent_has_to_be_positive")
-        if position_percent > 100:
-            raise PyVLXException("Position::position_percent_out_of_range")
-        return bytes([position_percent * 2, 0])
-
-    @staticmethod
-    def to_percent(raw):
-        """Create percent position value out of raw."""
-        # The first byte has the vlue from 0 to 200. Ignoring the second one.
-        # Adding 0.5 allows a slight tolerance for devices (e.g. Velux SML) that
-        # do not return exactly 51200 as final position when closed.
-        return int(raw[0] / 2 + 0.5)
-
-    def __str__(self):
-        """Return string representation of object."""
-        if self.raw == self.from_int(Position.UNKNOWN_VALUE):
-            return "UNKNOWN"
-        if self.raw == self.from_int(Position.CURRENT):
-            return "CURRENT"
-        if self.raw == self.from_int(Position.TARGET):
-            return "TARGET"
-        if self.raw == self.from_int(Position.IGNORE):
-            return "IGNORE"
-        return "{} %".format(self.position_percent)
 
 
 class UnknownPosition(Position):

@@ -54,9 +54,9 @@ class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
         self.assertEqual(
             str(frame),
             '<FrameNodeStatePositionChangedNotification node_id="5" state="5" '
-            'current_position="0xC800" target="0xC800" current_position_fp1="0xF7FF" '
-            'current_position_fp2="0xF7FF" current_position_fp3="0xF7FF" '
-            'current_position_fp4="0xF7FF" remaining_time="0" time="{}"/>'.format(
+            'current_position="100 %" target="100 %" current_position_fp1="UNKNOWN" '
+            'current_position_fp2="UNKNOWN" current_position_fp3="UNKNOWN" '
+            'current_position_fp4="UNKNOWN" remaining_time="0" time="{}"/>'.format(
                 test_ts
             ),
         )

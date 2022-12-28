@@ -58,7 +58,7 @@ class TestFrameCommandSendRequest(unittest.TestCase):
         )
         self.assertEqual(
             str(frame),
-            '<FrameCommandSendRequest node_ids="[1, 2, 3]" parameter="24 %" '
+            '<FrameCommandSendRequest node_ids="[1, 2, 3]" active_parameter="0" parameter="24 %" '
             'functional_parameter="fp1: 0 %, fp2: 0 %, fp3: 24 %, fp4: 0 %, fp5: 0 %, fp6: 0 %, fp7: 0 %, '
             'fp8: 0 %, fp9: 0 %, fp10: 0 %, fp11: 0 %, fp12: 0 %, fp13: 0 %, fp14: 0 %, fp15: 0 %, fp16: 0 %, " '
             'session_id="1000" originator="Originator.RAIN"/>',
