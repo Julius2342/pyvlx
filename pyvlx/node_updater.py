@@ -85,10 +85,10 @@ class NodeUpdater:
             
             # Set opening device status
             if isinstance(node, OpeningDevice):
-                if position.position > target.position:
+                if position.position > target.position <= Parameter.MAX:
                     node.is_opening = True
                     PYVLXLOG.debug("%s is opening", node.name)
-                elif position.position < target.position:
+                elif position.position < target.position <= Parameter.MAX:
                     node.is_closing = True
                     PYVLXLOG.debug("%s is closing", node.name)
                 else:
@@ -101,9 +101,9 @@ class NodeUpdater:
 
             # Set main parameter 
             if isinstance(node, OpeningDevice):
-                if position.position <= Parameter.MAX:
-                    node.position = position
-                    PYVLXLOG.debug("%s position changed to: %s", node.name, position)
+                if position.position <= Parameter.MAX: 
+                        node.position = position
+                        PYVLXLOG.debug("%s position changed to: %s", node.name, position)
                 await node.after_update()
             elif isinstance(node, LighteningDevice):
                 intensity = Intensity(frame.current_position)
