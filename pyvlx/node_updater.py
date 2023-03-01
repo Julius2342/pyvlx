@@ -2,7 +2,7 @@
 from .api.frames import (
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
-from .const import NodeParameter
+from .const import NodeParameter, OperatingState
 from .lightening_device import LighteningDevice
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
@@ -85,10 +85,10 @@ class NodeUpdater:
             
             # Set opening device status
             if isinstance(node, OpeningDevice):
-                if position.position > target.position <= Parameter.MAX:
+                if (position.position > target.position <= Parameter.MAX) and (frame.state == OperatingState.EXECUTING):
                     node.is_opening = True
                     PYVLXLOG.debug("%s is opening", node.name)
-                elif position.position < target.position <= Parameter.MAX:
+                elif (position.position < target.position <= Parameter.MAX) and (frame.state == OperatingState.EXECUTING):
                     node.is_closing = True
                     PYVLXLOG.debug("%s is closing", node.name)
                 else:
