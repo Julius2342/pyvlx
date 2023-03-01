@@ -2,7 +2,7 @@
 import struct
 from datetime import datetime
 
-from pyvlx.const import Command
+from pyvlx.const import Command, OperatingState
 from pyvlx.parameter import Parameter
 
 from .frame import FrameBase
@@ -44,7 +44,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
     def from_payload(self, payload):
         """Init frame from binary data."""
         self.node_id = payload[0]
-        self.state = payload[1]
+        self.state = OperatingState(payload[1])
         self.current_position = Parameter(payload[2:4])
         self.target = Parameter(payload[4:6])
         self.current_position_fp1 = Parameter(payload[6:8])

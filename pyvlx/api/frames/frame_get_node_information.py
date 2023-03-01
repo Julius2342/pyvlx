@@ -3,7 +3,7 @@ import struct
 from datetime import datetime
 from enum import Enum
 
-from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
+from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
@@ -166,7 +166,7 @@ class FrameGetNodeInformationNotification(FrameBase):
             75
         ]  # <-- hey @VELUX: your documentation is wrong here
         self._serial_number = payload[76:84]
-        self.state = payload[84]
+        self.state = OperatingState(payload[84])
         self.current_position = Parameter(payload[85:87])
         self.target = Parameter(payload[87:89])
         self.current_position_fp1 = Parameter(payload[89:91])
