@@ -188,7 +188,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
                 self.power_mode,
                 self.build_number,
                 self.serial_number,
-                self.state,
+                self.state.name,
                 self.current_position,
                 self.target,
                 self.current_position_fp1,

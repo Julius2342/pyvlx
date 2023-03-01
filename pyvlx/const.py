@@ -578,6 +578,7 @@ class OperatingState(Enum):
     EXECUTING = 4
     DONE = 5
     UNKNOWN = 255
+    UNDEFINED = 45 # Not specified value
 
 
 class StatusReply(Enum):

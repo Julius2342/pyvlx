@@ -71,7 +71,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
             'remaining_time="{}" time="{}"/>'.format(
                 type(self).__name__,
                 self.node_id,
-                self.state,
+                self.state.name,
                 self.current_position,
                 self.target,
                 self.current_position_fp1,
