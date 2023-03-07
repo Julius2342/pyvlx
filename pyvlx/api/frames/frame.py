@@ -35,12 +35,10 @@ class FrameBase:
 
     def get_payload(self):
         """Return Payload."""
-        # pylint: disable=no-self-use
         return b""
 
     def from_payload(self, payload):
         """Init frame from binary data."""
-        # pylint: disable=no-self-use
 
     def __str__(self):
         """Return human readable string."""

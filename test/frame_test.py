@@ -13,14 +13,13 @@ class TestFrame(unittest.TestCase):
 
     def test_validate_payload_len_no_payload_len_defined(self):
         """Test validate_payload_len_function without any PAYLOAD_LEN defined."""
-        # pylint: disable=no-self-use
         frame = FrameBase(command=Command.GW_GET_NODE_INFORMATION_REQ)
         frame.validate_payload_len(bytes(23))
 
     def test_validate_payload_len_payload_len_defined(self):
         """Test validate_payload_len_function with defined PAYLOAD_LEN."""
-        # pylint: disable=no-self-use
         frame = FrameBase(command=Command.GW_GET_NODE_INFORMATION_REQ)
+        # pylint: disable=invalid-name
         frame.PAYLOAD_LEN = 23
         frame.validate_payload_len(bytes(23))
 

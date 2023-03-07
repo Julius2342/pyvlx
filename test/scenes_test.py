@@ -47,7 +47,7 @@ class TestScenes(unittest.TestCase):
         scenes.add(scene2)
         scene3 = Scene(pyvlx, 2, "Scene_3")
         scenes.add(scene3)
-        self.assertEqual(tuple(scenes.__iter__()), (scene1, scene2, scene3))
+        self.assertEqual(tuple(scenes.__iter__()), (scene1, scene2, scene3))  # pylint: disable=unnecessary-dunder-call
 
     def test_len(self):
         """Test len."""
