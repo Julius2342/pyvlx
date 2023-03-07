@@ -19,7 +19,8 @@ class TestFrame(unittest.TestCase):
     def test_validate_payload_len_payload_len_defined(self):
         """Test validate_payload_len_function with defined PAYLOAD_LEN."""
         frame = FrameBase(command=Command.GW_GET_NODE_INFORMATION_REQ)
-        frame.PAYLOAD_LEN = 23  # pylint: disable=invalid-name
+        # pylint: disable=invalid-name
+        frame.PAYLOAD_LEN = 23
         frame.validate_payload_len(bytes(23))
 
     def test_validate_payload_len_payload_len_error(self):
