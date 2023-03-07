@@ -17,6 +17,7 @@ class NodeUpdater:
         self.pyvlx = pyvlx
 
     async def process_frame_status_request_notification(self, frame: FrameStatusRequestNotification):
+        """Process FrameStatusRequestNotification."""
         PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
         if frame.node_id not in self.pyvlx.nodes:
             return

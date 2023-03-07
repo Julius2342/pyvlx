@@ -27,10 +27,12 @@ class GetLimitation(ApiEvent):
 
     @property
     def max_value(self):
+        """Return max value."""
         return Position.to_percent(self.max_value_raw)
 
     @property
     def min_value(self):
+        """Return min value."""
         return Position.to_percent(self.min_value_raw)
 
     async def handle_frame(self, frame):
