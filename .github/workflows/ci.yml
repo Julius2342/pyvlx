@@ -45,7 +45,10 @@ jobs:
         pip install -r requirements/testing.txt
     - name: CI
       run: |
-        tox
+        pydocstyle pyvlx test/*.py test/*.py *.py examples/*.py
+        flake8
+        pytest --cov pyvlx --cov-report xml
+        pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
     - name: Upload coverage artifact
       uses: actions/upload-artifact@v2.2.2
       with:
