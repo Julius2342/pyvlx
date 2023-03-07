@@ -140,6 +140,7 @@ class Window(OpeningDevice):
         )
 
     async def get_limitation(self):
+        """Return limitaation."""
         get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
         await get_limitation.do_api_call()
         if not get_limitation.success:
@@ -223,9 +224,7 @@ class Blind(OpeningDevice):
                 without stopping the blind (if orientation position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-
         """
-
         await self.set_position_and_orientation(position, wait_for_completion)
 
     async def open(self, wait_for_completion=True):
@@ -234,7 +233,6 @@ class Blind(OpeningDevice):
         Parameters:
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-
         """
         await self.set_position(
             position=Position(position_percent=0),

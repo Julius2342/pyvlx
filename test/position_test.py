@@ -45,6 +45,7 @@ class TestPosition(unittest.TestCase):
         self.assertEqual(Position(position=12345).position_percent, 24)
 
     def test_fallback_to_unknown(self):
+        """Test fallback to unknown."""
         self.assertEqual(Parameter(raw=b"\xC8\x01"), Parameter(raw=Parameter.from_int(Parameter.UNKNOWN_VALUE)))
         self.assertEqual(Parameter(raw=b"\xC9\x00"), Parameter(raw=Parameter.from_int(Parameter.UNKNOWN_VALUE)))
         self.assertEqual(Parameter(raw=b"\xD8\x00"), Parameter(raw=Parameter.from_int(Parameter.UNKNOWN_VALUE)))
