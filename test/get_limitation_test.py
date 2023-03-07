@@ -14,7 +14,7 @@ from pyvlx.const import LimitationType, Originator
 
 @pytest.fixture(scope="class")
 def event_loop_instance(request):
-    """ Add the event_loop as an attribute to the unittest style test class."""
+    """Add the event_loop as an attribute to the unittest style test class."""
     request.cls.event_loop = asyncio.get_event_loop_policy().new_event_loop()
     yield
     request.cls.event_loop.close()
@@ -89,7 +89,7 @@ class TestGetLimitation(unittest.TestCase):
         self.assertEqual(limit.limit_time, frame.limit_time)
 
     def test_request_frame(self):
-        """test initiating frame."""
+        """Test initiating frame."""
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         req_frame = limit.request_frame()

@@ -45,7 +45,7 @@ jobs:
         pip install -r requirements/testing.txt
     - name: CI
       run: |
-        pydocstyle pyvlx test/*.py test/*.py *.py examples/*.py
+        pydocstyle pyvlx test/*.py *.py examples/*.py
         flake8
         pytest --cov pyvlx --cov-report xml
         pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
