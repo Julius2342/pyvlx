@@ -10,4 +10,4 @@ pytest-cov==3.0.0
 pytest-timeout==2.1.0
 setuptools==67.5.1
 tox==3.25.0
-twine==4.0.0
+twine==4.0.2
