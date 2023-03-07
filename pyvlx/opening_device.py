@@ -178,8 +178,8 @@ class Blind(OpeningDevice):
 
     async def set_position_and_orientation(self, position, wait_for_completion=True, orientation=None):
         """Set window to desired position.
-        Parameters:
 
+        Parameters:
             * position: Position object containing the current position.
             * target_position: Position object holding the target position
                 which allows to ajust the position while the blind is in movement
@@ -216,8 +216,8 @@ class Blind(OpeningDevice):
 
     async def set_position(self, position, wait_for_completion=True):
         """Set window to desired position.
-        Parameters:
 
+        Parameters:
             * position: Position object containing the current position.
             * target_position: Position object holding the target position
                 which allows to ajust the position while the blind is in movement
@@ -230,8 +230,8 @@ class Blind(OpeningDevice):
 
     async def open(self, wait_for_completion=True):
         """Open window.
-        Parameters:
 
+        Parameters:
             * wait_for_completion: If set, function will return
                 after device has reached target position.
         """
