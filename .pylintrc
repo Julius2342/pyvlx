@@ -3,6 +3,7 @@ reports=no
 
 [MESSAGES CONTROL]
 disable=E1101,C0111,duplicate-code,fixme,locally-disabled,too-few-public-methods,too-many-arguments,too-many-instance-attributes,consider-using-f-string
+good-names=PAYLOAD_LEN
 
 [REPORTS]
 output-format=colorized
