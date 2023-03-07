@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9]
+        python-version: [3.8, 3.9, 3.10]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -41,14 +41,15 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Install dependencies
-      run: |
-        pip install -r requirements/testing.txt
-    - name: CI
-      run: |
-        pydocstyle pyvlx test/*.py *.py examples/*.py
-        flake8
-        PYTHONPATH=. pytest --cov pyvlx --cov-report xml
-        PYTHONPATH=. pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
+      run: pip install -r requirements/testing.txt
+    - name: Linter: Pydocstyle
+      run: pydocstyle pyvlx test/*.py *.py examples/*.py
+    - name: Linter Flake8
+      run: flake8
+    - name: Linter Pylint
+      run: PYTHONPATH=. pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
+    - name: Tests
+      run: PYTHONPATH=. pytest --cov pyvlx --cov-report xml
     - name: Upload coverage artifact
       uses: actions/upload-artifact@v2.2.2
       with:
