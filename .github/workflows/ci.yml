@@ -42,7 +42,7 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
-    - name: Linter: Pydocstyle
+    - name: Linter Pydocstyle
       run: pydocstyle pyvlx test/*.py *.py examples/*.py
     - name: Linter Flake8
       run: flake8
