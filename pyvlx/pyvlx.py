@@ -29,7 +29,6 @@ class PyVLX:
         self.connection = Connection(loop=self.loop, config=self.config)
         self.heartbeat = Heartbeat(pyvlx=self)
         self.node_updater = NodeUpdater(pyvlx=self)
-        self.heartbeat.start()
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
         self.nodes = Nodes(self)
         self.scenes = Scenes(self)
@@ -40,6 +39,7 @@ class PyVLX:
     async def connect(self):
         """Connect to KLF 200."""
         PYVLXLOG.debug("Connecting to KLF 200.")
+        self.heartbeat.start()
         await self.connection.connect()
         await self.klf200.password_enter(password=self.config.password)
         await self.klf200.get_version()
