@@ -14,7 +14,6 @@ class TestFrameGetLimitationStatusNotification(unittest.TestCase):
 
     def test_bytes(self):
         """Test FrameGetLimitationStatusNotification bytes."""
-
         frame = FrameGetLimitationStatusNotification()
         frame.session_id = 1
         frame.node_id = 1

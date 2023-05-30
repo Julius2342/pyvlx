@@ -14,7 +14,7 @@ from pyvlx.const import LimitationType, Originator
 
 @pytest.fixture(scope="class")
 def event_loop_instance(request):
-    """ Add the event_loop as an attribute to the unittest style test class. """
+    """Add the event_loop as an attribute to the unittest style test class."""
     request.cls.event_loop = asyncio.get_event_loop_policy().new_event_loop()
     yield
     request.cls.event_loop.close()
@@ -26,6 +26,7 @@ class TestGetLimitation(unittest.TestCase):
     """Test class for Limitation."""
 
     def setUp(self):
+        """Set up TestGetLimitation."""
         self.pyvlx = PyVLX()
 
     def test_get_name(self):
@@ -39,18 +40,21 @@ class TestGetLimitation(unittest.TestCase):
         self.assertEqual(limit.limitation_type, LimitationType.MAX_LIMITATION)
 
     def test_max_value(self):
+        """Test limit.max_value."""
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         limit.max_value_raw = b'\xf7'
         self.assertEqual(limit.max_value, 124)
 
     def test_min_value(self):
+        """Test limit.min_value."""
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         limit.min_value_raw = b'\xba'
         self.assertEqual(limit.min_value, 93)
 
     def test_handle_frame(self):
+        """Test handle frame."""
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
 
@@ -85,7 +89,7 @@ class TestGetLimitation(unittest.TestCase):
         self.assertEqual(limit.limit_time, frame.limit_time)
 
     def test_request_frame(self):
-        """test initiating frame."""
+        """Test initiating frame."""
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         req_frame = limit.request_frame()

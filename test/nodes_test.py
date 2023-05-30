@@ -64,7 +64,7 @@ class TestNodes(unittest.TestCase):
         nodes.add(window2)
         window3 = Window(pyvlx, 2, "Window_3", "aa:bb:aa:bb:aa:bb:aa:02")
         nodes.add(window3)
-        self.assertEqual(tuple(nodes.__iter__()), (window1, window2, window3))
+        self.assertEqual(tuple(nodes.__iter__()), (window1, window2, window3))  # pylint: disable=unnecessary-dunder-call
 
     def test_len(self):
         """Test len."""

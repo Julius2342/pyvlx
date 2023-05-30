@@ -8,8 +8,7 @@ class TestParameterPosition(unittest.TestCase):
     """Test class for Position class."""
 
     def test_to_percent(self):
-        """Test position percent output from position int input"""
-
+        """Test position percent output from position int input."""
         self.assertEqual(Position.to_percent(Parameter.from_int(0)), 0)
         self.assertEqual(Position.to_percent(Parameter.from_int(1)), 0)
         self.assertEqual(Position.to_percent(Parameter.from_int(3)), 0)
@@ -24,7 +23,7 @@ class TestParameterPosition(unittest.TestCase):
         self.assertEqual(Position.to_percent(Parameter.from_int(51200)), 100)
 
     def test_from_to_percent(self):
-        """Test position percent output from position percent input"""
+        """Test position percent output from position percent input."""
         self.assertEqual(Position.to_percent(Position.from_percent(0)), 0)
         self.assertEqual(Position.to_percent(Position.from_percent(1)), 1)
         self.assertEqual(Position.to_percent(Position.from_percent(25)), 25)
