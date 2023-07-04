@@ -664,3 +664,4 @@ class StatusType(Enum):
     REQUEST_CURRENT_POSITION = 1  # Request Current Position
     REQUEST_REMAINING_TIME = 2  # Request Remaining Time
     REQUEST_MAIN_INFO = 3  # Request Main Info
+    REQUEST_UNKNOWN = 255  # Request Unknown
