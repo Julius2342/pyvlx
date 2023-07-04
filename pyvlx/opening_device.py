@@ -31,6 +31,8 @@ class OpeningDevice(Node):
         self.position = Position(parameter=position_parameter)
         self.is_opening = False
         self.is_closing = False
+        self.use_default_velocity = False
+        self.default_velocity = Velocity.DEFAULT
 
     async def set_position(self, position, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
         """Set window to desired position.
@@ -43,6 +45,9 @@ class OpeningDevice(Node):
 
         """
         kwargs = {}
+
+        if (velocity is None or velocity is Velocity.DEFAULT) and self.use_default_velocity:
+            velocity = self.default_velocity
 
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
@@ -221,6 +226,9 @@ class Blind(OpeningDevice):
             kwargs['fp3'] = Position(position_percent=0)
         else:
             kwargs['fp3'] = IgnorePosition()
+
+        if (velocity is None or velocity is Velocity.DEFAULT) and self.use_default_velocity:
+            velocity = self.default_velocity
 
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
