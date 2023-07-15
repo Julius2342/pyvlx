@@ -135,9 +135,11 @@ class Klf200Gateway:
             raise PyVLXException("Unable enable house status monitor.")
         self.house_status_monitor_enabled = True
 
-    async def house_status_monitor_disable(self, pyvlx):
+    async def house_status_monitor_disable(self, pyvlx, timeout=None):
         """Disable house status monitor."""
         status_monitor_disable = HouseStatusMonitorDisable(pyvlx=pyvlx)
+        if timeout is not None:
+            status_monitor_disable.timeout_in_seconds = timeout
         await status_monitor_disable.do_api_call()
         if not status_monitor_disable.success:
             raise PyVLXException("Unable disable house status monitor.")

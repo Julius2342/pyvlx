@@ -1,6 +1,7 @@
 """Module for window openers."""
 from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
+from .const import Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
@@ -30,50 +31,72 @@ class OpeningDevice(Node):
         self.position = Position(parameter=position_parameter)
         self.is_opening = False
         self.is_closing = False
+        self.use_default_velocity = False
+        self.default_velocity = Velocity.DEFAULT
 
-    async def set_position(self, position, wait_for_completion=True):
+    async def set_position(self, position, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
         """Set window to desired position.
 
         Parameters:
             * position: Position object containing the target position.
+            * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
 
         """
+        kwargs = {}
+
+        if (velocity is None or velocity is Velocity.DEFAULT) and self.use_default_velocity:
+            velocity = self.default_velocity
+
+        if isinstance(velocity, Velocity):
+            if velocity is not Velocity.DEFAULT:
+                if velocity is Velocity.SILENT:
+                    kwargs['fp1'] = Parameter(raw=b"\x00\x00")
+                else:
+                    kwargs['fp1'] = Parameter(raw=b"\xC8\x00")
+        elif isinstance(velocity, int):
+            kwargs['fp1'] = Position.from_percent(velocity)
+
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=position,
+            **kwargs
         )
         await command_send.do_api_call()
         if not command_send.success:
             raise PyVLXException("Unable to send command")
         await self.after_update()
 
-    async def open(self, wait_for_completion=True):
+    async def open(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
         """Open window.
 
         Parameters:
+            * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
 
         """
         await self.set_position(
             position=Position(position_percent=0),
+            velocity=velocity,
             wait_for_completion=wait_for_completion,
         )
 
-    async def close(self, wait_for_completion=True):
+    async def close(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
         """Close window.
 
         Parameters:
+            * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
 
         """
         await self.set_position(
             position=Position(position_percent=100),
+            velocity=velocity,
             wait_for_completion=wait_for_completion,
         )
 
@@ -177,11 +200,12 @@ class Blind(OpeningDevice):
         self.open_orientation_target: float = 50
         self.close_orientation_target: float = 100
 
-    async def set_position_and_orientation(self, position, wait_for_completion=True, orientation=None):
+    async def set_position_and_orientation(self, position, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True, orientation=None):
         """Set window to desired position.
 
         Parameters:
             * position: Position object containing the current position.
+            * velocity: Velocity to be used during transition.
             * target_position: Position object holding the target position
                 which allows to ajust the position while the blind is in movement
                 without stopping the blind (if orientation position has been changed.)
@@ -203,6 +227,18 @@ class Blind(OpeningDevice):
         else:
             kwargs['fp3'] = IgnorePosition()
 
+        if (velocity is None or velocity is Velocity.DEFAULT) and self.use_default_velocity:
+            velocity = self.default_velocity
+
+        if isinstance(velocity, Velocity):
+            if velocity is not Velocity.DEFAULT:
+                if velocity is Velocity.SILENT:
+                    kwargs['fp1'] = Parameter(raw=b"\x00\x00")
+                else:
+                    kwargs['fp1'] = Parameter(raw=b"\xC8\x00")
+        elif isinstance(velocity, int):
+            kwargs['fp1'] = Position.from_percent(velocity)
+
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
@@ -215,11 +251,12 @@ class Blind(OpeningDevice):
             raise PyVLXException("Unable to send command")
         await self.after_update()
 
-    async def set_position(self, position, wait_for_completion=True):
+    async def set_position(self, position, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
         """Set window to desired position.
 
         Parameters:
             * position: Position object containing the current position.
+            * velocity: Velocity to be used during transition.
             * target_position: Position object holding the target position
                 which allows to ajust the position while the blind is in movement
                 without stopping the blind (if orientation position has been changed.)
@@ -228,30 +265,34 @@ class Blind(OpeningDevice):
 
         """
 
-        await self.set_position_and_orientation(position, wait_for_completion)
+        await self.set_position_and_orientation(position, velocity, wait_for_completion)
 
-    async def open(self, wait_for_completion=True):
+    async def open(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
         """Open window.
 
         Parameters:
+            * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
 
         """
         await self.set_position(
             position=Position(position_percent=0),
+            velocity=velocity,
             wait_for_completion=wait_for_completion,
         )
 
-    async def close(self, wait_for_completion=True):
+    async def close(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
         """Close window.
 
         Parameters:
+            * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
         """
         await self.set_position(
             position=Position(position_percent=100),
+            velocity=velocity,
             wait_for_completion=wait_for_completion,
         )
 
@@ -350,7 +391,6 @@ class DualRollerShutter(OpeningDevice):
         self.target_position = TargetPosition()
         self.active_parameter=0
 
-
     async def set_position(self, position: Position, wait_for_completion=True, curtain="dual"):
         """Set window to desired position.
 
@@ -410,6 +450,7 @@ class DualRollerShutter(OpeningDevice):
             wait_for_completion=wait_for_completion,
             curtain=curtain
         )
+
     async def close(self, wait_for_completion=True, curtain="dual"):
         """Close window.
 
