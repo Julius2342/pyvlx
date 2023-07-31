@@ -87,7 +87,7 @@ class Klf200Gateway:
             raise PyVLXException("Unable to set utc.")
         return setutc.success
 
-    async def set_rtc_time_zone(self):  # pylint: disable=no-self-use
+    async def set_rtc_time_zone(self):
         """Set the RTC Time Zone."""
         # idontwant = setrtctimezone(pyvlx=self.pyvlx)
         raise PyVLXException("KLF 200 RTC Timezone Set not implemented")
