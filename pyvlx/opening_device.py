@@ -89,7 +89,7 @@ class OpeningDevice(Node):
         )
 
     async def set_position_limitations(self, position_min=Position(position_percent=0), position_max=Position(position_percent=100)):
-        """Set a minimum and maximum position limit
+        """Set a minimum and maximum position limit.
 
         Parameters:
             * min_position: Position object containing the minimum position.
@@ -109,7 +109,7 @@ class OpeningDevice(Node):
         await self.after_update()
 
     async def clear_position_limitations(self):
-        """Set position limits
+        """Set position limits.
 
         Parameters:
             * wait_for_completion: If set, function will return
