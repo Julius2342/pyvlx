@@ -1,6 +1,7 @@
 """Module for updating nodes via frames."""
 from .api.frames import (
     FrameGetAllNodesInformationNotification,
+    FrameGetLimitationStatusNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
 from .const import NodeParameter
 from .lightening_device import LighteningDevice
@@ -39,6 +40,18 @@ class NodeUpdater:
                 )
 
             await node.after_update()
+
+    async def process_frame_limitation_status_notification(self, frame: FrameGetLimitationStatusNotification):
+        """Process FrameGetLimitationStatusNotification."""
+        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
+        if frame.node_id not in self.pyvlx.nodes:
+            return
+        node = self.pyvlx.nodes[frame.node_id]
+        if isinstance(node, OpeningDevice):
+            node.limitation_max = Position(frame.max_value)
+            node.limitation_min = Position(frame.min_value)
+            node.limitation_originator = frame.limit_originator
+            node.limitation_time = frame.limit_time
 
     async def process_frame(self, frame):
         """Update nodes via frame, usually received by house monitor."""
@@ -80,3 +93,5 @@ class NodeUpdater:
                 await node.after_update()
         elif isinstance(frame, FrameStatusRequestNotification):
             await self.process_frame_status_request_notification(frame)
+        elif isinstance(frame, FrameGetLimitationStatusNotification):
+            await self.process_frame_limitation_status_notification(frame)

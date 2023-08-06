@@ -2,6 +2,7 @@
 from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .api.set_limitation import SetLimitation
+from .const import Originator
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
@@ -29,6 +30,10 @@ class OpeningDevice(Node):
             pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
         )
         self.position = Position(parameter=position_parameter)
+        self.limitation_min = IgnorePosition()
+        self.limitation_max = IgnorePosition()
+        self.limitation_time = 255
+        self.limitation_originator = Originator.USER
 
     async def set_position(self, position, wait_for_completion=True):
         """Set window to desired position.
