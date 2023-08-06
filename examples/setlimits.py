@@ -1,8 +1,8 @@
 """Just a demo of the new PyVLX module."""
 import asyncio
-import logging
 
-from pyvlx import Position, PyVLX, PYVLXLOG
+from pyvlx import Position, PyVLX
+
 
 async def main(loop):
     """Demonstrate functionality of setting a limit."""

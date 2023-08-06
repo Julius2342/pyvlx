@@ -32,9 +32,9 @@ from .frames import (
     FrameNodeStatePositionChangedNotification, FramePasswordChangeConfirmation,
     FramePasswordChangeNotification, FramePasswordChangeRequest,
     FramePasswordEnterConfirmation, FramePasswordEnterRequest,
-    FrameSessionFinishedNotification, FrameSetNodeNameConfirmation,
-    FrameSetNodeNameRequest, FrameSetLimitationRequest, FrameSetLimitationConfirmation,
-    FrameSetUTCConfirmation, FrameSetUTCRequest,
+    FrameSessionFinishedNotification, FrameSetLimitationConfirmation,
+    FrameSetLimitationRequest, FrameSetNodeNameConfirmation,
+    FrameSetNodeNameRequest, FrameSetUTCConfirmation, FrameSetUTCRequest,
     FrameStatusRequestConfirmation, FrameStatusRequestNotification,
     FrameStatusRequestRequest, extract_from_frame)
 

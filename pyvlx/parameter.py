@@ -242,6 +242,7 @@ class IgnorePosition(Position):
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.IGNORE)
 
+
 class Intensity(Parameter):
     """Class for storing an intensity."""
 

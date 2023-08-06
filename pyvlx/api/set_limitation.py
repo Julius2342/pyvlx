@@ -1,10 +1,10 @@
 """Module for retrieving limitation value from API."""
 
-from ..parameter import Position, IgnorePosition
+from ..parameter import IgnorePosition, Position
 from .api_event import ApiEvent
 from .frames import (
-    FrameSetLimitationRequest, FrameSetLimitationConfirmation, SetLimitationRequestStatus,
-    FrameGetLimitationStatusNotification)
+    FrameGetLimitationStatusNotification, FrameSetLimitationConfirmation,
+    FrameSetLimitationRequest, SetLimitationRequestStatus)
 from .session_id import get_new_session_id
 
 
@@ -42,7 +42,7 @@ class SetLimitation(ApiEvent):
         if isinstance(frame, FrameSetLimitationConfirmation):
             if frame.status == SetLimitationRequestStatus.REJECTED:
                 self.success = False
-                return True # Stop if request is cancelled
+                return True  # Stop if request is cancelled
             return False  # Wait for Notification Frame
         if isinstance(frame, FrameGetLimitationStatusNotification):
             if frame.session_id == self.session_id:
@@ -58,6 +58,7 @@ class SetLimitation(ApiEvent):
     def request_frame(self):
         """Construct initiating frame."""
         self.session_id = get_new_session_id()
-        return FrameSetLimitationRequest(node_ids=[self.node_id], session_id=self.session_id,
-                                        limitation_value_min=self.limitation_value_min, limitation_value_max=self.limitation_value_max,
-                                        limitation_time=self.limitation_time)
+        return FrameSetLimitationRequest(
+            node_ids=[self.node_id], session_id=self.session_id,
+            limitation_value_min=self.limitation_value_min, limitation_value_max=self.limitation_value_max,
+            limitation_time=self.limitation_time)

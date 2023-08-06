@@ -5,13 +5,14 @@ import unittest
 import pytest
 
 from pyvlx import PyVLX
-from pyvlx.api.frames.frame_set_limitation import (
-    FrameSetLimitationRequest, FrameSetLimitationConfirmation, SetLimitationRequestStatus)
 from pyvlx.api.frames.frame_get_limitation import (
     FrameGetLimitationStatusNotification)
+from pyvlx.api.frames.frame_set_limitation import (
+    FrameSetLimitationConfirmation, FrameSetLimitationRequest,
+    SetLimitationRequestStatus)
 from pyvlx.api.set_limitation import SetLimitation
 from pyvlx.const import Originator
-from pyvlx.parameter import Position, IgnorePosition
+from pyvlx.parameter import IgnorePosition, Position
 
 
 @pytest.fixture(scope="class")
@@ -100,4 +101,3 @@ class TestSetLimitation(unittest.TestCase):
         self.assertTrue(req_frame.limitation_value_min, IgnorePosition())
         self.assertTrue(req_frame.limitation_value_max, IgnorePosition())
         self.assertTrue(req_frame.limitation_time, 255)
- 

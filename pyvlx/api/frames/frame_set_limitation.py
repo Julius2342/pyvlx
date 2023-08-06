@@ -1,11 +1,12 @@
 
 """Module for get local time classes."""
 from enum import Enum
+
 from pyvlx.const import Command, Originator, Priority
 
 from .frame import FrameBase
 
-# TODO: This should be called FrameSetLimitationRequest
+
 class FrameSetLimitationRequest(FrameBase):
     """Frame for setting limitation."""
 
@@ -42,11 +43,13 @@ class FrameSetLimitationRequest(FrameBase):
         return f'<{type(self).__name__} node_ids="{self.node_ids}" ' \
                f'session_id="{self.session_id}" originator="{self.originator}" />'
 
+
 class SetLimitationRequestStatus(Enum):
     """Enum for set limitation request status."""
 
     REJECTED = 0
     ACCEPTED = 1
+
 
 class FrameSetLimitationConfirmation(FrameBase):
     """Frame for response for set limitation requests."""
