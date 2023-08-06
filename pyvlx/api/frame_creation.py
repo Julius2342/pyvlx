@@ -33,7 +33,8 @@ from .frames import (
     FramePasswordChangeNotification, FramePasswordChangeRequest,
     FramePasswordEnterConfirmation, FramePasswordEnterRequest,
     FrameSessionFinishedNotification, FrameSetNodeNameConfirmation,
-    FrameSetNodeNameRequest, FrameSetUTCConfirmation, FrameSetUTCRequest,
+    FrameSetNodeNameRequest, FrameSetLimitation, FrameSetLimitationConfirmation,
+    FrameSetUTCConfirmation, FrameSetUTCRequest,
     FrameStatusRequestConfirmation, FrameStatusRequestNotification,
     FrameStatusRequestRequest, extract_from_frame)
 
@@ -196,5 +197,10 @@ def create_frame(command):
         return FrameStatusRequestConfirmation()
     if command == Command.GW_STATUS_REQUEST_NTF:
         return FrameStatusRequestNotification()
+
+    if command == Command.GW_SET_LIMITATION_REQ:
+        return FrameSetLimitation()
+    if command == Command.GW_SET_LIMITATION_CFM:
+        return FrameSetLimitationConfirmation()
 
     return None

@@ -1,5 +1,6 @@
 """Module for window openers."""
 from .api.command_send import CommandSend
+from .api.set_limitation import SetLimitation
 from .api.get_limitation import GetLimitation
 from .exception import PyVLXException
 from .node import Node
@@ -86,6 +87,44 @@ class OpeningDevice(Node):
         await self.set_position(
             position=CurrentPosition(), wait_for_completion=wait_for_completion
         )
+
+    async def set_position_limitations(self, position_min=Position(position_percent=0), position_max=Position(position_percent=100)):
+        """Set a minimum and maximum position limit
+
+        Parameters:
+            * min_position: Position object containing the minimum position.
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        command_set_limitation = SetLimitation(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            limitation_value_min=position_min,
+            limitation_value_max=position_max
+        )
+        await command_set_limitation.do_api_call()
+        if not command_set_limitation.success:
+            raise PyVLXException("Unable to set limitations")
+        await self.after_update()
+
+    async def clear_position_limitations(self):
+        """Set position limits
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        command_set_limitation = SetLimitation(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            limitation_time=255,
+        )
+        await command_set_limitation.do_api_call()
+        if not command_set_limitation.success:
+            raise PyVLXException("Unable to send command")
+        await self.after_update()
 
     def __str__(self):
         """Return object as readable string."""
