@@ -131,6 +131,14 @@ class OpeningDevice(Node):
             raise PyVLXException("Unable to send command")
         await self.after_update()
 
+    async def get_limitation(self):
+        """Return limitaation."""
+        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
+        await get_limitation.do_api_call()
+        if not get_limitation.success:
+            raise PyVLXException("Unable to send command")
+        return get_limitation
+
     def __str__(self):
         """Return object as readable string."""
         return (
@@ -182,14 +190,6 @@ class Window(OpeningDevice):
                 self.rain_sensor, self.serial_number, self.position
             )
         )
-
-    async def get_limitation(self):
-        """Return limitaation."""
-        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
-        await get_limitation.do_api_call()
-        if not get_limitation.success:
-            raise PyVLXException("Unable to send command")
-        return get_limitation
 
 
 class Blind(OpeningDevice):
