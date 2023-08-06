@@ -3,7 +3,7 @@
 from ..parameter import Position, IgnorePosition
 from .api_event import ApiEvent
 from .frames import (
-    FrameSetLimitation, FrameSetLimitationConfirmation, SetLimitationRequestStatus,
+    FrameSetLimitationRequest, FrameSetLimitationConfirmation, SetLimitationRequestStatus,
     FrameGetLimitationStatusNotification)
 from .session_id import get_new_session_id
 
@@ -58,6 +58,6 @@ class SetLimitation(ApiEvent):
     def request_frame(self):
         """Construct initiating frame."""
         self.session_id = get_new_session_id()
-        return FrameSetLimitation(node_ids=[self.node_id], session_id=self.session_id,
+        return FrameSetLimitationRequest(node_ids=[self.node_id], session_id=self.session_id,
                                         limitation_value_min=self.limitation_value_min, limitation_value_max=self.limitation_value_max,
                                         limitation_time=self.limitation_time)

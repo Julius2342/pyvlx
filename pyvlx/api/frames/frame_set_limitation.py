@@ -6,7 +6,7 @@ from pyvlx.const import Command, Originator, Priority
 from .frame import FrameBase
 
 # TODO: This should be called FrameSetLimitationRequest
-class FrameSetLimitation(FrameBase):
+class FrameSetLimitationRequest(FrameBase):
     """Frame for setting limitation."""
 
     PAYLOAD_LEN = 31

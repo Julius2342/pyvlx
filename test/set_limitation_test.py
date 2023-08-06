@@ -6,7 +6,7 @@ import pytest
 
 from pyvlx import PyVLX
 from pyvlx.api.frames.frame_set_limitation import (
-    FrameSetLimitation, FrameSetLimitationConfirmation, SetLimitationRequestStatus)
+    FrameSetLimitationRequest, FrameSetLimitationConfirmation, SetLimitationRequestStatus)
 from pyvlx.api.frames.frame_get_limitation import (
     FrameGetLimitationStatusNotification)
 from pyvlx.api.set_limitation import SetLimitation
@@ -80,7 +80,7 @@ class TestSetLimitation(unittest.TestCase):
         limit = SetLimitation(self.pyvlx, 1, Position(position_percent=30),
                               Position(position_percent=70))
         req_frame = limit.request_frame()
-        self.assertIsInstance(req_frame, FrameSetLimitation)
+        self.assertIsInstance(req_frame, FrameSetLimitationRequest)
         self.assertTrue(req_frame.session_id, 1)
         self.assertTrue(req_frame.node_ids, [1])
         self.assertTrue(req_frame.originator, Originator.USER)
@@ -93,7 +93,7 @@ class TestSetLimitation(unittest.TestCase):
         self.pyvlx = PyVLX()
         limit = SetLimitation(self.pyvlx, 1, limitation_time=255)
         req_frame = limit.request_frame()
-        self.assertIsInstance(req_frame, FrameSetLimitation)
+        self.assertIsInstance(req_frame, FrameSetLimitationRequest)
         self.assertTrue(req_frame.session_id, 1)
         self.assertTrue(req_frame.node_ids, [1])
         self.assertTrue(req_frame.originator, Originator.USER)

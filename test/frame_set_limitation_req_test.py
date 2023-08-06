@@ -1,36 +1,36 @@
-"""Unit tests for FrameSetLimitation."""
+"""Unit tests for FrameSetLimitationRequest."""
 import unittest
 
 from pyvlx.api.frame_creation import frame_from_raw
-from pyvlx.api.frames.frame_set_limitation import FrameSetLimitation
+from pyvlx.api.frames.frame_set_limitation import FrameSetLimitationRequest
 from pyvlx.parameter import Position, IgnorePosition
 
 class TestFrameSetLimitation(unittest.TestCase):
-    """Test class for FrameSetLimitation."""
+    """Test class for FrameSetLimitationRequest."""
 
     # pylint: disable=too-many-public-methods,invalid-name
 
     def test_bytes_setlimits(self):
-        """Test FrameSetLimitation bytes."""
-        frame = FrameSetLimitation(node_ids=[1], session_id=1, limitation_value_min=Position(position_percent=30), 
+        """Test FrameSetLimitationRequest bytes."""
+        frame = FrameSetLimitationRequest(node_ids=[1], session_id=1, limitation_value_min=Position(position_percent=30), 
                                    limitation_value_max=Position(position_percent=70), limitation_time=1)
         self.assertEqual(bytes(frame), b'\x00\x22\x03\x10\x00\x01\x01\x03\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
                                        b'\x00\x00\x00\x00\x00\x3C\x00\x8C\x00\x01\x83')
 
     def test_bytes_clearlimits(self):
-        """Test FrameSetLimitation bytes for clear limits."""
-        frame = FrameSetLimitation(node_ids=[1, 2], session_id=2, limitation_value_min=IgnorePosition(),
+        """Test FrameSetLimitationRequest bytes for clear limits."""
+        frame = FrameSetLimitationRequest(node_ids=[1, 2], session_id=2, limitation_value_min=IgnorePosition(),
                                    limitation_value_max=IgnorePosition(), limitation_time=255)
         self.assertEqual(bytes(frame), b'\x00\x22\x03\x10\x00\x02\x01\x03\x02\x01\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
                                        b'\x00\x00\x00\x00\x00\xD4\x00\xD4\x00\xFF\xCF')
 
     def test_frame_from_raw(self):
-        """Test parse FrameSetLimitation from raw."""
+        """Test parse FrameSetLimitationRequest from raw."""
         frame = frame_from_raw(b'\x00\x22\x03\x10\x00\x02\x01\x03\x02\x01\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
                                b'\x00\x00\x00\x00\x00\xD4\x00\xD4\x00\x00\x30')
-        self.assertTrue(isinstance(frame, FrameSetLimitation))
+        self.assertTrue(isinstance(frame, FrameSetLimitationRequest))
 
     def test_str(self):
-        """Test string representation of FrameSetLimitation."""
-        frame = FrameSetLimitation(node_ids=[1], session_id=1)
-        self.assertEqual(str(frame), '<FrameSetLimitation node_ids="[1]" session_id="1" originator="Originator.USER" />')
+        """Test string representation of FrameSetLimitationRequest."""
+        frame = FrameSetLimitationRequest(node_ids=[1], session_id=1)
+        self.assertEqual(str(frame), '<FrameSetLimitationRequest node_ids="[1]" session_id="1" originator="Originator.USER" />')

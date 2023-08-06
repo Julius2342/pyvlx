@@ -75,4 +75,4 @@ from .frame_status_request import (
     FrameStatusRequestConfirmation, FrameStatusRequestNotification,
     FrameStatusRequestRequest)
 from .frame_set_limitation import (
-    FrameSetLimitation, SetLimitationRequestStatus, FrameSetLimitationConfirmation)
+    FrameSetLimitationRequest, SetLimitationRequestStatus, FrameSetLimitationConfirmation)
