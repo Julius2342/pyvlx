@@ -35,7 +35,7 @@ class FrameSetLimitationRequest(FrameBase):
         ret += bytes([self.parameter_id])
         ret += bytes(self.limitation_value_min)
         ret += bytes(self.limitation_value_max)
-        ret += bytes([self.limitation_time])
+        ret += bytes(self.limitation_time)
         return ret
 
     def __str__(self):

@@ -1,4 +1,6 @@
 """Module for Position class."""
+import math
+
 from .exception import PyVLXException
 
 
@@ -339,3 +341,46 @@ class CurrentIntensity(Intensity):
     def __init__(self):
         """Initialize CurrentIntensity class."""
         super().__init__(intensity=Intensity.CURRENT)
+
+
+class LimitationTime:
+    """Class for storing limitation time for position limitation"""
+
+    UNLIMITED = 253
+    CLEAR_MASTER = 254
+    CLEAR_ALL = 255
+
+    def __init__(self, time=None, limitation_time=None):
+        self.limitation_time = 0
+        if limitation_time is not None:
+            self.limitation_time = limitation_time
+        elif time is not None:
+            self.limitation_time = math.ceil(time / 30)
+        else:
+            self.limitation_time = LimitationTime.CLEAR_MASTER
+
+    def __bytes__(self):
+        """Convert object in byte representation."""
+        return bytes([self.limitation_time])
+
+    def __eq__(self, other):
+        """Equal operator."""
+        return bytes(self) == bytes(other)
+
+
+class LimitationTimeUnlimited(LimitationTime):
+    """Limitation time does not end"""
+    def __init__(self):
+        super().__init__(limitation_time=LimitationTime.UNLIMITED)
+
+
+class LimitationTimeClearMaster(LimitationTime):
+    """Clear all limitation entries for this Master"""
+    def __init__(self):
+        super().__init__(limitation_time=LimitationTime.CLEAR_MASTER)
+
+
+class LimitationTimeClearAll(LimitationTime):
+    """Clear all limitation entries"""
+    def __init__(self):
+        super().__init__(limitation_time=LimitationTime.CLEAR_ALL)

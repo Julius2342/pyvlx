@@ -1,6 +1,6 @@
 """Module for retrieving limitation value from API."""
 
-from ..parameter import IgnorePosition, Position
+from ..parameter import IgnorePosition, LimitationTime, Position
 from .api_event import ApiEvent
 from .frames import (
     FrameGetLimitationStatusNotification, FrameSetLimitationConfirmation,
@@ -13,7 +13,8 @@ class SetLimitation(ApiEvent):
 
     # NOTE: Required to always set both limits at the same time.
     # If setting only one limit to a value, the other to Ignore, Default or Current, the gateway will reject the Frame.
-    def __init__(self, pyvlx, node_id, limitation_value_min=IgnorePosition(), limitation_value_max=IgnorePosition(), limitation_time=0x01):
+    def __init__(self, pyvlx, node_id, limitation_value_min=IgnorePosition(),
+                 limitation_value_max=IgnorePosition(), limitation_time=LimitationTime(60)):
         """Initialize SceneList class."""
         super().__init__(pyvlx=pyvlx)
         self.node_id = node_id

@@ -12,7 +12,8 @@ from pyvlx.api.frames.frame_set_limitation import (
     SetLimitationRequestStatus)
 from pyvlx.api.set_limitation import SetLimitation
 from pyvlx.const import Originator
-from pyvlx.parameter import IgnorePosition, Position
+from pyvlx.parameter import (
+    IgnorePosition, LimitationTime, LimitationTimeClearAll, Position)
 
 
 @pytest.fixture(scope="class")
@@ -87,7 +88,7 @@ class TestSetLimitation(unittest.TestCase):
         self.assertTrue(req_frame.originator, Originator.USER)
         self.assertTrue(req_frame.limitation_value_min, Position(position_percent=30))
         self.assertTrue(req_frame.limitation_value_max, Position(position_percent=70))
-        self.assertTrue(req_frame.limitation_time, 1)
+        self.assertTrue(req_frame.limitation_time, LimitationTime(60))
 
     def test_request_clear_frame(self):
         """Test initiating frame."""
@@ -100,4 +101,4 @@ class TestSetLimitation(unittest.TestCase):
         self.assertTrue(req_frame.originator, Originator.USER)
         self.assertTrue(req_frame.limitation_value_min, IgnorePosition())
         self.assertTrue(req_frame.limitation_value_max, IgnorePosition())
-        self.assertTrue(req_frame.limitation_time, 255)
+        self.assertTrue(req_frame.limitation_time, LimitationTimeClearAll())
