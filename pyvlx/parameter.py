@@ -351,17 +351,19 @@ class LimitationTime:
     CLEAR_ALL = 255
 
     def __init__(self, time=None, limitation_time=None):
-        self.limitation_time = 0
+        self.raw = LimitationTime.CLEAR_MASTER
         if limitation_time is not None:
-            self.limitation_time = limitation_time
+            self.raw = limitation_time
         elif time is not None:
-            self.limitation_time = math.ceil(time / 30)
-        else:
-            self.limitation_time = LimitationTime.CLEAR_MASTER
+            if time > 7590:
+                self.raw = 252
+            else:
+                self.raw = math.ceil(time / 30) - 1
+        self.raw = bytes([self.raw])
 
     def __bytes__(self):
         """Convert object in byte representation."""
-        return bytes([self.limitation_time])
+        return self.raw
 
     def __eq__(self, other):
         """Equal operator."""
