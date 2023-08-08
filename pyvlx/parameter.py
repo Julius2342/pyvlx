@@ -350,8 +350,10 @@ class LimitationTime:
     CLEAR_MASTER = 254
     CLEAR_ALL = 255
 
-    def __init__(self, time=None, limitation_time=None):
+    def __init__(self, time=None, limitation_time=None, limit_raw=None):
         self.raw = LimitationTime.CLEAR_MASTER
+        if limit_raw is not None:
+            self.raw = limit_raw
         if limitation_time is not None:
             self.raw = limitation_time
         elif time is not None:
@@ -368,6 +370,17 @@ class LimitationTime:
     def __eq__(self, other):
         """Equal operator."""
         return bytes(self) == bytes(other)
+
+    def get_time(self):
+        """Get limitation time in seconds or a subclass of LimitationTime"""
+        time_value = self.raw[0]
+        if time_value == LimitationTime.UNLIMITED:
+            return LimitationTimeUnlimited()
+        if time_value == LimitationTime.CLEAR_MASTER:
+            return LimitationTimeClearMaster()
+        if time_value == LimitationTime.CLEAR_ALL:
+            return LimitationTimeClearAll()
+        return (time_value + 1) * 30
 
 
 class LimitationTimeUnlimited(LimitationTime):

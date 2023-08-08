@@ -22,18 +22,18 @@ class TestFrameGetLimitationStatusNotification(unittest.TestCase):
         frame.max_value = 63487
         frame.limit_originator = Originator.USER.value
         frame.limit_time = 0
-        self.assertEqual(bytes(frame), b'\x00\r\x03\x14\x00\x01\x01\x00\xba4\xf7\xff\x01\x00\x9d')
+        self.assertEqual(bytes(frame), b'\x00\x0d\x03\x14\x00\x01\x01\x00\xba\x34\xf7\xff\x01\x00\x9d')
 
     def test_frame_from_raw(self):
         """Test parse FrameGetLimitationStatusNotification from raw."""
-        frame = frame_from_raw(b'\x00\r\x03\x14\x00\x01\x01\x00\xba4\xf7\xff\x01\x00\x9d')
+        frame = frame_from_raw(b'\x00\x0d\x03\x14\x00\x01\x01\x00\xba\x34\xf7\xff\x01\x00\x9d')
         self.assertTrue(isinstance(frame, FrameGetLimitationStatusNotification))
         self.assertEqual(frame.limit_originator, Originator.USER)
         self.assertEqual(frame.node_id, 1)
         self.assertEqual(frame.parameter_id, 0)
         self.assertEqual(frame.session_id, 1)
-        self.assertEqual(frame.max_value, b'\xf7')
-        self.assertEqual(frame.min_value, b'\xba')
+        self.assertEqual(frame.max_value, 63487)
+        self.assertEqual(frame.min_value, 47668)
         self.assertEqual(frame.limit_time, 0)
 
     def test_str(self):

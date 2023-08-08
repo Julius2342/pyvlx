@@ -6,7 +6,8 @@ from .const import Originator
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition)
+    CurrentPosition, IgnorePosition, LimitationTimeClearAll, Parameter,
+    Position, TargetPosition)
 
 
 class OpeningDevice(Node):
@@ -124,7 +125,7 @@ class OpeningDevice(Node):
         command_set_limitation = SetLimitation(
             pyvlx=self.pyvlx,
             node_id=self.node_id,
-            limitation_time=255,
+            limitation_time=LimitationTimeClearAll(),
         )
         await command_set_limitation.do_api_call()
         if not command_set_limitation.success:

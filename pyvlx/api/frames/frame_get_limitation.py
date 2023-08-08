@@ -97,8 +97,8 @@ class FrameGetLimitationStatusNotification(FrameBase):
         self.session_id = payload[0] * 256 + payload[1]
         self.node_id = payload[2]
         self.parameter_id = payload[3]
-        self.min_value = payload[4:5]
-        self.max_value = payload[6:7]
+        self.min_value = payload[4] * 256 + payload[5]
+        self.max_value = payload[6] * 256 + payload[7]
         self.limit_originator = Originator(payload[8])
         self.limit_time = payload[9]
 

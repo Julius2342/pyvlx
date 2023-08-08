@@ -7,7 +7,7 @@ from .const import NodeParameter
 from .lightening_device import LighteningDevice
 from .log import PYVLXLOG
 from .opening_device import Blind, OpeningDevice
-from .parameter import Intensity, Parameter, Position
+from .parameter import Intensity, LimitationTime, Parameter, Position
 
 
 class NodeUpdater:
@@ -48,10 +48,10 @@ class NodeUpdater:
             return
         node = self.pyvlx.nodes[frame.node_id]
         if isinstance(node, OpeningDevice):
-            node.limitation_max = Position(frame.max_value)
-            node.limitation_min = Position(frame.min_value)
+            node.limitation_max = Position(position=frame.max_value)
+            node.limitation_min = Position(position=frame.min_value)
             node.limitation_originator = frame.limit_originator
-            node.limitation_time = frame.limit_time
+            node.limitation_time = LimitationTime(limit_raw=frame.limit_time)
 
     async def process_frame(self, frame):
         """Update nodes via frame, usually received by house monitor."""
