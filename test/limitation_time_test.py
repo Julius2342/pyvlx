@@ -29,7 +29,7 @@ class TestLimitationTime(unittest.TestCase):
         self.assertEqual(LimitationTimeClearAll().raw, b"\xFF")
 
     def test_from_raw(self):
-        """Test limitation time convertion from raw value"""
+        """Test limitation time convertion from raw value."""
         self.assertEqual(LimitationTime(limit_raw=0).get_time(), 30)
         self.assertEqual(LimitationTime(limit_raw=1).get_time(), 60)
         self.assertEqual(LimitationTime(limit_raw=252).get_time(), 7590)
