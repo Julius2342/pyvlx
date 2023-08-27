@@ -580,6 +580,10 @@ class OperatingState(Enum):
     UNKNOWN = 255
     UNDEFINED = 45 # Not specified value
 
+    @classmethod
+    def _missing_(cls, value):
+        return cls.UNDEFINED
+
 
 class StatusReply(Enum):
     """Enum Class for Node Status Reply."""
