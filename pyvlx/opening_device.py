@@ -429,7 +429,7 @@ class DualRollerShutter(OpeningDevice):
         self.target_position = TargetPosition()
         self.active_parameter=0
 
-    async def set_position(self, position: Position, wait_for_completion=True, curtain="dual"):
+    async def set_position(self, position: Position, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True, curtain="dual"):
         """Set window to desired position.
 
         Parameters:
@@ -455,6 +455,19 @@ class DualRollerShutter(OpeningDevice):
             self.target_position = position
             self.active_parameter=0
     
+
+        if (velocity is None or velocity is Velocity.DEFAULT) and self.use_default_velocity:
+            velocity = self.default_velocity
+
+        if isinstance(velocity, Velocity):
+            if velocity is not Velocity.DEFAULT:
+                if velocity is Velocity.SILENT:
+                    kwargs['fp3'] = Parameter(raw=b"\x00\x00")
+                else:
+                    kwargs['fp3'] = Parameter(raw=b"\xC8\x00")
+        elif isinstance(velocity, int):
+            kwargs['fp3'] = Position.from_percent(velocity)
+
         command_send = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
@@ -475,7 +488,7 @@ class DualRollerShutter(OpeningDevice):
                 self.position = position
         await self.after_update()
 
-    async def open(self, wait_for_completion=True, curtain="dual"):
+    async def open(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True, curtain="dual"):
         """Open window.
 
         Parameters:
@@ -485,11 +498,12 @@ class DualRollerShutter(OpeningDevice):
         """
         await self.set_position(
             position=Position(position_percent=0),
+            velocity=velocity,
             wait_for_completion=wait_for_completion,
             curtain=curtain
         )
 
-    async def close(self, wait_for_completion=True, curtain="dual"):
+    async def close(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True, curtain="dual"):
         """Close window.
 
         Parameters:
@@ -498,14 +512,16 @@ class DualRollerShutter(OpeningDevice):
         """
         await self.set_position(
             position=Position(position_percent=100),
+            velocity=velocity,
             wait_for_completion=wait_for_completion,
             curtain=curtain
         )
 
-    async def stop(self, wait_for_completion=True, curtain="dual"):
+    async def stop(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True, curtain="dual"):
         """Stop Blind position."""
         await self.set_position(
             position=CurrentPosition(), 
+            velocity=velocity,
             wait_for_completion=wait_for_completion, 
             curtain=curtain
         )
