@@ -1,4 +1,6 @@
 """Module for updating nodes via frames."""
+import datetime
+
 from .api.frames import (
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
@@ -86,15 +88,23 @@ class NodeUpdater:
             
             # Set opening device status
             if isinstance(node, OpeningDevice):
-                if (position.position > target.position <= Parameter.MAX) and (frame.state == OperatingState.EXECUTING):
+                if (position.position > target.position <= Parameter.MAX) and ((frame.state == OperatingState.EXECUTING) or frame.remaining_time > 0):
                     node.is_opening = True
                     PYVLXLOG.debug("%s is opening", node.name)
-                elif (position.position < target.position <= Parameter.MAX) and (frame.state == OperatingState.EXECUTING):
+                    node.state_received_at = datetime.datetime.now()
+                    node.estimated_completion = node.state_received_at + datetime.timedelta(0, frame.remaining_time)
+                    PYVLXLOG.debug("%s will be opening until", node.estimated_completion)
+                elif (position.position < target.position <= Parameter.MAX) and ((frame.state == OperatingState.EXECUTING) or frame.remaining_time > 0):
                     node.is_closing = True
                     PYVLXLOG.debug("%s is closing", node.name)
+                    node.state_received_at = datetime.datetime.now()
+                    node.estimated_completion = node.state_received_at + datetime.timedelta(0, frame.remaining_time)
+                    PYVLXLOG.debug("%s will be closing until", node.estimated_completion)
                 else:
                     if node.is_opening:
                         node.is_opening = False
+                        node.state_received_at = None
+                        node.estimated_completion = None
                         PYVLXLOG.debug("%s stops opening", node.name)
                     if node.is_closing:
                         node.is_closing = False
@@ -104,6 +114,7 @@ class NodeUpdater:
             if isinstance(node, OpeningDevice):
                 if position.position <= Parameter.MAX: 
                         node.position = position
+                        node.target = target
                         PYVLXLOG.debug("%s position changed to: %s", node.name, position)
                 await node.after_update()
             elif isinstance(node, LighteningDevice):

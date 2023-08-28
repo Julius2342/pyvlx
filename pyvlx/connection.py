@@ -1,6 +1,7 @@
 """Module for handling the TCP connection with Gateway."""
 import asyncio
 import ssl
+import sys
 
 from .api.frame_creation import frame_from_raw
 from .api.frames import FrameBase
@@ -49,9 +50,13 @@ class TCPTransport(asyncio.Protocol):
         self.tokenizer.feed(data)
         while self.tokenizer.has_tokens():
             raw = self.tokenizer.get_next_token()
-            frame = frame_from_raw(raw)
-            if frame is not None:
-                self.frame_received_cb(frame)
+
+            try:
+                frame = frame_from_raw(raw)
+                if frame is not None:
+                    self.frame_received_cb(frame)
+            except Exception:
+                PYVLXLOG.error("Error in data_received", exc_info=sys.exc_info())
 
     def connection_lost(self, exc):
         """Handle lost connection."""

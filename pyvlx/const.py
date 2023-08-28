@@ -578,7 +578,10 @@ class OperatingState(Enum):
     EXECUTING = 4
     DONE = 5
     UNKNOWN = 255
-    UNDEFINED = 45 # Not specified value
+
+    @classmethod
+    def _missing_(cls, value):
+        return cls.UNKNOWN
 
 
 class StatusReply(Enum):
@@ -631,6 +634,10 @@ class StatusReply(Enum):
     LIMITATION_BY_AUTOMATIC_CYCLE = 0xED              # Indicates the parameter was limited by an automatic cycle.
     LIMITATION_BY_EMERGENCY = 0xEE                    # Indicates the parameter was limited by an emergency.
 
+    @classmethod
+    def _missing_(cls, value):
+        return cls.UNKNOWN_STATUS_REPLY
+
 
 class StatusId(Enum):
     """Enum Class for Status ID Reply."""
@@ -647,6 +654,10 @@ class StatusId(Enum):
     STATUS_AUTOMATIC_CYCLE = 0x0B  # The status is from a automatic cycle generated action.
     STATUS_EMERGENCY = 0x0C        # The status is from an emergency or a security generated action.
     STATUS_UNKNOWN = 0xFF          # The status is from from an unknown command originator action.
+
+    @classmethod
+    def _missing_(cls, value):
+        return cls.STATUS_UNKNOWN
 
 
 class RunStatus(Enum):
@@ -665,3 +676,7 @@ class StatusType(Enum):
     REQUEST_REMAINING_TIME = 2  # Request Remaining Time
     REQUEST_MAIN_INFO = 3  # Request Main Info
     REQUEST_UNKNOWN = 255  # Request Unknown
+
+    @classmethod
+    def _missing_(cls, value):
+        return cls.REQUEST_UNKNOWN
