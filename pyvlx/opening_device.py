@@ -1,4 +1,8 @@
 """Module for window openers."""
+import datetime
+
+from .log import PYVLXLOG
+
 from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .const import Velocity
@@ -29,8 +33,11 @@ class OpeningDevice(Node):
             pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
         )
         self.position = Position(parameter=position_parameter)
+        self.target = Position(parameter=position_parameter)
         self.is_opening = False
         self.is_closing = False
+        self.state_received_at: datetime.datetime | None = None
+        self.estimated_completion: datetime.datetime | None = None
         self.use_default_velocity = False
         self.default_velocity = Velocity.DEFAULT
 
@@ -111,6 +118,38 @@ class OpeningDevice(Node):
         await self.set_position(
             position=CurrentPosition(), wait_for_completion=wait_for_completion
         )
+
+    def is_moving(self):
+        return self.is_opening or self.is_closing
+
+    def movement_percent(self):
+        if self.estimated_completion is None or self.estimated_completion < datetime.datetime.now():
+            return 100
+
+        movement_duration_s = (self.estimated_completion - self.state_received_at).total_seconds()
+        time_passed_s = (datetime.datetime.now() - self.state_received_at).total_seconds()
+
+        percent = time_passed_s / movement_duration_s * 100
+        if percent < 0:
+            percent = 0
+        if percent > 100:
+            percent = 100
+        return percent
+
+    def get_position(self):
+        PYVLXLOG.debug("get_position")
+        if self.is_moving():
+            PYVLXLOG.debug("get_position: is moving")
+            percent = self.movement_percent()
+            PYVLXLOG.debug("get_position: %d percent" % percent)
+            movement_origin = self.position.position_percent
+            movement_target = self.target.position_percent
+            PYVLXLOG.debug("get_position: %s => %s" % (movement_origin, movement_target))
+            current_position = movement_origin + (movement_target - movement_origin) / 100 * percent
+            PYVLXLOG.debug("get_position: current_position=%d" % int(current_position))
+            return Position(position_percent=int(current_position))
+        else:
+            return self.position
 
     def __str__(self):
         """Return object as readable string."""

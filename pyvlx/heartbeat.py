@@ -11,18 +11,19 @@ from .opening_device import Blind, DualRollerShutter
 class Heartbeat:
     """Class for sending heartbeats to API."""
 
-    def __init__(self, pyvlx, timeout_in_seconds=30):
+    def __init__(self, pyvlx, interval=30, load_all_states=True):
         """Initialize Heartbeat object."""
         PYVLXLOG.debug("Heartbeat __init__")
         self.pyvlx = pyvlx
-        self.timeout_in_seconds = timeout_in_seconds
+        self.interval = interval
+        self.load_all_states = load_all_states
         self.task = None
 
     async def _run(self):
         PYVLXLOG.debug("Heartbeat: task started")
         while True:
             PYVLXLOG.debug("Heartbeat: sleeping")
-            await asyncio.sleep(self.timeout_in_seconds)
+            await asyncio.sleep(self.interval)
             PYVLXLOG.debug("Heartbeat: pulsing")
             try:
                 await self.pulse()
@@ -63,6 +64,8 @@ class Heartbeat:
         # If nodes contain Blind or DualRollerShutter device, refresh orientation or upper/lower curtain positions because House Monitoring
         # delivers wrong values for FP1, FP2 and FP3 parameter
         for node in self.pyvlx.nodes:
-            if isinstance(node, Blind) or isinstance(node, DualRollerShutter):
+            if isinstance(node, Blind) or isinstance(node, DualRollerShutter) or self.load_all_states:
                 status_request = StatusRequest(self.pyvlx, node.node_id)
                 await status_request.do_api_call()
+                # give user requests a chance
+                await asyncio.sleep(0.5)
