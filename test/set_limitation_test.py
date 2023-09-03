@@ -5,8 +5,6 @@ import unittest
 import pytest
 
 from pyvlx import PyVLX
-from pyvlx.api.frames.frame_get_limitation import (
-    FrameGetLimitationStatusNotification)
 from pyvlx.api.frames.frame_set_limitation import (
     FrameSetLimitationConfirmation, FrameSetLimitationRequest,
     SetLimitationRequestStatus)
