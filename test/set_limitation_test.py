@@ -40,31 +40,8 @@ class TestSetLimitation(unittest.TestCase):
 
         frame = FrameSetLimitationConfirmation()
         frame.status = SetLimitationRequestStatus.ACCEPTED
-        self.assertFalse(self.event_loop.run_until_complete(limit.handle_frame(frame)))
-        self.assertFalse(limit.success)
-
-        frame = FrameGetLimitationStatusNotification()
-        frame.session_id = 1
-        frame.node_id = 1
-        frame.min_value = b'\xf7'
-        frame.max_value = b'\xba'
-        frame.limit_originator = Originator.USER
-        frame.limit_time = 1
-
-        limit.session_id = 0
-        self.assertFalse(self.event_loop.run_until_complete(limit.handle_frame(frame)))
-        self.assertFalse(limit.success)  # Session id is wrong
-
-        limit.session_id = frame.session_id
         self.assertTrue(self.event_loop.run_until_complete(limit.handle_frame(frame)))
         self.assertTrue(limit.success)
-
-        self.assertEqual(limit.node_id, frame.node_id)
-        self.assertEqual(limit.session_id, frame.session_id)
-        self.assertEqual(limit.min_value, 124)
-        self.assertEqual(limit.max_value, 93)
-        self.assertEqual(limit.originator, frame.limit_originator)
-        self.assertEqual(limit.limitation_time, frame.limit_time)
 
     def test_handle_frame_rejected(self):
         """Test handle frame."""

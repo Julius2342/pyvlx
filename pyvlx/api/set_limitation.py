@@ -43,7 +43,10 @@ class SetLimitation(ApiEvent):
         if isinstance(frame, FrameSetLimitationConfirmation):
             if frame.status == SetLimitationRequestStatus.REJECTED:
                 self.success = False
+            else:
+                self.success = True
             return True
+        return False
 
     def request_frame(self):
         """Construct initiating frame."""
