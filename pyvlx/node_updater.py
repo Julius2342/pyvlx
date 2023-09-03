@@ -52,6 +52,7 @@ class NodeUpdater:
             node.limitation_min = Position(position=frame.min_value)
             node.limitation_originator = frame.limit_originator
             node.limitation_time = LimitationTime(limit_raw=frame.limit_time)
+            await node.after_update()
 
     async def process_frame(self, frame):
         """Update nodes via frame, usually received by house monitor."""

@@ -2,7 +2,7 @@
 from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .api.set_limitation import SetLimitation
-from .const import Originator
+from .const import LimitationType, Originator
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
@@ -112,6 +112,8 @@ class OpeningDevice(Node):
         await command_set_limitation.do_api_call()
         if not command_set_limitation.success:
             raise PyVLXException("Unable to set limitations")
+        self.limitation_min = position_min
+        self.limitation_max = position_max
         await self.after_update()
 
     async def clear_position_limitations(self):
@@ -130,11 +132,21 @@ class OpeningDevice(Node):
         await command_set_limitation.do_api_call()
         if not command_set_limitation.success:
             raise PyVLXException("Unable to send command")
+        self.limitation_min = IgnorePosition()
+        self.limitation_max = IgnorePosition()
         await self.after_update()
 
     async def get_limitation(self):
         """Return limitaation."""
         get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
+        await get_limitation.do_api_call()
+        if not get_limitation.success:
+            raise PyVLXException("Unable to send command")
+        return get_limitation
+
+    async def get_limitation_max(self):
+        """Return maximum limitation."""
+        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id, limitation_type=LimitationType.MAX_LIMITATION)
         await get_limitation.do_api_call()
         if not get_limitation.success:
             raise PyVLXException("Unable to send command")

@@ -1,10 +1,10 @@
 """Module for retrieving limitation value from API."""
 
-from ..parameter import IgnorePosition, LimitationTime, Position
+from ..parameter import IgnorePosition, LimitationTimeUnlimited, Position
 from .api_event import ApiEvent
 from .frames import (
-    FrameGetLimitationStatusNotification, FrameSetLimitationConfirmation,
-    FrameSetLimitationRequest, SetLimitationRequestStatus)
+    FrameSetLimitationConfirmation, FrameSetLimitationRequest,
+    SetLimitationRequestStatus)
 from .session_id import get_new_session_id
 
 
@@ -14,7 +14,7 @@ class SetLimitation(ApiEvent):
     # NOTE: Required to always set both limits at the same time.
     # If setting only one limit to a value, the other to Ignore, Default or Current, the gateway will reject the Frame.
     def __init__(self, pyvlx, node_id, limitation_value_min=IgnorePosition(),
-                 limitation_value_max=IgnorePosition(), limitation_time=LimitationTime(60)):
+                 limitation_value_max=IgnorePosition(), limitation_time=LimitationTimeUnlimited()):
         """Initialize SceneList class."""
         super().__init__(pyvlx=pyvlx)
         self.node_id = node_id
@@ -43,18 +43,7 @@ class SetLimitation(ApiEvent):
         if isinstance(frame, FrameSetLimitationConfirmation):
             if frame.status == SetLimitationRequestStatus.REJECTED:
                 self.success = False
-                return True  # Stop if request is cancelled
-            return False  # Wait for Notification Frame
-        if isinstance(frame, FrameGetLimitationStatusNotification):
-            if frame.session_id == self.session_id:
-                self.success = True
-                self.min_value_raw = frame.min_value
-                self.max_value_raw = frame.max_value
-                self.originator = frame.limit_originator
-                self.limitation_time = frame.limit_time
-                self.notification_frame = frame
-                return True
-        return False
+            return True
 
     def request_frame(self):
         """Construct initiating frame."""
