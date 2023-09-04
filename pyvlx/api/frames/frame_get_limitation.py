@@ -25,8 +25,7 @@ class FrameGetLimitationStatus(FrameBase):
         """Return Payload."""
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([len(self.node_ids)])  # index array count
-        for node_id in self.node_ids:
-            ret += bytes([node_id])
+        ret += bytes(self.node_ids)
         ret += bytes(20 - len(self.node_ids))
         ret += bytes([self.parameter_id])
         ret += bytes([self.limitations_type.value])

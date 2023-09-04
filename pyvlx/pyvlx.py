@@ -84,7 +84,7 @@ class PyVLX:
 
     async def get_limitation(self, node_id):
         """Return limitation."""
-        limit = get_limitation.GetLimitation(self, [node_id], limitation_type=LimitationType.MIN_LIMITATION)
+        limit = get_limitation.GetLimitation(self, node_id, limitation_type=LimitationType.MIN_LIMITATION)
         await limit.do_api_call()
-        limit = get_limitation.GetLimitation(self, [node_id], limitation_type=LimitationType.MAX_LIMITATION)
+        limit = get_limitation.GetLimitation(self, node_id, limitation_type=LimitationType.MAX_LIMITATION)
         await limit.do_api_call()
