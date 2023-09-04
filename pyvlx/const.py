@@ -583,11 +583,6 @@ class OperatingState(Enum):
     def _missing_(cls, value):
         return cls.UNKNOWN
 
-    @classmethod
-    def _missing_(cls, value):
-        return cls.UNDEFINED
-
-
 class StatusReply(Enum):
     """Enum Class for Node Status Reply."""
 
