@@ -1,10 +1,13 @@
 """Module for window openers."""
 from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
+from .api.set_limitation import SetLimitation
+from .const import LimitationType, Originator
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition)
+    CurrentPosition, IgnorePosition, LimitationTimeClearAll, Parameter,
+    Position, TargetPosition)
 
 
 class OpeningDevice(Node):
@@ -28,6 +31,10 @@ class OpeningDevice(Node):
             pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
         )
         self.position = Position(parameter=position_parameter)
+        self.limitation_min = IgnorePosition()
+        self.limitation_max = IgnorePosition()
+        self.limitation_time = 255
+        self.limitation_originator = Originator.USER
 
     async def set_position(self, position, wait_for_completion=True):
         """Set window to desired position.
@@ -87,6 +94,64 @@ class OpeningDevice(Node):
             position=CurrentPosition(), wait_for_completion=wait_for_completion
         )
 
+    async def set_position_limitations(self, position_min=Position(position_percent=0), position_max=Position(position_percent=100)):
+        """Set a minimum and maximum position limit.
+
+        Parameters:
+            * min_position: Position object containing the minimum position.
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        command_set_limitation = SetLimitation(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            limitation_value_min=position_min,
+            limitation_value_max=position_max
+        )
+        await command_set_limitation.do_api_call()
+        if not command_set_limitation.success:
+            raise PyVLXException("Unable to set limitations")
+        self.limitation_min = position_min
+        self.limitation_max = position_max
+        await self.after_update()
+
+    async def clear_position_limitations(self):
+        """Set position limits.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        command_set_limitation = SetLimitation(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            limitation_time=LimitationTimeClearAll(),
+        )
+        await command_set_limitation.do_api_call()
+        if not command_set_limitation.success:
+            raise PyVLXException("Unable to send command")
+        self.limitation_min = IgnorePosition()
+        self.limitation_max = IgnorePosition()
+        await self.after_update()
+
+    async def get_limitation(self):
+        """Return limitaation."""
+        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
+        await get_limitation.do_api_call()
+        if not get_limitation.success:
+            raise PyVLXException("Unable to send command")
+        return get_limitation
+
+    async def get_limitation_max(self):
+        """Return maximum limitation."""
+        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id, limitation_type=LimitationType.MAX_LIMITATION)
+        await get_limitation.do_api_call()
+        if not get_limitation.success:
+            raise PyVLXException("Unable to send command")
+        return get_limitation
+
     def __str__(self):
         """Return object as readable string."""
         return (
@@ -138,14 +203,6 @@ class Window(OpeningDevice):
                 self.rain_sensor, self.serial_number, self.position
             )
         )
-
-    async def get_limitation(self):
-        """Return limitaation."""
-        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
-        await get_limitation.do_api_call()
-        if not get_limitation.success:
-            raise PyVLXException("Unable to send command")
-        return get_limitation
 
 
 class Blind(OpeningDevice):
