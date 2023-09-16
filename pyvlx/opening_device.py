@@ -40,6 +40,8 @@ class OpeningDevice(Node):
         self.estimated_completion: datetime.datetime | None = None
         self.use_default_velocity = False
         self.default_velocity = Velocity.DEFAULT
+        self.open_position_target = 0
+        self.close_position_target = 100
 
     async def set_position(self, position, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
         """Set window to desired position.
@@ -87,7 +89,7 @@ class OpeningDevice(Node):
 
         """
         await self.set_position(
-            position=Position(position_percent=0),
+            position=Position(position_percent=self.open_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
         )
@@ -102,7 +104,7 @@ class OpeningDevice(Node):
 
         """
         await self.set_position(
-            position=Position(position_percent=100),
+            position=Position(position_percent=self.close_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
         )
@@ -315,7 +317,7 @@ class Blind(OpeningDevice):
                 after device has reached target position.
         """
         await self.set_position(
-            position=Position(position_percent=0),
+            position=Position(position_percent=self.open_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
         )
@@ -329,7 +331,7 @@ class Blind(OpeningDevice):
                 after device has reached target position.
         """
         await self.set_position(
-            position=Position(position_percent=100),
+            position=Position(position_percent=self.close_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
         )
@@ -497,7 +499,7 @@ class DualRollerShutter(OpeningDevice):
 
         """
         await self.set_position(
-            position=Position(position_percent=0),
+            position=Position(position_percent=self.open_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
             curtain=curtain
@@ -511,7 +513,7 @@ class DualRollerShutter(OpeningDevice):
                 after device has reached target position.
         """
         await self.set_position(
-            position=Position(position_percent=100),
+            position=Position(position_percent=self.close_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
             curtain=curtain
