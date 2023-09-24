@@ -19,7 +19,7 @@ class LeaveLearnState(ApiEvent):
         """Handle incoming API frame, return True if this was the expected frame."""
         if not isinstance(frame, FrameLeaveLearnStateConfirmation):
             return False
-        self.status = frame.status
+        self.status.status = frame.status
         self.success = True
         return True
 

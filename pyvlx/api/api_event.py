@@ -53,4 +53,5 @@ class ApiEvent:
 
     async def stop_timeout(self):
         """Stop timeout."""
-        self.timeout_handle.cancel()
+        if self.timeout_handle is not None:
+            self.timeout_handle.cancel()

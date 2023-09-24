@@ -83,6 +83,11 @@ class FrameGetLimitationStatusNotification(FrameBase):
 
     def get_payload(self):
         """Return Payload."""
+        assert self.session_id is not None
+        assert self.min_value is not None
+        assert self.max_value is not None
+        assert self.limit_originator is not None
+        assert self.limit_time is not None
         payload = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         payload += bytes([self.node_id])
         payload += bytes([self.parameter_id])

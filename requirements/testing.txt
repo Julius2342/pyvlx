@@ -10,3 +10,5 @@ pytest-cov==4.0.0
 pytest-timeout==2.1.0
 setuptools==67.8.0
 twine==4.0.2
+mypy==1.5.1
+types-pyyaml==6.0.12.12

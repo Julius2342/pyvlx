@@ -18,7 +18,7 @@ class GetLocalTime(ApiEvent):
         """Handle incoming API frame, return True if this was the expected frame."""
         if not isinstance(frame, FrameGetLocalTimeConfirmation):
             return False
-        self.localtime = frame.localtime
+        self.localtime = frame.time
         self.success = True
 
         return True

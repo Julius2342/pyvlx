@@ -105,6 +105,7 @@ class Connection:
         if not isinstance(frame, FrameBase):
             raise PyVLXException("Frame not of type FrameBase", frame_type=type(frame))
         PYVLXLOG.debug("SEND: %s", frame)
+        assert self.transport is not None
         self.transport.write(slip_pack(bytes(frame)))
 
     @staticmethod
