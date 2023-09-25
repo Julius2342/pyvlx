@@ -15,7 +15,12 @@ class Config:
 
     DEFAULT_PORT = 51200
 
-    def __init__(self, pyvlx: "PyVLX", path: Optional[str] = None, host: Optional[str] = None, password: Optional[str] = None, port: Optional[int] = None):
+    def __init__(self,
+                 pyvlx: "PyVLX",
+                 path: Optional[str] = None,
+                 host: Optional[str] = None,
+                 password: Optional[str] = None,
+                 port: Optional[int] = None):
         """Initialize Config class."""
         self.pyvlx = pyvlx
         self.host = host

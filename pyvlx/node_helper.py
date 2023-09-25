@@ -16,11 +16,13 @@ if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-def convert_frame_to_node(pyvlx: "PyVLX", frame: Union[FrameGetNodeInformationNotification, FrameGetAllNodesInformationNotification]) -> Optional[Node]:
+def convert_frame_to_node(pyvlx: "PyVLX",
+                          frame: Union[FrameGetNodeInformationNotification, FrameGetAllNodesInformationNotification]) -> Optional[Node]:
     """Convert FrameGet[All]Node[s]InformationNotification into Node object."""
+    # pylint: disable=too-many-return-statements
+
     assert frame.serial_number is not None
 
-    # pylint: disable=too-many-return-statements
     if frame.node_type == NodeTypeWithSubtype.WINDOW_OPENER:
         return Window(
             pyvlx=pyvlx,

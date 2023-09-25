@@ -181,7 +181,10 @@ class Blind(OpeningDevice):
         self.open_orientation_target: int = 50
         self.close_orientation_target: int = 100
 
-    async def set_position_and_orientation(self, position: Position, wait_for_completion: bool = True, orientation: Optional[Position] = None) -> None:
+    async def set_position_and_orientation(self,
+                                           position: Position,
+                                           wait_for_completion: bool = True,
+                                           orientation: Optional[Position] = None) -> None:
         """Set window to desired position.
 
         Parameters:

@@ -12,7 +12,10 @@ class FrameGetLimitationStatus(FrameBase):
 
     PAYLOAD_LEN = 25
 
-    def __init__(self, node_ids: Optional[List[int]] = None, session_id: Optional[int] = None, limitation_type: LimitationType = LimitationType.MIN_LIMITATION):
+    def __init__(self,
+                 node_ids: Optional[List[int]] = None,
+                 session_id: Optional[int] = None,
+                 limitation_type: LimitationType = LimitationType.MIN_LIMITATION):
         """Init Frame."""
         super().__init__(Command.GW_GET_LIMITATION_STATUS_REQ)
         self.session_id = session_id

@@ -67,7 +67,11 @@ class DtoLocalTime:
 class DtoNetworkSetup:
     """Dataobject to hold KLF200 Network Setup."""
 
-    def __init__(self, ipaddress: Optional[str] = None, gateway: Optional[str] = None, netmask: Optional[str] = None, dhcp: Optional[DHCPParameter] = None):
+    def __init__(self,
+                 ipaddress: Optional[str] = None,
+                 gateway: Optional[str] = None,
+                 netmask: Optional[str] = None,
+                 dhcp: Optional[DHCPParameter] = None):
         """Initialize DtoNetworkSetup class."""
         self.ipaddress = ipaddress
         self.gateway = gateway
