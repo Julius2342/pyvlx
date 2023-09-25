@@ -40,7 +40,7 @@ setup(
         "Programming Language :: Python :: 3.6",
     ],
     packages=find_packages(),
-    package_data = {
+    package_data={
         'pyvlx': ['py.typed'],
     },
     install_requires=REQUIRES,
