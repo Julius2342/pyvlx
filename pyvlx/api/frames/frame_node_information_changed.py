@@ -1,4 +1,6 @@
 """Module for requesting change of node name."""
+from typing import Optional
+
 from pyvlx.const import Command, NodeVariation
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
 
@@ -12,11 +14,11 @@ class FrameNodeInformationChangedNotification(FrameBase):
 
     def __init__(
             self,
-            node_id=0,
-            name=None,
-            order=0,
-            placement=0,
-            node_variation=NodeVariation.NOT_SET,
+            node_id: int = 0,
+            name: Optional[str] = None,
+            order: int = 0,
+            placement: int = 0,
+            node_variation: NodeVariation = NodeVariation.NOT_SET,
     ):
         """Init Frame."""
         super().__init__(Command.GW_NODE_INFORMATION_CHANGED_NTF)
@@ -26,16 +28,17 @@ class FrameNodeInformationChangedNotification(FrameBase):
         self.placement = placement
         self.node_variation = node_variation
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         payload = bytes([self.node_id])
+        assert self.name is not None
         payload += string_to_bytes(self.name, 64)
         payload += bytes([self.order >> 8 & 255, self.order & 255])
         payload += bytes([self.placement])
         payload += bytes([self.node_variation.value])
         return payload
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.node_id = payload[0]
         self.name = bytes_to_string(payload[1:65])
@@ -43,7 +46,7 @@ class FrameNodeInformationChangedNotification(FrameBase):
         self.placement = payload[67]
         self.node_variation = NodeVariation(payload[68])
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} node_id="{}" name="{}" order="{}" '

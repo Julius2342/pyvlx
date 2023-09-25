@@ -1,4 +1,6 @@
 """Module for Position class."""
+from typing import Optional
+
 from .exception import PyVLXException
 
 
@@ -14,20 +16,20 @@ class Parameter:
     TARGET = 0xD100  # D1 00
     IGNORE = 0xD400  # D4 00
 
-    def __init__(self, raw=None):
+    def __init__(self, raw: Optional[bytes] = None):
         """Initialize Parameter class."""
         self.raw = self.from_int(Position.UNKNOWN_VALUE)
         if raw is not None:
             self.raw = self.from_raw(raw)
 
-    def from_parameter(self, parameter):
+    def from_parameter(self, parameter: "Parameter") -> None:
         """Set internal raw state from parameter."""
         if not isinstance(parameter, Parameter):
             raise PyVLXException("parameter::from_parameter_wrong_object")
         self.raw = parameter.raw
 
     @staticmethod
-    def from_int(value):
+    def from_int(value: int) -> bytes:
         """Create raw out of position vlaue."""
         if not isinstance(value, int):
             raise PyVLXException("value_has_to_be_int")
@@ -36,7 +38,7 @@ class Parameter:
         return bytes([value >> 8 & 255, value & 255])
 
     @staticmethod
-    def is_valid_int(value):
+    def is_valid_int(value: int) -> bool:
         """Test if value can be rendered out of int."""
         if 0 <= value <= Parameter.MAX:  # This includes ON and OFF
             return True
@@ -51,7 +53,7 @@ class Parameter:
         return False
 
     @staticmethod
-    def from_raw(raw):
+    def from_raw(raw: bytes) -> bytes:
         """Test if raw packets are valid for initialization of Position."""
         if not isinstance(raw, bytes):
             raise PyVLXException("Position::raw_must_be_bytes")
@@ -67,37 +69,43 @@ class Parameter:
             return Position.from_int(Position.UNKNOWN_VALUE)
         return raw
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """Equal operator."""
+        if not isinstance(other, Parameter):
+            return NotImplemented
         return self.raw == other.raw
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return string representation of object."""
         return "0x" + "".join("{:02X}".format(x) for x in self.raw)
+
+    def __bytes__(self) -> bytes:
+        """Return raw bytes of object."""
+        return self.raw
 
 
 class SwitchParameter(Parameter):
     """Class for storing On or Off values."""
 
-    def __init__(self, parameter=None):
+    def __init__(self, parameter: Optional[Parameter] = None):
         """Initialize Parameter class."""
         super().__init__()
         if parameter is not None:
             self.from_parameter(parameter)
 
-    def set_on(self):
+    def set_on(self) -> None:
         """Set parameter to 'on' state."""
         self.raw = self.from_int(Parameter.ON)
 
-    def set_off(self):
+    def set_off(self) -> None:
         """Set parameter to 'off' state."""
         self.raw = self.from_int(Parameter.OFF)
 
-    def is_on(self):
+    def is_on(self) -> bool:
         """Return True if parameter is in 'on' state."""
         return self.raw == self.from_int(Parameter.ON)
 
-    def is_off(self):
+    def is_off(self) -> bool:
         """Return True if parameter is in 'off' state."""
         return self.raw == self.from_int(Parameter.OFF)
 
@@ -105,7 +113,7 @@ class SwitchParameter(Parameter):
 class SwitchParameterOn(SwitchParameter):
     """Switch Parameter in switched 'on' state."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize SwitchParameterOn class."""
         super().__init__()
         self.set_on()
@@ -114,7 +122,7 @@ class SwitchParameterOn(SwitchParameter):
 class SwitchParameterOff(SwitchParameter):
     """Switch Parameter in switched 'off' state."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize SwitchParameterOff class."""
         super().__init__()
         self.set_off()
@@ -123,7 +131,7 @@ class SwitchParameterOff(SwitchParameter):
 class Position(Parameter):
     """Class for storing a position."""
 
-    def __init__(self, parameter=None, position=None, position_percent=None):
+    def __init__(self, parameter: Optional[Parameter] = None, position: Optional[int] = None, position_percent: Optional[int] = None):
         """Initialize Position class."""
         super().__init__()
         if parameter is not None:
@@ -133,54 +141,54 @@ class Position(Parameter):
         elif position_percent is not None:
             self.position_percent = position_percent
 
-    def __bytes__(self):
+    def __bytes__(self) -> bytes:
         """Convert object in byte representation."""
         return self.raw
 
     @property
-    def known(self):
+    def known(self) -> bool:
         """Known property, true if position is not in an unknown position."""
         return self.raw != self.from_int(Position.UNKNOWN_VALUE)
 
     @property
-    def open(self):
+    def open(self) -> bool:
         """Return true if position is set to fully open."""
         return self.raw == self.from_int(Position.MIN)
 
     @property
-    def closed(self):
+    def closed(self) -> bool:
         """Return true if position is set to fully closed."""
         # Consider closed even if raw is not exactly 51200 (tolerance for devices like Velux SML)
         return self.position_percent == 100
 
     @property
-    def position(self):
+    def position(self) -> int:
         """Position property."""
         return self.to_int(self.raw)
 
     @position.setter
-    def position(self, position):
+    def position(self, position: int) -> None:
         """Setter of internal raw via position."""
         self.raw = self.from_int(position)
 
     @property
-    def position_percent(self):
+    def position_percent(self) -> int:
         """Position percent property."""
-        # inclear why it returns a <property object> here
+        # unclear why it returns a <property object> here
         return int(self.to_percent(self.raw))
 
     @position_percent.setter
-    def position_percent(self, position_percent):
+    def position_percent(self, position_percent: int) -> None:
         """Setter of internal raw via percent position."""
         self.raw = self.from_percent(position_percent)
 
     @staticmethod
-    def to_int(raw):
+    def to_int(raw: bytes) -> int:
         """Create int position value out of raw."""
         return raw[0] * 256 + raw[1]
 
     @staticmethod
-    def from_percent(position_percent):
+    def from_percent(position_percent: int) -> bytes:
         """Create raw value out of percent position."""
         if not isinstance(position_percent, int):
             raise PyVLXException("Position::position_percent_has_to_be_int")
@@ -191,14 +199,14 @@ class Position(Parameter):
         return bytes([position_percent * 2, 0])
 
     @staticmethod
-    def to_percent(raw):
+    def to_percent(raw: bytes) -> int:
         """Create percent position value out of raw."""
         # The first byte has the vlue from 0 to 200. Ignoring the second one.
         # Adding 0.5 allows a slight tolerance for devices (e.g. Velux SML) that
         # do not return exactly 51200 as final position when closed.
         return int(raw[0] / 2 + 0.5)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return string representation of object."""
         if self.raw == self.from_int(Position.UNKNOWN_VALUE):
             return "UNKNOWN"
@@ -208,7 +216,7 @@ class Position(Parameter):
 class UnknownPosition(Position):
     """Unknown position."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize UnknownPosition class."""
         super().__init__(position=Position.UNKNOWN_VALUE)
 
@@ -216,7 +224,7 @@ class UnknownPosition(Position):
 class CurrentPosition(Position):
     """Current position, used to stop devices."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.CURRENT)
 
@@ -230,15 +238,23 @@ class TargetPosition(Position):
 
     """
 
-    def __init__(self):
-        """Initialize CurrentPosition class."""
+    def __init__(self) -> None:
+        """Initialize TargetPosition class."""
         super().__init__(position=Position.TARGET)
+
+    @staticmethod
+    def from_position(from_position: Position) -> "TargetPosition":
+        """Create TargetPosition from an existing position."""
+        target = TargetPosition()
+        target.position = from_position.position
+        target.position_percent = from_position.position_percent
+        return target
 
 
 class IgnorePosition(Position):
     """The Ignore is used where a parameter in the frame is to be ignored."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.IGNORE)
 
@@ -246,7 +262,7 @@ class IgnorePosition(Position):
 class Intensity(Parameter):
     """Class for storing an intensity."""
 
-    def __init__(self, parameter=None, intensity=None, intensity_percent=None):
+    def __init__(self, parameter: Optional[Parameter] = None, intensity: Optional[int] = None, intensity_percent: Optional[int] = None):
         """Initialize Intensity class."""
         super().__init__()
         if parameter is not None:
@@ -256,53 +272,53 @@ class Intensity(Parameter):
         elif intensity_percent is not None:
             self.intensity_percent = intensity_percent
 
-    def __bytes__(self):
+    def __bytes__(self) -> bytes:
         """Convert object in byte representation."""
         return self.raw
 
     @property
-    def known(self):
+    def known(self) -> bool:
         """Known property, true if intensity is not in an unknown intensity."""
         return self.raw != self.from_int(Intensity.UNKNOWN_VALUE)
 
     @property
-    def on(self):  # pylint: disable=invalid-name
+    def on(self) -> bool:  # pylint: disable=invalid-name
         """Return true if intensity is set to fully turn on."""
         return self.raw == self.from_int(Intensity.MIN)
 
     @property
-    def off(self):
+    def off(self) -> bool:
         """Return true if intensity is set to fully turn off."""
         return self.raw == bytes([self.MAX >> 8 & 255, self.MAX & 255])
 
     @property
-    def intensity(self):
+    def intensity(self) -> int:
         """Intensity property."""
         return self.to_int(self.raw)
 
     @intensity.setter
-    def intensity(self, intensity):
+    def intensity(self, intensity: int) -> None:
         """Setter of internal raw via intensity."""
         self.raw = self.from_int(intensity)
 
     @property
-    def intensity_percent(self):
+    def intensity_percent(self) -> int:
         """Intensity percent property."""
         # inclear why it returns a <property object> here
         return int(self.to_percent(self.raw))
 
     @intensity_percent.setter
-    def intensity_percent(self, intensity_percent):
+    def intensity_percent(self, intensity_percent: int) -> None:
         """Setter of internal raw via percent intensity."""
         self.raw = self.from_percent(intensity_percent)
 
     @staticmethod
-    def to_int(raw):
+    def to_int(raw: bytes) -> int:
         """Create int intensity value out of raw."""
         return raw[0] * 256 + raw[1]
 
     @staticmethod
-    def from_percent(intensity_percent):
+    def from_percent(intensity_percent: int) -> bytes:
         """Create raw value out of percent intensity."""
         if not isinstance(intensity_percent, int):
             raise PyVLXException("Intensity::intensity_percent_has_to_be_int")
@@ -313,12 +329,12 @@ class Intensity(Parameter):
         return bytes([intensity_percent * 2, 0])
 
     @staticmethod
-    def to_percent(raw):
+    def to_percent(raw: bytes) -> int:
         """Create percent intensity value out of raw."""
         # The first byte has the value from 0 to 200. Ignoring the second one.
         return int(raw[0] / 2)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return string representation of object."""
         if self.raw == self.from_int(Intensity.UNKNOWN_VALUE):
             return "UNKNOWN"
@@ -328,7 +344,7 @@ class Intensity(Parameter):
 class UnknownIntensity(Intensity):
     """Unknown intensity."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize UnknownIntensity class."""
         super().__init__(intensity=Intensity.UNKNOWN_VALUE)
 
@@ -336,6 +352,6 @@ class UnknownIntensity(Intensity):
 class CurrentIntensity(Intensity):
     """Current intensity, used to stop devices."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize CurrentIntensity class."""
         super().__init__(intensity=Intensity.CURRENT)

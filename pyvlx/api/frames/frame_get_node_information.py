@@ -2,6 +2,7 @@
 import struct
 from datetime import datetime
 from enum import Enum
+from typing import Optional
 
 from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
 from pyvlx.exception import PyVLXException
@@ -17,20 +18,21 @@ class FrameGetNodeInformationRequest(FrameBase):
 
     PAYLOAD_LEN = 1
 
-    def __init__(self, node_id=None):
+    def __init__(self, node_id: Optional[int] = None):
         """Init Frame."""
         super().__init__(Command.GW_GET_NODE_INFORMATION_REQ)
         self.node_id = node_id
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
+        assert self.node_id is not None
         return bytes([self.node_id])
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.node_id = payload[0]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} node_id="{}"/>'.format(type(self).__name__, self.node_id)
 
@@ -49,22 +51,23 @@ class FrameGetNodeInformationConfirmation(FrameBase):
 
     PAYLOAD_LEN = 2
 
-    def __init__(self, status=NodeInformationStatus.OK, node_id=None):
+    def __init__(self, status: NodeInformationStatus = NodeInformationStatus.OK, node_id: Optional[int] = None):
         """Init Frame."""
         super().__init__(Command.GW_GET_NODE_INFORMATION_CFM)
         self.status = status
         self.node_id = node_id
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
+        assert self.node_id is not None
         return bytes([self.status.value, self.node_id])
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.status = NodeInformationStatus(payload[0])
         self.node_id = payload[1]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} node_id="{}" status="{}"/>'.format(
             type(self).__name__, self.node_id, self.status
@@ -76,7 +79,7 @@ class FrameGetNodeInformationNotification(FrameBase):
 
     PAYLOAD_LEN = 124
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_GET_NODE_INFORMATION_NTF)
         self.node_id = 0
@@ -103,14 +106,14 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.alias_array = AliasArray()
 
     @property
-    def serial_number(self):
+    def serial_number(self) -> Optional[str]:
         """Property for serial number in a human readable way."""
         if self._serial_number == bytes(8):
             return None
         return ":".join("{:02x}".format(c) for c in self._serial_number)
 
     @serial_number.setter
-    def serial_number(self, serial_number):
+    def serial_number(self, serial_number: Optional[str]) -> None:
         """Set serial number."""
         if serial_number is None:
             self._serial_number = bytes(8)
@@ -121,7 +124,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         if len(self._serial_number) != 8:
             raise PyVLXException("could_not_parse_serial_number")
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         payload = bytes()
         payload += bytes([self.node_id])
@@ -150,7 +153,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         payload += bytes(self.alias_array)
         return payload
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.node_id = payload[0]
         self.order = payload[1] * 256 + payload[2]
@@ -178,11 +181,11 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.alias_array = AliasArray(payload[103:125])
 
     @property
-    def timestamp_formatted(self):
+    def timestamp_formatted(self) -> str:
         """Return time as human readable string."""
         return datetime.fromtimestamp(self.timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} node_id="{}" order="{}" '

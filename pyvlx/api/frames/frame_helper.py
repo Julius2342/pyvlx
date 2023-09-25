@@ -1,9 +1,11 @@
 """Helper module for SLIP Frames."""
+from typing import Tuple
+
 from pyvlx.const import Command
 from pyvlx.exception import PyVLXException
 
 
-def calc_crc(raw):
+def calc_crc(raw: bytes) -> int:
     """Calculate cyclic redundancy check (CRC)."""
     crc = 0
     for sym in raw:
@@ -11,7 +13,7 @@ def calc_crc(raw):
     return crc
 
 
-def extract_from_frame(data):
+def extract_from_frame(data: bytes) -> Tuple[Command, bytes]:
     """Extract payload and command from frame."""
     if len(data) <= 4:
         raise PyVLXException("could_not_extract_from_frame_too_short", data=data)

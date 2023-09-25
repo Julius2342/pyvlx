@@ -1,26 +1,32 @@
 """Module for retrieving scene list from API."""
+from typing import TYPE_CHECKING, Optional
+
 from .api_event import ApiEvent
 from .frames import (
     ActivateSceneConfirmationStatus, FrameActivateSceneConfirmation,
-    FrameActivateSceneRequest, FrameCommandRemainingTimeNotification,
-    FrameCommandRunStatusNotification, FrameSessionFinishedNotification)
+    FrameActivateSceneRequest, FrameBase,
+    FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification,
+    FrameSessionFinishedNotification)
 from .session_id import get_new_session_id
+
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
 
 
 class ActivateScene(ApiEvent):
     """Class for activating scene via API."""
 
     def __init__(
-            self, pyvlx, scene_id, wait_for_completion=True, timeout_in_seconds=60
+            self, pyvlx: "PyVLX", scene_id: int, wait_for_completion: bool = True, timeout_in_seconds: int = 60
     ):
         """Initialize SceneList class."""
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
         self.success = False
         self.scene_id = scene_id
         self.wait_for_completion = wait_for_completion
-        self.session_id = None
+        self.session_id: Optional[int] = None
 
-    async def handle_frame(self, frame):
+    async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""
         if (
                 isinstance(frame, FrameActivateSceneConfirmation)
@@ -49,7 +55,7 @@ class ActivateScene(ApiEvent):
             return True
         return False
 
-    def request_frame(self):
+    def request_frame(self) -> FrameActivateSceneRequest:
         """Construct initiating frame."""
         self.session_id = get_new_session_id()
         return FrameActivateSceneRequest(
