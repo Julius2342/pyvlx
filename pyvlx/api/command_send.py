@@ -18,7 +18,7 @@ class CommandSend(ApiEvent):
             parameter,
             active_parameter=0,
             wait_for_completion=True,
-            timeout_in_seconds=60,
+            timeout_in_seconds=2,
             **functional_parameter
     ):
         """Initialize SceneList class."""
@@ -66,8 +66,8 @@ class CommandSend(ApiEvent):
         if not self.success:
             if (self.retries < max_retries):
                 self.retries += 1
+                PYVLXLOG.debug("No response from KFL200 for session_id %s, retry: %s of %s", self.session_id, self.retries, max_retries)
                 await self.do_api_call()
-                PYVLXLOG.debug("No response from KFL200, retries: %s of %s", self.retries, max_retries)
             else:
                 raise PyVLXException("Unable to send command")
 

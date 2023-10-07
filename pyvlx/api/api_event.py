@@ -5,7 +5,7 @@ import asyncio
 class ApiEvent:
     """Base class for waiting a specific frame from API connection."""
 
-    def __init__(self, pyvlx, timeout_in_seconds=3):
+    def __init__(self, pyvlx, timeout_in_seconds=5):
         """Initialize ApiEvent."""
         self.pyvlx = pyvlx
         self.response_received_or_timeout = asyncio.Event()
