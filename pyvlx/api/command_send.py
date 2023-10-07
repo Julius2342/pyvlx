@@ -6,6 +6,7 @@ from .frames import (
     FrameCommandSendRequest, FrameSessionFinishedNotification)
 from .session_id import get_new_session_id
 from ..exception import PyVLXException
+from ..log import PYVLXLOG
 
 class CommandSend(ApiEvent):
     """Class for sending command to API."""
@@ -66,6 +67,7 @@ class CommandSend(ApiEvent):
             if (self.retries < max_retries):
                 self.retries += 1
                 await self.do_api_call()
+                PYVLXLOG.debug("No response from KFL200, retries: %s of %s", self.retries, max_retries)
             else:
                 raise PyVLXException("Unable to send command")
 
