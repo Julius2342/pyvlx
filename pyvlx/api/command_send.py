@@ -61,15 +61,21 @@ class CommandSend(ApiEvent):
             return True
         return False
     
-    async def send(self, max_retries=3):
-        self.retries = 0
-        while self.retries < max_retries:
+    async def send(self):
+        async with self.pyvlx.sem:
             await self.do_api_call()
-            if self.success:
-                return
-            self.retries += 1
-            PYVLXLOG.debug("No response from KFL200 for session_id %s, retry: %s of %s", self.session_id, self.retries, max_retries)           
-        raise PyVLXException("Unable to send command")
+            if not self.success:
+                raise PyVLXException("Unable to send command")
+
+    # async def send(self, max_retries=3):
+    #     self.retries = 0
+    #     while self.retries < max_retries:
+    #         await self.do_api_call()
+    #         if self.success:
+    #             return
+    #         self.retries += 1
+    #         PYVLXLOG.debug("No response from KFL200 for session_id %s, retry: %s of %s", self.session_id, self.retries, max_retries)           
+    #     raise PyVLXException("Unable to send command")
 
     def request_frame(self):
         """Construct initiating frame."""
