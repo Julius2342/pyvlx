@@ -62,7 +62,7 @@ class CommandSend(ApiEvent):
         return False
     
     async def send(self):
-        async with self.pyvlx.sem:
+        async with self.pyvlx.parallel_commands: 
             await self.do_api_call()
             if not self.success:
                 raise PyVLXException("Unable to send command")
