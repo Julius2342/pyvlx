@@ -40,8 +40,8 @@ class OpeningDevice(Node):
         self.estimated_completion: datetime.datetime | None = None
         self.use_default_velocity = False
         self.default_velocity = Velocity.DEFAULT
-        self.open_position_target = 0
-        self.close_position_target = 100
+        self.open_position_target: float = 0
+        self.close_position_target: float = 100
 
     async def set_position(self, position, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
         """Set window to desired position.
