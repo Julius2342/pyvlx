@@ -30,6 +30,7 @@ class CommandSend(ApiEvent):
         self.functional_parameter = functional_parameter
         self.wait_for_completion = wait_for_completion
         self.session_id = None
+        self.frame = None
 
     async def handle_frame(self, frame):
         """Handle incoming API frame, return True if this was the expected frame."""
@@ -62,22 +63,23 @@ class CommandSend(ApiEvent):
     
     async def send(self, max_retries=3):
         self.retries = 0
-        await self.do_api_call()
-        if not self.success:
-            if (self.retries < max_retries):
-                self.retries += 1
-                PYVLXLOG.debug("No response from KFL200 for session_id %s, retry: %s of %s", self.session_id, self.retries, max_retries)
-                await self.do_api_call()
-            else:
-                raise PyVLXException("Unable to send command")
+        while self.retries < max_retries:
+            await self.do_api_call()
+            if self.success:
+                return
+            self.retries += 1
+            PYVLXLOG.debug("No response from KFL200 for session_id %s, retry: %s of %s", self.session_id, self.retries, max_retries)           
+        raise PyVLXException("Unable to send command")
 
     def request_frame(self):
         """Construct initiating frame."""
-        self.session_id = get_new_session_id()
-        return FrameCommandSendRequest(
-            node_ids=[self.node_id],
-            parameter=self.parameter,
-            active_parameter=self.active_parameter,
-            session_id=self.session_id,
-            **self.functional_parameter
-        )
+        if self.frame is None:
+            self.session_id = get_new_session_id()
+            self.frame = FrameCommandSendRequest(
+                node_ids=[self.node_id],
+                parameter=self.parameter,
+                active_parameter=self.active_parameter,
+                session_id=self.session_id,
+                **self.functional_parameter
+            )
+        return self.frame
