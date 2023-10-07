@@ -131,3 +131,4 @@ class Connection:
     def connection_closed_cb(self):
         """Server closed connection."""
         self.connected = False
+        self.transport.close()

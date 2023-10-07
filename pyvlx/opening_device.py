@@ -67,16 +67,14 @@ class OpeningDevice(Node):
         elif isinstance(velocity, int):
             kwargs['fp1'] = Position.from_percent(velocity)
 
-        command_send = CommandSend(
+        command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=position,
             **kwargs
         )
-        await command_send.do_api_call()
-        if not command_send.success:
-            raise PyVLXException("Unable to send command")
+        await command.send()
         await self.after_update()
 
     async def open(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
@@ -281,16 +279,14 @@ class Blind(OpeningDevice):
         elif isinstance(velocity, int):
             kwargs['fp1'] = Position.from_percent(velocity)
 
-        command_send = CommandSend(
+        command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=position,
             **kwargs
         )
-        await command_send.do_api_call()
-        if not command_send.success:
-            raise PyVLXException("Unable to send command")
+        await command.send()
         await self.after_update()
 
     async def set_position(self, position, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True):
@@ -362,16 +358,14 @@ class Blind(OpeningDevice):
             else self.target_orientation
 
         print("Orientation in device: %s " % (orientation))
-        command_send = CommandSend(
+        command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=self.target_position,
             fp3=fp3,
         )
-        await command_send.do_api_call()
-        if not command_send.success:
-            raise PyVLXException("Unable to send command")
+        await command.send()
         await self.after_update()
         # KLF200 always send UNKNOWN position for functional parameter,
         # so orientation is set directly and not via GW_NODE_STATE_POSITION_CHANGED_NTF
@@ -470,7 +464,7 @@ class DualRollerShutter(OpeningDevice):
         elif isinstance(velocity, int):
             kwargs['fp3'] = Position.from_percent(velocity)
 
-        command_send = CommandSend(
+        command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
@@ -478,9 +472,7 @@ class DualRollerShutter(OpeningDevice):
             active_parameter=self.active_parameter,
             **kwargs
         )
-        await command_send.do_api_call()
-        if not command_send.success:
-            raise PyVLXException("Unable to send command")
+        await command.send()
         if position.position <= Position.MAX:
             if curtain == "upper":
                 self.position_upper_curtain = position

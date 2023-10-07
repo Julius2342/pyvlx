@@ -5,7 +5,7 @@ from .frames import (
     FrameCommandRunStatusNotification, FrameCommandSendConfirmation,
     FrameCommandSendRequest, FrameSessionFinishedNotification)
 from .session_id import get_new_session_id
-
+from ..exception import PyVLXException
 
 class CommandSend(ApiEvent):
     """Class for sending command to API."""
@@ -58,6 +58,16 @@ class CommandSend(ApiEvent):
         ):
             return True
         return False
+    
+    async def send(self, max_retries=3):
+        self.retries = 0
+        await self.do_api_call()
+        if not self.success:
+            if (self.retries < max_retries):
+                self.retries += 1
+                await self.do_api_call()
+            else:
+                raise PyVLXException("Unable to send command")
 
     def request_frame(self):
         """Construct initiating frame."""

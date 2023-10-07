@@ -33,15 +33,13 @@ class LighteningDevice(Node):
                 after device has reached target intensity.
 
         """
-        command_send = CommandSend(
+        command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=intensity,
         )
-        await command_send.do_api_call()
-        if not command_send.success:
-            raise PyVLXException("Unable to send command")
+        await command.send()
         await self.after_update()
 
     async def turn_on(self, wait_for_completion=True):
