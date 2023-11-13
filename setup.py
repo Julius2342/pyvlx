@@ -8,7 +8,7 @@ REQUIRES = ["PyYAML"]
 
 PKG_ROOT = os.path.dirname(__file__)
 
-VERSION = "0.1.70"
+VERSION = "0.1.71"
 
 
 def get_long_description():
