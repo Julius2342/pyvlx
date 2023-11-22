@@ -9,11 +9,11 @@ class FrameGatewayRebootRequest(FrameBase):
 
     PAYLOAD_LEN = 0
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_REBOOT_REQ)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{}/>'.format(type(self).__name__)
 
@@ -23,10 +23,10 @@ class FrameGatewayRebootConfirmation(FrameBase):
 
     PAYLOAD_LEN = 0
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_REBOOT_CFM)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{}/>'.format(type(self).__name__)

@@ -25,7 +25,7 @@ class Scene:
         """Return name of object."""
         return self.name
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return object as readable string."""
         return '<Scene name="{0}" ' \
             'id="{1}" />' \

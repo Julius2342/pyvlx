@@ -18,9 +18,9 @@ class TestFrameGetLimitationStatusNotification(unittest.TestCase):
         frame.session_id = 1
         frame.node_id = 1
         frame.parameter_id = 0
-        frame.min_value = 47668
-        frame.max_value = 63487
-        frame.limit_originator = Originator.USER.value
+        frame.min_value = int.to_bytes(47668, 2, byteorder='big')
+        frame.max_value = int.to_bytes(63487, 2, byteorder='big')
+        frame.limit_originator = Originator.USER
         frame.limit_time = 0
         self.assertEqual(bytes(frame), b'\x00\r\x03\x14\x00\x01\x01\x00\xba4\xf7\xff\x01\x00\x9d')
 

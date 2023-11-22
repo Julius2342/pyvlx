@@ -1,6 +1,9 @@
 """Module for updating nodes via frames."""
+
+from typing import TYPE_CHECKING
+
 from .api.frames import (
-    FrameGetAllNodesInformationNotification,
+    FrameBase, FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
 from .const import NodeParameter
 from .lightening_device import LighteningDevice
@@ -8,15 +11,18 @@ from .log import PYVLXLOG
 from .opening_device import Blind, OpeningDevice
 from .parameter import Intensity, Parameter, Position
 
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
+
 
 class NodeUpdater:
     """Class for updating nodes via incoming frames,  usually received by house monitor."""
 
-    def __init__(self, pyvlx):
+    def __init__(self, pyvlx: "PyVLX"):
         """Initialize NodeUpdater object."""
         self.pyvlx = pyvlx
 
-    async def process_frame_status_request_notification(self, frame: FrameStatusRequestNotification):
+    async def process_frame_status_request_notification(self, frame: FrameStatusRequestNotification) -> None:
         """Process FrameStatusRequestNotification."""
         PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
         if frame.node_id not in self.pyvlx.nodes:
@@ -40,7 +46,7 @@ class NodeUpdater:
 
             await node.after_update()
 
-    async def process_frame(self, frame):
+    async def process_frame(self, frame: FrameBase) -> None:
         """Update nodes via frame, usually received by house monitor."""
         if isinstance(
                 frame,

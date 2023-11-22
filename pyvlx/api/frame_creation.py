@@ -1,10 +1,12 @@
 """Helper module for creating a frame out of raw data."""
+from typing import Optional
+
 from pyvlx.const import Command
 from pyvlx.log import PYVLXLOG
 
 from .frames import (
     FrameActivateSceneConfirmation, FrameActivateSceneRequest,
-    FrameActivationLogUpdatedNotification,
+    FrameActivationLogUpdatedNotification, FrameBase,
     FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification,
     FrameCommandSendConfirmation, FrameCommandSendRequest,
     FrameDiscoverNodesConfirmation, FrameDiscoverNodesNotification,
@@ -38,7 +40,7 @@ from .frames import (
     FrameStatusRequestRequest, extract_from_frame)
 
 
-def frame_from_raw(raw):
+def frame_from_raw(raw: bytes) -> Optional[FrameBase]:
     """Create and return frame from raw bytes."""
     command, payload = extract_from_frame(raw)
     frame = create_frame(command)
@@ -54,7 +56,7 @@ def frame_from_raw(raw):
     return frame
 
 
-def create_frame(command):
+def create_frame(command: Command) -> Optional[FrameBase]:
     """Create and return empty Frame from Command."""
     # pylint: disable=too-many-branches,too-many-return-statements,too-many-statements
     if command == Command.GW_ERROR_NTF:
