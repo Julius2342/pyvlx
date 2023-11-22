@@ -1,22 +1,27 @@
 """Module for handling the login to API."""
+from typing import TYPE_CHECKING
+
 from pyvlx.log import PYVLXLOG
 
 from .api_event import ApiEvent
 from .frames import (
-    FramePasswordEnterConfirmation, FramePasswordEnterRequest,
+    FrameBase, FramePasswordEnterConfirmation, FramePasswordEnterRequest,
     PasswordEnterConfirmationStatus)
+
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
 
 
 class PasswordEnter(ApiEvent):
     """Class for handling login to API."""
 
-    def __init__(self, pyvlx, password):
+    def __init__(self, pyvlx: "PyVLX", password: str):
         """Initialize login class."""
         super().__init__(pyvlx=pyvlx)
         self.password = password
         self.success = False
 
-    async def handle_frame(self, frame):
+    async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""
         if not isinstance(frame, FramePasswordEnterConfirmation):
             return False
@@ -29,6 +34,6 @@ class PasswordEnter(ApiEvent):
             self.success = True
         return True
 
-    def request_frame(self):
+    def request_frame(self) -> FramePasswordEnterRequest:
         """Construct initiating frame."""
         return FramePasswordEnterRequest(password=self.password)

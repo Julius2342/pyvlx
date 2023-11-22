@@ -48,6 +48,8 @@ jobs:
       run: flake8
     - name: Linter Pylint
       run: PYTHONPATH=. pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
+    - name: Mypy
+      run: mypy pyvlx
     - name: Tests
       run: PYTHONPATH=. pytest --cov pyvlx --cov-report xml
     - name: Upload coverage artifact

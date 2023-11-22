@@ -1,15 +1,28 @@
 """Helper module for Node objects."""
+from typing import TYPE_CHECKING, Optional, Union
+
+from .api.frames import (
+    FrameGetAllNodesInformationNotification,
+    FrameGetNodeInformationNotification)
 from .const import NodeTypeWithSubtype
 from .lightening_device import Light
 from .log import PYVLXLOG
+from .node import Node
 from .on_off_switch import OnOffSwitch
 from .opening_device import (
     Awning, Blade, Blind, GarageDoor, Gate, RollerShutter, Window)
 
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
 
-def convert_frame_to_node(pyvlx, frame):
+
+def convert_frame_to_node(pyvlx: "PyVLX",
+                          frame: Union[FrameGetNodeInformationNotification, FrameGetAllNodesInformationNotification]) -> Optional[Node]:
     """Convert FrameGet[All]Node[s]InformationNotification into Node object."""
     # pylint: disable=too-many-return-statements
+
+    assert frame.serial_number is not None
+
     if frame.node_type == NodeTypeWithSubtype.WINDOW_OPENER:
         return Window(
             pyvlx=pyvlx,
