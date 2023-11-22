@@ -9,7 +9,7 @@ class PyVLXException(Exception):
         super(PyVLXException, self).__init__()
         self.description = description
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return object as readable string."""
         return '<PyVLXException description="{0}" />' \
             .format(self.description)

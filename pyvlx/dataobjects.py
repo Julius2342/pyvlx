@@ -1,12 +1,17 @@
 """Module for Dataobjects."""
 import time
 from datetime import datetime
+from typing import Optional
+
+from .const import (
+    DHCPParameter, GatewayState, GatewaySubState,
+    LeaveLearnStateConfirmationStatus)
 
 
 class DtoLocalTime:
     """Dataobject to hold KLF200 Time Data."""
 
-    def __init__(self, utctime=None, localtime=None):
+    def __init__(self, utctime: Optional[datetime] = None, localtime: Optional[datetime] = None):
         """Initialize DtoLocalTime class."""
         if utctime is None:
             utctime = datetime.fromtimestamp(0)
@@ -15,14 +20,14 @@ class DtoLocalTime:
         self.utctime = utctime
         self.localtime = localtime
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} utctime="{}" localtime="{}"/>'.format(
                 type(self).__name__, self.utctime, self.localtime)
         )
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Build the Dto From Data."""
         self.utctime = datetime.fromtimestamp(int.from_bytes(payload[0:4], "big"))
         weekday = payload[11] - 1
@@ -40,7 +45,7 @@ class DtoLocalTime:
              int.from_bytes(payload[12:14], byteorder='big'),  # day of year
              int.from_bytes(payload[14:15], byteorder='big', signed=True))))
 
-    def to_payload(self):
+    def to_payload(self) -> bytes:
         """Build the Dto From Data."""
         payload = b''
         payload = int(self.utctime.timestamp()).to_bytes(4, byteorder='big')
@@ -62,14 +67,18 @@ class DtoLocalTime:
 class DtoNetworkSetup:
     """Dataobject to hold KLF200 Network Setup."""
 
-    def __init__(self, ipaddress=None, gateway=None, netmask=None, dhcp=None):
+    def __init__(self,
+                 ipaddress: Optional[str] = None,
+                 gateway: Optional[str] = None,
+                 netmask: Optional[str] = None,
+                 dhcp: Optional[DHCPParameter] = None):
         """Initialize DtoNetworkSetup class."""
         self.ipaddress = ipaddress
         self.gateway = gateway
         self.netmask = netmask
         self.dhcp = dhcp
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} ipaddress="{}" gateway="{}" gateway="{}"  dhcp="{}"/>'.format(
             type(self).__name__, self.ipaddress, self.gateway,
@@ -80,12 +89,12 @@ class DtoNetworkSetup:
 class DtoProtocolVersion:
     """KLF 200 Dataobject for Protocol version."""
 
-    def __init__(self, majorversion=None, minorversion=None):
+    def __init__(self, majorversion: Optional[int] = None, minorversion: Optional[int] = None):
         """Initialize DtoProtocolVersion class."""
         self.majorversion = majorversion
         self.minorversion = minorversion
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} majorversion="{}" minorversion="{}"/>'.format(
@@ -97,12 +106,12 @@ class DtoProtocolVersion:
 class DtoState:
     """Data Object for Gateway State."""
 
-    def __init__(self, gateway_state=None, gateway_sub_state=None):
+    def __init__(self, gateway_state: Optional[GatewayState] = None, gateway_sub_state: Optional[GatewaySubState] = None):
         """Initialize DtoState class."""
         self.gateway_state = gateway_state
         self.gateway_sub_state = gateway_sub_state
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} gateway_state="{}" gateway_sub_state="{}"/>'.format(
@@ -115,14 +124,17 @@ class DtoVersion:
     """Object for KLF200 Version Information."""
 
     def __init__(self,
-                 softwareversion=None, hardwareversion=None, productgroup=None, producttype=None):
+                 softwareversion: Optional[str] = None,
+                 hardwareversion: Optional[int] = None,
+                 productgroup: Optional[int] = None,
+                 producttype: Optional[int] = None):
         """Initialize DtoVersion class."""
         self.softwareversion = softwareversion
         self.hardwareversion = hardwareversion
         self.productgroup = productgroup
         self.producttype = producttype
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} softwareversion="{}" hardwareversion="{}" '
@@ -136,11 +148,11 @@ class DtoVersion:
 class DtoLeaveLearnState:
     """Dataobject to hold KLF200 Data."""
 
-    def __init__(self, status=None):
+    def __init__(self, status: Optional[LeaveLearnStateConfirmationStatus] = None):
         """Initialize DtoLeaveLearnState class."""
         self.status = status
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} status="{}"/>'.format(

@@ -1,33 +1,35 @@
 """Module for Serial Line Internet Protocol (SLIP)."""
 
+from typing import Optional, Tuple
+
 SLIP_END = 0xC0
 SLIP_ESC = 0xDB
 SLIP_ESC_END = 0xDC
 SLIP_ESC_ESC = 0xDD
 
 
-def is_slip(raw):
+def is_slip(raw: bytes) -> bool:
     """Check if raw is a SLIP packet."""
     if len(raw) < 2:
         return False
     return raw[0] == SLIP_END and SLIP_END in raw[1:]
 
 
-def decode(raw):
+def decode(raw: bytes) -> bytes:
     """Decode SLIP message."""
     return raw.replace(bytes([SLIP_ESC, SLIP_ESC_END]), bytes([SLIP_END])).replace(
         bytes([SLIP_ESC, SLIP_ESC_ESC]), bytes([SLIP_ESC])
     )
 
 
-def encode(raw):
+def encode(raw: bytes) -> bytes:
     """Encode SLIP message."""
     return raw.replace(bytes([SLIP_ESC]), bytes([SLIP_ESC, SLIP_ESC_ESC])).replace(
         bytes([SLIP_END]), bytes([SLIP_ESC, SLIP_ESC_END])
     )
 
 
-def get_next_slip(raw):
+def get_next_slip(raw: bytes) -> Tuple[Optional[bytes], bytes]:
     """
     Get the next slip packet from raw data.
 
@@ -41,6 +43,6 @@ def get_next_slip(raw):
     return slip_packet, new_raw
 
 
-def slip_pack(raw):
+def slip_pack(raw: bytes) -> bytes:
     """Pack raw message to complete slip message."""
     return bytes([SLIP_END]) + encode(raw) + bytes([SLIP_END])

@@ -1,12 +1,17 @@
 """Module for scene."""
+from typing import TYPE_CHECKING, Any
+
 from .api import ActivateScene
 from .exception import PyVLXException
+
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
 
 
 class Scene:
     """Object for scene."""
 
-    def __init__(self, pyvlx, scene_id, name):
+    def __init__(self, pyvlx: "PyVLX", scene_id: int, name: str):
         """Initialize Scene object.
 
         Parameters:
@@ -20,7 +25,7 @@ class Scene:
         self.scene_id = scene_id
         self.name = name
 
-    async def run(self, wait_for_completion=True):
+    async def run(self, wait_for_completion: bool = True) -> None:
         """Run scene.
 
         Parameters:
@@ -37,12 +42,12 @@ class Scene:
         if not activate_scene.success:
             raise PyVLXException("Unable to activate scene")
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return object as readable string."""
         return '<{} name="{}" id="{}"/>'.format(
             type(self).__name__, self.name, self.scene_id
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         """Equal operator."""
         return self.__dict__ == other.__dict__

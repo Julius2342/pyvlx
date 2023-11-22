@@ -2,7 +2,7 @@
 from .exception import PyVLXException
 
 
-def string_to_bytes(string, size):
+def string_to_bytes(string: str, size: int) -> bytes:
     """Convert string to bytes add padding."""
     if len(string) > size:
         raise PyVLXException("string_to_bytes::string_to_large")
@@ -10,7 +10,7 @@ def string_to_bytes(string, size):
     return encoded + bytes(size - len(encoded))
 
 
-def bytes_to_string(raw):
+def bytes_to_string(raw: bytes) -> str:
     """Convert bytes to string."""
     ret = bytes()
     for byte in raw:

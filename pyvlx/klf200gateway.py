@@ -1,40 +1,49 @@
 """Module for basic klf200 gateway functions."""
 
+from typing import TYPE_CHECKING, Awaitable, Callable, List, Optional
+
 from .api import (
     FactoryDefault, GetLocalTime, GetNetworkSetup, GetProtocolVersion,
     GetState, GetVersion, LeaveLearnState, PasswordEnter, Reboot, SetUTC)
+from .dataobjects import (
+    DtoLocalTime, DtoNetworkSetup, DtoProtocolVersion, DtoState, DtoVersion)
 from .exception import PyVLXException
+
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
+
+CallbackType = Callable[["Klf200Gateway"], Awaitable[None]]
 
 
 class Klf200Gateway:
     """Class for node abstraction."""
 
-    def __init__(self, pyvlx):
+    def __init__(self, pyvlx: "PyVLX"):
         """Initialize Node object."""
         self.pyvlx = pyvlx
-        self.state = None
-        self.network_setup = None
-        self.password = None
-        self.time = None
-        self.protocol_version = None
-        self.version = None
-        self.device_updated_cbs = []
+        self.state: Optional[DtoState] = None
+        self.network_setup: Optional[DtoNetworkSetup] = None
+        self.password: Optional[str] = None
+        self.time: Optional[DtoLocalTime] = None
+        self.protocol_version: Optional[DtoProtocolVersion] = None
+        self.version: Optional[DtoVersion] = None
+        self.device_updated_cbs: List[CallbackType] = []
 
-    def register_device_updated_cb(self, device_updated_cb):
+    def register_device_updated_cb(self, device_updated_cb: CallbackType) -> None:
         """Register device updated callback."""
         self.device_updated_cbs.append(device_updated_cb)
 
-    def unregister_device_updated_cb(self, device_updated_cb):
+    def unregister_device_updated_cb(self, device_updated_cb: CallbackType) -> None:
         """Unregister device updated callback."""
         self.device_updated_cbs.remove(device_updated_cb)
 
-    async def after_update(self):
+    async def after_update(self) -> None:
         """Execute callbacks after internal state has been changed."""
         for device_updated_cb in self.device_updated_cbs:
             # pylint: disable=not-callable
             await device_updated_cb(self)
 
-    async def get_state(self):
+    async def get_state(self) -> bool:
         """Retrieve state from API."""
         get_state = GetState(pyvlx=self.pyvlx)
         await get_state.do_api_call()
@@ -43,7 +52,7 @@ class Klf200Gateway:
         self.state = get_state.state
         return get_state.success
 
-    async def get_network_setup(self):
+    async def get_network_setup(self) -> bool:
         """Retrieve network setup from API."""
         get_network_setup = GetNetworkSetup(pyvlx=self.pyvlx)
         await get_network_setup.do_api_call()
@@ -52,7 +61,7 @@ class Klf200Gateway:
         self.network_setup = get_network_setup.networksetup
         return get_network_setup.success
 
-    async def get_version(self):
+    async def get_version(self) -> bool:
         """Retrieve version from API."""
         get_version = GetVersion(pyvlx=self.pyvlx)
         await get_version.do_api_call()
@@ -61,7 +70,7 @@ class Klf200Gateway:
         self.version = get_version.version
         return get_version.success
 
-    async def get_protocol_version(self):
+    async def get_protocol_version(self) -> bool:
         """Retrieve protocol version from API."""
         get_protocol_version = GetProtocolVersion(pyvlx=self.pyvlx)
         await get_protocol_version.do_api_call()
@@ -70,7 +79,7 @@ class Klf200Gateway:
         self.protocol_version = get_protocol_version.protocolversion
         return get_protocol_version.success
 
-    async def leave_learn_state(self):
+    async def leave_learn_state(self) -> bool:
         """Leave Learn state from API."""
         leave_learn_state = LeaveLearnState(pyvlx=self.pyvlx)
         await leave_learn_state.do_api_call()
@@ -78,7 +87,7 @@ class Klf200Gateway:
             raise PyVLXException("Unable to leave learn state")
         return leave_learn_state.success
 
-    async def set_utc(self):
+    async def set_utc(self) -> bool:
         """Set UTC Clock."""
         setutc = SetUTC(pyvlx=self.pyvlx)
         await setutc.do_api_call()
@@ -86,13 +95,13 @@ class Klf200Gateway:
             raise PyVLXException("Unable to set utc.")
         return setutc.success
 
-    async def set_rtc_time_zone(self):
+    async def set_rtc_time_zone(self) -> None:
         """Set the RTC Time Zone."""
         # idontwant = setrtctimezone(pyvlx=self.pyvlx)
         raise PyVLXException("KLF 200 RTC Timezone Set not implemented")
         # return setrtctimezone.success
 
-    async def reboot(self):
+    async def reboot(self) -> bool:
         """Reboot gateway."""
         reboot = Reboot(pyvlx=self.pyvlx)
         await reboot.do_api_call()
@@ -100,7 +109,7 @@ class Klf200Gateway:
             raise PyVLXException("Unable to reboot gateway.")
         return reboot.success
 
-    async def set_factory_default(self):
+    async def set_factory_default(self) -> bool:
         """Set Gateway to Factory Default."""
         factorydefault = FactoryDefault(pyvlx=self.pyvlx)
         await factorydefault.do_api_call()
@@ -108,7 +117,7 @@ class Klf200Gateway:
             raise PyVLXException("Unable to factory Default Reset gateway.")
         return factorydefault.success
 
-    async def get_local_time(self):
+    async def get_local_time(self) -> bool:
         """Get local time from gateway."""
         getlocaltime = GetLocalTime(pyvlx=self.pyvlx)
         await getlocaltime.do_api_call()
@@ -117,7 +126,7 @@ class Klf200Gateway:
         self.time = getlocaltime.localtime
         return getlocaltime.success
 
-    async def password_enter(self, password):
+    async def password_enter(self, password: str) -> bool:
         """Get enter Password for gateway."""
         self.password = password
         passwordenter = PasswordEnter(pyvlx=self.pyvlx, password=self.password)
@@ -126,7 +135,7 @@ class Klf200Gateway:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
         return passwordenter.success
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return object as readable string."""
         return '<{} state="{}" network_setup="{}"  version="{}"  protocol_version="{}"/>'.format(
             type(self).__name__,
