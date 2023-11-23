@@ -13,7 +13,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
 
     PAYLOAD_LEN = 20
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_NODE_STATE_POSITION_CHANGED_NTF)
         self.node_id = 0
@@ -27,7 +27,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
         self.remaining_time = 0
         self.timestamp = 0
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         payload = bytes([self.node_id])
         payload += bytes([self.state])
@@ -41,7 +41,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
         payload += struct.pack(">I", self.timestamp)
         return payload
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.node_id = payload[0]
         self.state = OperatingState(payload[1])
@@ -57,11 +57,11 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
         self.timestamp = struct.unpack(">I", payload[16:20])[0]
 
     @property
-    def timestamp_formatted(self):
+    def timestamp_formatted(self) -> str:
         """Return time as human readable string."""
         return datetime.fromtimestamp(self.timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} node_id="{}" '

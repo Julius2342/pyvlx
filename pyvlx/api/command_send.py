@@ -1,25 +1,33 @@
 """Module for retrieving scene list from API."""
+from typing import TYPE_CHECKING, Any, Optional
+
+from ..parameter import Parameter
 from .api_event import ApiEvent
 from .frames import (
-    CommandSendConfirmationStatus, FrameCommandRemainingTimeNotification,
-    FrameCommandRunStatusNotification, FrameCommandSendConfirmation,
-    FrameCommandSendRequest, FrameSessionFinishedNotification)
+    CommandSendConfirmationStatus, FrameBase,
+    FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification,
+    FrameCommandSendConfirmation, FrameCommandSendRequest,
+    FrameSessionFinishedNotification)
 from .session_id import get_new_session_id
 from ..exception import PyVLXException
 from ..log import PYVLXLOG
+
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
+
 
 class CommandSend(ApiEvent):
     """Class for sending command to API."""
 
     def __init__(
             self,
-            pyvlx,
-            node_id,
-            parameter,
-            active_parameter=0,
-            wait_for_completion=True,
-            timeout_in_seconds=2,
-            **functional_parameter
+            pyvlx: "PyVLX",
+            node_id: int,
+            parameter: Parameter,
+            active_parameter: int = 0,
+            wait_for_completion: bool = True,
+            timeout_in_seconds: int = 2,
+            **functional_parameter: Any
     ):
         """Initialize SceneList class."""
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
@@ -29,10 +37,11 @@ class CommandSend(ApiEvent):
         self.active_parameter = active_parameter
         self.functional_parameter = functional_parameter
         self.wait_for_completion = wait_for_completion
-        self.session_id = None
+        self.session_id: Optional[int] = None
         self.frame = None
+        
 
-    async def handle_frame(self, frame):
+    async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""
         if (
                 isinstance(frame, FrameCommandSendConfirmation)
@@ -77,7 +86,7 @@ class CommandSend(ApiEvent):
     #         PYVLXLOG.debug("No response from KFL200 for session_id %s, retry: %s of %s", self.session_id, self.retries, max_retries)           
     #     raise PyVLXException("Unable to send command")
 
-    def request_frame(self):
+    def request_frame(self) -> FrameCommandSendRequest:
         """Construct initiating frame."""
         if self.frame is None:
             self.session_id = get_new_session_id()

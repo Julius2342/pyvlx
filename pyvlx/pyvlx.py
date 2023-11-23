@@ -6,8 +6,10 @@ a VELUX KLF 200 device for controlling window openers
 and roller shutters.
 """
 import asyncio
+from typing import Optional
 
 from .api import (get_limitation)
+from .api.frames import FrameBase
 from .config import Config
 from .connection import Connection
 from .heartbeat import Heartbeat
@@ -21,7 +23,13 @@ from .scenes import Scenes
 class PyVLX:
     """Class for PyVLX."""
 
-    def __init__(self, path=None, host=None, password=None, loop=None, heartbeat_interval=30, heartbeat_load_all_states=True):
+    def __init__(self,
+                 path: Optional[str] = None,
+                 host: Optional[str] = None,
+                 password: Optional[str] = None,
+                 loop: Optional[asyncio.AbstractEventLoop] = None,
+                 heartbeat_interval=30, 
+                 heartbeat_load_all_states=True):
         """Initialize PyVLX class."""
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
@@ -38,11 +46,12 @@ class PyVLX:
 
         PYVLXLOG.debug("Loading https://github.com/pawlizio/pyvlx.git@handle_timeout 0.1.71")
 
-    async def connect(self):
+    async def connect(self) -> None:
         """Connect to KLF 200."""
         PYVLXLOG.debug("Connecting to KLF 200 on %s", self)
         await self.connection.connect()
-        await self.klf200.password_enter(password=self.config.password) 
+        assert self.config.password is not None
+        await self.klf200.password_enter(password=self.config.password)
         await self.klf200.get_version()
         await self.klf200.get_protocol_version()
         PYVLXLOG.debug(
@@ -57,18 +66,18 @@ class PyVLX:
         await self.klf200.house_status_monitor_enable(pyvlx=self)
         self.heartbeat.start()
 
-    async def reboot_gateway(self):
+    async def reboot_gateway(self) -> None:
         """For Compatibility: Reboot the KLF 200."""
         PYVLXLOG.warning("KLF 200 reboot initiated")
         await self.klf200.reboot()
 
-    async def send_frame(self, frame):
+    async def send_frame(self, frame: FrameBase) -> None:
         """Send frame to API via connection."""
         if not self.connection.connected:
             await self.connect()
         self.connection.write(frame)
 
-    async def disconnect(self):
+    async def disconnect(self) -> None:
         """Disconnect from KLF 200."""
         # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
         try:
@@ -78,15 +87,15 @@ class PyVLX:
         await self.heartbeat.stop()
         self.connection.disconnect()
 
-    async def load_nodes(self, node_id=None):
+    async def load_nodes(self, node_id: Optional[int] = None) -> None:
         """Load devices from KLF 200, if no node_id is specified all nodes are loaded."""
         await self.nodes.load(node_id)
 
-    async def load_scenes(self):
+    async def load_scenes(self) -> None:
         """Load scenes from KLF 200."""
         await self.scenes.load()
 
-    async def get_limitation(self, node_id):
+    async def get_limitation(self, node_id: int) -> None:
         """Return limitation."""
-        limit = get_limitation.GetLimitation(self, [node_id])
+        limit = get_limitation.GetLimitation(self, node_id)
         await limit.do_api_call()

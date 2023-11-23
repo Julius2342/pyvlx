@@ -1,22 +1,27 @@
 """Module for storing and accessing scene list."""
+from typing import TYPE_CHECKING, Iterator, List, Union
+
 from .api import GetSceneList
 from .exception import PyVLXException
 from .scene import Scene
+
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
 
 
 class Scenes:
     """Class for storing and accessing ."""
 
-    def __init__(self, pyvlx):
+    def __init__(self, pyvlx: "PyVLX"):
         """Initialize Scenes class."""
         self.pyvlx = pyvlx
-        self.__scenes = []
+        self.__scenes: List[Scene] = []
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Scene]:
         """Iterate."""
         yield from self.__scenes
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: Union[str, int]) -> Scene:
         """Return scene by name or by index."""
         if isinstance(key, int):
             for scene in self.__scenes:
@@ -27,11 +32,11 @@ class Scenes:
                 return scene
         raise KeyError
 
-    def __len__(self):
+    def __len__(self) -> int:
         """Return number of scenes."""
         return len(self.__scenes)
 
-    def add(self, scene):
+    def add(self, scene: Scene) -> None:
         """Add scene, replace existing scene if scene with scene_id is present."""
         if not isinstance(scene, Scene):
             raise TypeError()
@@ -41,11 +46,11 @@ class Scenes:
                 return
         self.__scenes.append(scene)
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear internal scenes array."""
         self.__scenes = []
 
-    async def load(self):
+    async def load(self) -> None:
         """Load scenes from KLF 200."""
         get_scene_list = GetSceneList(pyvlx=self.pyvlx)
         await get_scene_list.do_api_call()

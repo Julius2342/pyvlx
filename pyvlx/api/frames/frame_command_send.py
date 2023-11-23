@@ -1,5 +1,6 @@
 """Module for sending command to gw."""
 from enum import Enum
+from typing import List, Optional
 
 from pyvlx.const import Command, Originator, Priority
 from pyvlx.exception import PyVLXException
@@ -15,16 +16,16 @@ class FrameCommandSendRequest(FrameBase):
 
     def __init__(
             self,
-            node_ids=None,
-            parameter=Parameter(),
-            active_parameter=0,
-            session_id=None,
-            originator=Originator.USER,
-            **functional_parameter
+            node_ids: Optional[List[int]] = None,
+            parameter: Parameter = Parameter(),
+            active_parameter: int = 0,
+            session_id: Optional[int] = None,
+            originator: Originator = Originator.USER,
+            **functional_parameter: bytes
     ):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_SEND_REQ)
-        self.node_ids = node_ids
+        self.node_ids = node_ids if node_ids is not None else []
         self.parameter = parameter
         self.active_parameter = active_parameter
         self.fpi1 = 0
@@ -48,9 +49,10 @@ class FrameCommandSendRequest(FrameBase):
             else:
                 self.functional_parameter[key] = bytes(2)
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         # Session id
+        assert self.session_id is not None
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([self.originator.value])
         ret += bytes([self.priority.value])
@@ -80,7 +82,7 @@ class FrameCommandSendRequest(FrameBase):
         ret += bytes([0])
         return ret
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
         self.originator = Originator(payload[2])
@@ -95,7 +97,7 @@ class FrameCommandSendRequest(FrameBase):
 
         self.parameter = Parameter(payload[7:9])
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         functional_parameter = ""
         for key, value in self.functional_parameter.items():
@@ -125,24 +127,26 @@ class FrameCommandSendConfirmation(FrameBase):
 
     PAYLOAD_LEN = 3
 
-    def __init__(self, session_id=None, status=None):
+    def __init__(self, session_id: Optional[int] = None, status: Optional[CommandSendConfirmationStatus] = None):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_SEND_CFM)
         self.session_id = session_id
         self.status = status
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
+        assert self.session_id is not None
+        assert self.status is not None
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([self.status.value])
         return ret
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
         self.status = CommandSendConfirmationStatus(payload[2])
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} session_id="{}" status="{}"/>'.format(
             type(self).__name__, self.session_id, self.status
@@ -156,11 +160,11 @@ class FrameCommandRunStatusNotification(FrameBase):
 
     def __init__(
             self,
-            session_id=None,
-            status_id=None,
-            index_id=None,
-            node_parameter=None,
-            parameter_value=None,
+            session_id: Optional[int] = None,
+            status_id: Optional[int] = None,
+            index_id: Optional[int] = None,
+            node_parameter: Optional[int] = None,
+            parameter_value: Optional[int] = None,
     ):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_RUN_STATUS_NTF)
@@ -170,19 +174,24 @@ class FrameCommandRunStatusNotification(FrameBase):
         self.node_parameter = node_parameter
         self.parameter_value = parameter_value
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
+        assert self.session_id is not None
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
+        assert self.status_id is not None
         ret += bytes([self.status_id])
+        assert self.index_id is not None
         ret += bytes([self.index_id])
+        assert self.node_parameter is not None
         ret += bytes([self.node_parameter])
+        assert self.parameter_value is not None
         ret += bytes([self.parameter_value >> 8 & 255, self.parameter_value & 255])
 
         # XXX: Missing implementation of run_status, status_reply and information_code
         ret += bytes(6)
         return ret
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
         self.status_id = payload[2]
@@ -190,7 +199,7 @@ class FrameCommandRunStatusNotification(FrameBase):
         self.node_parameter = payload[4]
         self.parameter_value = payload[5] * 256 + payload[6]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} session_id="{}" status_id="{}" '
@@ -207,7 +216,7 @@ class FrameCommandRemainingTimeNotification(FrameBase):
 
     PAYLOAD_LEN = 6
 
-    def __init__(self, session_id=None, index_id=None, node_parameter=None, seconds=0):
+    def __init__(self, session_id: Optional[int] = None, index_id: Optional[int] = None, node_parameter: Optional[int] = None, seconds: int = 0):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_REMAINING_TIME_NTF)
         self.session_id = session_id
@@ -215,22 +224,25 @@ class FrameCommandRemainingTimeNotification(FrameBase):
         self.node_parameter = node_parameter
         self.seconds = seconds
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
+        assert self.session_id is not None
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
+        assert self.index_id is not None
         ret += bytes([self.index_id])
+        assert self.node_parameter is not None
         ret += bytes([self.node_parameter])
         ret += bytes([self.seconds >> 8 & 255, self.seconds & 255])
         return ret
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
         self.index_id = payload[2]
         self.node_parameter = payload[3]
         self.seconds = payload[4] * 256 + payload[5]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} session_id="{}" index_id="{}" '
@@ -246,21 +258,22 @@ class FrameSessionFinishedNotification(FrameBase):
 
     PAYLOAD_LEN = 2
 
-    def __init__(self, session_id=None):
+    def __init__(self, session_id: Optional[int] = None):
         """Init Frame."""
         super().__init__(Command.GW_SESSION_FINISHED_NTF)
         self.session_id = session_id
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
+        assert self.session_id is not None
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         return ret
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} session_id="{}"/>'.format(
             type(self).__name__, self.session_id

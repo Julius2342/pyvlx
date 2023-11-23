@@ -40,6 +40,9 @@ setup(
         "Programming Language :: Python :: 3.6",
     ],
     packages=find_packages(),
+    package_data={
+        'pyvlx': ['py.typed'],
+    },
     install_requires=REQUIRES,
     keywords="velux KLF 200 home automation",
     zip_safe=False,

@@ -1,5 +1,6 @@
 """Module for sending get state requests to API in regular periods."""
 import asyncio
+from typing import TYPE_CHECKING, Optional
 
 from .api import GetState
 from .api.status_request import StatusRequest
@@ -7,11 +8,17 @@ from .log import PYVLXLOG
 from .exception import PyVLXException
 from .opening_device import Blind, DualRollerShutter
 
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
+
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
+
 
 class Heartbeat:
     """Class for sending heartbeats to API."""
 
-    def __init__(self, pyvlx, interval=30, load_all_states=True):
+    def __init__(self, pyvlx: "PyVLX", interval: int = 30, load_all_states: bool = True):
         """Initialize Heartbeat object."""
         PYVLXLOG.debug("Heartbeat __init__")
         self.pyvlx = pyvlx
@@ -30,13 +37,13 @@ class Heartbeat:
             except Exception as e:
                 PYVLXLOG.debug("Heartbeat: pulsing failed: %s" % str(e))
 
-    async def _start(self):
+    async def _start(self) -> None:
         if self.task is not None:
             await self.stop()
         PYVLXLOG.debug("Heartbeat: creating task")
         self.task = asyncio.create_task(self._run())
 
-    def start(self):
+    def start(self) -> None:
         PYVLXLOG.debug("Heartbeat start")
         asyncio.run_coroutine_threadsafe(self._start(), self.pyvlx.loop)
 
@@ -44,7 +51,7 @@ class Heartbeat:
     def stopped(self):
         return self.task is None
 
-    async def stop(self):
+    async def stop(self) -> None:
         """Stop heartbeat."""
         if self.task is not None:
             self.task.cancel()
@@ -53,7 +60,7 @@ class Heartbeat:
         else:
             PYVLXLOG.debug("Heartbeat was not running")
 
-    async def pulse(self):
+    async def pulse(self) -> None:
         """Send get state request to API to keep the connection alive."""
         PYVLXLOG.debug("Heartbeat pulse")
         get_state = GetState(pyvlx=self.pyvlx)
