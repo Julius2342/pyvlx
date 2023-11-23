@@ -8,7 +8,7 @@ pylint==3.0.1
 pytest==7.4.2
 pytest-cov==4.0.0
 pytest-timeout==2.1.0
-setuptools==68.2.2
+setuptools==69.0.2
 twine==4.0.2
 mypy==1.5.1
 types-pyyaml==6.0.12.12
