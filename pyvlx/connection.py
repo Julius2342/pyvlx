@@ -90,6 +90,7 @@ class Connection:
         if self.transport is not None:
             self.transport.close()
             self.transport = None
+        self.connected = False
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
@@ -138,5 +139,4 @@ class Connection:
 
     def connection_closed_cb(self) -> None:
         """Server closed connection."""
-        self.connected = False
-        self.transport.close()
+        self.disconnect()

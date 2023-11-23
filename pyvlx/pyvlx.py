@@ -28,8 +28,8 @@ class PyVLX:
                  host: Optional[str] = None,
                  password: Optional[str] = None,
                  loop: Optional[asyncio.AbstractEventLoop] = None,
-                 heartbeat_interval=30, 
-                 heartbeat_load_all_states=True):
+                 heartbeat_interval: int = 30,
+                 heartbeat_load_all_states: bool = True):
         """Initialize PyVLX class."""
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
@@ -43,8 +43,6 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.parallel_commands = asyncio.Semaphore(1) # Limit parallel commands
-
-        PYVLXLOG.debug("Loading https://github.com/pawlizio/pyvlx.git@handle_timeout 0.1.71")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""

@@ -10,7 +10,6 @@ from .frames import (
     FrameSessionFinishedNotification)
 from .session_id import get_new_session_id
 from ..exception import PyVLXException
-from ..log import PYVLXLOG
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -38,8 +37,7 @@ class CommandSend(ApiEvent):
         self.functional_parameter = functional_parameter
         self.wait_for_completion = wait_for_completion
         self.session_id: Optional[int] = None
-        self.frame = None
-        
+        self.frame: Optional[FrameCommandSendRequest] = None
 
     async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""
@@ -69,8 +67,8 @@ class CommandSend(ApiEvent):
         ):
             return True
         return False
-    
-    async def send(self):
+
+    async def send(self) -> None:
         """Send frame to KLF200."""
         async with self.pyvlx.parallel_commands: 
             await self.do_api_call()

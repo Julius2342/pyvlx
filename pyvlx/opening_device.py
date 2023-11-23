@@ -1,5 +1,6 @@
 """Module for window openers."""
 from typing import TYPE_CHECKING, Optional
+import datetime
 
 from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
@@ -17,7 +18,12 @@ class OpeningDevice(Node):
     """Meta class for opening device with one main parameter for position."""
 
     def __init__(
-            self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str, position_parameter: Parameter = Parameter()
+            self, 
+            pyvlx: "PyVLX", 
+            node_id: int, 
+            name: str, 
+            serial_number: str, 
+            position_parameter: Parameter = Parameter()
     ):
         """Initialize opening device.
 
@@ -31,11 +37,25 @@ class OpeningDevice(Node):
 
         """
         super().__init__(
-            pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
+            pyvlx=pyvlx,
+            node_id=node_id,
+            name=name,
+            serial_number=serial_number
         )
         self.position = Position(parameter=position_parameter)
+        self.target = Position(parameter=position_parameter)
+        self.is_opening = False
+        self.is_closing = False
+        self.state_received_at: datetime.datetime | None = None
+        self.estimated_completion: datetime.datetime | None = None
+        self.use_default_velocity = False
+        self.default_velocity = Velocity.DEFAULT
+        self.open_position_target: int = 0
+        self.close_position_target: int = 100
 
-    async def set_position(self, position, wait_for_completion=True):
+    async def set_position(self, position: Position,
+                           velocity: Velocity | int | None = Velocity.DEFAULT,
+                           wait_for_completion: bool = True) -> None:
         """Set window to desired position.
 
         Parameters:
@@ -64,12 +84,12 @@ class OpeningDevice(Node):
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=position,
-            **kwargs
+            functional_parameter=kwargs
         )
         await command.send()
         await self.after_update()
 
-    async def open(self, wait_for_completion=True):
+    async def open(self, wait_for_completion: bool = True) -> None:
         """Open window.
 
         Parameters:
@@ -84,7 +104,7 @@ class OpeningDevice(Node):
             wait_for_completion=wait_for_completion,
         )
 
-    async def close(self, wait_for_completion=True):
+    async def close(self, wait_for_completion: bool = True) -> None:
         """Close window.
 
         Parameters:
@@ -111,7 +131,7 @@ class OpeningDevice(Node):
             position=CurrentPosition(), wait_for_completion=wait_for_completion
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return object as readable string."""
         return (
             '<{} name="{}" node_id="{}" serial_number="{}" position="{}"/>'.format(
@@ -164,7 +184,7 @@ class Window(OpeningDevice):
         )
 
     async def get_limitation(self) -> GetLimitation:
-        """Return limitaation."""
+        """Return limitation."""
         get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
         await get_limitation.do_api_call()
         if not get_limitation.success:
@@ -200,7 +220,7 @@ class Blind(OpeningDevice):
         self.open_orientation_target: int = 50
         self.close_orientation_target: int = 100
 
-    async def set_position_and_orientation(self, position, wait_for_completion=True, orientation=None):
+    async def set_position_and_orientation(self, position: Position, wait_for_completion: bool = True, velocity: Optional[Velocity] = None, orientation: Optional[Position] = None) -> None:
         """Set window to desired position.
 
         Parameters:
@@ -248,7 +268,7 @@ class Blind(OpeningDevice):
         await command.send()
         await self.after_update()
 
-    async def set_position(self, position, wait_for_completion=True):
+    async def set_position(self, position: Position, wait_for_completion: bool = True) -> None:
         """Set window to desired position.
 
         Parameters:
@@ -262,7 +282,7 @@ class Blind(OpeningDevice):
         """
         await self.set_position_and_orientation(position, velocity, wait_for_completion)
 
-    async def open(self, wait_for_completion=True):
+    async def open(self, wait_for_completion: bool = True) -> None:
         """Open window.
 
         Parameters:
@@ -276,7 +296,7 @@ class Blind(OpeningDevice):
             wait_for_completion=wait_for_completion,
         )
 
-    async def close(self, wait_for_completion=True):
+    async def close(self, wait_for_completion: bool = True) -> None:
         """Close window.
 
         Parameters:
@@ -360,7 +380,12 @@ class DualRollerShutter(OpeningDevice):
     """DualRollerShutter object."""
 
     def __init__(
-            self, pyvlx, node_id, name, serial_number, position_parameter=Parameter()
+            self,
+            pyvlx: "PyVLX",
+            node_id: int,
+            name: str,
+            serial_number: str,
+            position_parameter: Parameter = Parameter()
     ):
         """Initialize Blind class.
 
@@ -381,9 +406,13 @@ class DualRollerShutter(OpeningDevice):
         self.position_upper_curtain = Position(position_percent=0)
         self.position_lower_curtain = Position(position_percent=0)
         self.target_position = TargetPosition()
-        self.active_parameter=0
+        self.active_parameter = 0
 
-    async def set_position(self, position: Position, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion=True, curtain="dual"):
+    async def set_position(self, 
+                           position: Position,
+                           velocity: Velocity | int | None = Velocity.DEFAULT,
+                           wait_for_completion: bool = True,
+                           curtain: str = "dual") -> None:
         """Set window to desired position.
 
         Parameters:

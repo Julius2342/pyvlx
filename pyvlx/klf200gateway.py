@@ -136,7 +136,7 @@ class Klf200Gateway:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
         return passwordenter.success
 
-    async def house_status_monitor_enable(self, pyvlx):
+    async def house_status_monitor_enable(self, pyvlx: "PyVLX") -> None:
         """Enable house status monitor."""
         status_monitor_enable = HouseStatusMonitorEnable(pyvlx=pyvlx)
         await status_monitor_enable.do_api_call()
@@ -144,7 +144,7 @@ class Klf200Gateway:
             raise PyVLXException("Unable enable house status monitor.")
         self.house_status_monitor_enabled = True
 
-    async def house_status_monitor_disable(self, pyvlx, timeout=None):
+    async def house_status_monitor_disable(self, pyvlx: "PyVLX", timeout: int = None) -> None:
         """Disable house status monitor."""
         status_monitor_disable = HouseStatusMonitorDisable(pyvlx=pyvlx)
         if timeout is not None:

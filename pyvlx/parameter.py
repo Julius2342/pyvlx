@@ -15,7 +15,7 @@ class Parameter:
     OFF = 0xC800  # C8 00
     TARGET = 0xD100  # D1 00
     IGNORE = 0xD400  # D4 00
-    DUAL_SHUTTER_CURTAINS = 0xD808 # D8 08
+    DUAL_SHUTTER_CURTAINS = 0xD808  # D8 08
 
     def __init__(self, raw: Optional[bytes] = None):
         """Initialize Parameter class."""
@@ -43,7 +43,7 @@ class Parameter:
         return bytes([value >> 8 & 255, value & 255])
 
     @staticmethod
-    def to_int(raw):
+    def to_int(raw: bytes) -> int:
         """Create int position value out of raw."""
         return raw[0] * 256 + raw[1]
 
@@ -82,7 +82,7 @@ class Parameter:
         return raw
 
     @staticmethod
-    def from_percent(position_percent):
+    def from_percent(position_percent: int) -> bytes:
         """Create raw value out of percent position."""
         if not isinstance(position_percent, int):
             raise PyVLXException("Position::position_percent_has_to_be_int")
@@ -93,7 +93,7 @@ class Parameter:
         return bytes([position_percent * 2, 0])
 
     @staticmethod
-    def to_percent(raw):
+    def to_percent(raw: bytes) -> int:
         """Create percent position value out of raw."""
         # The first byte has the vlue from 0 to 200. Ignoring the second one.
         # Adding 0.5 allows a slight tolerance for devices (e.g. Velux SML) that
@@ -120,10 +120,11 @@ class Parameter:
             return "DUAL"
         return "{} %".format(int(self.to_percent(self.raw)))
 
+
 class SwitchParameter(Parameter):
     """Class for storing On or Off values."""
 
-    def __init__(self, parameter: Optional[Parameter] = None, state=None):
+    def __init__(self, parameter: Optional[Parameter] = None, state: Optional[int] = None):
         """Initialize Parameter class."""
         super().__init__()
         if parameter is not None:
@@ -132,12 +133,12 @@ class SwitchParameter(Parameter):
             self.state = state
 
     @property
-    def state(self):
+    def state(self) -> int:
         """Position property."""
         return self.to_int(self.raw)
 
     @state.setter
-    def state(self, state):
+    def state(self, state: int) -> None:
         """Setter of internal raw via state."""
         self.raw = self.from_int(state)
     
@@ -157,7 +158,7 @@ class SwitchParameter(Parameter):
         """Return True if parameter is in 'off' state."""
         return self.raw == self.from_int(Parameter.OFF)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return string representation of object."""         
         if self.raw == self.from_int(Parameter.ON):
             return "ON"
@@ -381,6 +382,6 @@ class CurrentIntensity(Intensity):
 class DualRollerShutterPosition(Position):
     """Position to be provided when addressing the upper or lower curtain of a dual roller shutter by using FP1 or FP2."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.DUAL_SHUTTER_CURTAINS)
