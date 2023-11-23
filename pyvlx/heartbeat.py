@@ -44,11 +44,13 @@ class Heartbeat:
         self.task = asyncio.create_task(self._run())
 
     def start(self) -> None:
+        """Start heartbeat."""
         PYVLXLOG.debug("Heartbeat start")
         asyncio.run_coroutine_threadsafe(self._start(), self.pyvlx.loop)
 
     @property
     def stopped(self):
+        """Return Heartbeat running state"""
         return self.task is None
 
     async def stop(self) -> None:

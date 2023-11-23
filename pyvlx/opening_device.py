@@ -260,7 +260,6 @@ class Blind(OpeningDevice):
             * wait_for_completion: If set, function will return
                 after device has reached target position.
         """
-
         await self.set_position_and_orientation(position, velocity, wait_for_completion)
 
     async def open(self, wait_for_completion=True):
