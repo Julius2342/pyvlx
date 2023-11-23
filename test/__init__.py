@@ -1,1 +1,1 @@
-"""Module for all tests"""
+"""Module for all tests."""

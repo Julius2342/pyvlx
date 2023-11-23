@@ -50,7 +50,7 @@ class Heartbeat:
 
     @property
     def stopped(self):
-        """Return Heartbeat running state"""
+        """Return Heartbeat running state."""
         return self.task is None
 
     async def stop(self) -> None:
