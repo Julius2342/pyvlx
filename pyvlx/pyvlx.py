@@ -82,7 +82,7 @@ class PyVLX:
         # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
         try:
             await self.klf200.house_status_monitor_disable(pyvlx=self, timeout=1)
-        except:
+        except Exception:
             pass
         await self.heartbeat.stop()
         self.connection.disconnect()
