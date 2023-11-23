@@ -1,4 +1,6 @@
 """Module for window openers."""
+from typing import TYPE_CHECKING, Optional
+
 from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .const import Velocity
