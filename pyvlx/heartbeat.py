@@ -1,15 +1,12 @@
 """Module for sending get state requests to API in regular periods."""
 import asyncio
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Any
 
 from .api import GetState
 from .api.status_request import StatusRequest
-from .log import PYVLXLOG
 from .exception import PyVLXException
+from .log import PYVLXLOG
 from .opening_device import Blind, DualRollerShutter
-
-if TYPE_CHECKING:
-    from pyvlx import PyVLX
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -24,9 +21,9 @@ class Heartbeat:
         self.pyvlx = pyvlx
         self.interval = interval
         self.load_all_states = load_all_states
-        self.task = None
+        self.task: Any = None
 
-    async def _run(self):
+    async def _run(self) -> None:
         PYVLXLOG.debug("Heartbeat: task started")
         while True:
             PYVLXLOG.debug("Heartbeat: sleeping")
@@ -35,7 +32,7 @@ class Heartbeat:
             try:
                 await self.pulse()
             except Exception as e:
-                PYVLXLOG.debug("Heartbeat: pulsing failed: %s" % str(e))
+                PYVLXLOG.debug("Heartbeat: pulsing failed: %s", e)
 
     async def _start(self) -> None:
         if self.task is not None:
@@ -49,7 +46,7 @@ class Heartbeat:
         asyncio.run_coroutine_threadsafe(self._start(), self.pyvlx.loop)
 
     @property
-    def stopped(self):
+    def stopped(self) -> bool:
         """Return Heartbeat running state."""
         return self.task is None
 

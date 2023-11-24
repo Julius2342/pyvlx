@@ -8,7 +8,7 @@ and roller shutters.
 import asyncio
 from typing import Optional
 
-from .api import (get_limitation)
+from .api import get_limitation
 from .api.frames import FrameBase
 from .config import Config
 from .connection import Connection
@@ -23,13 +23,14 @@ from .scenes import Scenes
 class PyVLX:
     """Class for PyVLX."""
 
-    def __init__(self,
-                 path: Optional[str] = None,
-                 host: Optional[str] = None,
-                 password: Optional[str] = None,
-                 loop: Optional[asyncio.AbstractEventLoop] = None,
-                 heartbeat_interval: int = 30,
-                 heartbeat_load_all_states: bool = True):
+    def __init__(
+            self,
+            path: Optional[str] = None,
+            host: Optional[str] = None,
+            password: Optional[str] = None,
+            loop: Optional[asyncio.AbstractEventLoop] = None,
+            heartbeat_interval: int = 30,
+            heartbeat_load_all_states: bool = True):
         """Initialize PyVLX class."""
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
@@ -42,7 +43,7 @@ class PyVLX:
         self.version = None
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
-        self.parallel_commands = asyncio.Semaphore(1) # Limit parallel commands
+        self.parallel_commands = asyncio.Semaphore(1)  # Limit parallel commands
 
     async def connect(self) -> None:
         """Connect to KLF 200."""

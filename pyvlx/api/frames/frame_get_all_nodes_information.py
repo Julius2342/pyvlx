@@ -4,7 +4,8 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity
+from pyvlx.const import (
+    Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity)
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
@@ -36,7 +37,11 @@ class FrameGetAllNodesInformationConfirmation(FrameBase):
 
     PAYLOAD_LEN = 2
 
-    def __init__(self, status: AllNodesInformationStatus = AllNodesInformationStatus.OK, number_of_nodes: int = 0):
+    def __init__(
+        self,
+        status: AllNodesInformationStatus = AllNodesInformationStatus.OK,
+        number_of_nodes: int = 0,
+    ):
         """Init Frame."""
         super().__init__(Command.GW_GET_ALL_NODES_INFORMATION_CFM)
         self.status = status

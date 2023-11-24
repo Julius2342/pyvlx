@@ -4,7 +4,8 @@ from typing import TYPE_CHECKING, Awaitable, Callable, List, Optional
 
 from .api import (
     FactoryDefault, GetLocalTime, GetNetworkSetup, GetProtocolVersion,
-    GetState, GetVersion, HouseStatusMonitorDisable, HouseStatusMonitorEnable, LeaveLearnState, PasswordEnter, Reboot, SetUTC)
+    GetState, GetVersion, HouseStatusMonitorDisable, HouseStatusMonitorEnable,
+    LeaveLearnState, PasswordEnter, Reboot, SetUTC)
 from .dataobjects import (
     DtoLocalTime, DtoNetworkSetup, DtoProtocolVersion, DtoState, DtoVersion)
 from .exception import PyVLXException
@@ -29,7 +30,7 @@ class Klf200Gateway:
         self.version: Optional[DtoVersion] = None
         self.device_updated_cbs: List[CallbackType] = []
         self.house_status_monitor_enabled = False
-        
+
     def register_device_updated_cb(self, device_updated_cb: CallbackType) -> None:
         """Register device updated callback."""
         self.device_updated_cbs.append(device_updated_cb)
@@ -144,7 +145,7 @@ class Klf200Gateway:
             raise PyVLXException("Unable enable house status monitor.")
         self.house_status_monitor_enabled = True
 
-    async def house_status_monitor_disable(self, pyvlx: "PyVLX", timeout: int = None) -> None:
+    async def house_status_monitor_disable(self, pyvlx: "PyVLX", timeout: Optional[int] = None) -> None:
         """Disable house status monitor."""
         status_monitor_disable = HouseStatusMonitorDisable(pyvlx=pyvlx)
         if timeout is not None:
@@ -154,7 +155,7 @@ class Klf200Gateway:
             raise PyVLXException("Unable disable house status monitor.")
         self.house_status_monitor_enabled = False
 
-    def __str__(self) -> str:    
+    def __str__(self) -> str:
         """Return object as readable string."""
         return '<{} state="{}" network_setup="{}"  version="{}"  protocol_version="{}"/>'.format(
             type(self).__name__,

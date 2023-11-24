@@ -2,7 +2,6 @@
 from typing import TYPE_CHECKING
 
 from .api.command_send import CommandSend
-from .exception import PyVLXException
 from .node import Node
 from .parameter import SwitchParameter, SwitchParameterOff, SwitchParameterOn
 

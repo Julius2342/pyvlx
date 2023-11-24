@@ -1,7 +1,6 @@
 """Module for updating nodes via frames."""
 import datetime
-
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from .api.frames import (
     FrameBase, FrameGetAllNodesInformationNotification,
@@ -86,11 +85,11 @@ class NodeUpdater:
                 return
             node = self.pyvlx.nodes[frame.node_id]
             position = Position(frame.current_position)
-            target = Position(frame.target)
+            target: Any = Position(frame.target)
             # KLF transmits for functional parameters basically always 'No feed-back value known’ (0xF7FF).
             # In home assistant this cause unreasonable values like -23%. Therefore a check is implemented
             # whether the frame parameter is inside the maximum range.
-            
+
             # Set opening device status
             if isinstance(node, OpeningDevice):
                 if (position.position > target.position <= Parameter.MAX) and ((frame.state == OperatingState.EXECUTING) or frame.remaining_time > 0):
@@ -115,12 +114,12 @@ class NodeUpdater:
                         node.is_closing = False
                         PYVLXLOG.debug("%s stops closing", node.name)
 
-            # Set main parameter 
+            # Set main parameter
             if isinstance(node, OpeningDevice):
-                if position.position <= Parameter.MAX: 
-                        node.position = position
-                        node.target = target
-                        PYVLXLOG.debug("%s position changed to: %s", node.name, position)
+                if position.position <= Parameter.MAX:
+                    node.position = position
+                    node.target = target
+                    PYVLXLOG.debug("%s position changed to: %s", node.name, position)
                 await node.after_update()
             elif isinstance(node, LighteningDevice):
                 intensity = Intensity(frame.current_position)
@@ -129,7 +128,7 @@ class NodeUpdater:
                     PYVLXLOG.debug("%s intensity changed to: %s", node.name, intensity)
                 await node.after_update()
             elif isinstance(node, OnOffSwitch):
-                state = SwitchParameter(frame.current_position) 
+                state = SwitchParameter(frame.current_position)
                 target = SwitchParameter(frame.target)
                 if state.state == target.state:
                     if state.state == Parameter.ON:

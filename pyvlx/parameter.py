@@ -141,7 +141,7 @@ class SwitchParameter(Parameter):
     def state(self, state: int) -> None:
         """Setter of internal raw via state."""
         self.raw = self.from_int(state)
-    
+
     def set_on(self) -> None:
         """Set parameter to 'on' state."""
         self.raw = self.from_int(Parameter.ON)
@@ -159,7 +159,7 @@ class SwitchParameter(Parameter):
         return self.raw == self.from_int(Parameter.OFF)
 
     def __str__(self) -> str:
-        """Return string representation of object."""         
+        """Return string representation of object."""
         if self.raw == self.from_int(Parameter.ON):
             return "ON"
         elif self.raw == self.from_int(Parameter.OFF):

@@ -1,8 +1,6 @@
 """Module for house status monitor."""
 from typing import TYPE_CHECKING
 
-from pyvlx.exception import PyVLXException
-
 from .api_event import ApiEvent
 from .frames import (
     FrameBase, FrameHouseStatusMonitorDisableConfirmation,

@@ -1,7 +1,7 @@
 """Module for enum and consts."""
-from typing_extensions import Any
-
 from enum import Enum
+
+from typing_extensions import Any
 
 
 class Command(Enum):
@@ -681,4 +681,3 @@ class StatusType(Enum):
     @classmethod
     def _missing_(cls, value: object) -> Any:
         return cls.REQUEST_UNKNOWN
-

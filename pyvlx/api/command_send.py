@@ -70,7 +70,7 @@ class CommandSend(ApiEvent):
 
     async def send(self) -> None:
         """Send frame to KLF200."""
-        async with self.pyvlx.parallel_commands: 
+        async with self.pyvlx.parallel_commands:
             await self.do_api_call()
             if not self.success:
                 raise PyVLXException("Unable to send command")
