@@ -8,13 +8,8 @@ from .const import Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition,
-    DualRollerShutterPosition,
-    IgnorePosition,
-    Parameter,
-    Position,
-    TargetPosition,
-)
+    CurrentPosition, DualRollerShutterPosition, IgnorePosition, Parameter,
+    Position, TargetPosition)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
