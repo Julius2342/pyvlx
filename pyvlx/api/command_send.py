@@ -1,6 +1,7 @@
 """Module for retrieving scene list from API."""
 from typing import TYPE_CHECKING, Any, Optional
 
+from ..exception import PyVLXException
 from ..parameter import Parameter
 from .api_event import ApiEvent
 from .frames import (
@@ -9,7 +10,6 @@ from .frames import (
     FrameCommandSendConfirmation, FrameCommandSendRequest,
     FrameSessionFinishedNotification)
 from .session_id import get_new_session_id
-from ..exception import PyVLXException
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -74,16 +74,6 @@ class CommandSend(ApiEvent):
             await self.do_api_call()
             if not self.success:
                 raise PyVLXException("Unable to send command")
-
-    # async def send(self, max_retries=3):
-    #     self.retries = 0
-    #     while self.retries < max_retries:
-    #         await self.do_api_call()
-    #         if self.success:
-    #             return
-    #         self.retries += 1
-    #         PYVLXLOG.debug("No response from KFL200 for session_id %s, retry: %s of %s", self.session_id, self.retries, max_retries)           
-    #     raise PyVLXException("Unable to send command")
 
     def request_frame(self) -> FrameCommandSendRequest:
         """Construct initiating frame."""
