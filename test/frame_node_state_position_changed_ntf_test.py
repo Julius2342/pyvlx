@@ -7,6 +7,7 @@ from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import FrameNodeStatePositionChangedNotification
 from pyvlx.const import OperatingState
 
+
 class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
     """Test class for FrameNodeStatePositionChangedNotification."""
 
