@@ -3,11 +3,8 @@ import datetime
 from typing import TYPE_CHECKING, Any
 
 from .api.frames import (
-    FrameBase,
-    FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification,
-    FrameStatusRequestNotification,
-)
+    FrameBase, FrameGetAllNodesInformationNotification,
+    FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
 from .const import NodeParameter, OperatingState
 from .lightening_device import LighteningDevice
 from .log import PYVLXLOG

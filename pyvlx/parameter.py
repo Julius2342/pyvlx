@@ -165,8 +165,7 @@ class SwitchParameter(Parameter):
             return "ON"
         if self.raw == self.from_int(Parameter.OFF):
             return "OFF"
-        
-            return "UNKNOWN"
+        return "UNKNOWN"
 
 
 class SwitchParameterOn(SwitchParameter):
