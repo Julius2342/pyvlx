@@ -3,22 +3,34 @@ from typing import TYPE_CHECKING, Optional, Union
 
 from .api.frames import (
     FrameGetAllNodesInformationNotification,
-    FrameGetNodeInformationNotification)
+    FrameGetNodeInformationNotification,
+)
 from .const import NodeTypeWithSubtype
 from .lightening_device import Light
 from .log import PYVLXLOG
 from .node import Node
 from .on_off_switch import OnOffSwitch
 from .opening_device import (
-    Awning, Blade, Blind, DualRollerShutter, GarageDoor, Gate, RollerShutter,
-    Window)
+    Awning,
+    Blade,
+    Blind,
+    DualRollerShutter,
+    GarageDoor,
+    Gate,
+    RollerShutter,
+    Window,
+)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-def convert_frame_to_node(pyvlx: "PyVLX",
-                          frame: Union[FrameGetNodeInformationNotification, FrameGetAllNodesInformationNotification]) -> Optional[Node]:
+def convert_frame_to_node(
+    pyvlx: "PyVLX",
+    frame: Union[
+        FrameGetNodeInformationNotification, FrameGetAllNodesInformationNotification
+    ],
+) -> Optional[Node]:
     """Convert FrameGet[All]Node[s]InformationNotification into Node object."""
     # pylint: disable=too-many-return-statements
 
@@ -55,7 +67,7 @@ def convert_frame_to_node(pyvlx: "PyVLX",
 
     if frame.node_type in [
         NodeTypeWithSubtype.ROLLER_SHUTTER,
-        NodeTypeWithSubtype.SWINGING_SHUTTERS
+        NodeTypeWithSubtype.SWINGING_SHUTTERS,
     ]:
         return RollerShutter(
             pyvlx=pyvlx,

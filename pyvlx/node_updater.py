@@ -3,8 +3,11 @@ import datetime
 from typing import TYPE_CHECKING, Any
 
 from .api.frames import (
-    FrameBase, FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
+    FrameBase,
+    FrameGetAllNodesInformationNotification,
+    FrameNodeStatePositionChangedNotification,
+    FrameStatusRequestNotification,
+)
 from .const import NodeParameter, OperatingState
 from .lightening_device import LighteningDevice
 from .log import PYVLXLOG
@@ -23,16 +26,18 @@ class NodeUpdater:
         """Initialize NodeUpdater object."""
         self.pyvlx = pyvlx
 
-    async def process_frame_status_request_notification(self, frame: FrameStatusRequestNotification) -> None:
+    async def process_frame_status_request_notification(
+        self, frame: FrameStatusRequestNotification
+    ) -> None:
         """Process FrameStatusRequestNotification."""
         PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
         if frame.node_id not in self.pyvlx.nodes:
             return
         node = self.pyvlx.nodes[frame.node_id]
         if isinstance(node, Blind):
-            if NodeParameter(0) not in frame.parameter_data:    # MP missing in frame
+            if NodeParameter(0) not in frame.parameter_data:  # MP missing in frame
                 return
-            if NodeParameter(3) not in frame.parameter_data:    # FP3 missing in frame
+            if NodeParameter(3) not in frame.parameter_data:  # FP3 missing in frame
                 return
             position = Position(frame.parameter_data[NodeParameter(0)])
             orientation = Position(frame.parameter_data[NodeParameter(3)])
@@ -41,17 +46,15 @@ class NodeUpdater:
                 PYVLXLOG.debug("%s position changed to: %s", node.name, position)
             if orientation.position <= Parameter.MAX:
                 node.orientation = orientation
-                PYVLXLOG.debug(
-                    "%s orientation changed to: %s", node.name, orientation
-                )
+                PYVLXLOG.debug("%s orientation changed to: %s", node.name, orientation)
             await node.after_update()
 
         if isinstance(node, DualRollerShutter):
-            if NodeParameter(0) not in frame.parameter_data:    # MP missing in frame
+            if NodeParameter(0) not in frame.parameter_data:  # MP missing in frame
                 return
-            if NodeParameter(1) not in frame.parameter_data:    # FP1 missing in frame
+            if NodeParameter(1) not in frame.parameter_data:  # FP1 missing in frame
                 return
-            if NodeParameter(2) not in frame.parameter_data:    # FP2 missing in frame
+            if NodeParameter(2) not in frame.parameter_data:  # FP2 missing in frame
                 return
             position = Position(frame.parameter_data[NodeParameter(0)])
             position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
@@ -62,23 +65,27 @@ class NodeUpdater:
             if position_upper_curtain.position <= Parameter.MAX:
                 node.position_upper_curtain = position_upper_curtain
                 PYVLXLOG.debug(
-                    "%s position upper curtain changed to: %s", node.name, position_upper_curtain
+                    "%s position upper curtain changed to: %s",
+                    node.name,
+                    position_upper_curtain,
                 )
             if position_lower_curtain.position <= Parameter.MAX:
                 node.position_lower_curtain = position_lower_curtain
                 PYVLXLOG.debug(
-                    "%s position lower curtain changed to: %s", node.name, position_lower_curtain
+                    "%s position lower curtain changed to: %s",
+                    node.name,
+                    position_lower_curtain,
                 )
             await node.after_update()
 
     async def process_frame(self, frame: FrameBase) -> None:
         """Update nodes via frame, usually received by house monitor."""
         if isinstance(
-                frame,
-                (
-                    FrameGetAllNodesInformationNotification,
-                    FrameNodeStatePositionChangedNotification,
-                ),
+            frame,
+            (
+                FrameGetAllNodesInformationNotification,
+                FrameNodeStatePositionChangedNotification,
+            ),
         ):
             PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
             if frame.node_id not in self.pyvlx.nodes:
@@ -92,18 +99,34 @@ class NodeUpdater:
 
             # Set opening device status
             if isinstance(node, OpeningDevice):
-                if (position.position > target.position <= Parameter.MAX) and ((frame.state == OperatingState.EXECUTING) or frame.remaining_time > 0):
+                if (position.position > target.position <= Parameter.MAX) and (
+                    (frame.state == OperatingState.EXECUTING)
+                    or frame.remaining_time > 0
+                ):
                     node.is_opening = True
                     PYVLXLOG.debug("%s is opening", node.name)
                     node.state_received_at = datetime.datetime.now()
-                    node.estimated_completion = node.state_received_at + datetime.timedelta(0, frame.remaining_time)
-                    PYVLXLOG.debug("%s will be opening until", node.estimated_completion)
-                elif (position.position < target.position <= Parameter.MAX) and ((frame.state == OperatingState.EXECUTING) or frame.remaining_time > 0):
+                    node.estimated_completion = (
+                        node.state_received_at
+                        + datetime.timedelta(0, frame.remaining_time)
+                    )
+                    PYVLXLOG.debug(
+                        "%s will be opening until", node.estimated_completion
+                    )
+                elif (position.position < target.position <= Parameter.MAX) and (
+                    (frame.state == OperatingState.EXECUTING)
+                    or frame.remaining_time > 0
+                ):
                     node.is_closing = True
                     PYVLXLOG.debug("%s is closing", node.name)
                     node.state_received_at = datetime.datetime.now()
-                    node.estimated_completion = node.state_received_at + datetime.timedelta(0, frame.remaining_time)
-                    PYVLXLOG.debug("%s will be closing until", node.estimated_completion)
+                    node.estimated_completion = (
+                        node.state_received_at
+                        + datetime.timedelta(0, frame.remaining_time)
+                    )
+                    PYVLXLOG.debug(
+                        "%s will be closing until", node.estimated_completion
+                    )
                 else:
                     if node.is_opening:
                         node.is_opening = False

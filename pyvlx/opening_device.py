@@ -8,8 +8,13 @@ from .const import Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, DualRollerShutterPosition, IgnorePosition, Parameter,
-    Position, TargetPosition)
+    CurrentPosition,
+    DualRollerShutterPosition,
+    IgnorePosition,
+    Parameter,
+    Position,
+    TargetPosition,
+)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -19,12 +24,12 @@ class OpeningDevice(Node):
     """Meta class for opening device with one main parameter for position."""
 
     def __init__(
-            self,
-            pyvlx: "PyVLX",
-            node_id: int,
-            name: str,
-            serial_number: str,
-            position_parameter: Parameter = Parameter()
+        self,
+        pyvlx: "PyVLX",
+        node_id: int,
+        name: str,
+        serial_number: str,
+        position_parameter: Parameter = Parameter(),
     ):
         """Initialize opening device.
 
@@ -38,10 +43,7 @@ class OpeningDevice(Node):
 
         """
         super().__init__(
-            pyvlx=pyvlx,
-            node_id=node_id,
-            name=name,
-            serial_number=serial_number
+            pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
         )
         self.position = Position(parameter=position_parameter)
         self.target = Position(parameter=position_parameter)
@@ -54,9 +56,12 @@ class OpeningDevice(Node):
         self.open_position_target: int = 0
         self.close_position_target: int = 100
 
-    async def set_position(self, position: Position,
-                           velocity: Velocity | int | None = Velocity.DEFAULT,
-                           wait_for_completion: bool = True) -> None:
+    async def set_position(
+        self,
+        position: Position,
+        velocity: Velocity | int | None = Velocity.DEFAULT,
+        wait_for_completion: bool = True,
+    ) -> None:
         """Set window to desired position.
 
         Parameters:
@@ -68,29 +73,35 @@ class OpeningDevice(Node):
         """
         kwargs: Any = {}
 
-        if (velocity is None or velocity is Velocity.DEFAULT) and self.use_default_velocity:
+        if (
+            velocity is None or velocity is Velocity.DEFAULT
+        ) and self.use_default_velocity:
             velocity = self.default_velocity
 
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
                 if velocity is Velocity.SILENT:
-                    kwargs['fp1'] = Parameter(raw=b"\x00\x00")
+                    kwargs["fp1"] = Parameter(raw=b"\x00\x00")
                 else:
-                    kwargs['fp1'] = Parameter(raw=b"\xC8\x00")
+                    kwargs["fp1"] = Parameter(raw=b"\xC8\x00")
         elif isinstance(velocity, int):
-            kwargs['fp1'] = Position.from_percent(velocity)
+            kwargs["fp1"] = Position.from_percent(velocity)
 
         command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=position,
-            functional_parameter=kwargs
+            functional_parameter=kwargs,
         )
         await command.send()
         await self.after_update()
 
-    async def open(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion: bool = True) -> None:
+    async def open(
+        self,
+        velocity: Velocity | int | None = Velocity.DEFAULT,
+        wait_for_completion: bool = True,
+    ) -> None:
         """Open window.
 
         Parameters:
@@ -105,7 +116,11 @@ class OpeningDevice(Node):
             wait_for_completion=wait_for_completion,
         )
 
-    async def close(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion: bool = True) -> None:
+    async def close(
+        self,
+        velocity: Velocity | int | None = Velocity.DEFAULT,
+        wait_for_completion: bool = True,
+    ) -> None:
         """Close window.
 
         Parameters:
@@ -134,10 +149,12 @@ class OpeningDevice(Node):
 
     def __str__(self) -> str:
         """Return object as readable string."""
-        return (
-            '<{} name="{}" node_id="{}" serial_number="{}" position="{}"/>'.format(
-                type(self).__name__, self.name, self.node_id, self.serial_number, self.position
-            )
+        return '<{} name="{}" node_id="{}" serial_number="{}" position="{}"/>'.format(
+            type(self).__name__,
+            self.name,
+            self.node_id,
+            self.serial_number,
+            self.position,
         )
 
 
@@ -145,13 +162,13 @@ class Window(OpeningDevice):
     """Window object."""
 
     def __init__(
-            self,
-            pyvlx: "PyVLX",
-            node_id: int,
-            name: str,
-            serial_number: str,
-            position_parameter: Parameter = Parameter(),
-            rain_sensor: bool = False,
+        self,
+        pyvlx: "PyVLX",
+        node_id: int,
+        name: str,
+        serial_number: str,
+        position_parameter: Parameter = Parameter(),
+        rain_sensor: bool = False,
     ):
         """Initialize Window class.
 
@@ -177,11 +194,13 @@ class Window(OpeningDevice):
 
     def __str__(self) -> str:
         """Return object as readable string."""
-        return (
-            '<{} name="{}" node_id="{}" rain_sensor={} serial_number="{}" position="{}"/>'.format(
-                type(self).__name__, self.name, self.node_id,
-                self.rain_sensor, self.serial_number, self.position
-            )
+        return '<{} name="{}" node_id="{}" rain_sensor={} serial_number="{}" position="{}"/>'.format(
+            type(self).__name__,
+            self.name,
+            self.node_id,
+            self.rain_sensor,
+            self.serial_number,
+            self.position,
         )
 
     async def get_limitation(self) -> GetLimitation:
@@ -197,7 +216,12 @@ class Blind(OpeningDevice):
     """Blind objects."""
 
     def __init__(
-            self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str, position_parameter: Parameter = Parameter()
+        self,
+        pyvlx: "PyVLX",
+        node_id: int,
+        name: str,
+        serial_number: str,
+        position_parameter: Parameter = Parameter(),
     ):
         """Initialize Blind class.
 
@@ -222,11 +246,12 @@ class Blind(OpeningDevice):
         self.close_orientation_target: int = 100
 
     async def set_position_and_orientation(
-            self,
-            position: Position,
-            wait_for_completion: bool = True,
-            velocity: Velocity | int | None = None,
-            orientation: Optional[Position] = None) -> None:
+        self,
+        position: Position,
+        wait_for_completion: bool = True,
+        velocity: Velocity | int | None = None,
+        orientation: Optional[Position] = None,
+    ) -> None:
         """Set window to desired position.
 
         Parameters:
@@ -246,24 +271,26 @@ class Blind(OpeningDevice):
         kwargs: Any = {}
 
         if orientation is not None:
-            kwargs['fp3'] = orientation
+            kwargs["fp3"] = orientation
         elif self.target_position == Position(position_percent=0):
-            kwargs['fp3'] = Position(position_percent=0)
+            kwargs["fp3"] = Position(position_percent=0)
         else:
-            kwargs['fp3'] = IgnorePosition()
+            kwargs["fp3"] = IgnorePosition()
 
-        if (velocity is None or velocity is Velocity.DEFAULT) and self.use_default_velocity:
+        if (
+            velocity is None or velocity is Velocity.DEFAULT
+        ) and self.use_default_velocity:
             velocity = self.default_velocity
 
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
                 if velocity is Velocity.SILENT:
                     # The above code is declaring a variable called `kwargs`.
-                    kwargs['fp1'] = Parameter(raw=b"\x00\x00")
+                    kwargs["fp1"] = Parameter(raw=b"\x00\x00")
                 else:
-                    kwargs['fp1'] = Parameter(raw=b"\xC8\x00")
+                    kwargs["fp1"] = Parameter(raw=b"\xC8\x00")
         elif isinstance(velocity, int):
-            kwargs['fp1'] = Position.from_percent(velocity)
+            kwargs["fp1"] = Position.from_percent(velocity)
 
         command = CommandSend(
             pyvlx=self.pyvlx,
@@ -275,7 +302,12 @@ class Blind(OpeningDevice):
         await command.send()
         await self.after_update()
 
-    async def set_position(self, position: Position, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion: bool = True) -> None:
+    async def set_position(
+        self,
+        position: Position,
+        velocity: Velocity | int | None = Velocity.DEFAULT,
+        wait_for_completion: bool = True,
+    ) -> None:
         """Set window to desired position.
 
         Parameters:
@@ -287,9 +319,17 @@ class Blind(OpeningDevice):
             * wait_for_completion: If set, function will return
                 after device has reached target position.
         """
-        await self.set_position_and_orientation(position=position, wait_for_completion=wait_for_completion, velocity=velocity)
+        await self.set_position_and_orientation(
+            position=position,
+            wait_for_completion=wait_for_completion,
+            velocity=velocity,
+        )
 
-    async def open(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion: bool = True) -> None:
+    async def open(
+        self,
+        velocity: Velocity | int | None = Velocity.DEFAULT,
+        wait_for_completion: bool = True,
+    ) -> None:
         """Open window.
 
         Parameters:
@@ -303,7 +343,11 @@ class Blind(OpeningDevice):
             wait_for_completion=wait_for_completion,
         )
 
-    async def close(self, velocity: Velocity | int | None = Velocity.DEFAULT, wait_for_completion: bool = True) -> None:
+    async def close(
+        self,
+        velocity: Velocity | int | None = Velocity.DEFAULT,
+        wait_for_completion: bool = True,
+    ) -> None:
         """Close window.
 
         Parameters:
@@ -320,10 +364,14 @@ class Blind(OpeningDevice):
     async def stop(self, wait_for_completion: bool = True) -> None:
         """Stop Blind position."""
         await self.set_position_and_orientation(
-            position=CurrentPosition(), wait_for_completion=wait_for_completion, orientation=self.target_orientation
+            position=CurrentPosition(),
+            wait_for_completion=wait_for_completion,
+            orientation=self.target_orientation,
         )
 
-    async def set_orientation(self, orientation: Position, wait_for_completion: bool = True) -> None:
+    async def set_orientation(
+        self, orientation: Position, wait_for_completion: bool = True
+    ) -> None:
         """Set Blind shades to desired orientation.
 
         Parameters:
@@ -338,9 +386,11 @@ class Blind(OpeningDevice):
         self.target_orientation = TargetPosition.from_position(orientation)
         self.orientation = orientation
 
-        fp3 = Position(position_percent=0)\
-            if self.target_position == Position(position_percent=0)\
+        fp3 = (
+            Position(position_percent=0)
+            if self.target_position == Position(position_percent=0)
             else self.target_orientation
+        )
 
         print("Orientation in device: %s " % (orientation))
         command = CommandSend(
@@ -387,12 +437,12 @@ class DualRollerShutter(OpeningDevice):
     """DualRollerShutter object."""
 
     def __init__(
-            self,
-            pyvlx: "PyVLX",
-            node_id: int,
-            name: str,
-            serial_number: str,
-            position_parameter: Parameter = Parameter()
+        self,
+        pyvlx: "PyVLX",
+        node_id: int,
+        name: str,
+        serial_number: str,
+        position_parameter: Parameter = Parameter(),
     ):
         """Initialize Blind class.
 
@@ -415,11 +465,13 @@ class DualRollerShutter(OpeningDevice):
         self.target_position: Any = TargetPosition()
         self.active_parameter = 0
 
-    async def set_position(self,
-                           position: Position,
-                           velocity: Velocity | int | None = Velocity.DEFAULT,
-                           wait_for_completion: bool = True,
-                           curtain: str = "dual") -> None:
+    async def set_position(
+        self,
+        position: Position,
+        velocity: Velocity | int | None = Velocity.DEFAULT,
+        wait_for_completion: bool = True,
+        curtain: str = "dual",
+    ) -> None:
         """Set window to desired position.
 
         Parameters:
@@ -434,28 +486,30 @@ class DualRollerShutter(OpeningDevice):
         if curtain == "upper":
             self.target_position = DualRollerShutterPosition()
             self.active_parameter = 1
-            kwargs['fp1'] = position
-            kwargs['fp2'] = TargetPosition()
+            kwargs["fp1"] = position
+            kwargs["fp2"] = TargetPosition()
         elif curtain == "lower":
             self.target_position = DualRollerShutterPosition()
             self.active_parameter = 2
-            kwargs['fp1'] = TargetPosition()
-            kwargs['fp2'] = position
+            kwargs["fp1"] = TargetPosition()
+            kwargs["fp2"] = position
         else:
             self.target_position = position
             self.active_parameter = 0
 
-        if (velocity is None or velocity is Velocity.DEFAULT) and self.use_default_velocity:
+        if (
+            velocity is None or velocity is Velocity.DEFAULT
+        ) and self.use_default_velocity:
             velocity = self.default_velocity
 
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
                 if velocity is Velocity.SILENT:
-                    kwargs['fp3'] = Parameter(raw=b"\x00\x00")
+                    kwargs["fp3"] = Parameter(raw=b"\x00\x00")
                 else:
-                    kwargs['fp3'] = Parameter(raw=b"\xC8\x00")
+                    kwargs["fp3"] = Parameter(raw=b"\xC8\x00")
         elif isinstance(velocity, int):
-            kwargs['fp3'] = Position.from_percent(velocity)
+            kwargs["fp3"] = Position.from_percent(velocity)
 
         command = CommandSend(
             pyvlx=self.pyvlx,
@@ -476,10 +530,11 @@ class DualRollerShutter(OpeningDevice):
         await self.after_update()
 
     async def open(
-            self,
-            velocity: Velocity | int | None = Velocity.DEFAULT,
-            wait_for_completion: bool = True,
-            curtain: str = "dual") -> None:
+        self,
+        velocity: Velocity | int | None = Velocity.DEFAULT,
+        wait_for_completion: bool = True,
+        curtain: str = "dual",
+    ) -> None:
         """Open window.
 
         Parameters:
@@ -491,13 +546,15 @@ class DualRollerShutter(OpeningDevice):
             position=Position(position_percent=self.open_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
-            curtain=curtain
+            curtain=curtain,
         )
 
-    async def close(self,
-                    velocity: Velocity | int | None = Velocity.DEFAULT,
-                    wait_for_completion: bool = True,
-                    curtain: str = "dual") -> None:
+    async def close(
+        self,
+        velocity: Velocity | int | None = Velocity.DEFAULT,
+        wait_for_completion: bool = True,
+        curtain: str = "dual",
+    ) -> None:
         """Close window.
 
         Parameters:
@@ -508,19 +565,21 @@ class DualRollerShutter(OpeningDevice):
             position=Position(position_percent=self.close_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
-            curtain=curtain
+            curtain=curtain,
         )
 
-    async def stop(self,
-                   wait_for_completion: bool = True,
-                   velocity: Velocity | int | None = Velocity.DEFAULT,
-                   curtain: str = "dual") -> None:
+    async def stop(
+        self,
+        wait_for_completion: bool = True,
+        velocity: Velocity | int | None = Velocity.DEFAULT,
+        curtain: str = "dual",
+    ) -> None:
         """Stop Blind position."""
         await self.set_position(
             position=CurrentPosition(),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
-            curtain=curtain
+            curtain=curtain,
         )
 
 

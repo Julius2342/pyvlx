@@ -15,7 +15,9 @@ if TYPE_CHECKING:
 class Heartbeat:
     """Class for sending heartbeats to API."""
 
-    def __init__(self, pyvlx: "PyVLX", interval: int = 30, load_all_states: bool = True):
+    def __init__(
+        self, pyvlx: "PyVLX", interval: int = 30, load_all_states: bool = True
+    ):
         """Initialize Heartbeat object."""
         PYVLXLOG.debug("Heartbeat __init__")
         self.pyvlx = pyvlx
@@ -70,7 +72,7 @@ class Heartbeat:
         # If nodes contain Blind or DualRollerShutter device, refresh orientation or upper/lower curtain positions because House Monitoring
         # delivers wrong values for FP1, FP2 and FP3 parameter
         for node in self.pyvlx.nodes:
-            if isinstance(node, Blind) or isinstance(node, DualRollerShutter) or self.load_all_states:
+            if isinstance(node, (Blind, DualRollerShutter)) or self.load_all_states:
                 status_request = StatusRequest(self.pyvlx, node.node_id)
                 await status_request.do_api_call()
                 # give user requests a chance

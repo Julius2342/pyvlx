@@ -52,15 +52,14 @@ class Parameter:
         """Test if value can be rendered out of int."""
         if 0 <= value <= Parameter.MAX:  # This includes ON and OFF
             return True
-        if value == Parameter.UNKNOWN_VALUE:
-            return True
-        if value == Parameter.IGNORE:
-            return True
-        if value == Parameter.CURRENT:
-            return True
-        if value == Parameter.TARGET:
-            return True
-        if value == Parameter.DUAL_SHUTTER_CURTAINS:
+        valid_values = {
+            Parameter.UNKNOWN_VALUE.value,
+            Parameter.IGNORE.value,
+            Parameter.CURRENT.value,
+            Parameter.TARGET.value,
+            Parameter.DUAL_SHUTTER_CURTAINS.value
+        }
+        if value in valid_values:
             return True
         return False
 
@@ -72,11 +71,11 @@ class Parameter:
         if len(raw) != 2:
             raise PyVLXException("Position::raw_must_be_two_bytes")
         if (
-                raw != Position.from_int(Position.CURRENT)
-                and raw != Position.from_int(Position.IGNORE)
-                and raw != Position.from_int(Position.TARGET)
-                and raw != Position.from_int(Position.UNKNOWN_VALUE)
-                and Position.to_int(raw) > Position.MAX
+            raw != Position.from_int(Position.CURRENT)
+            and raw != Position.from_int(Position.IGNORE)
+            and raw != Position.from_int(Position.TARGET)
+            and raw != Position.from_int(Position.UNKNOWN_VALUE)
+            and Position.to_int(raw) > Position.MAX
         ):
             return Position.from_int(Position.UNKNOWN_VALUE)
         return raw
@@ -124,7 +123,9 @@ class Parameter:
 class SwitchParameter(Parameter):
     """Class for storing On or Off values."""
 
-    def __init__(self, parameter: Optional[Parameter] = None, state: Optional[int] = None):
+    def __init__(
+        self, parameter: Optional[Parameter] = None, state: Optional[int] = None
+    ):
         """Initialize Parameter class."""
         super().__init__()
         if parameter is not None:
@@ -162,9 +163,9 @@ class SwitchParameter(Parameter):
         """Return string representation of object."""
         if self.raw == self.from_int(Parameter.ON):
             return "ON"
-        elif self.raw == self.from_int(Parameter.OFF):
+        if self.raw == self.from_int(Parameter.OFF):
             return "OFF"
-        else:
+        
             return "UNKNOWN"
 
 
@@ -187,7 +188,12 @@ class SwitchParameterOff(SwitchParameter):
 class Position(Parameter):
     """Class for storing a position."""
 
-    def __init__(self, parameter: Optional[Parameter] = None, position: Optional[int] = None, position_percent: Optional[int] = None):
+    def __init__(
+        self,
+        parameter: Optional[Parameter] = None,
+        position: Optional[int] = None,
+        position_percent: Optional[int] = None,
+    ):
         """Initialize Position class."""
         super().__init__()
         if parameter is not None:
@@ -284,7 +290,12 @@ class IgnorePosition(Position):
 class Intensity(Parameter):
     """Class for storing an intensity."""
 
-    def __init__(self, parameter: Optional[Parameter] = None, intensity: Optional[int] = None, intensity_percent: Optional[int] = None):
+    def __init__(
+        self,
+        parameter: Optional[Parameter] = None,
+        intensity: Optional[int] = None,
+        intensity_percent: Optional[int] = None,
+    ):
         """Initialize Intensity class."""
         super().__init__()
         if parameter is not None:
