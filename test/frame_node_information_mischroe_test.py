@@ -6,7 +6,7 @@ from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import (
     FrameGetAllNodesInformationNotification,
     FrameGetNodeInformationNotification)
-from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
+from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity, OperatingState
 from pyvlx.parameter import Position
 from pyvlx.slip import get_next_slip
 
@@ -40,7 +40,7 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         "00:e0:c0"
     )
 
-    def test_frame1_from_raw(self):
+    def test_frame1_from_raw(self) -> None:
         """Test parse EXAMPLE_FRAME1 from raw."""
         slip = bytearray.fromhex(self.EXAMPLE_FRAME1.replace(":", ""))
         raw, _ = get_next_slip(slip)
@@ -60,7 +60,7 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         self.assertEqual(frame.power_mode, 1)
         self.assertEqual(frame.build_number, 30)
         self.assertEqual(frame.serial_number, "53:36:27:26:10:2f:00:81")
-        self.assertEqual(frame.state, 5)
+        self.assertEqual(frame.state, OperatingState.DONE)
         self.assertEqual(str(Position(frame.current_position)), "100 %")
         self.assertEqual(str(Position(frame.target)), "100 %")
         self.assertEqual(str(Position(frame.current_position_fp1)), "0 %")
@@ -75,7 +75,7 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         # Crosscheck, Serializing:
         self.assertEqual(bytes(frame), raw)
 
-    def test_frame2_from_raw(self):
+    def test_frame2_from_raw(self) -> None:
         """Test parse EXAMPLE_FRAME2 from raw."""
         slip = bytearray.fromhex(self.EXAMPLE_FRAME2.replace(":", ""))
         raw, _ = get_next_slip(slip)
@@ -95,7 +95,7 @@ class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
         self.assertEqual(frame.power_mode, 1)
         self.assertEqual(frame.build_number, 30)
         self.assertEqual(frame.serial_number, "53:36:27:26:10:2f:00:81")
-        self.assertEqual(frame.state, 5)
+        self.assertEqual(frame.state, OperatingState.DONE)
         self.assertEqual(str(Position(frame.current_position)), "100 %")
         self.assertEqual(str(Position(frame.target)), "100 %")
         self.assertEqual(str(Position(frame.current_position_fp1)), "0 %")

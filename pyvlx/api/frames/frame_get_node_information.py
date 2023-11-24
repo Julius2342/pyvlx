@@ -94,7 +94,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.power_mode = 0
         self.build_number = 0
         self._serial_number = bytes(8)
-        self.state = 0
+        self.state = OperatingState.UNKNOWN
         self.current_position = Parameter()
         self.target = Parameter()
         self.current_position_fp1 = Parameter()
@@ -141,7 +141,7 @@ class FrameGetNodeInformationNotification(FrameBase):
             [self.build_number]
         )  # <-- hey @VELUX: your documentation is wrong here
         payload += bytes(self._serial_number)
-        payload += bytes([self.state])
+        payload += bytes([self.state.value])
         payload += bytes(self.current_position.raw)
         payload += bytes(self.target.raw)
         payload += bytes(self.current_position_fp1.raw)
@@ -208,7 +208,7 @@ class FrameGetNodeInformationNotification(FrameBase):
                 self.power_mode,
                 self.build_number,
                 self.serial_number,
-                self.state,
+                self.state.name,
                 self.current_position,
                 self.target,
                 self.current_position_fp1,

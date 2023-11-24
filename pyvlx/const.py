@@ -1,4 +1,5 @@
 """Module for enum and consts."""
+from typing_extensions import Any
 
 from enum import Enum
 
@@ -580,8 +581,9 @@ class OperatingState(Enum):
     UNKNOWN = 255
 
     @classmethod
-    def _missing_(cls, value):
+    def _missing_(cls, value: object) -> Any:
         return cls.UNKNOWN
+
 
 class StatusReply(Enum):
     """Enum Class for Node Status Reply."""
@@ -634,7 +636,7 @@ class StatusReply(Enum):
     LIMITATION_BY_EMERGENCY = 0xEE                    # Indicates the parameter was limited by an emergency.
 
     @classmethod
-    def _missing_(cls, value):
+    def _missing_(cls, value: object) -> Any:
         return cls.UNKNOWN_STATUS_REPLY
 
 
@@ -655,12 +657,12 @@ class StatusId(Enum):
     STATUS_UNKNOWN = 0xFF          # The status is from from an unknown command originator action.
 
     @classmethod
-    def _missing_(cls, value):
+    def _missing_(cls, value: object) -> Any:
         return cls.STATUS_UNKNOWN
 
 
 class RunStatus(Enum):
-    """Enum Class for Node Runstatus."""
+    """Enum Class for Node RunStatus."""
 
     EXECUTION_COMPLETED = 0  # Execution is completed with no errors.
     EXECUTION_FAILED = 1     # Execution has failed. (Get specifics in the following error code)
@@ -677,5 +679,6 @@ class StatusType(Enum):
     REQUEST_UNKNOWN = 255  # Request Unknown
 
     @classmethod
-    def _missing_(cls, value):
+    def _missing_(cls, value: object) -> Any:
         return cls.REQUEST_UNKNOWN
+

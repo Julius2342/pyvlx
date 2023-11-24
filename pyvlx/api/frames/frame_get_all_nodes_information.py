@@ -78,7 +78,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.power_mode = 0
         self.build_number = 0
         self._serial_number = bytes(8)
-        self.state = 0
+        self.state = OperatingState.UNKNOWN
         self.current_position = Parameter()
         self.target = Parameter()
         self.current_position_fp1 = Parameter()
@@ -123,7 +123,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         payload += bytes([self.power_mode])
         payload += bytes([self.build_number])
         payload += bytes(self._serial_number)
-        payload += bytes([self.state])
+        payload += bytes([self.state.value])
         payload += bytes(self.current_position.raw)
         payload += bytes(self.target.raw)
         payload += bytes(self.current_position_fp1.raw)
