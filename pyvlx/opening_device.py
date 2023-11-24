@@ -1,6 +1,6 @@
 """Module for window openers."""
-from typing import TYPE_CHECKING, Optional, Any
 import datetime
+from typing import TYPE_CHECKING, Any, Optional
 
 from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
@@ -8,7 +8,7 @@ from .const import Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition, DualRollerShutterPosition)
+    CurrentPosition, DualRollerShutterPosition, IgnorePosition, Parameter, Position, TargetPosition)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -220,11 +220,12 @@ class Blind(OpeningDevice):
         self.open_orientation_target: int = 50
         self.close_orientation_target: int = 100
 
-    async def set_position_and_orientation(self,
-                                           position: Position,
-                                           wait_for_completion: bool = True,
-                                           velocity: Velocity | int | None = None,
-                                           orientation: Optional[Position] = None) -> None:
+    async def set_position_and_orientation(
+            self,
+            position: Position,
+            wait_for_completion: bool = True,
+            velocity: Velocity | int | None = None,
+            orientation: Optional[Position] = None) -> None:
         """Set window to desired position.
 
         Parameters:
@@ -241,7 +242,6 @@ class Blind(OpeningDevice):
         """
         self.target_position = TargetPosition.from_position(position)
         self.position = position
-        
         kwargs: Any = {}
 
         if orientation is not None:
@@ -414,7 +414,7 @@ class DualRollerShutter(OpeningDevice):
         self.target_position: Any = TargetPosition()
         self.active_parameter = 0
 
-    async def set_position(self, 
+    async def set_position(self,
                            position: Position,
                            velocity: Velocity | int | None = Velocity.DEFAULT,
                            wait_for_completion: bool = True,
@@ -429,7 +429,7 @@ class DualRollerShutter(OpeningDevice):
                 after device has reached target position.
         """
         kwargs: Any = {}
-        
+
         if curtain == "upper":
             self.target_position = DualRollerShutterPosition()
             self.active_parameter = 1
@@ -470,14 +470,15 @@ class DualRollerShutter(OpeningDevice):
                 self.position_upper_curtain = position
             elif curtain == "lower":
                 self.position_lower_curtain = position
-            else: 
+            else:
                 self.position = position
         await self.after_update()
 
-    async def open(self,
-                   velocity: Velocity | int | None = Velocity.DEFAULT, 
-                   wait_for_completion: bool = True, 
-                   curtain: str = "dual") -> None:
+    async def open(
+            self,
+            velocity: Velocity | int | None = Velocity.DEFAULT,
+            wait_for_completion: bool = True,
+            curtain: str = "dual") -> None:
         """Open window.
 
         Parameters:
@@ -515,9 +516,9 @@ class DualRollerShutter(OpeningDevice):
                    curtain: str = "dual") -> None:
         """Stop Blind position."""
         await self.set_position(
-            position=CurrentPosition(), 
+            position=CurrentPosition(),
             velocity=velocity,
-            wait_for_completion=wait_for_completion, 
+            wait_for_completion=wait_for_completion,
             curtain=curtain
         )
 
