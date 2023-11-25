@@ -69,6 +69,7 @@ class PyVLX:
         await self.klf200.reboot()
 
     async def check_connected(self) -> None:
+        """Check we're connected, and if not, connect."""
         if not self.connection.connected:
             await self.connect()
 
