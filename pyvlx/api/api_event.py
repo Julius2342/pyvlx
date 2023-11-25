@@ -23,12 +23,19 @@ class ApiEvent:
 
     async def do_api_call(self) -> None:
         """Start. Sending and waiting for answer."""
-        self.pyvlx.connection.register_frame_received_cb(self.response_rec_callback)
-        await self.send_frame()
-        await self.start_timeout()
-        await self.response_received_or_timeout.wait()
-        await self.stop_timeout()
-        self.pyvlx.connection.unregister_frame_received_cb(self.response_rec_callback)
+        
+        # We check for connection before entering the semaphore section
+        # because otherwise we might try to connect, which calls this, and we get stuck on
+        # the semaphore.
+        await self.pyvlx.check_connected()
+        
+        async with self.pyvlx.sem:
+            self.pyvlx.connection.register_frame_received_cb(self.response_rec_callback)
+            await self.send_frame()
+            await self.start_timeout()
+            await self.response_received_or_timeout.wait()
+            await self.stop_timeout()
+            self.pyvlx.connection.unregister_frame_received_cb(self.response_rec_callback)
 
     async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""
