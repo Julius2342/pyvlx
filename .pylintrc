@@ -11,3 +11,7 @@ output-format=colorized
 [FORMAT]
 indent-string='    '
 max-line-length=150
+
+[MAIN]
+max-branches=20
+max-statements=55
