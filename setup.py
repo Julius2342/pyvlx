@@ -8,7 +8,7 @@ REQUIRES = ["PyYAML"]
 
 PKG_ROOT = os.path.dirname(__file__)
 
-VERSION = "0.1.71"
+VERSION = "0.2.20"
 
 
 def get_long_description():
@@ -41,7 +41,7 @@ setup(
     ],
     packages=find_packages(),
     package_data={
-        'pyvlx': ['py.typed'],
+        "pyvlx": ["py.typed"],
     },
     install_requires=REQUIRES,
     keywords="velux KLF 200 home automation",
