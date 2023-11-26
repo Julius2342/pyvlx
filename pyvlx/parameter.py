@@ -53,11 +53,11 @@ class Parameter:
         if 0 <= value <= Parameter.MAX:  # This includes ON and OFF
             return True
         valid_values = {
-            Parameter.UNKNOWN_VALUE.value,
-            Parameter.IGNORE.value,
-            Parameter.CURRENT.value,
-            Parameter.TARGET.value,
-            Parameter.DUAL_SHUTTER_CURTAINS.value
+            Parameter.UNKNOWN_VALUE,
+            Parameter.IGNORE,
+            Parameter.CURRENT,
+            Parameter.TARGET,
+            Parameter.DUAL_SHUTTER_CURTAINS,
         }
         if value in valid_values:
             return True
