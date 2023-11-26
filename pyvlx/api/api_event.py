@@ -28,7 +28,7 @@ class ApiEvent:
         # the semaphore.
         await self.pyvlx.check_connected()
 
-        async with self.pyvlx.sem:
+        async with self.pyvlx.api_call_semaphore:
             self.pyvlx.connection.register_frame_received_cb(self.response_rec_callback)
             await self.send_frame()
             await self.start_timeout()
