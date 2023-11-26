@@ -149,9 +149,11 @@ class OpeningDevice(Node):
         )
 
     def is_moving(self) -> bool:
+        """Return moving state of the cover"""
         return self.is_opening or self.is_closing
 
     def movement_percent(self) -> int:
+        """Return movement percentage of the cover"""
         if (
             self.estimated_completion is None
             or self.state_received_at is None
@@ -172,6 +174,7 @@ class OpeningDevice(Node):
         return percent
 
     def get_position(self) -> Position:
+        """Return position of the cover"""
         PYVLXLOG.debug("get_position")
         if self.is_moving():
             PYVLXLOG.debug("get_position: is moving")
