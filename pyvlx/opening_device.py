@@ -183,8 +183,7 @@ class OpeningDevice(Node):
             )
             PYVLXLOG.debug("get_position: current_position=%d", int(current_position))
             return Position(position_percent=int(current_position))
-        else:
-            return self.position
+        return self.position
 
     def __str__(self) -> str:
         """Return object as readable string."""
