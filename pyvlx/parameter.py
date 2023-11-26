@@ -81,15 +81,15 @@ class Parameter:
         return raw
 
     @staticmethod
-    def from_percent(position_percent: int) -> bytes:
+    def from_percent(percent: int) -> bytes:
         """Create raw value out of percent position."""
-        if not isinstance(position_percent, int):
-            raise PyVLXException("Position::position_percent_has_to_be_int")
-        if position_percent < 0:
-            raise PyVLXException("Position::position_percent_has_to_be_positive")
-        if position_percent > 100:
-            raise PyVLXException("Position::position_percent_out_of_range")
-        return bytes([position_percent * 2, 0])
+        if not isinstance(percent, int):
+            raise PyVLXException("Position::percent_has_to_be_int")
+        if percent < 0:
+            raise PyVLXException("Position::percent_has_to_be_positive")
+        if percent > 100:
+            raise PyVLXException("Position::percent_out_of_range")
+        return bytes([percent * 2, 0])
 
     @staticmethod
     def to_percent(raw: bytes) -> int:
@@ -237,7 +237,7 @@ class Position(Parameter):
     @position_percent.setter
     def position_percent(self, position_percent: int) -> None:
         """Setter of internal raw via percent position."""
-        self.raw = self.from_percent(position_percent)
+        self.raw = self.from_percent(percent=position_percent)
 
 
 class UnknownPosition(Position):
@@ -304,10 +304,6 @@ class Intensity(Parameter):
         elif intensity_percent is not None:
             self.intensity_percent = intensity_percent
 
-    def __bytes__(self) -> bytes:
-        """Convert object in byte representation."""
-        return self.raw
-
     @property
     def known(self) -> bool:
         """Known property, true if intensity is not in an unknown intensity."""
@@ -336,35 +332,13 @@ class Intensity(Parameter):
     @property
     def intensity_percent(self) -> int:
         """Intensity percent property."""
-        # inclear why it returns a <property object> here
+        # unclear why it returns a <property object> here
         return int(self.to_percent(self.raw))
 
     @intensity_percent.setter
     def intensity_percent(self, intensity_percent: int) -> None:
         """Setter of internal raw via percent intensity."""
-        self.raw = self.from_percent(intensity_percent)
-
-    @staticmethod
-    def to_int(raw: bytes) -> int:
-        """Create int intensity value out of raw."""
-        return raw[0] * 256 + raw[1]
-
-    @staticmethod
-    def from_percent(intensity_percent: int) -> bytes:
-        """Create raw value out of percent intensity."""
-        if not isinstance(intensity_percent, int):
-            raise PyVLXException("Intensity::intensity_percent_has_to_be_int")
-        if intensity_percent < 0:
-            raise PyVLXException("Intensity::intensity_percent_has_to_be_positive")
-        if intensity_percent > 100:
-            raise PyVLXException("Intensity::intensity_percent")
-        return bytes([intensity_percent * 2, 0])
-
-    @staticmethod
-    def to_percent(raw: bytes) -> int:
-        """Create percent intensity value out of raw."""
-        # The first byte has the value from 0 to 200. Ignoring the second one.
-        return int(raw[0] / 2)
+        self.raw = self.from_percent(percent=intensity_percent)
 
     def __str__(self) -> str:
         """Return string representation of object."""

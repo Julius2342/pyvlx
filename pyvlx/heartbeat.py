@@ -33,7 +33,7 @@ class Heartbeat:
             PYVLXLOG.debug("Heartbeat: pulsing")
             try:
                 await self.pulse()
-            except Exception as e:
+            except (OSError, PyVLXException) as e:
                 PYVLXLOG.debug("Heartbeat: pulsing failed: %s", e)
 
     async def _start(self) -> None:

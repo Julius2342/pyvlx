@@ -38,7 +38,11 @@ class SlipTokenizer:
 class TCPTransport(asyncio.Protocol):
     """Class for handling asyncio connection transport."""
 
-    def __init__(self, frame_received_cb: Callable[[FrameBase], None], connection_closed_cb: Callable[[], None]):
+    def __init__(
+        self,
+        frame_received_cb: Callable[[FrameBase], None],
+        connection_closed_cb: Callable[[], None],
+    ):
         """Init TCPTransport."""
         self.frame_received_cb = frame_received_cb
         self.connection_closed_cb = connection_closed_cb
@@ -58,7 +62,7 @@ class TCPTransport(asyncio.Protocol):
                 frame = frame_from_raw(raw)
                 if frame is not None:
                     self.frame_received_cb(frame)
-            except Exception:
+            except PyVLXException:
                 PYVLXLOG.error("Error in data_received", exc_info=sys.exc_info())
 
     def connection_lost(self, exc: object) -> None:
@@ -104,7 +108,9 @@ class Connection:
         )
         self.connected = True
         self.connection_counter += 1
-        PYVLXLOG.debug("Amount of connections since last HA start: %s", self.connection_counter)
+        PYVLXLOG.debug(
+            "Amount of connections since last HA start: %s", self.connection_counter
+        )
 
     def register_frame_received_cb(self, callback: CallbackType) -> None:
         """Register frame received callback."""
@@ -117,7 +123,7 @@ class Connection:
     def write(self, frame: FrameBase) -> None:
         """Write frame to Bus."""
         if not isinstance(frame, FrameBase):
-            raise PyVLXException("Frame not of type FrameBase", frame_type=type(frame))
+            raise PyVLXException("Frame not of type FrameBase", *type(frame))
         PYVLXLOG.debug("SEND: %s", frame)
         assert self.transport is not None
         self.transport.write(slip_pack(bytes(frame)))
