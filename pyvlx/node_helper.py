@@ -21,8 +21,6 @@ def convert_frame_to_node(pyvlx: "PyVLX",
     """Convert FrameGet[All]Node[s]InformationNotification into Node object."""
     # pylint: disable=too-many-return-statements
 
-    assert frame.serial_number is not None
-
     if frame.node_type == NodeTypeWithSubtype.WINDOW_OPENER:
         return Window(
             pyvlx=pyvlx,
