@@ -24,7 +24,7 @@ class OpeningDevice(Node):
         pyvlx: "PyVLX",
         node_id: int,
         name: str,
-        serial_number: str,
+        serial_number: Optional[str],
         position_parameter: Parameter = Parameter(),
     ):
         """Initialize opening device.
@@ -204,7 +204,7 @@ class Window(OpeningDevice):
         pyvlx: "PyVLX",
         node_id: int,
         name: str,
-        serial_number: str,
+        serial_number: Optional[str],
         position_parameter: Parameter = Parameter(),
         rain_sensor: bool = False,
     ):
@@ -258,7 +258,7 @@ class Blind(OpeningDevice):
         pyvlx: "PyVLX",
         node_id: int,
         name: str,
-        serial_number: str,
+        serial_number: Optional[str],
         position_parameter: Parameter = Parameter(),
     ):
         """Initialize Blind class.
@@ -479,7 +479,7 @@ class DualRollerShutter(OpeningDevice):
         pyvlx: "PyVLX",
         node_id: int,
         name: str,
-        serial_number: str,
+        serial_number: Optional[str],
         position_parameter: Parameter = Parameter(),
     ):
         """Initialize Blind class.

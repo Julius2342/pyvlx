@@ -1,5 +1,5 @@
 """Module for lights."""
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from .api import CommandSend
 from .node import Node
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class LighteningDevice(Node):
     """Meta class for turning on device with one main parameter for intensity."""
 
-    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str):
+    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
         """Initialize turning on device.
 
         Parameters:
@@ -76,7 +76,7 @@ class LighteningDevice(Node):
 class Light(LighteningDevice):
     """Light object."""
 
-    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str):
+    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
         """Initialize Light class.
 
         Parameters:

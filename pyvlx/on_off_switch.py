@@ -1,5 +1,5 @@
 """Module for on/off switches."""
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from .api.command_send import CommandSend
 from .node import Node
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class OnOffSwitch(Node):
     """Class for controlling on-off switches."""
 
-    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str):
+    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
         """Initialize opening device."""
         super().__init__(
             pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
