@@ -17,7 +17,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
         """Init Frame."""
         super().__init__(Command.GW_NODE_STATE_POSITION_CHANGED_NTF)
         self.node_id = 0
-        self.state = 0
+        self.state: OperatingState = OperatingState.NON_EXECUTING
         self.current_position = Parameter()
         self.target = Parameter()
         self.current_position_fp1 = Parameter()
@@ -30,7 +30,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
     def get_payload(self) -> bytes:
         """Return Payload."""
         payload = bytes([self.node_id])
-        payload += bytes([self.state])
+        payload += bytes([self.state.value])
         payload += bytes(self.current_position.raw)
         payload += bytes(self.target.raw)
         payload += bytes(self.current_position_fp1.raw)

@@ -22,7 +22,7 @@ class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
         """Test FrameNodeStatePositionChangedNotification."""
         frame = FrameNodeStatePositionChangedNotification()
         frame.node_id = 5
-        frame.state = 5
+        frame.state = OperatingState.DONE
         frame.current_position = Position(position=51200)
         frame.target = Position(position=51200)
         frame.current_position_fp1 = Position()
