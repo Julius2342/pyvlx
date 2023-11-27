@@ -23,7 +23,12 @@ class ApiEvent:
 
     async def do_api_call(self) -> None:
         """Start. Sending and waiting for answer."""
-        async with self.pyvlx.semaphore:
+        # We check for connection before entering the semaphore section
+        # because otherwise we might try to connect, which calls this, and we get stuck on
+        # the semaphore.
+        await self.pyvlx.check_connected()
+
+        async with self.pyvlx.api_call_semaphore:
             self.pyvlx.connection.register_frame_received_cb(self.response_rec_callback)
             await self.send_frame()
             await self.start_timeout()
