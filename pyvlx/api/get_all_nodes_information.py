@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 class GetAllNodesInformation(ApiEvent):
-    """Class for retrieving node informationfrom API."""
+    """Class for retrieving node information from API."""
 
     def __init__(self, pyvlx: "PyVLX"):
         """Initialize SceneList class."""

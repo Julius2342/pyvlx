@@ -49,7 +49,7 @@ class PyVLX:
         self.version = None
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
-        self.semaphore = asyncio.Semaphore(1)  # Limit parallel commands
+        self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
@@ -76,10 +76,14 @@ class PyVLX:
         PYVLXLOG.warning("KLF 200 reboot initiated")
         await self.klf200.reboot()
 
-    async def send_frame(self, frame: FrameBase) -> None:
-        """Send frame to API via connection."""
+    async def check_connected(self) -> None:
+        """Check we're connected, and if not, connect."""
         if not self.connection.connected:
             await self.connect()
+
+    async def send_frame(self, frame: FrameBase) -> None:
+        """Send frame to API via connection."""
+        await self.check_connected()
         self.connection.write(frame)
 
     async def disconnect(self) -> None:
