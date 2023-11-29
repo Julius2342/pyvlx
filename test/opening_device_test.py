@@ -8,7 +8,7 @@ from pyvlx import Awning, Blade, Blind, Parameter, PyVLX, RollerShutter, Window
 class TestOpeningDevice(unittest.TestCase):
     """Test class for roller shutter."""
 
-    def test_window_str(self):
+    def test_window_str(self) -> None:
         """Test string representation of Window object."""
         pyvlx = PyVLX()
         window = Window(
@@ -23,7 +23,7 @@ class TestOpeningDevice(unittest.TestCase):
             '<Window name="Test Window" node_id="23" rain_sensor=True serial_number="aa:bb:aa:bb:aa:bb:aa:23" position="UNKNOWN"/>',
         )
 
-    def test_blind_str(self):
+    def test_blind_str(self) -> None:
         """Test string representation of Blind object."""
         pyvlx = PyVLX()
         blind = Blind(
@@ -37,7 +37,7 @@ class TestOpeningDevice(unittest.TestCase):
             '<Blind name="Test Blind" node_id="23" serial_number="aa:bb:aa:bb:aa:bb:aa:23" position="UNKNOWN"/>',
         )
 
-    def test_roller_shutter_str(self):
+    def test_roller_shutter_str(self) -> None:
         """Test string representation of RolllerShutter object."""
         pyvlx = PyVLX()
         roller_shutter = RollerShutter(
@@ -52,7 +52,7 @@ class TestOpeningDevice(unittest.TestCase):
             '<RollerShutter name="Test Roller Shutter" node_id="23" serial_number="aa:bb:aa:bb:aa:bb:aa:23" position="97 %"/>',
         )
 
-    def test_blade_str(self):
+    def test_blade_str(self) -> None:
         """Test string representation of Blade object."""
         pyvlx = PyVLX()
         blade = Blade(
@@ -66,7 +66,7 @@ class TestOpeningDevice(unittest.TestCase):
             '<Blade name="Test Blade" node_id="23" serial_number="aa:bb:aa:bb:aa:bb:aa:23" position="UNKNOWN"/>',
         )
 
-    def test_awning_str(self):
+    def test_awning_str(self) -> None:
         """Test string representation of Awning object."""
         pyvlx = PyVLX()
         awning = Awning(
@@ -80,7 +80,7 @@ class TestOpeningDevice(unittest.TestCase):
             '<Awning name="Test Awning" node_id="23" serial_number="aa:bb:aa:bb:aa:bb:aa:23" position="UNKNOWN"/>',
         )
 
-    def test_eq(self):
+    def test_eq(self) -> None:
         """Testing eq method with positive results."""
         pyvlx = PyVLX()
         node1 = Blind(
@@ -91,7 +91,7 @@ class TestOpeningDevice(unittest.TestCase):
         )
         self.assertEqual(node1, node2)
 
-    def test_nq(self):
+    def test_nq(self) -> None:
         """Testing eq method with negative results."""
         pyvlx = PyVLX()
         node1 = Blind(

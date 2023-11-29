@@ -8,7 +8,7 @@ from pyvlx import Light, PyVLX
 class TestLighteningDevice(unittest.TestCase):
     """Test class for lights."""
 
-    def test_light_str(self):
+    def test_light_str(self) -> None:
         """Test string representation of Light object."""
         pyvlx = PyVLX()
         light = Light(
@@ -22,7 +22,7 @@ class TestLighteningDevice(unittest.TestCase):
             '<Light name="Test Light" node_id="23" serial_number="aa:bb:aa:bb:aa:bb:aa:23"/>',
         )
 
-    def test_eq(self):
+    def test_eq(self) -> None:
         """Testing eq method with positive results."""
         pyvlx = PyVLX()
         node1 = Light(
@@ -33,7 +33,7 @@ class TestLighteningDevice(unittest.TestCase):
         )
         self.assertEqual(node1, node2)
 
-    def test_nq(self):
+    def test_nq(self) -> None:
         """Testing eq method with negative results."""
         pyvlx = PyVLX()
         node1 = Light(
