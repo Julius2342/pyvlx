@@ -46,6 +46,7 @@ class TestParameterPosition(unittest.TestCase):
         self.assertFalse(Parameter.is_valid_int(out_of_range_int))
 
     def test_from_raw(self) -> None:
+        """Test raw output from byte input."""
         with self.assertRaises(PyVLXException):
             Parameter.from_raw(raw=0xC800)  # type: ignore
         with self.assertRaises(PyVLXException):
