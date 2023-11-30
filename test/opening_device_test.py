@@ -1,12 +1,24 @@
 """Unit test for roller shutter."""
 import unittest
+from unittest import IsolatedAsyncioTestCase, mock
+from unittest.mock import AsyncMock, patch
 
-from pyvlx import Awning, Blade, Blind, Parameter, PyVLX, RollerShutter, Window
+from pyvlx import (
+    Awning, Blade, Blind, OpeningDevice, Parameter, Position, PyVLX, RollerShutter,
+    Window,)
 
 
 # pylint: disable=too-many-public-methods,invalid-name
-class TestOpeningDevice(unittest.TestCase):
+class TestOpeningDevice(IsolatedAsyncioTestCase):
     """Test class for roller shutter."""
+
+    @patch("pyvlx.api.CommandSend.send", new_callable=AsyncMock)
+    @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
+    async def test_set_position(self, commandSend: AsyncMock, afterUpdate: AsyncMock) -> None:
+        test_device = OpeningDevice(pyvlx="PyVLX", node_id=23, name="Test device", serial_number=None)
+        await test_device.set_position(position=Position(position_percent=100))
+        assert commandSend.called
+        assert afterUpdate.called
 
     def test_window_str(self) -> None:
         """Test string representation of Window object."""
