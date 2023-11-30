@@ -15,6 +15,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
     @patch("pyvlx.api.CommandSend.send", new_callable=AsyncMock)
     @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
     async def test_set_position(self, commandSend: AsyncMock, afterUpdate: AsyncMock) -> None:
+        """Test set_position of OpeningDevice object."""
         test_device = OpeningDevice(pyvlx="PyVLX", node_id=23, name="Test device", serial_number=None)
         await test_device.set_position(position=Position(position_percent=100))
         assert commandSend.called
