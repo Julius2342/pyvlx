@@ -4,8 +4,8 @@ from unittest import IsolatedAsyncioTestCase, mock
 from unittest.mock import AsyncMock, patch
 
 from pyvlx import (
-    Awning, Blade, Blind, OpeningDevice, Parameter, Position, PyVLX, RollerShutter,
-    Window,)
+    Awning, Blade, Blind, OpeningDevice, Parameter, Position, PyVLX,
+    RollerShutter, Window)
 
 
 # pylint: disable=too-many-public-methods,invalid-name
