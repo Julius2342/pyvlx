@@ -1,5 +1,6 @@
 """Test for slip helper functions."""
 import unittest
+from typing import Any
 
 from pyvlx.slip import decode, encode, get_next_slip, is_slip, slip_pack
 
@@ -9,7 +10,7 @@ class TestSlip(unittest.TestCase):
 
     # pylint: disable=invalid-name
 
-    def encode_decode(self, decoded, encoded) -> None:
+    def encode_decode(self, decoded: Any, encoded: Any) -> None:
         """Decode encoded, encode decoded and test results."""
         self.assertEqual(decode(encoded), decoded)
         self.assertEqual(encode(decoded), encoded)
@@ -21,7 +22,7 @@ class TestSlip(unittest.TestCase):
             b"\xdb\xdc\xdb\xdc\xdb\xdd\xdb\xdd\xdb\xdc\xdb\xdd\xdb\xdc",
         )
 
-    def tedst_empty(self) -> None:
+    def test_empty(self) -> None:
         """Test decode and  encode of empty string."""
         self.encode_decode(b"", b"")
 
