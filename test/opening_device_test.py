@@ -1,6 +1,5 @@
 """Unit test for roller shutter."""
-import unittest
-from unittest import IsolatedAsyncioTestCase, mock
+from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, patch
 
 from pyvlx import (
