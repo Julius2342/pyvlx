@@ -78,9 +78,9 @@ class TestScenes(unittest.TestCase):
         pyvlx = MagicMock()
         scenes = Scenes(pyvlx)
         with self.assertRaises(TypeError):
-            scenes.add(scenes)
+            scenes.add(scenes)  # type: ignore
         with self.assertRaises(TypeError):
-            scenes.add("scene")
+            scenes.add("scene")  # type: ignore
 
     def test_clear(self) -> None:
         """Test clear() method."""
