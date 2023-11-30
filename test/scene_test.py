@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from pyvlx import PyVLX, Scene
+from pyvlx import Scene
 
 
 # pylint: disable=too-many-public-methods,invalid-name

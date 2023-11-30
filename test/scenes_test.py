@@ -1,7 +1,8 @@
 """Unit test for Scenes object."""
 import unittest
+from unittest.mock import MagicMock
 
-from pyvlx import PyVLX, Scene, Scenes
+from pyvlx import Scene, Scenes
 
 # pylint: disable=too-many-public-methods,invalid-name
 
@@ -11,7 +12,7 @@ class TestScenes(unittest.TestCase):
 
     def test_get_item(self) -> None:
         """Test get_item."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         scenes = Scenes(pyvlx)
         scene1 = Scene(pyvlx, 0, "Scene_1")
         scenes.add(scene1)
@@ -28,7 +29,7 @@ class TestScenes(unittest.TestCase):
 
     def test_get_item_failed(self) -> None:
         """Test get_item with non existing object."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         scenes = Scenes(pyvlx)
         scene1 = Scene(pyvlx, 0, "Scene_1")
         scenes.add(scene1)
@@ -39,7 +40,7 @@ class TestScenes(unittest.TestCase):
 
     def test_iter(self) -> None:
         """Test iterator."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         scenes = Scenes(pyvlx)
         scene1 = Scene(pyvlx, 0, "Scene_1")
         scenes.add(scene1)
@@ -51,7 +52,7 @@ class TestScenes(unittest.TestCase):
 
     def test_len(self) -> None:
         """Test len."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         scenes = Scenes(pyvlx)
         self.assertEqual(len(scenes), 0)
         scenes.add(Scene(pyvlx, 0, "Scene_1"))
@@ -62,7 +63,7 @@ class TestScenes(unittest.TestCase):
 
     def test_add_same_object(self) -> None:
         """Test adding object with same scene_id."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         scenes = Scenes(pyvlx)
         self.assertEqual(len(scenes), 0)
         scenes.add(Scene(pyvlx, 0, "Scene_1"))
@@ -74,7 +75,7 @@ class TestScenes(unittest.TestCase):
 
     def test_add_item_failed(self) -> None:
         """Test add() with wrong type."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         scenes = Scenes(pyvlx)
         with self.assertRaises(TypeError):
             scenes.add(scenes)
@@ -83,7 +84,7 @@ class TestScenes(unittest.TestCase):
 
     def test_clear(self) -> None:
         """Test clear() method."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         scenes = Scenes(pyvlx)
         self.assertEqual(len(scenes), 0)
         scenes.add(Scene(pyvlx, 0, "Scene_1"))
