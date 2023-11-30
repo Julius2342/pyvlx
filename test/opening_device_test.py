@@ -1,10 +1,10 @@
 """Unit test for roller shutter."""
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from pyvlx import (
-    Awning, Blade, Blind, OpeningDevice, Parameter, Position, PyVLX,
-    RollerShutter, Window)
+    Awning, Blade, Blind, OpeningDevice, Parameter, Position, RollerShutter,
+    Window)
 
 
 # pylint: disable=too-many-public-methods,invalid-name
@@ -22,7 +22,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
 
     def test_window_str(self) -> None:
         """Test string representation of Window object."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         window = Window(
             pyvlx=pyvlx,
             node_id=23,
@@ -37,7 +37,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
 
     def test_blind_str(self) -> None:
         """Test string representation of Blind object."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         blind = Blind(
             pyvlx=pyvlx,
             node_id=23,
@@ -51,7 +51,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
 
     def test_roller_shutter_str(self) -> None:
         """Test string representation of RolllerShutter object."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         roller_shutter = RollerShutter(
             pyvlx=pyvlx,
             node_id=23,
@@ -66,7 +66,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
 
     def test_blade_str(self) -> None:
         """Test string representation of Blade object."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         blade = Blade(
             pyvlx=pyvlx,
             node_id=23,
@@ -80,7 +80,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
 
     def test_awning_str(self) -> None:
         """Test string representation of Awning object."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         awning = Awning(
             pyvlx=pyvlx,
             node_id=23,
@@ -94,7 +94,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
 
     def test_eq(self) -> None:
         """Testing eq method with positive results."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         node1 = Blind(
             pyvlx=pyvlx, node_id=23, name="xxx", serial_number="aa:bb:aa:bb:aa:bb:aa:23"
         )
@@ -105,7 +105,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
 
     def test_nq(self) -> None:
         """Testing eq method with negative results."""
-        pyvlx = PyVLX()
+        pyvlx = MagicMock()
         node1 = Blind(
             pyvlx=pyvlx, node_id=23, name="xxx", serial_number="aa:bb:aa:bb:aa:bb:aa:23"
         )

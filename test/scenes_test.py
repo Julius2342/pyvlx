@@ -9,7 +9,7 @@ from pyvlx import PyVLX, Scene, Scenes
 class TestScenes(unittest.TestCase):
     """Test class for scenes object."""
 
-    def test_get_item(self):
+    def test_get_item(self) -> None:
         """Test get_item."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
@@ -26,7 +26,7 @@ class TestScenes(unittest.TestCase):
         self.assertEqual(scenes[1], scene2)
         self.assertEqual(scenes[4], scene3)
 
-    def test_get_item_failed(self):
+    def test_get_item_failed(self) -> None:
         """Test get_item with non existing object."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
@@ -37,7 +37,7 @@ class TestScenes(unittest.TestCase):
         with self.assertRaises(KeyError):
             scenes[1]  # pylint: disable=pointless-statement
 
-    def test_iter(self):
+    def test_iter(self) -> None:
         """Test iterator."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
@@ -49,7 +49,7 @@ class TestScenes(unittest.TestCase):
         scenes.add(scene3)
         self.assertEqual(tuple(scenes.__iter__()), (scene1, scene2, scene3))  # pylint: disable=unnecessary-dunder-call
 
-    def test_len(self):
+    def test_len(self) -> None:
         """Test len."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
@@ -60,7 +60,7 @@ class TestScenes(unittest.TestCase):
         scenes.add(Scene(pyvlx, 3, "Scene_4"))
         self.assertEqual(len(scenes), 4)
 
-    def test_add_same_object(self):
+    def test_add_same_object(self) -> None:
         """Test adding object with same scene_id."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
@@ -72,7 +72,7 @@ class TestScenes(unittest.TestCase):
         self.assertEqual(len(scenes), 3)
         self.assertEqual(scenes[1].name, "Scene_2_same_id")
 
-    def test_add_item_failed(self):
+    def test_add_item_failed(self) -> None:
         """Test add() with wrong type."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
@@ -81,7 +81,7 @@ class TestScenes(unittest.TestCase):
         with self.assertRaises(TypeError):
             scenes.add("scene")
 
-    def test_clear(self):
+    def test_clear(self) -> None:
         """Test clear() method."""
         pyvlx = PyVLX()
         scenes = Scenes(pyvlx)
