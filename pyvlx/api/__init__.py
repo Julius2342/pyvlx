@@ -2,6 +2,7 @@
 # flake8: noqa
 
 from .activate_scene import ActivateScene
+from .api_event import ApiEvent
 from .command_send import CommandSend
 from .factory_default import FactoryDefault
 from .get_all_nodes_information import GetAllNodesInformation

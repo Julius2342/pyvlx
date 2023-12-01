@@ -1,6 +1,7 @@
 """Unit test for limitation."""
 import asyncio
 import unittest
+from unittest.mock import MagicMock
 
 import pytest
 from pytest import FixtureRequest
@@ -28,11 +29,10 @@ class TestGetLimitation(unittest.TestCase):
 
     def setUp(self) -> None:
         """Set up TestGetLimitation."""
-        self.pyvlx = PyVLX()
+        self.pyvlx = MagicMock(spec=PyVLX)
 
     def test_get_name(self) -> None:
         """Test get_name()."""
-        self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         self.assertEqual(limit.node_id, 1)
         self.assertEqual(limit.limitation_type, LimitationType.MIN_LIMITATION)
@@ -42,21 +42,18 @@ class TestGetLimitation(unittest.TestCase):
 
     def test_max_value(self) -> None:
         """Test limit.max_value."""
-        self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         limit.max_value_raw = b'\xf7'
         self.assertEqual(limit.max_value, 124)
 
     def test_min_value(self) -> None:
         """Test limit.min_value."""
-        self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         limit.min_value_raw = b'\xba'
         self.assertEqual(limit.min_value, 93)
 
     def test_handle_frame(self) -> None:
         """Test handle frame."""
-        self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
 
         frame = FrameGetLimitationStatus()
@@ -91,7 +88,6 @@ class TestGetLimitation(unittest.TestCase):
 
     def test_request_frame(self) -> None:
         """Test initiating frame."""
-        self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         req_frame = limit.request_frame()
         self.assertIsInstance(req_frame, FrameGetLimitationStatus)
