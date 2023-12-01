@@ -5,7 +5,7 @@ from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .exception import PyVLXException
 from .node import Node
-from .parameter import (CurrentPosition, IgnorePosition, Parameter, Position)
+from .parameter import CurrentPosition, IgnorePosition, Parameter, Position
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
