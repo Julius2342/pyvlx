@@ -257,25 +257,11 @@ class CurrentPosition(Position):
 
 
 class TargetPosition(Position):
-    """Class for using a target position, if another parameter is set.
-
-    It is implemented by taking the target parameter value and loads it into the execution
-    parameter buffer. When the target value is read, it holds for a given parameter always the
-    latest stored target value about a command execution.
-
-    """
+    """Class for using a target position."""
 
     def __init__(self) -> None:
         """Initialize TargetPosition class."""
         super().__init__(position=Position.TARGET)
-
-    @staticmethod
-    def from_position(from_position: Position) -> "TargetPosition":
-        """Create TargetPosition from an existing position."""
-        target = TargetPosition()
-        target.position = from_position.position
-        target.position_percent = from_position.position_percent
-        return target
 
 
 class IgnorePosition(Position):

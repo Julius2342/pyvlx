@@ -278,8 +278,8 @@ class Blind(OpeningDevice):
             position_parameter=position_parameter,
         )
         self.orientation = Position(position_percent=0)
-        self.target_orientation = TargetPosition()
-        self.target_position = TargetPosition()
+        self.target_orientation = Position()
+        self.target_position = Position()
         self.open_orientation_target: int = 50
         self.close_orientation_target: int = 100
 
@@ -304,7 +304,7 @@ class Blind(OpeningDevice):
                 Note, that, if the position is set to 0, the orientation will be set to 0 too.
 
         """
-        self.target_position = TargetPosition.from_position(position)
+        self.target_position = position
         self.position = position
         kwargs: Any = {}
 
@@ -421,7 +421,7 @@ class Blind(OpeningDevice):
                 after device has reached target position.
 
         """
-        self.target_orientation = TargetPosition.from_position(orientation)
+        self.target_orientation = orientation
         self.orientation = orientation
 
         fp3 = (
@@ -500,7 +500,7 @@ class DualRollerShutter(OpeningDevice):
         )
         self.position_upper_curtain = Position(position_percent=0)
         self.position_lower_curtain = Position(position_percent=0)
-        self.target_position: Any = TargetPosition()
+        self.target_position: Any = Position()
         self.active_parameter = 0
 
     async def set_position(
