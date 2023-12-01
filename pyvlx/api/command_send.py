@@ -37,7 +37,6 @@ class CommandSend(ApiEvent):
         self.functional_parameter = functional_parameter
         self.wait_for_completion = wait_for_completion
         self.session_id: Optional[int] = None
-        self.frame: Optional[FrameCommandSendRequest] = None
 
     async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""
@@ -76,13 +75,11 @@ class CommandSend(ApiEvent):
 
     def request_frame(self) -> FrameCommandSendRequest:
         """Construct initiating frame."""
-        if self.frame is None:
-            self.session_id = get_new_session_id()
-            self.frame = FrameCommandSendRequest(
-                node_ids=[self.node_id],
-                parameter=self.parameter,
-                active_parameter=self.active_parameter,
-                session_id=self.session_id,
-                **self.functional_parameter
-            )
-        return self.frame
+        self.session_id = get_new_session_id()
+        return FrameCommandSendRequest(
+            node_ids=[self.node_id],
+            parameter=self.parameter,
+            active_parameter=self.active_parameter,
+            session_id=self.session_id,
+            **self.functional_parameter
+        )

@@ -8,10 +8,10 @@ REQUIRES = ["PyYAML"]
 
 PKG_ROOT = os.path.dirname(__file__)
 
-VERSION = "0.1.73"
+VERSION = "0.1.74"
 
 
-def get_long_description():
+def get_long_description() -> str:
     """Read long description from README.md."""
     this_directory = path.abspath(path.dirname(__file__))
     with open(path.join(this_directory, "README.md"), encoding="utf-8") as readme:
