@@ -10,7 +10,7 @@ from pyvlx.node import Node
 class TestNodes(unittest.TestCase):
     """Test class for nodes object."""
 
-    def test_get_item(self):
+    def test_get_item(self) -> None:
         """Test get_item."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
@@ -29,7 +29,7 @@ class TestNodes(unittest.TestCase):
         self.assertEqual(nodes[1], blind)
         self.assertEqual(nodes[4], roller_shutter)
 
-    def test_get_item_failed(self):
+    def test_get_item_failed(self) -> None:
         """Test get_item with non existing object."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
@@ -40,7 +40,7 @@ class TestNodes(unittest.TestCase):
         with self.assertRaises(KeyError):
             nodes[1]  # pylint: disable=pointless-statement
 
-    def test_contains_item(self):
+    def test_contains_item(self) -> None:
         """Test contains operator."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
@@ -54,7 +54,7 @@ class TestNodes(unittest.TestCase):
         self.assertFalse(42 in nodes)
         self.assertFalse(window2 in nodes)
 
-    def test_iter(self):
+    def test_iter(self) -> None:
         """Test iterator."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
@@ -66,7 +66,7 @@ class TestNodes(unittest.TestCase):
         nodes.add(window3)
         self.assertEqual(tuple(nodes.__iter__()), (window1, window2, window3))  # pylint: disable=unnecessary-dunder-call
 
-    def test_len(self):
+    def test_len(self) -> None:
         """Test len."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
@@ -77,7 +77,7 @@ class TestNodes(unittest.TestCase):
         nodes.add(Window(pyvlx, 3, "Window_4", "aa:bb:aa:bb:aa:bb:aa:03"))
         self.assertEqual(len(nodes), 4)
 
-    def test_add_same_object(self):
+    def test_add_same_object(self) -> None:
         """Test adding object with same node_id."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
@@ -89,7 +89,7 @@ class TestNodes(unittest.TestCase):
         self.assertEqual(len(nodes), 3)
         self.assertEqual(nodes[1].name, "Window_2_same_id")
 
-    def test_add_item_failed(self):
+    def test_add_item_failed(self) -> None:
         """Test add() with wrong type."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
@@ -98,7 +98,7 @@ class TestNodes(unittest.TestCase):
         with self.assertRaises(TypeError):
             nodes.add("device")
 
-    def test_clear(self):
+    def test_clear(self) -> None:
         """Test clear() method."""
         pyvlx = PyVLX()
         nodes = Nodes(pyvlx)
@@ -108,7 +108,7 @@ class TestNodes(unittest.TestCase):
         nodes.clear()
         self.assertEqual(len(nodes), 0)
 
-    def test_node_str(self):
+    def test_node_str(self) -> None:
         """Test string representation of node."""
         pyvlx = PyVLX()
         node = Node(

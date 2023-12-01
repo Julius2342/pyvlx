@@ -3,6 +3,7 @@ import asyncio
 import unittest
 
 import pytest
+from pytest import FixtureRequest
 
 from pyvlx import PyVLX
 from pyvlx.api.frames.frame_get_limitation import (
@@ -13,7 +14,7 @@ from pyvlx.const import LimitationType, Originator
 
 
 @pytest.fixture(scope="class")
-def event_loop_instance(request):
+def event_loop_instance(request: FixtureRequest) -> None:
     """Add the event_loop as an attribute to the unittest style test class."""
     request.cls.event_loop = asyncio.get_event_loop_policy().new_event_loop()
     yield
@@ -25,11 +26,11 @@ def event_loop_instance(request):
 class TestGetLimitation(unittest.TestCase):
     """Test class for Limitation."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up TestGetLimitation."""
         self.pyvlx = PyVLX()
 
-    def test_get_name(self):
+    def test_get_name(self) -> None:
         """Test get_name()."""
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
@@ -39,21 +40,21 @@ class TestGetLimitation(unittest.TestCase):
         self.assertEqual(limit.node_id, 2)
         self.assertEqual(limit.limitation_type, LimitationType.MAX_LIMITATION)
 
-    def test_max_value(self):
+    def test_max_value(self) -> None:
         """Test limit.max_value."""
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         limit.max_value_raw = b'\xf7'
         self.assertEqual(limit.max_value, 124)
 
-    def test_min_value(self):
+    def test_min_value(self) -> None:
         """Test limit.min_value."""
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
         limit.min_value_raw = b'\xba'
         self.assertEqual(limit.min_value, 93)
 
-    def test_handle_frame(self):
+    def test_handle_frame(self) -> None:
         """Test handle frame."""
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
@@ -88,7 +89,7 @@ class TestGetLimitation(unittest.TestCase):
         self.assertEqual(limit.originator, frame.limit_originator)
         self.assertEqual(limit.limit_time, frame.limit_time)
 
-    def test_request_frame(self):
+    def test_request_frame(self) -> None:
         """Test initiating frame."""
         self.pyvlx = PyVLX()
         limit = GetLimitation(self.pyvlx, 1)
