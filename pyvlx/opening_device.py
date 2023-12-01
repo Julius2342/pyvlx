@@ -24,7 +24,7 @@ class OpeningDevice(Node):
         pyvlx: "PyVLX",
         node_id: int,
         name: str,
-        serial_number: Optional[str],
+        serial_number: Optional[str] = None,
         position_parameter: Parameter = Parameter(),
     ):
         """Initialize opening device.
@@ -296,7 +296,7 @@ class Blind(OpeningDevice):
             * position: Position object containing the current position.
             * velocity: Velocity to be used during transition.
             * target_position: Position object holding the target position
-                which allows to ajust the position while the blind is in movement
+                which allows to adjust the position while the blind is in movement
                 without stopping the blind (if orientation position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
@@ -352,7 +352,7 @@ class Blind(OpeningDevice):
             * position: Position object containing the current position.
             * velocity: Velocity to be used during transition.
             * target_position: Position object holding the target position
-                which allows to ajust the position while the blind is in movement
+                which allows to adjust the position while the blind is in movement
                 without stopping the blind (if orientation position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
@@ -515,7 +515,7 @@ class DualRollerShutter(OpeningDevice):
         Parameters:
             * position: Position object containing the current position.
             * target_position: Position object holding the target position
-                which allows to ajust the position while the blind is in movement
+                which allows to adjust the position while the blind is in movement
             * wait_for_completion: If set, function will return
                 after device has reached target position.
         """

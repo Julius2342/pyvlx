@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from pyvlx import Scene, Scenes
+from pyvlx import PyVLX, Scene, Scenes
 
 # pylint: disable=too-many-public-methods,invalid-name
 
@@ -12,7 +12,7 @@ class TestScenes(unittest.TestCase):
 
     def test_get_item(self) -> None:
         """Test get_item."""
-        pyvlx = MagicMock()
+        pyvlx = MagicMock(spec=PyVLX)
         scenes = Scenes(pyvlx)
         scene1 = Scene(pyvlx, 0, "Scene_1")
         scenes.add(scene1)
@@ -29,7 +29,7 @@ class TestScenes(unittest.TestCase):
 
     def test_get_item_failed(self) -> None:
         """Test get_item with non existing object."""
-        pyvlx = MagicMock()
+        pyvlx = MagicMock(spec=PyVLX)
         scenes = Scenes(pyvlx)
         scene1 = Scene(pyvlx, 0, "Scene_1")
         scenes.add(scene1)
@@ -40,7 +40,7 @@ class TestScenes(unittest.TestCase):
 
     def test_iter(self) -> None:
         """Test iterator."""
-        pyvlx = MagicMock()
+        pyvlx = MagicMock(spec=PyVLX)
         scenes = Scenes(pyvlx)
         scene1 = Scene(pyvlx, 0, "Scene_1")
         scenes.add(scene1)
@@ -52,7 +52,7 @@ class TestScenes(unittest.TestCase):
 
     def test_len(self) -> None:
         """Test len."""
-        pyvlx = MagicMock()
+        pyvlx = MagicMock(spec=PyVLX)
         scenes = Scenes(pyvlx)
         self.assertEqual(len(scenes), 0)
         scenes.add(Scene(pyvlx, 0, "Scene_1"))
@@ -63,7 +63,7 @@ class TestScenes(unittest.TestCase):
 
     def test_add_same_object(self) -> None:
         """Test adding object with same scene_id."""
-        pyvlx = MagicMock()
+        pyvlx = MagicMock(spec=PyVLX)
         scenes = Scenes(pyvlx)
         self.assertEqual(len(scenes), 0)
         scenes.add(Scene(pyvlx, 0, "Scene_1"))
@@ -84,7 +84,7 @@ class TestScenes(unittest.TestCase):
 
     def test_clear(self) -> None:
         """Test clear() method."""
-        pyvlx = MagicMock()
+        pyvlx = MagicMock(spec=PyVLX)
         scenes = Scenes(pyvlx)
         self.assertEqual(len(scenes), 0)
         scenes.add(Scene(pyvlx, 0, "Scene_1"))
