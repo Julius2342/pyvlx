@@ -102,6 +102,6 @@ jobs:
         coverage report --fail-under=79
         coverage xml
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1.3.2
+      uses: codecov/codecov-action@v3
       env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
