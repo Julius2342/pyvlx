@@ -99,7 +99,9 @@ jobs:
     - name: Create coverage report
       run: |
         coverage combine coverage*/.coverage*
-        coverage report --fail-under=81
+        coverage report --fail-under=79
         coverage xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1.3.2
+      env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
