@@ -1,5 +1,6 @@
 """Unit test for lights."""
 import unittest
+from unittest.mock import MagicMock
 
 from pyvlx import Light, PyVLX
 
@@ -8,11 +9,14 @@ from pyvlx import Light, PyVLX
 class TestLighteningDevice(unittest.TestCase):
     """Test class for lights."""
 
+    def setUp(self) -> None:
+        """Set up TestGetLimitation."""
+        self.pyvlx = MagicMock(spec=PyVLX)
+
     def test_light_str(self) -> None:
         """Test string representation of Light object."""
-        pyvlx = PyVLX()
         light = Light(
-            pyvlx=pyvlx,
+            pyvlx=self.pyvlx,
             node_id=23,
             name="Test Light",
             serial_number="aa:bb:aa:bb:aa:bb:aa:23",
@@ -24,22 +28,20 @@ class TestLighteningDevice(unittest.TestCase):
 
     def test_eq(self) -> None:
         """Testing eq method with positive results."""
-        pyvlx = PyVLX()
         node1 = Light(
-            pyvlx=pyvlx, node_id=23, name="xxx", serial_number="aa:bb:aa:bb:aa:bb:aa:23"
+            pyvlx=self.pyvlx, node_id=23, name="xxx", serial_number="aa:bb:aa:bb:aa:bb:aa:23"
         )
         node2 = Light(
-            pyvlx=pyvlx, node_id=23, name="xxx", serial_number="aa:bb:aa:bb:aa:bb:aa:23"
+            pyvlx=self.pyvlx, node_id=23, name="xxx", serial_number="aa:bb:aa:bb:aa:bb:aa:23"
         )
         self.assertEqual(node1, node2)
 
     def test_nq(self) -> None:
         """Testing eq method with negative results."""
-        pyvlx = PyVLX()
         node1 = Light(
-            pyvlx=pyvlx, node_id=23, name="xxx", serial_number="aa:bb:aa:bb:aa:bb:aa:23"
+            pyvlx=self.pyvlx, node_id=23, name="xxx", serial_number="aa:bb:aa:bb:aa:bb:aa:23"
         )
         node2 = Light(
-            pyvlx=pyvlx, node_id=24, name="xxx", serial_number="aa:bb:aa:bb:aa:bb:aa:23"
+            pyvlx=self.pyvlx, node_id=24, name="xxx", serial_number="aa:bb:aa:bb:aa:bb:aa:23"
         )
         self.assertNotEqual(node1, node2)
