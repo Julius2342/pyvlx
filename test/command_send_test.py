@@ -28,16 +28,19 @@ class TestCommandSend(unittest.IsolatedAsyncioTestCase):
         frame.status = CommandSendConfirmationStatus.ACCEPTED
         self.assertTrue(await self.command_send.handle_frame(frame=frame))
         self.assertTrue(self.command_send.success)
+
         self.command_send.success = False
         self.command_send.wait_for_completion = True
         frame.status = CommandSendConfirmationStatus.ACCEPTED
         self.assertFalse(await self.command_send.handle_frame(frame=frame))
         self.assertTrue(self.command_send.success)
+
         self.command_send.success = False
         self.command_send.wait_for_completion = False
         frame.status = CommandSendConfirmationStatus.REJECTED
         self.assertTrue(await self.command_send.handle_frame(frame=frame))
         self.assertFalse(self.command_send.success)
+
         self.command_send.success = False
         self.command_send.wait_for_completion = True
         frame.status = CommandSendConfirmationStatus.REJECTED
@@ -55,6 +58,10 @@ class TestCommandSend(unittest.IsolatedAsyncioTestCase):
         frame = MagicMock(spec=FrameSessionFinishedNotification)
         frame.session_id = session_id
         self.assertTrue(await self.command_send.handle_frame(frame=frame))
+
+        frame = MagicMock(spec=FrameSessionFinishedNotification)
+        frame.session_id = session_id + 1
+        self.assertFalse(await self.command_send.handle_frame(frame=frame))
 
     @patch("pyvlx.api.ApiEvent.do_api_call", new_callable=AsyncMock)
     async def test_send(self, do_api_call: AsyncMock) -> None:

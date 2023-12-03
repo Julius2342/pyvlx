@@ -1,4 +1,4 @@
-"""Module for window openers."""
+"""Module for Opening devices."""
 import datetime
 from typing import TYPE_CHECKING, Any, Optional
 
@@ -58,7 +58,7 @@ class OpeningDevice(Node):
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
     ) -> None:
-        """Set window to desired position.
+        """Set opening device to desired position.
 
         Parameters:
             * position: Position object containing the target position.
@@ -98,7 +98,7 @@ class OpeningDevice(Node):
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
     ) -> None:
-        """Open window.
+        """Open opening device.
 
         Parameters:
             * velocity: Velocity to be used during transition.
@@ -117,7 +117,7 @@ class OpeningDevice(Node):
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
     ) -> None:
-        """Close window.
+        """Close opening device.
 
         Parameters:
             * velocity: Velocity to be used during transition.
@@ -132,7 +132,7 @@ class OpeningDevice(Node):
         )
 
     async def stop(self, wait_for_completion: bool = True) -> None:
-        """Stop window.
+        """Stop opening device.
 
         Parameters:
             * wait_for_completion: If set, function will return
@@ -510,7 +510,7 @@ class DualRollerShutter(OpeningDevice):
         wait_for_completion: bool = True,
         curtain: str = "dual",
     ) -> None:
-        """Set window to desired position.
+        """Set DualRollerShutter to desired position.
 
         Parameters:
             * position: Position object containing the current position.
@@ -573,7 +573,7 @@ class DualRollerShutter(OpeningDevice):
         wait_for_completion: bool = True,
         curtain: str = "dual",
     ) -> None:
-        """Open window.
+        """Open DualRollerShutter.
 
         Parameters:
             * wait_for_completion: If set, function will return
@@ -593,7 +593,7 @@ class DualRollerShutter(OpeningDevice):
         wait_for_completion: bool = True,
         curtain: str = "dual",
     ) -> None:
-        """Close window.
+        """Close DualRollerShutter.
 
         Parameters:
             * wait_for_completion: If set, function will return
