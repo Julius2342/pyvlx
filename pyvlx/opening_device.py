@@ -5,8 +5,7 @@ from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .exception import PyVLXException
 from .node import Node
-from .parameter import (
-    CurrentPosition, IgnorePosition, Parameter, Position, TargetPosition)
+from .parameter import CurrentPosition, IgnorePosition, Parameter, Position
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -145,7 +144,7 @@ class Window(OpeningDevice):
         )
 
     async def get_limitation(self) -> GetLimitation:
-        """Return limitaation."""
+        """Return limitation."""
         get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
         await get_limitation.do_api_call()
         if not get_limitation.success:
@@ -176,21 +175,22 @@ class Blind(OpeningDevice):
             position_parameter=position_parameter,
         )
         self.orientation = Position(position_percent=0)
-        self.target_orientation = TargetPosition()
-        self.target_position = TargetPosition()
+        self.target_orientation = Position()
+        self.target_position = Position()
         self.open_orientation_target: int = 50
         self.close_orientation_target: int = 100
 
-    async def set_position_and_orientation(self,
-                                           position: Position,
-                                           wait_for_completion: bool = True,
-                                           orientation: Optional[Position] = None) -> None:
+    async def set_position_and_orientation(
+            self,
+            position: Position,
+            wait_for_completion: bool = True,
+            orientation: Optional[Position] = None) -> None:
         """Set window to desired position.
 
         Parameters:
             * position: Position object containing the current position.
             * target_position: Position object holding the target position
-                which allows to ajust the position while the blind is in movement
+                which allows to adjust the position while the blind is in movement
                 without stopping the blind (if orientation position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
@@ -198,7 +198,7 @@ class Blind(OpeningDevice):
                 Note, that, if the position is set to 0, the orientation will be set to 0 too.
 
         """
-        self.target_position = TargetPosition.from_position(position)
+        self.target_position = position
         self.position = position
 
         fp3: Position
@@ -227,7 +227,7 @@ class Blind(OpeningDevice):
         Parameters:
             * position: Position object containing the current position.
             * target_position: Position object holding the target position
-                which allows to ajust the position while the blind is in movement
+                which allows to adjust the position while the blind is in movement
                 without stopping the blind (if orientation position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
@@ -276,7 +276,7 @@ class Blind(OpeningDevice):
                 after device has reached target position.
 
         """
-        self.target_orientation = TargetPosition.from_position(orientation)
+        self.target_orientation = orientation
         self.orientation = orientation
 
         fp3 = Position(position_percent=0)\

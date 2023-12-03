@@ -30,7 +30,7 @@ class Parameter:
 
     @staticmethod
     def from_int(value: int) -> bytes:
-        """Create raw out of position vlaue."""
+        """Create raw out of position value."""
         if not isinstance(value, int):
             raise PyVLXException("value_has_to_be_int")
         if not Parameter.is_valid_int(value):
@@ -201,7 +201,7 @@ class Position(Parameter):
     @staticmethod
     def to_percent(raw: bytes) -> int:
         """Create percent position value out of raw."""
-        # The first byte has the vlue from 0 to 200. Ignoring the second one.
+        # The first byte has the value from 0 to 200. Ignoring the second one.
         # Adding 0.5 allows a slight tolerance for devices (e.g. Velux SML) that
         # do not return exactly 51200 as final position when closed.
         return int(raw[0] / 2 + 0.5)
@@ -230,25 +230,11 @@ class CurrentPosition(Position):
 
 
 class TargetPosition(Position):
-    """Class for using a target position, if another parameter is set.
-
-    It is implemented by taking the target parameter value and loads it into the execution
-    parameter buffer. When the target value is read, it holds for a given parameter always the
-    latest stored target value about a command execution.
-
-    """
+    """Class for using a target position."""
 
     def __init__(self) -> None:
         """Initialize TargetPosition class."""
         super().__init__(position=Position.TARGET)
-
-    @staticmethod
-    def from_position(from_position: Position) -> "TargetPosition":
-        """Create TargetPosition from an existing position."""
-        target = TargetPosition()
-        target.position = from_position.position
-        target.position_percent = from_position.position_percent
-        return target
 
 
 class IgnorePosition(Position):
@@ -304,7 +290,7 @@ class Intensity(Parameter):
     @property
     def intensity_percent(self) -> int:
         """Intensity percent property."""
-        # inclear why it returns a <property object> here
+        # unclear why it returns a <property object> here
         return int(self.to_percent(self.raw))
 
     @intensity_percent.setter
