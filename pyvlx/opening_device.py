@@ -156,14 +156,14 @@ class OpeningDevice(Node):
         ):
             return 100
 
-        movement_duration_s = (
+        movement_duration_s: float = (
             self.estimated_completion - self.state_received_at
         ).total_seconds()
-        time_passed_s = (
+        time_passed_s: float = (
             datetime.datetime.now() - self.state_received_at
         ).total_seconds()
 
-        percent = int(time_passed_s / movement_duration_s * 100)
+        percent: int = int(time_passed_s / movement_duration_s * 100)
         percent = max(percent, 0)
         percent = min(percent, 100)
         return percent
@@ -277,9 +277,9 @@ class Blind(OpeningDevice):
             serial_number=serial_number,
             position_parameter=position_parameter,
         )
-        self.orientation = Position(position_percent=0)
-        self.target_orientation = Position()
-        self.target_position = Position()
+        self.orientation: Position = Position(position_percent=0)
+        self.target_orientation: Position = Position()
+        self.target_position: Position = Position()
         self.open_orientation_target: int = 50
         self.close_orientation_target: int = 100
 
@@ -498,10 +498,10 @@ class DualRollerShutter(OpeningDevice):
             serial_number=serial_number,
             position_parameter=position_parameter,
         )
-        self.position_upper_curtain = Position(position_percent=0)
-        self.position_lower_curtain = Position(position_percent=0)
+        self.position_upper_curtain: Position = Position(position_percent=0)
+        self.position_lower_curtain: Position = Position(position_percent=0)
         self.target_position: Any = Position()
-        self.active_parameter = 0
+        self.active_parameter: int = 0
 
     async def set_position(
         self,
