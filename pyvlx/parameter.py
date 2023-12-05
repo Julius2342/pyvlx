@@ -35,7 +35,7 @@ class Parameter:
 
     @staticmethod
     def from_int(value: int) -> bytes:
-        """Create raw out of position vlaue."""
+        """Create raw out of position value."""
         if not isinstance(value, int):
             raise PyVLXException("value_has_to_be_int")
         if not Parameter.is_valid_int(value):
