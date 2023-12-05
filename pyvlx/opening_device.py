@@ -170,18 +170,13 @@ class OpeningDevice(Node):
 
     def get_position(self) -> Position:
         """Return position of the cover."""
-        PYVLXLOG.debug("get_position")
         if self.is_moving():
-            PYVLXLOG.debug("get_position: is moving")
             percent = self.movement_percent()
-            PYVLXLOG.debug("get_position: %d percent", percent)
             movement_origin = self.position.position_percent
             movement_target = self.target.position_percent
-            PYVLXLOG.debug("get_position: %s => %s", movement_origin, movement_target)
             current_position = (
                 movement_origin + (movement_target - movement_origin) / 100 * percent
             )
-            PYVLXLOG.debug("get_position: current_position=%d", int(current_position))
             return Position(position_percent=int(current_position))
         return self.position
 
