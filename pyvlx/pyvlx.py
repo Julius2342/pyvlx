@@ -50,6 +50,7 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
+        PYVLXLOG.debug("Loadig pyvlx v1.1.74")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
