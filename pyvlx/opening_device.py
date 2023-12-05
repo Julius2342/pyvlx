@@ -6,7 +6,6 @@ from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .const import Velocity
 from .exception import PyVLXException
-from .log import PYVLXLOG
 from .node import Node
 from .parameter import (
     CurrentPosition, DualRollerShutterPosition, IgnorePosition, Parameter,
