@@ -54,7 +54,7 @@ class PyVLX:
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
-        PYVLXLOG.debug("Connecting to KLF 200 on %s", self)
+        PYVLXLOG.debug("Connecting to KLF 200")
         await self.connection.connect()
         assert self.config.password is not None
         await self.klf200.password_enter(password=self.config.password)
