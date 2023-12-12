@@ -2,7 +2,7 @@
 import struct
 from datetime import datetime
 
-from pyvlx.const import Command
+from pyvlx.const import Command, OperatingState
 from pyvlx.parameter import Parameter
 
 from .frame import FrameBase
@@ -17,7 +17,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
         """Init Frame."""
         super().__init__(Command.GW_NODE_STATE_POSITION_CHANGED_NTF)
         self.node_id = 0
-        self.state = 0
+        self.state: OperatingState = OperatingState.NON_EXECUTING
         self.current_position = Parameter()
         self.target = Parameter()
         self.current_position_fp1 = Parameter()
@@ -30,7 +30,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
     def get_payload(self) -> bytes:
         """Return Payload."""
         payload = bytes([self.node_id])
-        payload += bytes([self.state])
+        payload += bytes([self.state.value])
         payload += bytes(self.current_position.raw)
         payload += bytes(self.target.raw)
         payload += bytes(self.current_position_fp1.raw)
@@ -44,7 +44,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
     def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.node_id = payload[0]
-        self.state = payload[1]
+        self.state = OperatingState(payload[1])
         self.current_position = Parameter(payload[2:4])
         self.target = Parameter(payload[4:6])
         self.current_position_fp1 = Parameter(payload[6:8])
@@ -71,7 +71,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
             'remaining_time="{}" time="{}"/>'.format(
                 type(self).__name__,
                 self.node_id,
-                self.state,
+                self.state.name,
                 self.current_position,
                 self.target,
                 self.current_position_fp1,

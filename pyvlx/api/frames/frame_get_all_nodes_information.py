@@ -4,7 +4,8 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
+from pyvlx.const import (
+    Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity)
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
@@ -36,7 +37,11 @@ class FrameGetAllNodesInformationConfirmation(FrameBase):
 
     PAYLOAD_LEN = 2
 
-    def __init__(self, status: AllNodesInformationStatus = AllNodesInformationStatus.OK, number_of_nodes: int = 0):
+    def __init__(
+        self,
+        status: AllNodesInformationStatus = AllNodesInformationStatus.OK,
+        number_of_nodes: int = 0,
+    ):
         """Init Frame."""
         super().__init__(Command.GW_GET_ALL_NODES_INFORMATION_CFM)
         self.status = status
@@ -78,7 +83,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.power_mode = 0
         self.build_number = 0
         self._serial_number = bytes(8)
-        self.state = 0
+        self.state = OperatingState.UNKNOWN
         self.current_position = Parameter()
         self.target = Parameter()
         self.current_position_fp1 = Parameter()
@@ -123,7 +128,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         payload += bytes([self.power_mode])
         payload += bytes([self.build_number])
         payload += bytes(self._serial_number)
-        payload += bytes([self.state])
+        payload += bytes([self.state.value])
         payload += bytes(self.current_position.raw)
         payload += bytes(self.target.raw)
         payload += bytes(self.current_position_fp1.raw)
@@ -150,7 +155,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.power_mode = payload[74]
         self.build_number = payload[75]
         self._serial_number = payload[76:84]
-        self.state = payload[84]
+        self.state = OperatingState(payload[84])
         self.current_position = Parameter(payload[85:87])
         self.target = Parameter(payload[87:89])
         self.current_position_fp1 = Parameter(payload[89:91])
@@ -189,7 +194,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
                 self.power_mode,
                 self.build_number,
                 self.serial_number,
-                self.state,
+                self.state.name,
                 self.current_position,
                 self.target,
                 self.current_position_fp1,

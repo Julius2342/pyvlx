@@ -33,6 +33,7 @@ class ApiEvent:
             await self.send_frame()
             await self.start_timeout()
             await self.response_received_or_timeout.wait()
+            self.response_received_or_timeout.clear()
             await self.stop_timeout()
             self.pyvlx.connection.unregister_frame_received_cb(self.response_rec_callback)
 

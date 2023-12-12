@@ -1,8 +1,7 @@
 """Module for lights."""
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from .api import CommandSend
-from .exception import PyVLXException
 from .node import Node
 from .parameter import Intensity
 
@@ -13,7 +12,7 @@ if TYPE_CHECKING:
 class LighteningDevice(Node):
     """Meta class for turning on device with one main parameter for intensity."""
 
-    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str):
+    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
         """Initialize turning on device.
 
         Parameters:
@@ -38,15 +37,13 @@ class LighteningDevice(Node):
                 after device has reached target intensity.
 
         """
-        command_send = CommandSend(
+        command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=intensity,
         )
-        await command_send.do_api_call()
-        if not command_send.success:
-            raise PyVLXException("Unable to send command")
+        await command.send()
         await self.after_update()
 
     async def turn_on(self, wait_for_completion: bool = True) -> None:
@@ -79,7 +76,7 @@ class LighteningDevice(Node):
 class Light(LighteningDevice):
     """Light object."""
 
-    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str):
+    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
         """Initialize Light class.
 
         Parameters:

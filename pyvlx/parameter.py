@@ -15,12 +15,17 @@ class Parameter:
     OFF = 0xC800  # C8 00
     TARGET = 0xD100  # D1 00
     IGNORE = 0xD400  # D4 00
+    DUAL_SHUTTER_CURTAINS = 0xD808  # D8 08
 
     def __init__(self, raw: Optional[bytes] = None):
         """Initialize Parameter class."""
         self.raw = self.from_int(Position.UNKNOWN_VALUE)
         if raw is not None:
             self.raw = self.from_raw(raw)
+
+    def __bytes__(self) -> bytes:
+        """Convert object in byte representation."""
+        return self.raw
 
     def from_parameter(self, parameter: "Parameter") -> None:
         """Set internal raw state from parameter."""
@@ -38,17 +43,23 @@ class Parameter:
         return bytes([value >> 8 & 255, value & 255])
 
     @staticmethod
+    def to_int(raw: bytes) -> int:
+        """Create int position value out of raw."""
+        return raw[0] * 256 + raw[1]
+
+    @staticmethod
     def is_valid_int(value: int) -> bool:
         """Test if value can be rendered out of int."""
         if 0 <= value <= Parameter.MAX:  # This includes ON and OFF
             return True
-        if value == Parameter.UNKNOWN_VALUE:
-            return True
-        if value == Parameter.IGNORE:
-            return True
-        if value == Parameter.CURRENT:
-            return True
-        if value == Parameter.TARGET:
+        valid_values = {
+            Parameter.UNKNOWN_VALUE,
+            Parameter.IGNORE,
+            Parameter.CURRENT,
+            Parameter.TARGET,
+            Parameter.DUAL_SHUTTER_CURTAINS,
+        }
+        if value in valid_values:
             return True
         return False
 
@@ -60,14 +71,33 @@ class Parameter:
         if len(raw) != 2:
             raise PyVLXException("Position::raw_must_be_two_bytes")
         if (
-                raw != Position.from_int(Position.CURRENT)
-                and raw != Position.from_int(Position.IGNORE)
-                and raw != Position.from_int(Position.TARGET)
-                and raw != Position.from_int(Position.UNKNOWN_VALUE)
-                and Position.to_int(raw) > Position.MAX
+            raw != Position.from_int(Position.CURRENT)
+            and raw != Position.from_int(Position.IGNORE)
+            and raw != Position.from_int(Position.TARGET)
+            and raw != Position.from_int(Position.UNKNOWN_VALUE)
+            and Position.to_int(raw) > Position.MAX
         ):
             return Position.from_int(Position.UNKNOWN_VALUE)
         return raw
+
+    @staticmethod
+    def from_percent(percent: int) -> bytes:
+        """Create raw value out of percent position."""
+        if not isinstance(percent, int):
+            raise PyVLXException("Position::percent_has_to_be_int")
+        if percent < 0:
+            raise PyVLXException("Position::percent_has_to_be_positive")
+        if percent > 100:
+            raise PyVLXException("Position::percent_out_of_range")
+        return bytes([percent * 2, 0])
+
+    @staticmethod
+    def to_percent(raw: bytes) -> int:
+        """Create percent position value out of raw."""
+        # The first byte has the vlue from 0 to 200. Ignoring the second one.
+        # Adding 0.5 allows a slight tolerance for devices (e.g. Velux SML) that
+        # do not return exactly 51200 as final position when closed.
+        return int(raw[0] / 2 + 0.5)
 
     def __eq__(self, other: object) -> bool:
         """Equal operator."""
@@ -77,21 +107,41 @@ class Parameter:
 
     def __str__(self) -> str:
         """Return string representation of object."""
-        return "0x" + "".join("{:02X}".format(x) for x in self.raw)
-
-    def __bytes__(self) -> bytes:
-        """Return raw bytes of object."""
-        return self.raw
+        if self.raw == self.from_int(Position.UNKNOWN_VALUE):
+            return "UNKNOWN"
+        if self.raw == self.from_int(Position.CURRENT):
+            return "CURRENT"
+        if self.raw == self.from_int(Position.TARGET):
+            return "TARGET"
+        if self.raw == self.from_int(Position.IGNORE):
+            return "IGNORE"
+        if self.raw == self.from_int(Position.DUAL_SHUTTER_CURTAINS):
+            return "DUAL"
+        return "{} %".format(int(self.to_percent(self.raw)))
 
 
 class SwitchParameter(Parameter):
     """Class for storing On or Off values."""
 
-    def __init__(self, parameter: Optional[Parameter] = None):
+    def __init__(
+        self, parameter: Optional[Parameter] = None, state: Optional[int] = None
+    ):
         """Initialize Parameter class."""
         super().__init__()
         if parameter is not None:
             self.from_parameter(parameter)
+        elif state is not None:
+            self.state = state
+
+    @property
+    def state(self) -> int:
+        """Position property."""
+        return self.to_int(self.raw)
+
+    @state.setter
+    def state(self, state: int) -> None:
+        """Setter of internal raw via state."""
+        self.raw = self.from_int(state)
 
     def set_on(self) -> None:
         """Set parameter to 'on' state."""
@@ -109,14 +159,21 @@ class SwitchParameter(Parameter):
         """Return True if parameter is in 'off' state."""
         return self.raw == self.from_int(Parameter.OFF)
 
+    def __str__(self) -> str:
+        """Return string representation of object."""
+        if self.raw == self.from_int(Parameter.ON):
+            return "ON"
+        if self.raw == self.from_int(Parameter.OFF):
+            return "OFF"
+        return "UNKNOWN"
+
 
 class SwitchParameterOn(SwitchParameter):
     """Switch Parameter in switched 'on' state."""
 
     def __init__(self) -> None:
         """Initialize SwitchParameterOn class."""
-        super().__init__()
-        self.set_on()
+        super().__init__(state=Parameter.ON)
 
 
 class SwitchParameterOff(SwitchParameter):
@@ -124,14 +181,18 @@ class SwitchParameterOff(SwitchParameter):
 
     def __init__(self) -> None:
         """Initialize SwitchParameterOff class."""
-        super().__init__()
-        self.set_off()
+        super().__init__(state=Parameter.OFF)
 
 
 class Position(Parameter):
     """Class for storing a position."""
 
-    def __init__(self, parameter: Optional[Parameter] = None, position: Optional[int] = None, position_percent: Optional[int] = None):
+    def __init__(
+        self,
+        parameter: Optional[Parameter] = None,
+        position: Optional[int] = None,
+        position_percent: Optional[int] = None,
+    ):
         """Initialize Position class."""
         super().__init__()
         if parameter is not None:
@@ -140,10 +201,6 @@ class Position(Parameter):
             self.position = position
         elif position_percent is not None:
             self.position_percent = position_percent
-
-    def __bytes__(self) -> bytes:
-        """Convert object in byte representation."""
-        return self.raw
 
     @property
     def known(self) -> bool:
@@ -159,7 +216,7 @@ class Position(Parameter):
     def closed(self) -> bool:
         """Return true if position is set to fully closed."""
         # Consider closed even if raw is not exactly 51200 (tolerance for devices like Velux SML)
-        return self.position_percent == 100
+        return self.raw == self.from_int(Position.MAX)
 
     @property
     def position(self) -> int:
@@ -180,37 +237,7 @@ class Position(Parameter):
     @position_percent.setter
     def position_percent(self, position_percent: int) -> None:
         """Setter of internal raw via percent position."""
-        self.raw = self.from_percent(position_percent)
-
-    @staticmethod
-    def to_int(raw: bytes) -> int:
-        """Create int position value out of raw."""
-        return raw[0] * 256 + raw[1]
-
-    @staticmethod
-    def from_percent(position_percent: int) -> bytes:
-        """Create raw value out of percent position."""
-        if not isinstance(position_percent, int):
-            raise PyVLXException("Position::position_percent_has_to_be_int")
-        if position_percent < 0:
-            raise PyVLXException("Position::position_percent_has_to_be_positive")
-        if position_percent > 100:
-            raise PyVLXException("Position::position_percent_out_of_range")
-        return bytes([position_percent * 2, 0])
-
-    @staticmethod
-    def to_percent(raw: bytes) -> int:
-        """Create percent position value out of raw."""
-        # The first byte has the value from 0 to 200. Ignoring the second one.
-        # Adding 0.5 allows a slight tolerance for devices (e.g. Velux SML) that
-        # do not return exactly 51200 as final position when closed.
-        return int(raw[0] / 2 + 0.5)
-
-    def __str__(self) -> str:
-        """Return string representation of object."""
-        if self.raw == self.from_int(Position.UNKNOWN_VALUE):
-            return "UNKNOWN"
-        return "{} %".format(self.position_percent)
+        self.raw = self.from_percent(percent=position_percent)
 
 
 class UnknownPosition(Position):
@@ -248,7 +275,12 @@ class IgnorePosition(Position):
 class Intensity(Parameter):
     """Class for storing an intensity."""
 
-    def __init__(self, parameter: Optional[Parameter] = None, intensity: Optional[int] = None, intensity_percent: Optional[int] = None):
+    def __init__(
+        self,
+        parameter: Optional[Parameter] = None,
+        intensity: Optional[int] = None,
+        intensity_percent: Optional[int] = None,
+    ):
         """Initialize Intensity class."""
         super().__init__()
         if parameter is not None:
@@ -257,10 +289,6 @@ class Intensity(Parameter):
             self.intensity = intensity
         elif intensity_percent is not None:
             self.intensity_percent = intensity_percent
-
-    def __bytes__(self) -> bytes:
-        """Convert object in byte representation."""
-        return self.raw
 
     @property
     def known(self) -> bool:
@@ -296,29 +324,7 @@ class Intensity(Parameter):
     @intensity_percent.setter
     def intensity_percent(self, intensity_percent: int) -> None:
         """Setter of internal raw via percent intensity."""
-        self.raw = self.from_percent(intensity_percent)
-
-    @staticmethod
-    def to_int(raw: bytes) -> int:
-        """Create int intensity value out of raw."""
-        return raw[0] * 256 + raw[1]
-
-    @staticmethod
-    def from_percent(intensity_percent: int) -> bytes:
-        """Create raw value out of percent intensity."""
-        if not isinstance(intensity_percent, int):
-            raise PyVLXException("Intensity::intensity_percent_has_to_be_int")
-        if intensity_percent < 0:
-            raise PyVLXException("Intensity::intensity_percent_has_to_be_positive")
-        if intensity_percent > 100:
-            raise PyVLXException("Intensity::intensity_percent")
-        return bytes([intensity_percent * 2, 0])
-
-    @staticmethod
-    def to_percent(raw: bytes) -> int:
-        """Create percent intensity value out of raw."""
-        # The first byte has the value from 0 to 200. Ignoring the second one.
-        return int(raw[0] / 2)
+        self.raw = self.from_percent(percent=intensity_percent)
 
     def __str__(self) -> str:
         """Return string representation of object."""
@@ -341,3 +347,11 @@ class CurrentIntensity(Intensity):
     def __init__(self) -> None:
         """Initialize CurrentIntensity class."""
         super().__init__(intensity=Intensity.CURRENT)
+
+
+class DualRollerShutterPosition(Position):
+    """Position to be provided when addressing the upper or lower curtain of a dual roller shutter by using FP1 or FP2."""
+
+    def __init__(self) -> None:
+        """Initialize CurrentPosition class."""
+        super().__init__(position=Position.DUAL_SHUTTER_CURTAINS)

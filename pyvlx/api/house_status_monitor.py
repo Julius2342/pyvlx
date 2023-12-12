@@ -1,8 +1,6 @@
 """Module for house status monitor."""
 from typing import TYPE_CHECKING
 
-from pyvlx.exception import PyVLXException
-
 from .api_event import ApiEvent
 from .frames import (
     FrameBase, FrameHouseStatusMonitorDisableConfirmation,
@@ -52,19 +50,3 @@ class HouseStatusMonitorDisable(ApiEvent):
     def request_frame(self) -> FrameHouseStatusMonitorDisableRequest:
         """Construct initiating frame."""
         return FrameHouseStatusMonitorDisableRequest()
-
-
-async def house_status_monitor_enable(pyvlx: "PyVLX") -> None:
-    """Enable house status monitor."""
-    status_monitor_enable = HouseStatusMonitorEnable(pyvlx=pyvlx)
-    await status_monitor_enable.do_api_call()
-    if not status_monitor_enable.success:
-        raise PyVLXException("Unable enable house status monitor.")
-
-
-async def house_status_monitor_disable(pyvlx: "PyVLX") -> None:
-    """Disable house status monitor."""
-    status_monitor_disable = HouseStatusMonitorDisable(pyvlx=pyvlx)
-    await status_monitor_disable.do_api_call()
-    if not status_monitor_disable.success:
-        raise PyVLXException("Unable disable house status monitor.")

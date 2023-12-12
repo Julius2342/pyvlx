@@ -11,7 +11,7 @@ PKG_ROOT = os.path.dirname(__file__)
 VERSION = "0.2.20"
 
 
-def get_long_description():
+def get_long_description() -> str:
     """Read long description from README.md."""
     this_directory = path.abspath(path.dirname(__file__))
     with open(path.join(this_directory, "README.md"), encoding="utf-8") as readme:
@@ -42,7 +42,7 @@ setup(
     ],
     packages=find_packages(),
     package_data={
-        'pyvlx': ['py.typed'],
+        "pyvlx": ["py.typed"],
     },
     python_requires='>=3.10',
     install_requires=REQUIRES,

@@ -4,7 +4,8 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
+from pyvlx.const import (
+    Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity)
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
@@ -94,7 +95,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.power_mode = 0
         self.build_number = 0
         self._serial_number = bytes(8)
-        self.state = 0
+        self.state = OperatingState.UNKNOWN
         self.current_position = Parameter()
         self.target = Parameter()
         self.current_position_fp1 = Parameter()
@@ -141,7 +142,7 @@ class FrameGetNodeInformationNotification(FrameBase):
             [self.build_number]
         )  # <-- hey @VELUX: your documentation is wrong here
         payload += bytes(self._serial_number)
-        payload += bytes([self.state])
+        payload += bytes([self.state.value])
         payload += bytes(self.current_position.raw)
         payload += bytes(self.target.raw)
         payload += bytes(self.current_position_fp1.raw)
@@ -169,7 +170,7 @@ class FrameGetNodeInformationNotification(FrameBase):
             75
         ]  # <-- hey @VELUX: your documentation is wrong here
         self._serial_number = payload[76:84]
-        self.state = payload[84]
+        self.state = OperatingState(payload[84])
         self.current_position = Parameter(payload[85:87])
         self.target = Parameter(payload[87:89])
         self.current_position_fp1 = Parameter(payload[89:91])
@@ -208,7 +209,7 @@ class FrameGetNodeInformationNotification(FrameBase):
                 self.power_mode,
                 self.build_number,
                 self.serial_number,
-                self.state,
+                self.state.name,
                 self.current_position,
                 self.target,
                 self.current_position_fp1,

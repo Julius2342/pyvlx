@@ -1,6 +1,7 @@
 """Module for retrieving scene list from API."""
 from typing import TYPE_CHECKING, Any, Optional
 
+from ..exception import PyVLXException
 from ..parameter import Parameter
 from .api_event import ApiEvent
 from .frames import (
@@ -24,7 +25,7 @@ class CommandSend(ApiEvent):
             parameter: Parameter,
             active_parameter: int = 0,
             wait_for_completion: bool = True,
-            timeout_in_seconds: int = 60,
+            timeout_in_seconds: int = 2,
             **functional_parameter: Any
     ):
         """Initialize SceneList class."""
@@ -65,6 +66,12 @@ class CommandSend(ApiEvent):
         ):
             return True
         return False
+
+    async def send(self) -> None:
+        """Send frame to KLF200."""
+        await self.do_api_call()
+        if not self.success:
+            raise PyVLXException("Unable to send command")
 
     def request_frame(self) -> FrameCommandSendRequest:
         """Construct initiating frame."""

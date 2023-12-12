@@ -5,7 +5,7 @@ Node object is an interface class and should
 be derived by other objects like window openers
 and roller shutters.
 """
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, List
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, List, Optional
 
 from .api import SetNodeName
 from .exception import PyVLXException
@@ -19,7 +19,7 @@ CallbackType = Callable[["Node"], Awaitable[None]]
 class Node:
     """Class for node abstraction."""
 
-    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str):
+    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
         """Initialize Node object."""
         self.pyvlx = pyvlx
         self.node_id = node_id
@@ -39,7 +39,7 @@ class Node:
         """Execute callbacks after internal state has been changed."""
         for device_updated_cb in self.device_updated_cbs:
             # pylint: disable=not-callable
-            await device_updated_cb(self)
+            self.pyvlx.loop.create_task(device_updated_cb(self))  # type: ignore
 
     async def rename(self, name: str) -> None:
         """Change name of node."""

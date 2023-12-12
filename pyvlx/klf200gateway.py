@@ -4,7 +4,8 @@ from typing import TYPE_CHECKING, Awaitable, Callable, List, Optional
 
 from .api import (
     FactoryDefault, GetLocalTime, GetNetworkSetup, GetProtocolVersion,
-    GetState, GetVersion, LeaveLearnState, PasswordEnter, Reboot, SetUTC)
+    GetState, GetVersion, HouseStatusMonitorDisable, HouseStatusMonitorEnable,
+    LeaveLearnState, PasswordEnter, Reboot, SetUTC)
 from .dataobjects import (
     DtoLocalTime, DtoNetworkSetup, DtoProtocolVersion, DtoState, DtoVersion)
 from .exception import PyVLXException
@@ -28,6 +29,7 @@ class Klf200Gateway:
         self.protocol_version: Optional[DtoProtocolVersion] = None
         self.version: Optional[DtoVersion] = None
         self.device_updated_cbs: List[CallbackType] = []
+        self.house_status_monitor_enabled = False
 
     def register_device_updated_cb(self, device_updated_cb: CallbackType) -> None:
         """Register device updated callback."""
@@ -134,6 +136,24 @@ class Klf200Gateway:
         if not passwordenter.success:
             raise PyVLXException("Login to KLF 200 failed, check credentials")
         return passwordenter.success
+
+    async def house_status_monitor_enable(self, pyvlx: "PyVLX") -> None:
+        """Enable house status monitor."""
+        status_monitor_enable = HouseStatusMonitorEnable(pyvlx=pyvlx)
+        await status_monitor_enable.do_api_call()
+        if not status_monitor_enable.success:
+            raise PyVLXException("Unable enable house status monitor.")
+        self.house_status_monitor_enabled = True
+
+    async def house_status_monitor_disable(self, pyvlx: "PyVLX", timeout: Optional[int] = None) -> None:
+        """Disable house status monitor."""
+        status_monitor_disable = HouseStatusMonitorDisable(pyvlx=pyvlx)
+        if timeout is not None:
+            status_monitor_disable.timeout_in_seconds = timeout
+        await status_monitor_disable.do_api_call()
+        if not status_monitor_disable.success:
+            raise PyVLXException("Unable disable house status monitor.")
+        self.house_status_monitor_enabled = False
 
     def __str__(self) -> str:
         """Return object as readable string."""

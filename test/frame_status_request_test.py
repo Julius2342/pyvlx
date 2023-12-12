@@ -16,17 +16,17 @@ class TestFrameStatusRequestRequest(unittest.TestCase):
     EXAMPLE_FRAME = b"\x00\x1d\x03\x05\x00\xab\x02\x01\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" \
                     b"\x00\x00\x00\x00\x01\xfe\x00N"
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameStatusRequestRequest with nodes 1,2 and session_id 0xAB."""
         frame = FrameStatusRequestRequest(node_ids=[1, 2], session_id=0xAB)
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameStatusRequestRequest from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameStatusRequestRequest))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameStatusRequestRequest."""
         frame = FrameStatusRequestRequest(node_ids=[1, 2], session_id=0xAB)
         self.assertEqual(str(frame), "<FrameStatusRequestRequest session_id=\"171\" node_ids=\"[1, 2]\" "
@@ -40,17 +40,17 @@ class TestFrameStatusRequestConfirmation(unittest.TestCase):
 
     EXAMPLE_FRAME = b"\x00\x06\x03\x06\x00\xab\x01\xa9"
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameStatusRequestConfirmation with session_id 0xAB and status ACCEPTED."""
         frame = FrameStatusRequestConfirmation(session_id=0xAB, status=StatusRequestStatus.ACCEPTED)
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameStatusRequestConfirmation from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameStatusRequestConfirmation))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameStatusRequestConfirmation."""
         frame = FrameStatusRequestConfirmation(session_id=0xAB, status=StatusRequestStatus.ACCEPTED)
         self.assertEqual(str(frame),
@@ -69,17 +69,17 @@ class TestFrameStatusRequestNotification(unittest.TestCase):
                     b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" \
                     b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00: "
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameStatusRequestNotification."""
         frame = FrameStatusRequestNotification()
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME_EMPTY)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameStatusRequestNotification from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME_EMPTY)
         self.assertTrue(isinstance(frame, FrameStatusRequestNotification))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameStatusRequestNotification."""
         frame = FrameStatusRequestNotification()
         self.assertEqual(str(frame), "<FrameStatusRequestNotification session_id=\"0\" "

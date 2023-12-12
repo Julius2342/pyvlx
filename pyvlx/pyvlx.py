@@ -8,11 +8,11 @@ and roller shutters.
 import asyncio
 from typing import Optional
 
-from .api import (
-    get_limitation, house_status_monitor_disable, house_status_monitor_enable)
+from .api import get_limitation
 from .api.frames import FrameBase
 from .config import Config
 from .connection import Connection
+from .exception import PyVLXException
 from .heartbeat import Heartbeat
 from .klf200gateway import Klf200Gateway
 from .log import PYVLXLOG
@@ -24,16 +24,24 @@ from .scenes import Scenes
 class PyVLX:
     """Class for PyVLX."""
 
-    def __init__(self,
-                 path: Optional[str] = None,
-                 host: Optional[str] = None,
-                 password: Optional[str] = None,
-                 loop: Optional[asyncio.AbstractEventLoop] = None):
+    def __init__(
+        self,
+        path: Optional[str] = None,
+        host: Optional[str] = None,
+        password: Optional[str] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+        heartbeat_interval: int = 30,
+        heartbeat_load_all_states: bool = True,
+    ):
         """Initialize PyVLX class."""
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
         self.connection = Connection(loop=self.loop, config=self.config)
-        self.heartbeat = Heartbeat(pyvlx=self)
+        self.heartbeat = Heartbeat(
+            pyvlx=self,
+            interval=heartbeat_interval,
+            load_all_states=heartbeat_load_all_states,
+        )
         self.node_updater = NodeUpdater(pyvlx=self)
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
         self.nodes = Nodes(self)
@@ -42,11 +50,11 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
+        PYVLXLOG.debug("Loadig pyvlx v0.2.20")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
-        PYVLXLOG.debug("Connecting to KLF 200.")
-        self.heartbeat.start()
+        PYVLXLOG.debug("Connecting to KLF 200")
         await self.connection.connect()
         assert self.config.password is not None
         await self.klf200.password_enter(password=self.config.password)
@@ -55,13 +63,14 @@ class PyVLX:
         PYVLXLOG.debug(
             "Connected to: %s,  %s",
             str(self.klf200.version),
-            str(self.klf200.protocol_version)
+            str(self.klf200.protocol_version),
         )
-
+        await self.klf200.house_status_monitor_disable(pyvlx=self)
         await self.klf200.get_state()
         await self.klf200.set_utc()
         await self.klf200.get_network_setup()
-        await house_status_monitor_enable(pyvlx=self)
+        await self.klf200.house_status_monitor_enable(pyvlx=self)
+        self.heartbeat.start()
 
     async def reboot_gateway(self) -> None:
         """For Compatibility: Reboot the KLF 200."""
@@ -81,7 +90,10 @@ class PyVLX:
     async def disconnect(self) -> None:
         """Disconnect from KLF 200."""
         # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
-        await house_status_monitor_disable(pyvlx=self)
+        try:
+            await self.klf200.house_status_monitor_disable(pyvlx=self, timeout=1)
+        except (OSError, PyVLXException):
+            pass
         await self.heartbeat.stop()
         self.connection.disconnect()
 
