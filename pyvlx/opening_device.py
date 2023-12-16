@@ -272,8 +272,8 @@ class Blind(OpeningDevice):
             position_parameter=position_parameter,
         )
         self.orientation: Position = Position(position_percent=0)
-        self.target_orientation: Position = Position()
-        self.target_position: Position = Position()
+        self.target_orientation: Position = TargetPosition()
+        self.target_position: Position = TargetPosition()
         self.open_orientation_target: int = 50
         self.close_orientation_target: int = 100
 
