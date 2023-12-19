@@ -51,7 +51,8 @@ class Node:
 
     @property
     def is_available(self) -> bool:
-        return self.pyvlx.is_connected()
+        """Return True if node is available."""
+        return self.pyvlx.get_connected()
 
     def __str__(self) -> str:
         """Return object as readable string."""

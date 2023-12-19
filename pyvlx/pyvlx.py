@@ -37,7 +37,7 @@ class PyVLX:
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
         self.connection = Connection(loop=self.loop, config=self.config)
-        self.connection.register_connection_closed_cb(self.connection_closed_cb)
+        self.connection.register_connection_closed_cb(self.on_connection_closed_cb)
         self.heartbeat = Heartbeat(
             pyvlx=self,
             interval=heartbeat_interval,
@@ -79,13 +79,13 @@ class PyVLX:
 
     async def reboot_gateway(self) -> None:
         """For Compatibility: Reboot the KLF 200."""
-        if not self.is_connected():
+        if not self.get_connected():
             PYVLXLOG.warning("KLF 200 reboot initiated, but gateway is not connected")
         else:
             PYVLXLOG.warning("KLF 200 reboot initiated")
             await self.klf200.reboot()
 
-    def is_connected(self) -> bool:
+    def get_connected(self) -> bool:
         """Returns whether the gateway is currently connected."""
         return self.connection.connected
 
@@ -122,7 +122,7 @@ class PyVLX:
         limit = get_limitation.GetLimitation(self, node_id)
         await limit.do_api_call()
 
-    async def connection_closed_cb(self) -> None:
+    async def on_connection_closed_cb(self) -> None:
         """Callback when connection to KLF 200 is closed."""
         PYVLXLOG.debug("Connecting to KLF 200 was closed")
         for node in self.nodes:
