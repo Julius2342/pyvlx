@@ -72,6 +72,7 @@ class PyVLX:
         await self.klf200.house_status_monitor_enable(pyvlx=self)
         self.heartbeat.start()
 
+        PYVLXLOG.debug("Connecting to KLF 200 was opened")
         for node in self.nodes:
             await self.loop.create_task(node.after_update())
 
@@ -122,5 +123,6 @@ class PyVLX:
 
     def connection_closed_cb(self) -> None:
         """Callback when connection to KLF 200 is closed."""
+        PYVLXLOG.debug("Connecting to KLF 200 was closed")
         for node in self.nodes:
             self.loop.create_task(node.after_update())
