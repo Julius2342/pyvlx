@@ -49,6 +49,10 @@ class Node:
             raise PyVLXException("Unable to rename node")
         self.name = name
 
+    @property
+    def is_available(self) -> bool:
+        return self.pyvlx.is_connected()
+
     def __str__(self) -> str:
         """Return object as readable string."""
         return (

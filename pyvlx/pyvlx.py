@@ -81,7 +81,7 @@ class PyVLX:
             await self.klf200.reboot()
 
     def is_connected(self) -> bool:
-        """Returns whether or not the gateway is currently connected."""
+        """Returns whether the gateway is currently connected."""
         return self.connection.connected
 
     async def check_connected(self) -> None:
