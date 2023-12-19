@@ -76,13 +76,13 @@ CallbackType = Callable[[FrameBase], Coroutine]
 class Connection:
     """Class for handling TCP connection."""
 
-    def __init__(self, loop: asyncio.AbstractEventLoop, config: Config, connection_closed_cb: CallbackType = None):
+    def __init__(self, loop: asyncio.AbstractEventLoop, config: Config, connection_closed_cb: Callable[[], None] = None):
         """Init TCP connection."""
         self.loop = loop
         self.config = config
         self.transport: Optional[asyncio.Transport] = None
         self.frame_received_cbs: List[CallbackType] = []
-        self.connection_closed_cb: CallbackType = None
+        self.connection_closed_cb: Callable[[], None] = connection_closed_cb
         self.connected = False
         self.connection_counter = 0
 
@@ -101,7 +101,7 @@ class Connection:
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
-        tcp_client = TCPTransport(self.frame_received_cb, self.connection_closed_cb)
+        tcp_client = TCPTransport(self.frame_received_cb, connection_closed_cb=self.connection_closed_cb)
         assert self.config.host is not None
         self.transport, _ = await self.loop.create_connection(
             lambda: tcp_client,

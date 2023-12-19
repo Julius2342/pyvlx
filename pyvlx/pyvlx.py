@@ -120,7 +120,7 @@ class PyVLX:
         limit = get_limitation.GetLimitation(self, node_id)
         await limit.do_api_call()
 
-    async def connection_closed_cb(self) -> None:
+    def connection_closed_cb(self) -> None:
         """Callback when connection to KLF 200 is closed."""
         for node in self.nodes:
-            await self.loop.create_task(node.after_update())
+            self.loop.create_task(node.after_update())
