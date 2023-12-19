@@ -74,8 +74,15 @@ class PyVLX:
 
     async def reboot_gateway(self) -> None:
         """For Compatibility: Reboot the KLF 200."""
-        PYVLXLOG.warning("KLF 200 reboot initiated")
-        await self.klf200.reboot()
+        if not self.is_connected():
+            PYVLXLOG.warning("KLF 200 reboot initiated, but gateway is not connected")
+        else:
+            PYVLXLOG.warning("KLF 200 reboot initiated")
+            await self.klf200.reboot()
+
+    def is_connected(self) -> bool:
+        """Returns whether or not the gateway is currently connected."""
+        return self.connection.connected
 
     async def check_connected(self) -> None:
         """Check we're connected, and if not, connect."""
