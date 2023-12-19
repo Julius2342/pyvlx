@@ -132,7 +132,7 @@ class Connection:
         """Register frame received callback."""
         self.connection_closed_cbs.append(callback)
         if not self.connected:
-            self.loop.create_task(callback)
+            self.loop.create_task(callback())
 
     def unregister_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
         """Unregister frame received callback."""
@@ -142,7 +142,7 @@ class Connection:
         """Register frame received callback."""
         self.connection_opened_cbs.append(callback)
         if self.connected:
-            self.loop.create_task(callback)
+            self.loop.create_task(callback())
 
     def unregister_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
         """Unregister frame received callback."""
