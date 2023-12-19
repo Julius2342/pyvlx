@@ -86,7 +86,7 @@ class PyVLX:
             await self.klf200.reboot()
 
     def get_connected(self) -> bool:
-        """Returns whether the gateway is currently connected."""
+        """Return whether the gateway is currently connected."""
         return self.connection.connected
 
     async def check_connected(self) -> None:
@@ -123,7 +123,7 @@ class PyVLX:
         await limit.do_api_call()
 
     async def on_connection_closed_cb(self) -> None:
-        """Callback when connection to KLF 200 is closed."""
+        """Handle KLF 200 closed connection callback."""
         PYVLXLOG.debug("Connecting to KLF 200 was closed")
         for node in self.nodes:
             await self.loop.create_task(node.after_update())
