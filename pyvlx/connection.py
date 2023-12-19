@@ -97,7 +97,7 @@ class Connection:
             self.transport = None
         self.connected = False
         if self.connection_closed_cb is not None:
-            self.loop.create_task(self.connection_closed_cb())
+            self.connection_closed_cb()
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
