@@ -36,7 +36,8 @@ class PyVLX:
         """Initialize PyVLX class."""
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
-        self.connection = Connection(loop=self.loop, config=self.config, connection_closed_cb=self.connection_closed_cb)
+        self.connection = Connection(loop=self.loop, config=self.config)
+        self.connection.register_connection_closed_cb(self.connection_closed_cb)
         self.heartbeat = Heartbeat(
             pyvlx=self,
             interval=heartbeat_interval,
@@ -121,8 +122,8 @@ class PyVLX:
         limit = get_limitation.GetLimitation(self, node_id)
         await limit.do_api_call()
 
-    def connection_closed_cb(self) -> None:
+    async def connection_closed_cb(self) -> None:
         """Callback when connection to KLF 200 is closed."""
         PYVLXLOG.debug("Connecting to KLF 200 was closed")
         for node in self.nodes:
-            self.loop.create_task(node.after_update())
+            await self.loop.create_task(node.after_update())
