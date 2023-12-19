@@ -44,8 +44,8 @@ class PyVLX:
             load_all_states=heartbeat_load_all_states,
         )
         self.node_updater = NodeUpdater(pyvlx=self)
-        self.connection.register_frame_received_cb(self.node_updater.process_frame)
         self.nodes = Nodes(self)
+        self.connection.register_frame_received_cb(self.node_updater.process_frame)
         self.scenes = Scenes(self)
         self.version = None
         self.protocol_version = None
