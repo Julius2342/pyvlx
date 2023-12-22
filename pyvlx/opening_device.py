@@ -41,7 +41,7 @@ class OpeningDevice(Node):
             pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
         )
         self.position: Position = Position(parameter=position_parameter)
-        self.target: Position = Position(parameter=position_parameter)
+        self.target_position: Position = Position(parameter=position_parameter)
         self.is_opening: bool = False
         self.is_closing: bool = False
         self.state_received_at: Optional[datetime.datetime] = None
@@ -172,7 +172,7 @@ class OpeningDevice(Node):
         if self.is_moving():
             percent = self.movement_percent()
             movement_origin = self.position.position_percent
-            movement_target = self.target.position_percent
+            movement_target = self.target_position.position_percent
             current_position = (
                 movement_origin + (movement_target - movement_origin) / 100 * percent
             )
@@ -273,7 +273,6 @@ class Blind(OpeningDevice):
         )
         self.orientation: Position = Position(position_percent=0)
         self.target_orientation: Position = TargetPosition()
-        self.target_position: Position = TargetPosition()
         self.open_orientation_target: int = 50
         self.close_orientation_target: int = 100
 
@@ -355,50 +354,6 @@ class Blind(OpeningDevice):
             position=position,
             wait_for_completion=wait_for_completion,
             velocity=velocity,
-        )
-
-    async def open(
-        self,
-        velocity: Velocity | int | None = Velocity.DEFAULT,
-        wait_for_completion: bool = True,
-    ) -> None:
-        """Open window.
-
-        Parameters:
-            * velocity: Velocity to be used during transition.
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-        """
-        await self.set_position(
-            position=Position(position_percent=self.open_position_target),
-            velocity=velocity,
-            wait_for_completion=wait_for_completion,
-        )
-
-    async def close(
-        self,
-        velocity: Velocity | int | None = Velocity.DEFAULT,
-        wait_for_completion: bool = True,
-    ) -> None:
-        """Close window.
-
-        Parameters:
-            * velocity: Velocity to be used during transition.
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-        """
-        await self.set_position(
-            position=Position(position_percent=self.close_position_target),
-            velocity=velocity,
-            wait_for_completion=wait_for_completion,
-        )
-
-    async def stop(self, wait_for_completion: bool = True) -> None:
-        """Stop Blind position."""
-        await self.set_position_and_orientation(
-            position=CurrentPosition(),
-            wait_for_completion=wait_for_completion,
-            orientation=self.target_orientation,
         )
 
     async def set_orientation(
@@ -494,7 +449,6 @@ class DualRollerShutter(OpeningDevice):
         )
         self.position_upper_curtain: Position = Position(position_percent=0)
         self.position_lower_curtain: Position = Position(position_percent=0)
-        self.target_position: Any = Position()
         self.active_parameter: int = 0
 
     async def set_position(
