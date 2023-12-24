@@ -8,8 +8,13 @@ from .const import Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, DualRollerShutterPosition, IgnorePosition, Parameter,
-    Position, TargetPosition)
+    CurrentPosition,
+    DualRollerShutterPosition,
+    IgnorePosition,
+    Parameter,
+    Position,
+    TargetPosition,
+)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -24,7 +29,7 @@ class OpeningDevice(Node):
         node_id: int,
         name: str,
         serial_number: Optional[str] = None,
-        position_parameter: Parameter = Parameter(),
+        position_parameter: Parameter = TargetPosition(),
     ):
         """Initialize opening device.
 
