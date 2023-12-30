@@ -95,7 +95,7 @@ class PyVLX:
         except (OSError, PyVLXException):
             pass
         await self.heartbeat.stop()
-        # Reboot KLF200 when disconnecting in order to avoid unresponsive KLF200.
+        # Reboot KLF200 when disconnecting to avoid unresponsive KLF200.
         await self.klf200.reboot()
         self.connection.disconnect()
 
