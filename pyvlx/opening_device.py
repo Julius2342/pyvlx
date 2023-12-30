@@ -51,6 +51,13 @@ class OpeningDevice(Node):
         self.open_position_target: int = 0
         self.close_position_target: int = 100
 
+    async def after_update(self) -> None:
+        """Execute callbacks after internal state has been changed."""
+        # While cover are moving, perform periodically update calls.
+        if self.is_moving():
+            self.pyvlx.loop.call_later(1, self.after_update)
+        return await super().after_update()
+
     async def set_position(
         self,
         position: Position,
