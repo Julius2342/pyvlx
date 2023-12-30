@@ -6,6 +6,7 @@ from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .const import Velocity
 from .exception import PyVLXException
+from .log import PYVLXLOG
 from .node import Node
 from .parameter import (
     CurrentPosition, DualRollerShutterPosition, IgnorePosition, Parameter,
@@ -55,6 +56,7 @@ class OpeningDevice(Node):
         """Execute callbacks after internal state has been changed."""
         # While cover are moving, perform periodically update calls.
         if self.is_moving():
+            PYVLXLOG.debug("Looping updates while moving.")
             self.pyvlx.loop.call_later(1, self.after_update)
         return await super().after_update()
 
