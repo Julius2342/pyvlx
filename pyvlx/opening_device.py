@@ -157,7 +157,7 @@ class OpeningDevice(Node):
     def is_moving(self) -> bool:
         """Return moving state of the cover."""
         if not self._update_task:
-            self._update_task = asyncio.create_task(self._update_calls())
+            self._update_task = self.pyvlx.loop.create_task(self._update_calls())
         return self.is_opening or self.is_closing
 
     def movement_percent(self) -> int:
