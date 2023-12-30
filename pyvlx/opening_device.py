@@ -1,5 +1,7 @@
 """Module for Opening devices."""
+import asyncio
 import datetime
+from asyncio import Task
 from typing import TYPE_CHECKING, Any, Optional
 
 from .api.command_send import CommandSend
@@ -51,14 +53,17 @@ class OpeningDevice(Node):
         self.default_velocity: Velocity = Velocity.DEFAULT
         self.open_position_target: int = 0
         self.close_position_target: int = 100
+        self._update_task: Task | None = None
 
-    async def after_update(self) -> None:
-        """Execute callbacks after internal state has been changed."""
-        # While cover are moving, perform periodically update calls.
-        if self.is_moving():
+    async def _update_calls(self) -> None:
+        """While cover are moving, perform periodically update calls."""
+        while self.is_moving():
             PYVLXLOG.debug("Looping updates while moving.")
-            self.pyvlx.loop.call_later(1, self.after_update)
-        return await super().after_update()
+            await asyncio.sleep(1)
+            await self.after_update()
+        if self._update_task:
+            self._update_task.cancel()
+            self._update_task = None
 
     async def set_position(
         self,
@@ -153,6 +158,8 @@ class OpeningDevice(Node):
 
     def is_moving(self) -> bool:
         """Return moving state of the cover."""
+        if not self._update_task:
+            self._update_task = asyncio.create_task(self._update_calls())
         return self.is_opening or self.is_closing
 
     def movement_percent(self) -> int:
