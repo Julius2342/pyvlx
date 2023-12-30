@@ -8,7 +8,6 @@ from .api.command_send import CommandSend
 from .api.get_limitation import GetLimitation
 from .const import Velocity
 from .exception import PyVLXException
-from .log import PYVLXLOG
 from .node import Node
 from .parameter import (
     CurrentPosition, DualRollerShutterPosition, IgnorePosition, Parameter,
@@ -58,7 +57,6 @@ class OpeningDevice(Node):
     async def _update_calls(self) -> None:
         """While cover are moving, perform periodically update calls."""
         while self.is_moving():
-            PYVLXLOG.debug("Looping updates while moving.")
             await asyncio.sleep(1)
             await self.after_update()
         if self._update_task:
