@@ -156,8 +156,6 @@ class OpeningDevice(Node):
 
     def is_moving(self) -> bool:
         """Return moving state of the cover."""
-        if not self._update_task:
-            self._update_task = self.pyvlx.loop.create_task(self._update_calls())
         return self.is_opening or self.is_closing
 
     def movement_percent(self) -> int:
@@ -190,6 +188,8 @@ class OpeningDevice(Node):
             current_position = (
                 movement_origin + (movement_target - movement_origin) / 100 * percent
             )
+            if not self._update_task:
+                self._update_task = self.pyvlx.loop.create_task(self._update_calls())
             return Position(position_percent=int(current_position))
         return self.position
 
