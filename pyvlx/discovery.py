@@ -4,12 +4,7 @@ from asyncio import AbstractEventLoop
 from dataclasses import dataclass
 
 from zeroconf import (
-    IPVersion,
-    ServiceBrowser,
-    ServiceInfo,
-    ServiceStateChange,
-    Zeroconf,
-)
+    IPVersion, ServiceBrowser, ServiceInfo, ServiceStateChange, Zeroconf)
 from zeroconf.asyncio import AsyncZeroconf
 
 HOST_STARTS_WITH: str = "VELUX_KLF_LAN"
