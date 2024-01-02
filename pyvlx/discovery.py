@@ -4,7 +4,7 @@ from asyncio import AbstractEventLoop
 from dataclasses import dataclass
 
 from zeroconf import (
-    IPVersion, ServiceBrowser, ServiceInfo, ServiceStateChange, Zeroconf)
+    IPVersion, ServiceBrowser, ServiceInfo, ServiceStateChange, Zeroconf,)
 from zeroconf.asyncio import AsyncZeroconf
 
 HOST_STARTS_WITH: str = "VELUX_KLF_LAN"
@@ -26,6 +26,7 @@ class VeluxDiscovery():
             zeroconf: AsyncZeroconf = AsyncZeroconf(),
             listening_time_in_seconds: float = 10
     ) -> None:
+        """Initialize VeluxDiscovery object."""
         self.zc: AsyncZeroconf = zeroconf
         self.loop: AbstractEventLoop = loop
         self.listening_time_in_seconds: float = listening_time_in_seconds
