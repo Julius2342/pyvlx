@@ -4,7 +4,12 @@ from asyncio import AbstractEventLoop
 from dataclasses import dataclass
 
 from zeroconf import (
-    IPVersion, ServiceBrowser, ServiceInfo, ServiceStateChange, Zeroconf)
+    IPVersion,
+    ServiceBrowser,
+    ServiceInfo,
+    ServiceStateChange,
+    Zeroconf,
+)
 from zeroconf.asyncio import AsyncZeroconf
 
 HOST_STARTS_WITH: str = "VELUX_KLF_LAN"
@@ -14,7 +19,7 @@ SERVICE_TYPE: str = "_http._tcp.local."
 @dataclass
 class VeluxHost():
     """Class to store Velux KLF200 host information."""
-    
+
     hostname: str
     ip_address: str
 
