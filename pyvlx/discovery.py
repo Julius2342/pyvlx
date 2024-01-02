@@ -13,6 +13,7 @@ SERVICE_TYPE: str = "_http._tcp.local."
 
 @dataclass
 class VeluxHost():
+    """Class to store Velux KLF200 host information."""
     hostname: str
     ip_address: str
 
