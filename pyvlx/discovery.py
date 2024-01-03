@@ -5,8 +5,7 @@ from dataclasses import dataclass
 from typing import Any, Optional
 
 from zeroconf import IPVersion
-from zeroconf.asyncio import (
-    AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf)
+from zeroconf.asyncio import AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf
 
 SERVICE_STARTS_WITH: str = "VELUX_KLF_LAN"
 SERVICE_TYPE: str = "_http._tcp.local."
@@ -78,7 +77,7 @@ class VeluxDiscovery():
         waits min_wait_time (seconds) for ServiceInfos from hosts.
         Some devices may take some time to respond (i.e. if they currently have a high CPU load).
         If one or more Hosts are found, the function cancels the ServiceBrowser and returns true.
-        If expected_hosts is set, the function returns true once expected_hosts are found.
+        If expected_hosts is set, the function ignores min_wait_time and returns true once expected_hosts are found.
         If timeout (seconds) is exceeded, the function returns false.
         """
         try:
