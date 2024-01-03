@@ -1,14 +1,11 @@
 """Module to discover Velux KLF200 devices on the network."""
 import asyncio
-from asyncio import AbstractEventLoop, Future
+from asyncio import AbstractEventLoop, Event, Future, Task
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Optional
 
 from zeroconf import IPVersion
-from zeroconf.asyncio import (
-    AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf)
-
-from .log import PYVLXLOG
+from zeroconf.asyncio import AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf
 
 SERVICE_STARTS_WITH: str = "VELUX_KLF_LAN"
 SERVICE_TYPE: str = "_http._tcp.local."
@@ -25,26 +22,19 @@ class VeluxHost():
 class VeluxDiscovery():
     """Class to discover Velux KLF200 devices on the network."""
 
-    def __init__(
-            self,
-            loop: AbstractEventLoop,
-            zeroconf: AsyncZeroconf,
-    ) -> None:
+    def __init__(self, zeroconf: AsyncZeroconf,) -> None:
         """Initialize VeluxDiscovery object."""
         self.zc: AsyncZeroconf = zeroconf
-        self.loop: AbstractEventLoop = loop
         self.hosts: list[VeluxHost | None] = []
         self.infos: list[AsyncServiceInfo | None] = []
 
-    async def _async_discover_hosts(self, min_wait_time: float) -> None:
+    async def _async_discover_hosts(self, min_wait_time: float, expected_hosts: int | None) -> None:
         """Listen for zeroconf ServiceInfo."""
         self.hosts.clear()
+        tasks: list[Task] = []
         service_names: list[str] = []
-
-        def handler(name: str, **kwargs: Any) -> None:  # pylint: disable=W0613:unused-argument
-            if name.startswith(SERVICE_STARTS_WITH):
-                if name not in service_names:
-                    service_names.append(name)
+        got_host: Event = Event()
+        loop: AbstractEventLoop = asyncio.get_running_loop()
 
         def add_info_and_host(fut: Future) -> None:
             info: AsyncServiceInfo = fut.result()
@@ -53,30 +43,46 @@ class VeluxDiscovery():
                 hostname=info.name.replace("._http._tcp.local.", ""),
                 ip_address=info.parsed_addresses(version=IPVersion.V4Only)[0],
             )
-            PYVLXLOG.debug("Found KLF200 in network: %s", host)
             self.hosts.append(host)
+            got_host.set()
+
+        def handler(name: str, **kwargs: Any) -> None:  # pylint: disable=W0613:unused-argument
+            if name.startswith(SERVICE_STARTS_WITH):
+                if name not in service_names:
+                    service_names.append(name)
+                    task = loop.create_task(self.zc.async_get_service_info(type_=SERVICE_TYPE, name=name))
+                    task.add_done_callback(add_info_and_host)
+                    tasks.append(task)
 
         browser: AsyncServiceBrowser = AsyncServiceBrowser(self.zc.zeroconf, SERVICE_TYPE, handlers=[handler])
-
+        if expected_hosts:
+            while len(self.hosts) < expected_hosts:
+                await got_host.wait()
+                got_host.clear()
         while not self.hosts:
             await asyncio.sleep(min_wait_time)
-            async with asyncio.TaskGroup() as tg:
-                for name in service_names:
-                    task = tg.create_task(self.zc.async_get_service_info(type_=SERVICE_TYPE, name=name))
-                    task.add_done_callback(add_info_and_host)
+        for task in tasks:
+            task.cancel()
         await browser.async_cancel()
 
-    async def async_discover_hosts(self, timeout: float = 10, min_wait_time: float = 1) -> bool:
+    async def async_discover_hosts(
+        self,
+        timeout: float = 10,
+        min_wait_time: float = 3,
+        expected_hosts: Optional[int] = None
+    ) -> bool:
         """Return true if Velux KLF200 devices found on the network.
 
-        This function creates a zeroconf AsyncServiceBrowser and waits min_wait_time (seconds) for ServiceInfos from hosts.
+        This function creates a zeroconf AsyncServiceBrowser and
+        waits min_wait_time (seconds) for ServiceInfos from hosts.
         Some devices may take some time to respond (i.e. if they currently have a high CPU load).
         If one or more Hosts are found, the function cancels the ServiceBrowser and returns true.
-        If no Host is found during timeout (seconds), false is returned.
+        If expected_hosts is set, the function returns true once expected_hosts are found.
+        If timeout (seconds) is exceeded, the function returns false.
         """
         try:
             async with asyncio.timeout(timeout):
-                await self._async_discover_hosts(min_wait_time)
+                await self._async_discover_hosts(min_wait_time, expected_hosts)
         except TimeoutError:
             return False
         return True
