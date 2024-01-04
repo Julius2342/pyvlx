@@ -40,7 +40,7 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
     ],
-    packages=find_packages(),
+    packages=find_packages(exclude=['test*']),
     package_data={
         "pyvlx": ["py.typed"],
     },
