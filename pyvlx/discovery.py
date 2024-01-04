@@ -1,6 +1,6 @@
 """Module to discover Velux KLF200 devices on the network."""
 import asyncio
-from asyncio import AbstractEventLoop, Event, Future, Task
+from asyncio import Event, Future, Task
 from dataclasses import dataclass
 from typing import Any, Optional
 
@@ -32,10 +32,9 @@ class VeluxDiscovery():
     async def _async_discover_hosts(self, min_wait_time: float, expected_hosts: int | None) -> None:
         """Listen for zeroconf ServiceInfo."""
         self.hosts.clear()
-        tasks: list[Task] = []
         service_names: list[str] = []
+        tasks: list[Task] = []
         got_host: Event = Event()
-        loop: AbstractEventLoop = asyncio.get_running_loop()
 
         def add_info_and_host(fut: Future) -> None:
             info: AsyncServiceInfo = fut.result()
@@ -50,8 +49,8 @@ class VeluxDiscovery():
         def handler(name: str, **kwargs: Any) -> None:  # pylint: disable=W0613:unused-argument
             if name.startswith(SERVICE_STARTS_WITH):
                 if name not in service_names:
-                    service_names.append(name)
-                    task = loop.create_task(self.zc.async_get_service_info(type_=SERVICE_TYPE, name=name))
+                    service_names.append(name)                  
+                    task = asyncio.create_task(self.zc.async_get_service_info(type_=SERVICE_TYPE, name=name))
                     task.add_done_callback(add_info_and_host)
                     tasks.append(task)
 
@@ -62,9 +61,8 @@ class VeluxDiscovery():
                 got_host.clear()
         while not self.hosts:
             await asyncio.sleep(min_wait_time)
-        for task in tasks:
-            task.cancel()
         await browser.async_cancel()
+        await asyncio.gather(*tasks)
 
     async def async_discover_hosts(
         self,
