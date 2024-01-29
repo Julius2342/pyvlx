@@ -109,6 +109,7 @@ class Klf200Gateway:
         await reboot.do_api_call()
         if not reboot.success:
             raise PyVLXException("Unable to reboot gateway.")
+        await self.pyvlx.disconnect()
         return reboot.success
 
     async def set_factory_default(self) -> bool:

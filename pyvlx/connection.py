@@ -82,6 +82,8 @@ class Connection:
         self.config = config
         self.transport: Optional[asyncio.Transport] = None
         self.frame_received_cbs: List[CallbackType] = []
+        self.connection_closed_cbs: List[Callable[[], Coroutine]] = []
+        self.connection_opened_cbs: List[Callable[[], Coroutine]] = []
         self.connected = False
         self.connection_counter = 0
 
@@ -95,10 +97,13 @@ class Connection:
             self.transport.close()
             self.transport = None
         self.connected = False
+        for connection_closed_cb in self.connection_closed_cbs:
+            # pylint: disable=not-callable
+            self.loop.create_task(connection_closed_cb())
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
-        tcp_client = TCPTransport(self.frame_received_cb, self.connection_closed_cb)
+        tcp_client = TCPTransport(self.frame_received_cb, connection_closed_cb=self.connection_closed_cb)
         assert self.config.host is not None
         self.transport, _ = await self.loop.create_connection(
             lambda: tcp_client,
@@ -111,6 +116,9 @@ class Connection:
         PYVLXLOG.debug(
             "Amount of connections since last HA start: %s", self.connection_counter
         )
+        for connection_opened_cb in self.connection_opened_cbs:
+            # pylint: disable=not-callable
+            await self.loop.create_task(connection_opened_cb())
 
     def register_frame_received_cb(self, callback: CallbackType) -> None:
         """Register frame received callback."""
@@ -119,6 +127,26 @@ class Connection:
     def unregister_frame_received_cb(self, callback: CallbackType) -> None:
         """Unregister frame received callback."""
         self.frame_received_cbs.remove(callback)
+
+    def register_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
+        """Register frame received callback."""
+        self.connection_closed_cbs.append(callback)
+        if not self.connected:
+            self.loop.create_task(callback())
+
+    def unregister_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
+        """Unregister frame received callback."""
+        self.connection_closed_cbs.remove(callback)
+
+    def register_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
+        """Register frame received callback."""
+        self.connection_opened_cbs.append(callback)
+        if self.connected:
+            self.loop.create_task(callback())
+
+    def unregister_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
+        """Unregister frame received callback."""
+        self.connection_opened_cbs.remove(callback)
 
     def write(self, frame: FrameBase) -> None:
         """Write frame to Bus."""
