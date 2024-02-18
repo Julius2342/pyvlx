@@ -1,5 +1,7 @@
 """Module for Opening devices."""
+import asyncio
 import datetime
+from asyncio import Task
 from typing import TYPE_CHECKING, Any, Optional
 
 from .api.command_send import CommandSend
@@ -50,6 +52,16 @@ class OpeningDevice(Node):
         self.default_velocity: Velocity = Velocity.DEFAULT
         self.open_position_target: int = 0
         self.close_position_target: int = 100
+        self._update_task: Task | None = None
+
+    async def _update_calls(self) -> None:
+        """While cover are moving, perform periodically update calls."""
+        while self.is_moving():
+            await asyncio.sleep(1)
+            await self.after_update()
+        if self._update_task:
+            self._update_task.cancel()
+            self._update_task = None
 
     async def set_position(
         self,
@@ -176,6 +188,8 @@ class OpeningDevice(Node):
             current_position = (
                 movement_origin + (movement_target - movement_origin) / 100 * percent
             )
+            if not self._update_task:
+                self._update_task = self.pyvlx.loop.create_task(self._update_calls())
             return Position(position_percent=int(current_position))
         return self.position
 

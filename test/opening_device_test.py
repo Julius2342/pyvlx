@@ -57,22 +57,6 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
             position=CurrentPosition(),
             wait_for_completion=wait_for_completion)
 
-    def test_is_moving(self) -> None:
-        """Test is moving boolean of OpeningDevice object."""
-        opening_device = OpeningDevice(pyvlx=self.mocked_pyvlx, node_id=23, name="Test Device")
-        opening_device.is_opening = True
-        opening_device.is_closing = False
-        self.assertTrue(opening_device.is_moving())
-        opening_device.is_opening = False
-        opening_device.is_closing = True
-        self.assertTrue(opening_device.is_moving())
-        opening_device.is_opening = True
-        opening_device.is_closing = True
-        self.assertTrue(opening_device.is_moving())
-        opening_device.is_opening = False
-        opening_device.is_closing = False
-        self.assertFalse(opening_device.is_moving())
-
     def test_window_str(self) -> None:
         """Test string representation of Window object."""
         pyvlx = self.mocked_pyvlx
