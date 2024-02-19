@@ -107,6 +107,8 @@ class PyVLX:
         except (OSError, PyVLXException):
             pass
         await self.heartbeat.stop()
+        # Reboot KLF200 when disconnecting to avoid unresponsive KLF200.
+        await self.klf200.reboot()
         self.connection.disconnect()
 
     async def load_nodes(self, node_id: Optional[int] = None) -> None:
