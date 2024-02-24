@@ -30,7 +30,7 @@ class TestFrameStatusRequestRequest(unittest.TestCase):
         """Test string representation of FrameStatusRequestRequest."""
         frame = FrameStatusRequestRequest(node_ids=[1, 2], session_id=0xAB)
         self.assertEqual(str(frame), "<FrameStatusRequestRequest session_id=\"171\" node_ids=\"[1, 2]\" "
-                                     "status_type=\"StatusType.REQUEST_CURRENT_POSITION\" fpi1=\"254\" fpi2=\"0\"/>")
+                                     "status_type=\"StatusType.REQUEST_CURRENT_POSITION\" fpi1=\"0\" fpi2=\"0\"/>")
 
 
 class TestFrameStatusRequestConfirmation(unittest.TestCase):
