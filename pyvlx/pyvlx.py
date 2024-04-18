@@ -51,7 +51,7 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
-        PYVLXLOG.debug("Loadig pyvlx v0.2.23")
+        PYVLXLOG.debug("Loadig pyvlx v0.1.87")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
@@ -101,15 +101,18 @@ class PyVLX:
 
     async def disconnect(self) -> None:
         """Disconnect from KLF 200."""
-        # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
-        try:
-            await self.klf200.house_status_monitor_disable(pyvlx=self, timeout=1)
-        except (OSError, PyVLXException):
-            pass
         await self.heartbeat.stop()
-        # Reboot KLF200 when disconnecting to avoid unresponsive KLF200.
-        await self.klf200.reboot()
-        self.connection.disconnect()
+        if self.connection.connected:
+            try:
+                # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
+                await self.klf200.house_status_monitor_disable(pyvlx=self, timeout=1)
+                # Reboot KLF200 when disconnecting to avoid unresponsive KLF200.
+                await self.klf200.reboot()
+            except (OSError, PyVLXException):
+                pass
+            self.connection.disconnect()
+        for node in self.nodes:
+            await self.loop.create_task(node.after_update())
 
     async def load_nodes(self, node_id: Optional[int] = None) -> None:
         """Load devices from KLF 200, if no node_id is specified all nodes are loaded."""
@@ -127,5 +130,4 @@ class PyVLX:
     async def on_connection_closed_cb(self) -> None:
         """Handle KLF 200 closed connection callback."""
         PYVLXLOG.debug("Connecting to KLF 200 was closed")
-        for node in self.nodes:
-            await self.loop.create_task(node.after_update())
+        await self.disconnect()
