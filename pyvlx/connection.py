@@ -136,6 +136,14 @@ class Connection:
         """Unregister frame received callback."""
         self.connection_closed_cbs.remove(callback)
 
+    def register_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
+        """Register frame received callback."""
+        self.connection_opened_cbs.append(callback)
+
+    def unregister_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
+        """Unregister frame received callback."""
+        self.connection_opened_cbs.remove(callback)
+
     def write(self, frame: FrameBase) -> None:
         """Write frame to Bus."""
         if not isinstance(frame, FrameBase):
