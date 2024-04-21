@@ -50,7 +50,7 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
-        PYVLXLOG.debug("Loadig pyvlx v0.1.93")
+        PYVLXLOG.debug("Loadig pyvlx v0.1.94")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
@@ -112,8 +112,6 @@ class PyVLX:
             self.connection.disconnect()
         if self.connection.tasks:
             await asyncio.gather(*self.connection.tasks)
-        for node in self.nodes:
-            await self.loop.create_task(node.after_update())
 
     async def load_nodes(self, node_id: Optional[int] = None) -> None:
         """Load devices from KLF 200, if no node_id is specified all nodes are loaded."""
@@ -131,4 +129,5 @@ class PyVLX:
     async def on_connection_closed_cb(self) -> None:
         """Handle KLF 200 closed connection callback."""
         PYVLXLOG.debug("Connection to KLF 200 was closed")
-        await self.disconnect()
+        for node in self.nodes:
+            await self.loop.create_task(node.after_update())
