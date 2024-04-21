@@ -86,14 +86,3 @@ class VeluxDiscovery():
         except TimeoutError:
             return False
         return True
-
-
-async def test() -> None:
-    vd = VeluxDiscovery(zeroconf=AsyncZeroconf())
-    if not await vd.async_discover_hosts(expected_hosts=1):
-        print("No hosts found")
-
-    print(vd.hosts)
-
-
-asyncio.run(test())
