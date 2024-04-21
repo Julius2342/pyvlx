@@ -51,7 +51,7 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
-        PYVLXLOG.debug("Loadig pyvlx v0.1.90")
+        PYVLXLOG.debug("Loadig pyvlx v0.1.91")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
@@ -73,7 +73,6 @@ class PyVLX:
         await self.klf200.house_status_monitor_enable(pyvlx=self)
         self.heartbeat.start()
 
-        PYVLXLOG.debug("Connecting to KLF 200 was opened")
         for node in self.nodes:
             await self.loop.create_task(node.after_update())
 

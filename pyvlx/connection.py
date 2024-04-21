@@ -50,6 +50,7 @@ class TCPTransport(asyncio.Protocol):
 
     def connection_made(self, transport: object) -> None:
         """Handle sucessful connection."""
+        PYVLXLOG.debug("Socket connection to KLF 200 opened")
 
     def data_received(self, data: bytes) -> None:
         """Handle data received."""
@@ -67,7 +68,7 @@ class TCPTransport(asyncio.Protocol):
 
     def connection_lost(self, exc: object) -> None:
         """Handle lost connection."""
-        PYVLXLOG.debug("Socket connection has been lost")
+        PYVLXLOG.debug("Socket connection to KLF 200 has been lost")
         self.connection_closed_cb()
 
 
