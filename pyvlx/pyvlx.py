@@ -51,7 +51,7 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
-        PYVLXLOG.debug("Loadig pyvlx v0.1.87")
+        PYVLXLOG.debug("Loadig pyvlx v0.1.88")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
@@ -111,6 +111,7 @@ class PyVLX:
             except (OSError, PyVLXException):
                 pass
             self.connection.disconnect()
+            await asyncio.gather(*self.connection.tasks)
         for node in self.nodes:
             await self.loop.create_task(node.after_update())
 

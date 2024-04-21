@@ -67,6 +67,7 @@ class TCPTransport(asyncio.Protocol):
 
     def connection_lost(self, exc: object) -> None:
         """Handle lost connection."""
+        PYVLXLOG.debug("Socket connection has been lost")
         self.connection_closed_cb()
 
 
@@ -86,6 +87,7 @@ class Connection:
         self.connection_opened_cbs: List[Callable[[], Coroutine]] = []
         self.connected = False
         self.connection_counter = 0
+        self.tasks: List[asyncio.Task] = []
 
     def __del__(self) -> None:
         """Destruct connection."""
@@ -97,9 +99,11 @@ class Connection:
             self.transport.close()
             self.transport = None
         self.connected = False
+        PYVLXLOG.debug("Disconnected from KLF200")
         for connection_closed_cb in self.connection_closed_cbs:
             # pylint: disable=not-callable
-            self.loop.run_until_complete(connection_closed_cb())
+            task = self.loop.create_task(connection_closed_cb())
+            self.tasks.append(task)
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
@@ -118,7 +122,8 @@ class Connection:
         )
         for connection_opened_cb in self.connection_opened_cbs:
             # pylint: disable=not-callable
-            await self.loop.create_task(connection_opened_cb())
+            task = self.loop.create_task(connection_opened_cb())
+            self.tasks.append(task)
 
     def register_frame_received_cb(self, callback: CallbackType) -> None:
         """Register frame received callback."""
@@ -130,11 +135,27 @@ class Connection:
 
     def register_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
         """Register frame received callback."""
-        self.connection_closed_cbs.append(callback)
+        if not self.connected:
+            task = self.loop.create_task(callback())
+            self.tasks.append(task)
+        else:
+            self.connection_closed_cbs.append(callback)
 
     def unregister_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
         """Unregister frame received callback."""
         self.connection_closed_cbs.remove(callback)
+
+    def register_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
+        """Register frame received callback."""
+        if self.connected:
+            task = self.loop.create_task(callback())
+            self.tasks.append(task)
+        else:
+            self.connection_opened_cbs.append(callback)
+
+    def unregister_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
+        """Unregister frame received callback."""
+        self.connection_opened_cbs.remove(callback)
 
     def write(self, frame: FrameBase) -> None:
         """Write frame to Bus."""
@@ -157,7 +178,8 @@ class Connection:
         PYVLXLOG.debug("REC: %s", frame)
         for frame_received_cb in self.frame_received_cbs:
             # pylint: disable=not-callable
-            self.loop.create_task(frame_received_cb(frame))
+            task = self.loop.create_task(frame_received_cb(frame))
+            self.tasks.append(task)
 
     def connection_closed_cb(self) -> None:
         """Server closed connection."""
