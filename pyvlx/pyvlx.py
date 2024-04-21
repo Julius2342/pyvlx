@@ -37,7 +37,6 @@ class PyVLX:
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
         self.connection = Connection(loop=self.loop, config=self.config)
-        self.connection.register_connection_closed_cb(self.on_connection_closed_cb)
         self.heartbeat = Heartbeat(
             pyvlx=self,
             interval=heartbeat_interval,
@@ -51,12 +50,13 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
-        PYVLXLOG.debug("Loadig pyvlx v0.1.91")
+        PYVLXLOG.debug("Loadig pyvlx v0.1.92")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
         PYVLXLOG.debug("Connecting to KLF 200")
         await self.connection.connect()
+        self.connection.register_connection_closed_cb(self.on_connection_closed_cb)
         assert self.config.password is not None
         await self.klf200.password_enter(password=self.config.password)
         await self.klf200.get_version()
@@ -129,5 +129,5 @@ class PyVLX:
 
     async def on_connection_closed_cb(self) -> None:
         """Handle KLF 200 closed connection callback."""
-        PYVLXLOG.debug("Connecting to KLF 200 was closed")
+        PYVLXLOG.debug("Connection to KLF 200 was closed")
         await self.disconnect()
