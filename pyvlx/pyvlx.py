@@ -37,6 +37,7 @@ class PyVLX:
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
         self.connection = Connection(loop=self.loop, config=self.config)
+        self.connection.register_connection_closed_cb(self.on_connection_closed_cb)
         self.heartbeat = Heartbeat(
             pyvlx=self,
             interval=heartbeat_interval,
@@ -56,7 +57,6 @@ class PyVLX:
         """Connect to KLF 200."""
         PYVLXLOG.debug("Connecting to KLF 200")
         await self.connection.connect()
-        self.connection.register_connection_closed_cb(self.on_connection_closed_cb)
         assert self.config.password is not None
         await self.klf200.password_enter(password=self.config.password)
         await self.klf200.get_version()

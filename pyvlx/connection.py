@@ -108,7 +108,7 @@ class Connection:
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
-        tcp_client = TCPTransport(self.frame_received_cb, connection_lost_cb=self.connection_lost_cb)
+        tcp_client = TCPTransport(self.frame_received_cb, connection_lost_cb=self.on_connection_lost)
         assert self.config.host is not None
         self.transport, _ = await self.loop.create_connection(
             lambda: tcp_client,
@@ -134,18 +134,6 @@ class Connection:
         """Unregister frame received callback."""
         self.frame_received_cbs.remove(callback)
 
-    def register_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
-        """Register connection opened callback."""
-        if self.connected:
-            task = self.loop.create_task(callback())
-            self.tasks.append(task)
-        else:
-            self.connection_opened_cbs.append(callback)
-
-    def unregister_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
-        """Unregister connection opened callback."""
-        self.connection_opened_cbs.remove(callback)
-
     def register_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
         """Register connection closed callback."""
         if not self.connected:
@@ -157,6 +145,18 @@ class Connection:
     def unregister_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
         """Unregister connection closed callback."""
         self.connection_closed_cbs.remove(callback)
+
+    def register_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
+        """Register connection opened callback."""
+        if self.connected:
+            task = self.loop.create_task(callback())
+            self.tasks.append(task)
+        else:
+            self.connection_opened_cbs.append(callback)
+
+    def unregister_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
+        """Unregister connection opened callback."""
+        self.connection_opened_cbs.remove(callback)
 
     def write(self, frame: FrameBase) -> None:
         """Write frame to Bus."""
@@ -182,6 +182,6 @@ class Connection:
             task = self.loop.create_task(frame_received_cb(frame))
             self.tasks.append(task)
 
-    def connection_lost_cb(self) -> None:
+    def on_connection_lost(self) -> None:
         """Server closed connection."""
         self.disconnect()
