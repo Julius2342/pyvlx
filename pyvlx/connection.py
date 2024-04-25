@@ -137,9 +137,6 @@ class Connection:
     def register_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
         """Register connection closed callback."""
         self.connection_closed_cbs.append(callback)
-        if not self.connected:
-            task = self.loop.create_task(callback())
-            self.tasks.append(task)
 
     def unregister_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
         """Unregister connection closed callback."""
@@ -148,9 +145,6 @@ class Connection:
     def register_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
         """Register connection opened callback."""
         self.connection_opened_cbs.append(callback)
-        if self.connected:
-            task = self.loop.create_task(callback())
-            self.tasks.append(task)
 
     def unregister_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
         """Unregister connection opened callback."""

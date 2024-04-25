@@ -37,7 +37,6 @@ class PyVLX:
         self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
         self.connection = Connection(loop=self.loop, config=self.config)
-        self.connection.register_connection_closed_cb(self.on_connection_closed_cb)
         self.heartbeat = Heartbeat(
             pyvlx=self,
             interval=heartbeat_interval,
@@ -46,12 +45,14 @@ class PyVLX:
         self.node_updater = NodeUpdater(pyvlx=self)
         self.nodes = Nodes(self)
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
+        self.connection.register_connection_closed_cb(self.update_nodes)
+        self.connection.register_connection_opened_cb(self.update_nodes)
         self.scenes = Scenes(self)
         self.version = None
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
-        PYVLXLOG.debug("Loadig pyvlx v0.1.95")
+        PYVLXLOG.debug("Loadig pyvlx v0.1.97")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
@@ -72,9 +73,6 @@ class PyVLX:
         await self.klf200.get_network_setup()
         await self.klf200.house_status_monitor_enable(pyvlx=self)
         self.heartbeat.start()
-
-        for node in self.nodes:
-            await self.loop.create_task(node.after_update())
 
     async def reboot_gateway(self) -> None:
         """For Compatibility: Reboot the KLF 200."""
@@ -126,8 +124,7 @@ class PyVLX:
         limit = get_limitation.GetLimitation(self, node_id)
         await limit.do_api_call()
 
-    async def on_connection_closed_cb(self) -> None:
+    async def update_nodes(self) -> None:
         """Handle KLF 200 closed connection callback."""
-        PYVLXLOG.debug("Connection to KLF 200 was closed")
         for node in self.nodes:
             await self.loop.create_task(node.after_update())
