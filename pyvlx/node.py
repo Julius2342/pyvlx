@@ -41,7 +41,7 @@ class Node:
         """Execute callbacks after internal state has been changed."""
         for device_updated_cb in self.device_updated_cbs:
             # pylint: disable=not-callable
-            await self.pyvlx.loop.create_task(device_updated_cb(self))  # type: ignore
+            await self.pyvlx.loop.create_task(device_updated_cb())  # type: ignore
 
     async def rename(self, name: str) -> None:
         """Change name of node."""
