@@ -45,14 +45,13 @@ class PyVLX:
         self.node_updater = NodeUpdater(pyvlx=self)
         self.nodes = Nodes(self)
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
-        self.connection.register_connection_closed_cb(self.update_nodes)
-        self.connection.register_connection_opened_cb(self.update_nodes)
+
         self.scenes = Scenes(self)
         self.version = None
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
-        PYVLXLOG.debug("Loadig pyvlx v0.1.97")
+        PYVLXLOG.debug("Loadig pyvlx v0.1.98")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
@@ -124,7 +123,3 @@ class PyVLX:
         limit = get_limitation.GetLimitation(self, node_id)
         await limit.do_api_call()
 
-    async def update_nodes(self) -> None:
-        """Handle KLF 200 closed connection callback."""
-        for node in self.nodes:
-            await self.loop.create_task(node.after_update())
