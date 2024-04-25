@@ -122,4 +122,3 @@ class PyVLX:
         """Return limitation."""
         limit = get_limitation.GetLimitation(self, node_id)
         await limit.do_api_call()
-
