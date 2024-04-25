@@ -102,9 +102,10 @@ class Connection:
         self.connected = False
         PYVLXLOG.debug("TCP transport closed.")
         for connection_closed_cb in self.connection_closed_cbs:
-            # pylint: disable=not-callable
-            task = self.loop.create_task(connection_closed_cb())
-            self.tasks.append(task)
+            if connection_closed_cb is not None:
+                # pylint: disable=not-callable
+                task = self.loop.create_task(connection_closed_cb())
+                self.tasks.append(task)
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
@@ -122,9 +123,10 @@ class Connection:
             "Amount of connections since last HA start: %s", self.connection_counter
         )
         for connection_opened_cb in self.connection_opened_cbs:
-            # pylint: disable=not-callable
-            task = self.loop.create_task(connection_opened_cb())
-            self.tasks.append(task)
+            if connection_opened_cb is not None:
+                # pylint: disable=not-callable
+                task = self.loop.create_task(connection_opened_cb())
+                self.tasks.append(task)
 
     def register_frame_received_cb(self, callback: CallbackType) -> None:
         """Register frame received callback."""
