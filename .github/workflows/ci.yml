@@ -49,9 +49,11 @@ jobs:
     - name: Linter Pylint
       run: PYTHONPATH=. pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
     - name: Mypy
-      run: mypy pyvlx
+      run: mypy --install-types pyvlx
     - name: Tests
       run: PYTHONPATH=. pytest --cov pyvlx --cov-report xml
+    - name: Isort
+      run: isort --check-only test examples pyvlx
     - name: Upload coverage artifact
       uses: actions/upload-artifact@v2.2.2
       with:
