@@ -49,7 +49,7 @@ jobs:
     - name: Linter Pylint
       run: PYTHONPATH=. pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
     - name: Mypy
-      run: mypy --install-types pyvlx
+      run: mypy --install-types --non-interactive pyvlx
     - name: Tests
       run: PYTHONPATH=. pytest --cov pyvlx --cov-report xml
     - name: Isort
