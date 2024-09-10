@@ -23,9 +23,6 @@ class VeluxHost():
 class VeluxDiscovery():
     """Class to discover Velux KLF200 devices on the network."""
 
-    hosts: list[VeluxHost | None] = []
-    infos: list[AsyncServiceInfo | None] = []
-
     def __init__(self, zeroconf: AsyncZeroconf,) -> None:
         """Initialize VeluxDiscovery object."""
         self.zc: AsyncZeroconf = zeroconf
