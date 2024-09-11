@@ -102,7 +102,7 @@ jobs:
         path: .coverage
         pattern: coverage*
         merge-multiple: true
-    - run: ls -R .my-artifact
+    - run: ls -R .coverage
     - name: Create coverage report
       run: |
         coverage combine coverage*/.coverage*
