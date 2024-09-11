@@ -58,7 +58,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: coverage-${{ matrix.python-version }}
-        path: coverage.xml
+        path: .coverage
 
   coverage:
     name: Process test coverage
@@ -102,7 +102,7 @@ jobs:
         path: .coverage
     - name: Create coverage report
       run: |
-        coverage combine .coverage/
+        coverage combine coverage* .coverage/
         coverage report --fail-under=79
 
         coverage xml
