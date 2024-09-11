@@ -99,11 +99,9 @@ jobs:
         pip install -r requirements/testing.txt
     - name: Download all coverage artifacts
       uses: actions/download-artifact@v4
-      with: 
-        path: .coverage
     - name: Create coverage report
       run: |
-        coverage combine .coverage/
+        coverage combine coverage*/.coverage*
         coverage report --fail-under=79
 
         coverage xml
