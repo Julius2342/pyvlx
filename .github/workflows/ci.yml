@@ -15,13 +15,13 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12"]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-pypi-modules
       with:
@@ -31,7 +31,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Cache pre-commit packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-pre-commit
       with:
@@ -68,13 +68,13 @@ jobs:
       matrix:
         python-version: ["3.11"]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-pypi-modules
       with:
@@ -84,7 +84,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Cache pre-commit packages
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       env:
         cache-name: cache-pre-commit
       with:
@@ -98,10 +98,7 @@ jobs:
         pip install -r requirements/testing.txt
     - name: Download all coverage artifacts
       uses: actions/download-artifact@v4
-      with:
-        path: .coverage
-        merge-multiple: true
-    - run: ls -R .coverage
+    - run: ls -R
     - name: Create coverage report
       run: |
         coverage combine coverage*/.coverage*
