@@ -51,14 +51,14 @@ jobs:
     - name: Mypy
       run: mypy --install-types --non-interactive pyvlx
     - name: Tests
-      run: PYTHONPATH=. pytest --cov pyvlx --cov-report xml
+      run: PYTHONPATH=. pytest --cov pyvlx --cov-report xml:coverage-${{ matrix.python-version }}.xml
     - name: Isort
       run: isort --check-only test examples pyvlx
     - name: Upload coverage artifact
       uses: actions/upload-artifact@v4
       with:
         name: coverage-${{ matrix.python-version }}
-        path: .coverage
+        path: coverage.xml
 
   coverage:
     name: Process test coverage
@@ -70,7 +70,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
