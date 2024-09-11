@@ -100,7 +100,6 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         path: .coverage
-        pattern: coverage*
         merge-multiple: true
     - run: ls -R .coverage
     - name: Create coverage report
