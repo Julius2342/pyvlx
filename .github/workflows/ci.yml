@@ -51,7 +51,7 @@ jobs:
     - name: Mypy
       run: mypy --install-types --non-interactive pyvlx
     - name: Tests
-      run: PYTHONPATH=. pytest --cov pyvlx --cov-report xml
+      run: PYTHONPATH=. pytest --cov pyvlx --cov-report=
     - name: Isort
       run: isort --check-only test examples pyvlx
     - name: Upload coverage artifact
