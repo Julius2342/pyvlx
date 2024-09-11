@@ -98,7 +98,6 @@ jobs:
         pip install -r requirements/testing.txt
     - name: Download all coverage artifacts
       uses: actions/download-artifact@v4
-    - run: ls -R
     - name: Create coverage report
       run: |
         coverage combine coverage*/.coverage*
