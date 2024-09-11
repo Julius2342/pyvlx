@@ -51,7 +51,7 @@ jobs:
     - name: Mypy
       run: mypy --install-types --non-interactive pyvlx
     - name: Tests
-      run: PYTHONPATH=. pytest --cov pyvlx --cov-report=
+      run: PYTHONPATH=. pytest --cov pyvlx --cov-report xml
     - name: Isort
       run: isort --check-only test examples pyvlx
     - name: Upload coverage artifact
@@ -59,6 +59,7 @@ jobs:
       with:
         name: coverage-${{ matrix.python-version }}
         path: .coverage
+        include-hidden-files: true
 
   coverage:
     name: Process test coverage
