@@ -55,7 +55,7 @@ jobs:
     - name: Isort
       run: isort --check-only test examples pyvlx
     - name: Upload coverage artifact
-      uses: actions/upload-artifact@v2.2.2
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-${{ matrix.python-version }}
         path: .coverage
