@@ -1,5 +1,6 @@
 """Module for get node information from gateway."""
 from enum import Enum
+from typing import Dict, List, Optional
 
 from pyvlx.const import (
     Command, NodeParameter, RunStatus, StatusReply, StatusType)
@@ -14,17 +15,18 @@ class FrameStatusRequestRequest(FrameBase):
 
     PAYLOAD_LEN = 26
 
-    def __init__(self, session_id=None, node_ids=None):
+    def __init__(self, session_id: Optional[int] = None, node_ids: Optional[List[int]] = None):
         """Init Frame."""
         super().__init__(Command.GW_STATUS_REQUEST_REQ)
         self.session_id = session_id
-        self.node_ids = node_ids
+        self.node_ids = node_ids if node_ids is not None else []
         self.status_type = StatusType.REQUEST_CURRENT_POSITION
         self.fpi1 = 254     # Request FP1 to FP7
         self.fpi2 = 0
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
+        assert self.session_id is not None
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([len(self.node_ids)])      # index array count
         ret += bytes(self.node_ids) + bytes(20 - len(self.node_ids))
@@ -33,7 +35,7 @@ class FrameStatusRequestRequest(FrameBase):
         ret += bytes([self.fpi2])
         return ret
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
         len_node_ids = payload[2]
@@ -47,7 +49,7 @@ class FrameStatusRequestRequest(FrameBase):
         self.fpi1 = payload[24]
         self.fpi2 = payload[25]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} session_id="{}" node_ids="{}" '
@@ -71,24 +73,26 @@ class FrameStatusRequestConfirmation(FrameBase):
 
     PAYLOAD_LEN = 3
 
-    def __init__(self, session_id=None, status=None):
+    def __init__(self, session_id: Optional[int] = None, status: Optional[StatusRequestStatus] = None):
         """Init Frame."""
         super().__init__(Command.GW_STATUS_REQUEST_CFM)
         self.session_id = session_id
         self.status = status
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
+        assert self.session_id is not None
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
+        assert self.status is not None
         ret += bytes([self.status.value])
         return ret
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
         self.status = StatusRequestStatus(payload[2])
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} session_id="{}" status="{}"/>'.format(
             type(self).__name__, self.session_id, self.status
@@ -101,7 +105,7 @@ class FrameStatusRequestNotification(FrameBase):
     # PAYLOAD_LEN = 59
     # No PAYLOAD_LEN because it is variable depending on StatusType
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_STATUS_REQUEST_NTF)
         self.session_id = 0
@@ -111,14 +115,14 @@ class FrameStatusRequestNotification(FrameBase):
         self.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
         self.status_type = StatusType.REQUEST_TARGET_POSITION
         self.status_count = 0
-        self.parameter_data = {}
+        self.parameter_data: Dict[NodeParameter, Parameter] = {}
         self.target_position = Parameter()
         self.current_position = Parameter()
         self.remaining_time = 0
-        self.last_master_execution_address = 0
+        self.last_master_execution_address = b''
         self.last_command_originator = 0
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         payload = bytes()
         payload += bytes([self.session_id >> 8 & 255, self.session_id & 255])
@@ -131,24 +135,19 @@ class FrameStatusRequestNotification(FrameBase):
             payload += bytes(self.target_position.raw)
             payload += bytes(self.current_position.raw)
             payload += bytes([self.remaining_time >> 8 & 255, self.remaining_time & 255])
-            payload += bytes([
-                self.last_master_execution_address >> 16 & 255,
-                self.last_master_execution_address >> 8 & 255,
-                self.last_master_execution_address & 255
-            ])
-
+            payload += self.last_master_execution_address
             payload += bytes([self.last_command_originator])
         else:
             payload += bytes([self.status_count])
             keys = self.parameter_data.keys()
             for key in keys:
-                payload += bytes([key])
+                payload += bytes([key.value])
                 payload += bytes(self.parameter_data[key].raw)
             payload += bytes(51 - len(self.parameter_data))
 
         return payload
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
         self.status_id = payload[2]
@@ -167,13 +166,13 @@ class FrameStatusRequestNotification(FrameBase):
             for i in range(8, 8 + self.status_count*3, 3):
                 self.parameter_data.update({NodeParameter(payload[i]): Parameter(payload[i+1:i+3])})
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         if self.status_type == StatusType.REQUEST_MAIN_INFO:
             return (
                 '<{} session_id="{}" status_id="{}" '
                 'node_id="{}" run_status="{}" status_reply="{}" status_type="{}" target_position="{}" '
-                'current_position="{}" remaining_time="{}" last_master_execution_address="{}" last_command_originator="{}"/>'.format(
+                'current_position="{}" remaining_time="{}" last_master_execution_address="{!r}" last_command_originator="{}"/>'.format(
                     type(self).__name__,
                     self.session_id,
                     self.status_id,

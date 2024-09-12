@@ -1,23 +1,28 @@
 """Module for storing nodes."""
+from typing import TYPE_CHECKING, Iterator, List, Optional, Union
+
 from .api import GetAllNodesInformation, GetNodeInformation
 from .exception import PyVLXException
 from .node import Node
 from .node_helper import convert_frame_to_node
 
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
+
 
 class Nodes:
     """Object for storing node objects."""
 
-    def __init__(self, pyvlx):
+    def __init__(self, pyvlx: "PyVLX"):
         """Initialize Nodes object."""
         self.pyvlx = pyvlx
-        self.__nodes = []
+        self.__nodes: List[Node] = []
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Node]:
         """Iterate."""
         yield from self.__nodes
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: Union[str, int]) -> Node:
         """Return node by name or by index."""
         if isinstance(key, int):
             for node in self.__nodes:
@@ -28,7 +33,7 @@ class Nodes:
                 return node
         raise KeyError
 
-    def __contains__(self, key):
+    def __contains__(self, key: Union[str, int, Node]) -> bool:
         """Check if key is in index."""
         if isinstance(key, int):
             for node in self.__nodes:
@@ -43,11 +48,11 @@ class Nodes:
                 return True
         return False
 
-    def __len__(self):
+    def __len__(self) -> int:
         """Return number of nodes."""
         return len(self.__nodes)
 
-    def add(self, node):
+    def add(self, node: Node) -> None:
         """Add Node, replace existing node if node with node_id is present."""
         if not isinstance(node, Node):
             raise TypeError()
@@ -57,29 +62,31 @@ class Nodes:
                 return
         self.__nodes.append(node)
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear internal node array."""
         self.__nodes = []
 
-    async def load(self, node_id=None):
+    async def load(self, node_id: Optional[int] = None) -> None:
         """Load nodes from KLF 200, if no node_id is specified all nodes are loaded."""
         if node_id is not None:
             await self._load_node(node_id=node_id)
         else:
             await self._load_all_nodes()
 
-    async def _load_node(self, node_id):
+    async def _load_node(self, node_id: int) -> None:
         """Load single node via API."""
         get_node_information = GetNodeInformation(pyvlx=self.pyvlx, node_id=node_id)
         await get_node_information.do_api_call()
         if not get_node_information.success:
             raise PyVLXException("Unable to retrieve node information")
         notification_frame = get_node_information.notification_frame
+        if notification_frame is None:
+            return
         node = convert_frame_to_node(self.pyvlx, notification_frame)
         if node is not None:
             self.add(node)
 
-    async def _load_all_nodes(self):
+    async def _load_all_nodes(self) -> None:
         """Load all nodes via API."""
         get_all_nodes_information = GetAllNodesInformation(pyvlx=self.pyvlx)
         await get_all_nodes_information.do_api_call()

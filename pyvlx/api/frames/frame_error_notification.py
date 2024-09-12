@@ -23,20 +23,20 @@ class FrameErrorNotification(FrameBase):
 
     PAYLOAD_LEN = 1
 
-    def __init__(self, error_type=ErrorType.NotFurtherDefined):
+    def __init__(self, error_type: ErrorType = ErrorType.NotFurtherDefined):
         """Init Frame."""
         super().__init__(Command.GW_ERROR_NTF)
         self.error_type = error_type
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         ret = bytes([self.error_type.value])
         return ret
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.error_type = ErrorType(payload[0])
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} error_type="{}"/>'.format(type(self).__name__, self.error_type)

@@ -9,6 +9,6 @@ class FrameActivationLogUpdatedNotification(FrameBase):
 
     PAYLOAD_LEN = 0
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_ACTIVATION_LOG_UPDATED_NTF)

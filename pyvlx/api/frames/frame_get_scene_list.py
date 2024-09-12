@@ -1,4 +1,6 @@
 """Module for get scene list frame classes."""
+from typing import List, Tuple
+
 from pyvlx.const import Command
 from pyvlx.exception import PyVLXException
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
@@ -11,7 +13,7 @@ class FrameGetSceneListRequest(FrameBase):
 
     PAYLOAD_LEN = 0
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_GET_SCENE_LIST_REQ)
 
@@ -21,20 +23,20 @@ class FrameGetSceneListConfirmation(FrameBase):
 
     PAYLOAD_LEN = 1
 
-    def __init__(self, count_scenes=0):
+    def __init__(self, count_scenes: int = 0):
         """Init Frame."""
         super().__init__(Command.GW_GET_SCENE_LIST_CFM)
         self.count_scenes = count_scenes
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         return bytes([self.count_scenes])
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.count_scenes = payload[0]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} count_scenes="{}"/>'.format(
             type(self).__name__, self.count_scenes
@@ -44,13 +46,13 @@ class FrameGetSceneListConfirmation(FrameBase):
 class FrameGetSceneListNotification(FrameBase):
     """Frame for scene list notification."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_GET_SCENE_LIST_NTF)
-        self.scenes = []
+        self.scenes: List[Tuple[int, str]] = []
         self.remaining_scenes = 0
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         ret = bytes([len(self.scenes)])
         for number, name in self.scenes:
@@ -59,7 +61,7 @@ class FrameGetSceneListNotification(FrameBase):
         ret += bytes([self.remaining_scenes])
         return ret
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         number_of_objects = payload[0]
         self.remaining_scenes = payload[-1]
@@ -73,7 +75,7 @@ class FrameGetSceneListNotification(FrameBase):
             name = bytes_to_string(scene[1:])
             self.scenes.append((number, name))
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} scenes="{}" remaining_scenes="{}">'.format(
             type(self).__name__, self.scenes, self.remaining_scenes

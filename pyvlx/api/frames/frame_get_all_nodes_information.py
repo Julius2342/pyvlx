@@ -2,8 +2,10 @@
 import struct
 from datetime import datetime
 from enum import Enum
+from typing import Optional
 
-from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, Velocity
+from pyvlx.const import (
+    Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity)
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
@@ -17,7 +19,7 @@ class FrameGetAllNodesInformationRequest(FrameBase):
 
     PAYLOAD_LEN = 0
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_GET_ALL_NODES_INFORMATION_REQ)
 
@@ -35,22 +37,26 @@ class FrameGetAllNodesInformationConfirmation(FrameBase):
 
     PAYLOAD_LEN = 2
 
-    def __init__(self, status=AllNodesInformationStatus.OK, number_of_nodes=0):
+    def __init__(
+        self,
+        status: AllNodesInformationStatus = AllNodesInformationStatus.OK,
+        number_of_nodes: int = 0,
+    ):
         """Init Frame."""
         super().__init__(Command.GW_GET_ALL_NODES_INFORMATION_CFM)
         self.status = status
         self.number_of_nodes = number_of_nodes
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         return bytes([self.status.value, self.number_of_nodes])
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.status = AllNodesInformationStatus(payload[0])
         self.number_of_nodes = payload[1]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} status="{}" number_of_nodes="{}"/>'.format(
             type(self).__name__, self.status, self.number_of_nodes
@@ -62,7 +68,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
 
     PAYLOAD_LEN = 124
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_GET_ALL_NODES_INFORMATION_NTF)
         self.node_id = 0
@@ -77,7 +83,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.power_mode = 0
         self.build_number = 0
         self._serial_number = bytes(8)
-        self.state = 0
+        self.state = OperatingState.UNKNOWN
         self.current_position = Parameter()
         self.target = Parameter()
         self.current_position_fp1 = Parameter()
@@ -89,14 +95,14 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.alias_array = AliasArray()
 
     @property
-    def serial_number(self):
+    def serial_number(self) -> Optional[str]:
         """Property for serial number in a human readable way."""
         if self._serial_number == bytes(8):
             return None
         return ":".join("{:02x}".format(c) for c in self._serial_number)
 
     @serial_number.setter
-    def serial_number(self, serial_number):
+    def serial_number(self, serial_number: str) -> None:
         """Set serial number."""
         if serial_number is None:
             self._serial_number = bytes(8)
@@ -107,7 +113,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         if len(self._serial_number) != 8:
             raise PyVLXException("could_not_parse_serial_number")
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         payload = bytes()
         payload += bytes([self.node_id])
@@ -122,7 +128,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         payload += bytes([self.power_mode])
         payload += bytes([self.build_number])
         payload += bytes(self._serial_number)
-        payload += bytes([self.state])
+        payload += bytes([self.state.value])
         payload += bytes(self.current_position.raw)
         payload += bytes(self.target.raw)
         payload += bytes(self.current_position_fp1.raw)
@@ -135,7 +141,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
 
         return payload
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.node_id = payload[0]
         self.order = payload[1] * 256 + payload[2]
@@ -149,7 +155,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.power_mode = payload[74]
         self.build_number = payload[75]
         self._serial_number = payload[76:84]
-        self.state = payload[84]
+        self.state = OperatingState(payload[84])
         self.current_position = Parameter(payload[85:87])
         self.target = Parameter(payload[87:89])
         self.current_position_fp1 = Parameter(payload[89:91])
@@ -161,11 +167,11 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.alias_array = AliasArray(payload[103:125])
 
     @property
-    def timestamp_formatted(self):
+    def timestamp_formatted(self) -> str:
         """Return time as human readable string."""
         return datetime.fromtimestamp(self.timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} node_id="{}" order="{}" '
@@ -188,7 +194,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
                 self.power_mode,
                 self.build_number,
                 self.serial_number,
-                self.state,
+                self.state.name,
                 self.current_position,
                 self.target,
                 self.current_position_fp1,
@@ -207,6 +213,6 @@ class FrameGetAllNodesInformationFinishedNotification(FrameBase):
 
     PAYLOAD_LEN = 0
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_GET_ALL_NODES_INFORMATION_FINISHED_NTF)

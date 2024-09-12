@@ -9,7 +9,7 @@ class FrameGetProtocolVersionRequest(FrameBase):
 
     PAYLOAD_LEN = 0
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_GET_PROTOCOL_VERSION_REQ)
 
@@ -19,18 +19,18 @@ class FrameGetProtocolVersionConfirmation(FrameBase):
 
     PAYLOAD_LEN = 4
 
-    def __init__(self, major_version=0, minor_version=0):
+    def __init__(self, major_version: int = 0, minor_version: int = 0):
         """Init Frame."""
         super().__init__(Command.GW_GET_PROTOCOL_VERSION_CFM)
         self.major_version = major_version
         self.minor_version = minor_version
 
     @property
-    def version(self):
+    def version(self) -> str:
         """Return formatted protocol version."""
         return "{}.{}".format(self.major_version, self.minor_version)
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         return bytes(
             [
@@ -41,12 +41,12 @@ class FrameGetProtocolVersionConfirmation(FrameBase):
             ]
         )
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.major_version = payload[0] * 256 + payload[1]
         self.minor_version = payload[2] * 256 + payload[3]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} version="{}"/>'.format(
             type(self).__name__, self.version

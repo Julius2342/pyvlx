@@ -5,6 +5,7 @@ from datetime import datetime
 from pyvlx import Position
 from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import FrameNodeStatePositionChangedNotification
+from pyvlx.const import OperatingState
 
 
 class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
@@ -17,11 +18,11 @@ class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
         b"\xf7\xff\xf7\xff\x00\x00L\xcf\x00\x00\x87"
     )
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameNodeStatePositionChangedNotification."""
         frame = FrameNodeStatePositionChangedNotification()
         frame.node_id = 5
-        frame.state = 5
+        frame.state = OperatingState.DONE
         frame.current_position = Position(position=51200)
         frame.target = Position(position=51200)
         frame.current_position_fp1 = Position()
@@ -32,12 +33,12 @@ class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
         frame.timestamp = 1288634368
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameNodeStatePositionChangedNotification from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameNodeStatePositionChangedNotification))
         self.assertEqual(frame.node_id, 5)
-        self.assertEqual(frame.state, 5)
+        self.assertEqual(frame.state, OperatingState.DONE)
         self.assertEqual(Position(frame.current_position).position, 51200)
         self.assertEqual(Position(frame.target).position, 51200)
         self.assertEqual(Position(frame.current_position_fp1).position, 63487)
@@ -47,16 +48,16 @@ class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
         self.assertEqual(frame.remaining_time, 0)
         self.assertEqual(frame.timestamp, 1288634368)
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameNodeStatePositionChangedNotification."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         test_ts = datetime.fromtimestamp(1288634368).strftime("%Y-%m-%d %H:%M:%S")
         self.assertEqual(
             str(frame),
-            '<FrameNodeStatePositionChangedNotification node_id="5" state="5" '
-            'current_position="0xC800" target="0xC800" current_position_fp1="0xF7FF" '
-            'current_position_fp2="0xF7FF" current_position_fp3="0xF7FF" '
-            'current_position_fp4="0xF7FF" remaining_time="0" time="{}"/>'.format(
+            '<FrameNodeStatePositionChangedNotification node_id="5" state="DONE" '
+            'current_position="100 %" target="100 %" current_position_fp1="UNKNOWN" '
+            'current_position_fp2="UNKNOWN" current_position_fp3="UNKNOWN" '
+            'current_position_fp4="UNKNOWN" remaining_time="0" time="{}"/>'.format(
                 test_ts
             ),
         )

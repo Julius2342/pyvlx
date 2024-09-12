@@ -5,7 +5,8 @@ from datetime import datetime
 from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import FrameGetAllNodesInformationNotification
 from pyvlx.api.frames.alias_array import AliasArray
-from pyvlx.const import NodeTypeWithSubtype, NodeVariation, Velocity
+from pyvlx.const import (
+    NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity)
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Position
 
@@ -25,7 +26,7 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
         + b"\xd7\x00\x01\x03\x03\x02\x03\x0501234567890123456789\x71"
     )
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGetAllNodesInformationNotification."""
         frame = FrameGetAllNodesInformationNotification()
         frame.node_id = 23
@@ -41,7 +42,7 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
         frame.build_number = 7
         frame.serial_number = "01:02:03:04:05:06:06:08"
 
-        frame.state = 1
+        frame.state = OperatingState.ERROR_EXECUTING
         frame.current_position = Position(position=12)
         frame.target = Position(position=123)
         frame.current_position_fp1 = Position(position=1234)
@@ -53,7 +54,7 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
         frame.alias_array = AliasArray(raw=b"\x0501234567890123456789")
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGetAllNodesInformationNotification from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameGetAllNodesInformationNotification))
@@ -69,7 +70,7 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
         self.assertEqual(frame.power_mode, 1)
         self.assertEqual(frame.build_number, 7)
         self.assertEqual(frame.serial_number, "01:02:03:04:05:06:06:08")
-        self.assertEqual(frame.state, 1)
+        self.assertEqual(frame.state, OperatingState.ERROR_EXECUTING)
         self.assertEqual(Position(frame.current_position).position, 12)
         self.assertEqual(Position(frame.target).position, 123)
         self.assertEqual(Position(frame.current_position_fp1).position, 1234)
@@ -83,7 +84,7 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
             "3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839",
         )
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGetAllNodesInformationNotification."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         test_ts = datetime.fromtimestamp(50528771).strftime("%Y-%m-%d %H:%M:%S")
@@ -92,33 +93,33 @@ class TestFrameGetAllNodesInformationNotification(unittest.TestCase):
             '<FrameGetAllNodesInformationNotification node_id="23" order="1234" placement="2" '
             'name="Fnord23" velocity="Velocity.SILENT" node_type="NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND" '
             'product_group="23" product_type="13" node_variation="NodeVariation.TOPHUNG" '
-            'power_mode="1" build_number="7" serial_number="01:02:03:04:05:06:06:08" state="1" '
-            'current_position="0x000C" target="0x007B" current_position_fp1="0x04D2" '
-            'current_position_fp2="0x0929" current_position_fp3="0x0D80" current_position_fp4="0x11D7" '
+            'power_mode="1" build_number="7" serial_number="01:02:03:04:05:06:06:08" state="ERROR_EXECUTING" '
+            'current_position="0 %" target="0 %" current_position_fp1="2 %" '
+            'current_position_fp2="5 %" current_position_fp3="7 %" current_position_fp4="9 %" '
             'remaining_time="1" time="{}" '
             'alias_array="3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839"/>'.format(
                 test_ts
             ),
         )
 
-    def test_serial_number(self):
+    def test_serial_number(self) -> None:
         """Test serial number property."""
         frame = FrameGetAllNodesInformationNotification()
         frame.serial_number = "01:02:03:04:05:06:06:08"
         self.assertEqual(frame.serial_number, "01:02:03:04:05:06:06:08")
 
-    def test_serial_number_none(self):
+    def test_serial_number_none(self) -> None:
         """Test serial number property with no value set."""
         frame = FrameGetAllNodesInformationNotification()
         frame.serial_number = None
         self.assertEqual(frame.serial_number, None)
 
-    def test_serial_number_not_set(self):
+    def test_serial_number_not_set(self) -> None:
         """Test serial number property with not set."""
         frame = FrameGetAllNodesInformationNotification()
         self.assertEqual(frame.serial_number, None)
 
-    def test_wrong_serial_number(self):
+    def test_wrong_serial_number(self) -> None:
         """Test setting a wrong serial number."""
         frame = FrameGetAllNodesInformationNotification()
         with self.assertRaises(PyVLXException):
