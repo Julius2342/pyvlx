@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from pyvlx import (
     Awning, Blade, Blind, CurrentPosition, OpeningDevice, Parameter, Position,
     PyVLX, RollerShutter, Window)
+from pyvlx.connection import Connection
 from pyvlx.const import Velocity
 
 
@@ -13,6 +14,8 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
     """Test class for roller shutter."""
 
     mocked_pyvlx = MagicMock(spec=PyVLX)
+    connection = MagicMock(spec=Connection)
+    mocked_pyvlx.attach_mock(mock=connection, attribute="connection")
 
     @patch("pyvlx.api.CommandSend.send", new_callable=AsyncMock)
     @patch("pyvlx.Node.after_update", new_callable=AsyncMock)

@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from pyvlx import Light, PyVLX
+from pyvlx.connection import Connection
 
 
 # pylint: disable=too-many-public-methods,invalid-name
@@ -12,6 +13,8 @@ class TestLighteningDevice(unittest.TestCase):
     def setUp(self) -> None:
         """Set up TestGetLimitation."""
         self.pyvlx = MagicMock(spec=PyVLX)
+        connection = MagicMock(spec=Connection)
+        self.pyvlx.attach_mock(mock=connection, attribute="connection")
 
     def test_light_str(self) -> None:
         """Test string representation of Light object."""

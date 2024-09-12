@@ -5,6 +5,7 @@ from unittest.mock import MagicMock
 from pyvlx import (
     Blade, Blind, GarageDoor, Gate, Light, PyVLX, RollerShutter, Window)
 from pyvlx.api.frames import FrameGetNodeInformationNotification
+from pyvlx.connection import Connection
 from pyvlx.const import NodeTypeWithSubtype
 from pyvlx.node_helper import convert_frame_to_node
 
@@ -17,6 +18,8 @@ class TestNodeHelper(unittest.TestCase):
     def setUp(self) -> None:
         """Set up TestNodeHelper."""
         self.pyvlx = MagicMock(spec=PyVLX)
+        connection = MagicMock(spec=Connection)
+        self.pyvlx.attach_mock(mock=connection, attribute="connection")
 
     def test_window(self) -> None:
         """Test convert_frame_to_node with window."""
