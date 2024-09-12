@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from pyvlx import Blind, Nodes, PyVLX, RollerShutter, Window
+from pyvlx.connection import Connection
 from pyvlx.node import Node
 
 # pylint: disable=too-many-public-methods,invalid-name
@@ -14,6 +15,8 @@ class TestNodes(unittest.TestCase):
     def setUp(self) -> None:
         """Set up TestNodes."""
         self.pyvlx = MagicMock(spec=PyVLX)
+        connection = MagicMock(spec=Connection)
+        self.pyvlx.attach_mock(mock=connection, attribute="connection")
 
     def test_get_item(self) -> None:
         """Test get_item."""
