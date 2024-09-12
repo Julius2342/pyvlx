@@ -28,14 +28,17 @@ class ApiEvent:
         # the semaphore.
         await self.pyvlx.check_connected()
 
-        async with self.pyvlx.api_call_semaphore:
-            self.pyvlx.connection.register_frame_received_cb(self.response_rec_callback)
-            await self.send_frame()
-            await self.start_timeout()
-            await self.response_received_or_timeout.wait()
-            self.response_received_or_timeout.clear()
-            await self.stop_timeout()
-            self.pyvlx.connection.unregister_frame_received_cb(self.response_rec_callback)
+        if self.pyvlx.get_connected():
+            async with self.pyvlx.api_call_semaphore:
+                self.pyvlx.connection.register_frame_received_cb(self.response_rec_callback)
+                await self.send_frame()
+                await self.start_timeout()
+                await self.response_received_or_timeout.wait()
+                self.response_received_or_timeout.clear()
+                await self.stop_timeout()
+                self.pyvlx.connection.unregister_frame_received_cb(self.response_rec_callback)
+        else:
+            self.success = False
 
     async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""

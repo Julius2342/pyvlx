@@ -1,5 +1,6 @@
 """Module for accessing KLF 200 gateway with python."""
 
+from .discovery import VeluxDiscovery
 from .exception import PyVLXException
 from .klf200gateway import Klf200Gateway
 from .lightening_device import Light, LighteningDevice
