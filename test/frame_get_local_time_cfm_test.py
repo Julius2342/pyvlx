@@ -25,7 +25,7 @@ class TestFrameGetLocalTimeConfirmation(unittest.TestCase):
     def test_frame_from_raw(self) -> None:
         """Test parse FrameGetLocalTimeConfirmation from raw."""
         frame = frame_from_raw(
-            b"\x00\x12 \x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x007"
+            b"\x00\x12 \x05_\xc9,'\x13\x13\x12\x03\x0c\x00x\x04\x01R\xffg"
         )
         self.assertTrue(isinstance(frame, FrameGetLocalTimeConfirmation))
 
