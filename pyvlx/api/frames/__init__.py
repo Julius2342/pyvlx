@@ -10,7 +10,8 @@ from .frame_activation_log_updated import FrameActivationLogUpdatedNotification
 from .frame_command_send import (
     CommandSendConfirmationStatus, FrameCommandRemainingTimeNotification,
     FrameCommandRunStatusNotification, FrameCommandSendConfirmation,
-    FrameCommandSendRequest, FrameSessionFinishedNotification)
+    FrameCommandSendRequest, FrameSessionFinishedNotification,
+    CommandNotificationRunStatus, CommandNotificationStatusReply)
 from .frame_discover_nodes import (
     FrameDiscoverNodesConfirmation, FrameDiscoverNodesNotification,
     FrameDiscoverNodesRequest)
