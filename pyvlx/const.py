@@ -295,6 +295,9 @@ class NodeTypeWithSubtype(Enum):
     DUAL_ROLLER_SHUTTER = 0x0340
     ON_OFF_SWITCH = 0x03C0
     HORIZONTAL_AWNING = 0x0400
+    # Not documented by Velux but reported by some devices
+    # Velux support refuses to provide additional information about this node sub type
+    HORIZONTAL_AWNING_ALT = 0x0401
     EXTERIOR_VENETIAN_BLIND = 0x0440
     LOUVER_BLIND = 0x0480
     CURTAIN_TRACK = 0x04C0
