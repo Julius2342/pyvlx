@@ -11,6 +11,7 @@ output-format=colorized
 [FORMAT]
 indent-string='    '
 max-line-length=150
+max-positional-arguments=7
 
 [MAIN]
 max-branches=20

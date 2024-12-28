@@ -96,6 +96,7 @@ def convert_frame_to_node(
     if frame.node_type in [
         NodeTypeWithSubtype.VERTICAL_EXTERIOR_AWNING,
         NodeTypeWithSubtype.HORIZONTAL_AWNING,
+        NodeTypeWithSubtype.HORIZONTAL_AWNING_ALT,
     ]:
         return Awning(
             pyvlx=pyvlx,
