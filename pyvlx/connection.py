@@ -92,9 +92,9 @@ class Connection:
 
     def __del__(self) -> None:
         """Destruct connection."""
-        self.disconnect_wrapper()
+        self.disconnect()
 
-    async def disconnect(self) -> None:
+    def disconnect(self) -> None:
         """Disconnect connection."""
         if self.transport is not None:
             self.transport.close()
@@ -106,18 +106,10 @@ class Connection:
                 task = self.loop.create_task(connection_closed_cb())
                 self.tasks.add(task)
                 task.add_done_callback(self.tasks.remove)
-        if self.tasks:
-            await asyncio.gather(*self.tasks)
-
-    def disconnect_wrapper(self) -> None:
-        """Call the async disconnect function."""
-        task = asyncio.create_task(self.disconnect())
-        self.tasks.add(task)
-        task.add_done_callback(self.tasks.remove)
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
-        tcp_client = TCPTransport(self.frame_received_cb, connection_lost_cb=self.on_connection_lost_wrapper)
+        tcp_client = TCPTransport(self.frame_received_cb, connection_lost_cb=self.on_connection_lost)
         assert self.config.host is not None
         self.transport, _ = await self.loop.create_connection(
             lambda: tcp_client,
@@ -185,12 +177,6 @@ class Connection:
             self.tasks.add(task)
             task.add_done_callback(self.tasks.remove)
 
-    async def async_on_connection_lost(self) -> None:
+    def on_connection_lost(self) -> None:
         """Server closed connection."""
-        await self.disconnect()
-
-    def on_connection_lost_wrapper(self) -> None:
-        """Call the async on_connection_lost function."""
-        task = asyncio.create_task(self.async_on_connection_lost())
-        self.tasks.add(task)
-        task.add_done_callback(self.tasks.remove)
+        self.disconnect()

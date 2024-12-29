@@ -106,7 +106,9 @@ class PyVLX:
                 await self.klf200.reboot()
             except (OSError, PyVLXException):
                 pass
-            await self.connection.disconnect()
+            self.connection.disconnect()
+            if self.connection.tasks:
+                await asyncio.gather(*self.connection.tasks)  # Wait for all tasks to finish
 
     async def load_nodes(self, node_id: Optional[int] = None) -> None:
         """Load devices from KLF 200, if no node_id is specified all nodes are loaded."""
