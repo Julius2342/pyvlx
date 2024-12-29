@@ -110,7 +110,7 @@ class Connection:
             await asyncio.gather(*self.tasks)
 
     def disconnect_wrapper(self) -> None:
-        """Wrapper to call the async disconnect function."""
+        """Call the async disconnect function."""
         task = asyncio.create_task(self.disconnect())
         self.tasks.add(task)
         task.add_done_callback(self.tasks.remove)
@@ -190,7 +190,7 @@ class Connection:
         await self.disconnect()
 
     def on_connection_lost_wrapper(self) -> None:
-        """Wrapper to call the async on_connection_lost function."""
+        """Call the async on_connection_lost function."""
         task = asyncio.create_task(self.async_on_connection_lost())
         self.tasks.add(task)
         task.add_done_callback(self.tasks.remove)
