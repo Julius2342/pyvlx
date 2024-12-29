@@ -2,7 +2,7 @@
 import asyncio
 import ssl
 import sys
-from typing import Callable, Coroutine, List, Optional
+from typing import Callable, Coroutine, List, Optional, Set
 
 from .api.frame_creation import frame_from_raw
 from .api.frames import FrameBase
@@ -88,7 +88,7 @@ class Connection:
         self.connection_opened_cbs: List[Callable[[], Coroutine]] = []
         self.connected = False
         self.connection_counter = 0
-        self.tasks: List[asyncio.Task] = []
+        self.tasks: Set[asyncio.Task] = set()
 
     def __del__(self) -> None:
         """Destruct connection."""
@@ -104,7 +104,8 @@ class Connection:
         for connection_closed_cb in self.connection_closed_cbs:
             if asyncio.iscoroutine(connection_closed_cb()):
                 task = self.loop.create_task(connection_closed_cb())
-                self.tasks.append(task)
+                self.tasks.add(task)
+                task.add_done_callback(self.tasks.remove)
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
@@ -124,7 +125,8 @@ class Connection:
         for connection_opened_cb in self.connection_opened_cbs:
             if asyncio.iscoroutine(connection_opened_cb()):
                 task = self.loop.create_task(connection_opened_cb())
-                self.tasks.append(task)
+                self.tasks.add(task)
+                task.add_done_callback(self.tasks.remove)
 
     def register_frame_received_cb(self, callback: CallbackType) -> None:
         """Register frame received callback."""
@@ -172,7 +174,8 @@ class Connection:
         for frame_received_cb in self.frame_received_cbs:
             # pylint: disable=not-callable
             task = self.loop.create_task(frame_received_cb(frame))
-            self.tasks.append(task)
+            self.tasks.add(task)
+            task.add_done_callback(self.tasks.remove)
 
     def on_connection_lost(self) -> None:
         """Server closed connection."""
