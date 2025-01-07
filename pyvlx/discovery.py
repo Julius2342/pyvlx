@@ -41,7 +41,7 @@ class VeluxDiscovery():
             info: AsyncServiceInfo = fut.result()
             self.infos.append(info)
             host = VeluxHost(
-                hostname=info.name.replace("._http._tcp.local.", ""),
+                hostname=info.name.replace("._http._tcp.local.", "").upper().replace("LAN_", ""),   # KLF report it's hostname within DHCP requests without the "LAN_" prefix
                 ip_address=info.parsed_addresses(version=IPVersion.V4Only)[0],
             )
             self.hosts.append(host)
