@@ -313,7 +313,6 @@ class Blind(OpeningDevice):
 
         """
         self.target_position = position
-        self.position = position
         kwargs: Any = {}
 
         if orientation is not None:
