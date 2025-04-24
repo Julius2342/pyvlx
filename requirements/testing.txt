@@ -8,6 +8,6 @@ pylint==3.3.6
 pytest==8.3.5
 pytest-cov==6.1.1
 pytest-timeout==2.3.1
-setuptools==79.0.0
+setuptools==79.0.1
 twine==6.1.0
 mypy==1.15.0
