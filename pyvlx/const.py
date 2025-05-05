@@ -1,7 +1,7 @@
 """Module for enum and consts."""
 from enum import Enum
 
-from typing_extensions import Any
+from typing import Any
 
 
 class Command(Enum):
