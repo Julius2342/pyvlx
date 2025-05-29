@@ -21,7 +21,7 @@ class FrameStatusRequestRequest(FrameBase):
         self.session_id = session_id
         self.node_ids = node_ids if node_ids is not None else []
         self.status_type = StatusType.REQUEST_CURRENT_POSITION
-        self.fpi1 = 254     # Request FP1 to FP7
+        self.fpi1 = 0
         self.fpi2 = 0
 
     def get_payload(self) -> bytes:
