@@ -74,3 +74,6 @@ from .frame_set_utc import FrameSetUTCConfirmation, FrameSetUTCRequest
 from .frame_status_request import (
     FrameStatusRequestConfirmation, FrameStatusRequestNotification,
     FrameStatusRequestRequest)
+from .frame_get_systemtable import (
+    FrameGetSystemTableRequest, FrameGetSystemTableConfirmation, FrameGetSystemTableNotification
+)
