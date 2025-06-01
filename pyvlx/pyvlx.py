@@ -19,7 +19,7 @@ from .log import PYVLXLOG
 from .node_updater import NodeUpdater
 from .nodes import Nodes
 from .scenes import Scenes
-
+from .actutators import Actutators
 
 class PyVLX:
     """Class for PyVLX."""
@@ -47,6 +47,7 @@ class PyVLX:
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
 
         self.scenes = Scenes(self)
+        self.actutators = Actutators(self)
         self.version = None
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
@@ -117,6 +118,9 @@ class PyVLX:
     async def load_scenes(self) -> None:
         """Load scenes from KLF 200."""
         await self.scenes.load()
+
+    async def load_actutators(self) -> None:
+        await self.actutators.load()
 
     async def get_limitation(self, node_id: int) -> None:
         """Return limitation."""

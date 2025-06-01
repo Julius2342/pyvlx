@@ -37,7 +37,9 @@ from .frames import (
     FrameSessionFinishedNotification, FrameSetNodeNameConfirmation,
     FrameSetNodeNameRequest, FrameSetUTCConfirmation, FrameSetUTCRequest,
     FrameStatusRequestConfirmation, FrameStatusRequestNotification,
-    FrameStatusRequestRequest, extract_from_frame)
+    FrameStatusRequestRequest, extract_from_frame,
+    FrameGetSystemTableRequest, FrameGetSystemTableConfirmation, FrameGetSystemTableNotification
+)
 
 
 def frame_from_raw(raw: bytes) -> Optional[FrameBase]:
@@ -198,5 +200,12 @@ def create_frame(command: Command) -> Optional[FrameBase]:
         return FrameStatusRequestConfirmation()
     if command == Command.GW_STATUS_REQUEST_NTF:
         return FrameStatusRequestNotification()
+
+    if command == Command.GW_CS_GET_SYSTEMTABLE_DATQ_REQ:
+        return FrameGetSystemTableRequest()
+    if command == Command.GW_CS_GET_SYSTEMTABLE_DATA_CFM:
+        return FrameGetSystemTableConfirmation()
+    if command == Command.GW_CS_GET_SYSTEMTABLE_DATA_NTF:
+        return FrameGetSystemTableNotification()
 
     return None
