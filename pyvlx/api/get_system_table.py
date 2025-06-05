@@ -26,7 +26,7 @@ class GetSystemTable(ApiEvent):
       return False
     
     if isinstance(frame, FrameGetSystemTableNotification):
-      self.count += len(frame.self.systemObjects)
+      self.count += len(frame.systemObjects)
       self.actutators.extend(frame.systemObjects)
       if frame.remaining_objects != 0:
         # We are still waiting for FrameGetSystemTableNotifications
