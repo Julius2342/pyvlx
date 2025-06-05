@@ -32,5 +32,5 @@ class Actutators() :
     if not _actutatorsReq.success:
       raise PyVLXException("Unable to retrieve SystemTable information")
     self.clear()
-    for act in _actutatorsReq :
+    for act in _actutatorsReq.actutators :
       self._actuators.append( act );
