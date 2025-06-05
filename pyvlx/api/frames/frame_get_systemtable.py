@@ -37,7 +37,7 @@ class FrameGetSystemTableNotification(FrameBase):
     def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_CS_GET_SYSTEMTABLE_DATA_NTF)
-        self.actutators: List[Tuple[int, Actutator]] = []
+        self.actutators: List[Actutator] = []
         self.remaining_objects = 0
 
     def get_payload(self) -> bytes:
@@ -61,7 +61,7 @@ class FrameGetSystemTableNotification(FrameBase):
         if len(payload) != predicted_len:
             raise PyVLXException("system_objects_notification_wrong_length")
         self.remaining_objects = payload[number_of_objects * 11 + 1 ]
-        self.systemObjects = []
+        self.actutators = []
         for i in range(number_of_objects):
             self.actutators.append(Actutator(
                 payload[(i * 11 + 1)],

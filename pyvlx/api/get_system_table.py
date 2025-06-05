@@ -17,7 +17,7 @@ class GetSystemTable(ApiEvent):
     super().__init__(pyvlx=pyvlx)
     self.success = False
     self.count: int = 0
-    self.actutators: List[Tuple[int, Actutator]] = []
+    self.actutators: List[Actutator] = []
 
   async def handle_frame(self, frame: FrameBase) -> bool:
     """Handle incoming API frame, return True if this was the expected frame."""
@@ -26,8 +26,8 @@ class GetSystemTable(ApiEvent):
       return False
     
     if isinstance(frame, FrameGetSystemTableNotification):
-      self.count += len(frame.systemObjects)
-      self.actutators.extend(frame.systemObjects)
+      self.count += len(frame.actutators)
+      self.actutators.extend(frame.actutators)
       if frame.remaining_objects != 0:
         # We are still waiting for FrameGetSystemTableNotifications
         return False
