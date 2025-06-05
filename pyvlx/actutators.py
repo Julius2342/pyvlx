@@ -11,7 +11,7 @@ class Actutators() :
   def __init__(self, pyvlx: "PyVLX"):
     """Initialize Nodes object."""
     self.pyvlx = pyvlx
-    self._actuators: List[Tuple[int, Actutator]] = []
+    self._actuators: List[ Actutator ] = []
 
   def __iter__(self) -> Iterator[Actutator]:
     """Iterate."""
@@ -32,4 +32,5 @@ class Actutators() :
     if not _actutatorsReq.success:
       raise PyVLXException("Unable to retrieve SystemTable information")
     self.clear()
-    self._actuators = _actutatorsReq;
+    for act in _actutatorsReq :
+      self._actuators.append( act );
