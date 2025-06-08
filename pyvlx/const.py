@@ -331,14 +331,14 @@ class NodeType(Enum):
     ON_OFF_SWITCH = 15
     HORIZONTAL_AWNING = 16
     EXTERNAL_VENETIAN_BLIND = 17
-    LOUVRE_BLINT = 18
+    LOUVRE_BLIND = 18
     CURTAIN_TRACK = 19
     VENTILATION_POINT = 20
     EXTERIOR_HEATING = 21
     HEAT_PUMP = 22
     INTRUSION_ALARM = 23
     SWINGING_SHUTTER = 24
-
+    BLADE_OPENER = 29
 
 class NodeVariation(Enum):
     """Enum class for node variations."""
@@ -687,19 +687,19 @@ class StatusType(Enum):
 class TurnAround(Enum) :
     """Enum Actuator Turnaround time is the time each node must respond within.
        Response seen by the operator of the gateway is obviously larger. """
-    WITHIN_5ms  = 0
-    WITHIN_10ms = 1
-    WITHIN_20ms = 2
-    WITHIN_40ms = 3
-    none        = 4
+    WITHIN_5MS  = 0
+    WITHIN_10MS = 1
+    WITHIN_20MS = 2
+    WITHIN_40MS = 3
+    NONE        = 4
 
 class Manufactor(Enum) :
     """ io-Manufacture """
-    none           = 0
+    NONE           = 0
     VELUX          = 1
     SOMFY          = 2
     HONEYWELL      = 3
-    HÖRMANN        = 4
+    HORMANN        = 4
     ASSA_ABLOY     = 5
     NIKO           = 6
     WINDOW_MASTER  = 7
