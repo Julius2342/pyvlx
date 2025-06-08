@@ -1,12 +1,17 @@
 """Module for retrieving system table from API."""
 from typing import TYPE_CHECKING, List
-from pyvlx.log import PYVLXLOG
+
 from pyvlx.actutator import Actutator
+from pyvlx.log import PYVLXLOG
+
 from .api_event import ApiEvent
-from .frames import ( FrameBase, FrameGetSystemTableRequest, FrameGetSystemTableConfirmation, FrameGetSystemTableNotification )
+from .frames import (
+    FrameBase, FrameGetSystemTableConfirmation,
+    FrameGetSystemTableNotification, FrameGetSystemTableRequest)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
+
 
 class GetSystemTable(ApiEvent):
     """Class for retrieving scene list from API."""
@@ -25,9 +30,7 @@ class GetSystemTable(ApiEvent):
         if isinstance(frame, FrameGetSystemTableNotification):
             self.count += len(frame.actutators)
             self.actutators.extend(frame.actutators)
-        if frame.remaining_objects != 0:
-            # We are still waiting for FrameGetSystemTableNotifications
-            return False
+            return frame.remaining_objects == 0
         if self.count != len(self.actutators):
             PYVLXLOG.warning("Warning: number of received system objects does not match expected number")
         self.success = True

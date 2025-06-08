@@ -8,6 +8,7 @@ and roller shutters.
 import asyncio
 from typing import Optional
 
+from .actutators import Actutators
 from .api import get_limitation
 from .api.frames import FrameBase
 from .config import Config
@@ -19,7 +20,7 @@ from .log import PYVLXLOG
 from .node_updater import NodeUpdater
 from .nodes import Nodes
 from .scenes import Scenes
-from .actutators import Actutators
+
 
 class PyVLX:
     """Class for PyVLX."""
@@ -120,6 +121,7 @@ class PyVLX:
         await self.scenes.load()
 
     async def load_actutators(self) -> None:
+        """Load actutators."""
         await self.actutators.load()
 
     async def get_limitation(self, node_id: int) -> None:

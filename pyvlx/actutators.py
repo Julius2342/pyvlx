@@ -1,10 +1,14 @@
+"""Actutators."""
 from typing import TYPE_CHECKING, Iterator
+
 from pyvlx.actutator import Actutator
 from pyvlx.exception import PyVLXException
+
 from .api import GetSystemTable
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
+
 
 class Actutators() :
     """Object for storing node objects."""
@@ -12,7 +16,7 @@ class Actutators() :
     def __init__(self, pyvlx: "PyVLX"):
         """Initialize Nodes object."""
         self.pyvlx = pyvlx
-        self._actutators = []
+        self._actutators : list[Actutator] = []
 
     def __iter__(self) -> Iterator[Actutator]:
         """Iterate."""
@@ -30,4 +34,4 @@ class Actutators() :
             raise PyVLXException("Unable to retrieve SystemTable information")
         self._actutators = []
         for act in _actutators_req.actutators :
-            self._actutators.append( act )
+            self._actutators.append(act)

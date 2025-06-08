@@ -349,6 +349,7 @@ class NodeType(Enum):
     SWINGING_SHUTTER = 24
     BLADE_OPENER = 29
 
+
 class NodeVariation(Enum):
     """Enum class for node variations."""
 
@@ -697,27 +698,33 @@ class StatusType(Enum):
     def _missing_(cls, value: object) -> Any:
         return cls.REQUEST_UNKNOWN
 
+
 class TurnAround(Enum) :
     """Enum Actuator Turnaround time is the time each node must respond within.
-       Response seen by the operator of the gateway is obviously larger. """
-    WITHIN_5MS  = 0
+
+    Response seen by the operator of the gateway is obviously larger.
+    """
+
+    WITHIN_5MS = 0
     WITHIN_10MS = 1
     WITHIN_20MS = 2
     WITHIN_40MS = 3
-    NONE        = 4
+    NONE = 4
+
 
 class Manufactor(Enum) :
-    """ io-Manufacture """
-    NONE           = 0
-    VELUX          = 1
-    SOMFY          = 2
-    HONEYWELL      = 3
-    HORMANN        = 4
-    ASSA_ABLOY     = 5
-    NIKO           = 6
-    WINDOW_MASTER  = 7
-    RENSON         = 8
-    CIAT           = 9
-    SECUYOU        = 10
-    OVERKIZ        = 11
+    """io-Manufactor."""
+
+    NONE = 0
+    VELUX = 1
+    SOMFY = 2
+    HONEYWELL = 3
+    HORMANN = 4
+    ASSA_ABLOY = 5
+    NIKO = 6
+    WINDOW_MASTER = 7
+    RENSON = 8
+    CIAT = 9
+    SECUYOU = 10
+    OVERKIZ = 11
     ATLANTIC_GROUP = 12
