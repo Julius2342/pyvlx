@@ -16,7 +16,7 @@ class Actutators() :
 
     def __iter__(self) -> Iterator[Actutator]:
         """Iterate."""
-        yield from self._actuators
+        yield from self._actutators
 
     def __len__(self) -> int:
         """Return number of nodes."""
