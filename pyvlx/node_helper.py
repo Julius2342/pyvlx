@@ -1,10 +1,11 @@
 """Helper module for Node objects."""
+from math import floor
 from typing import TYPE_CHECKING, Optional, Union
 
 from .api.frames import (
     FrameGetAllNodesInformationNotification,
     FrameGetNodeInformationNotification)
-from .const import NodeTypeWithSubtype
+from .const import NodeType, NodeTypeWithSubtype
 from .dimmable_device import ExteriorHeating, Light, OnOffLight
 from .log import PYVLXLOG
 from .node import Node
@@ -17,165 +18,54 @@ if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-def convert_frame_to_node(
-    pyvlx: "PyVLX",
-    frame: Union[
-        FrameGetNodeInformationNotification, FrameGetAllNodesInformationNotification
-    ],
-) -> Optional[Node]:
+def convert_frame_to_node(pyvlx: "PyVLX",
+                          frame: Union[FrameGetNodeInformationNotification, FrameGetAllNodesInformationNotification]) -> Optional[Node]:
     """Convert FrameGet[All]Node[s]InformationNotification into Node object."""
     # pylint: disable=too-many-return-statements
 
-    if frame.node_type == NodeTypeWithSubtype.WINDOW_OPENER:
-        return Window(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-            position_parameter=frame.current_position,
-            rain_sensor=False,
-        )
+    match NodeType(floor(frame.node_type.value / 64)):
+        case NodeType.VENETIAN_BLIND | NodeType.BLIND:  # 1, 10
+            # this seems wrong : VENITIAN_BLIND excepts FP1, FP2 and FP3
+            return RollerShutter(pyvlx, frame.node_id, frame.name, frame.serial_number)
 
-    if frame.node_type == NodeTypeWithSubtype.WINDOW_OPENER_WITH_RAIN_SENSOR:
-        return Window(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-            position_parameter=frame.current_position,
-            rain_sensor=True,
-        )
+        case NodeType.ROLLER_SHUTTER:  # 2
+            if frame.node_type == NodeTypeWithSubtype.ADJUSTABLE_SLATS_ROLLING_SHUTTER:
+                return Blind(pyvlx, frame.node_id, frame.name, frame.serial_number, frame.current_position)
+            return RollerShutter(pyvlx, frame.node_id, frame.name, frame.serial_number, frame.current_position)
 
-    if frame.node_type == NodeTypeWithSubtype.DUAL_ROLLER_SHUTTER:
-        return DualRollerShutter(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-            position_parameter=frame.current_position,
-        )
+        case NodeType.AWNING | NodeType.HORIZONTAL_AWNING:  # 3, 16
+            return Awning(pyvlx, frame.node_id, frame.name, frame.serial_number, frame.current_position)
 
-    if frame.node_type in [
-        NodeTypeWithSubtype.ROLLER_SHUTTER,
-        NodeTypeWithSubtype.SWINGING_SHUTTERS,
-    ]:
-        return RollerShutter(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-            position_parameter=frame.current_position,
-        )
+        case NodeType.WINDOW_OPENER:  # 4
+            return Window(pyvlx, frame.node_id, frame.name, frame.serial_number, frame.current_position,
+                          (frame.node_type == NodeTypeWithSubtype.WINDOW_OPENER_WITH_RAIN_SENSOR))
 
-    if frame.node_type in [
-        NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND,
-        NodeTypeWithSubtype.VERTICAL_INTERIOR_BLINDS,
-        NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND,
-    ]:
-        return RollerShutter(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-        )
+        case NodeType.GARAGE_OPENER:  # 5
+            return GarageDoor(pyvlx, frame.node_id, frame.name, frame.serial_number, frame.current_position)
 
-    # Blinds have position and orientation (inherit frame.current_position_fp3) attribute
-    if frame.node_type in [
-        NodeTypeWithSubtype.EXTERIOR_VENETIAN_BLIND,
-        NodeTypeWithSubtype.ADJUSTABLE_SLATS_ROLLING_SHUTTER,
-        NodeTypeWithSubtype.LOUVER_BLIND,
-    ]:
-        return Blind(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-            position_parameter=frame.current_position,
-        )
+        case NodeType.LIGHT:  # 6
+            if frame.node_type = NodeTypeWithSubtype.LIGHT_ON_OFF :
+                return OnOffLight(pyvlx, frame.node_id, frame.name, frame.serial_number )
+            else :
+                return Light(pyvlx, frame.node_id, frame.name, frame.serial_number)
 
-    if frame.node_type in [
-        NodeTypeWithSubtype.VERTICAL_EXTERIOR_AWNING,
-        NodeTypeWithSubtype.HORIZONTAL_AWNING,
-        NodeTypeWithSubtype.HORIZONTAL_AWNING_ALT,
-    ]:
-        return Awning(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-            position_parameter=frame.current_position,
-        )
+        case NodeType.GATE_OPENER:  # 7
+            return Gate(pyvlx, frame.node_id, frame.name, frame.serial_number, frame.current_position)
 
-    if frame.node_type == NodeTypeWithSubtype.ON_OFF_SWITCH:
-        return OnOffSwitch(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-        )
+        case NodeType.DUAL_SHUTTER:  # 13
+            return DualRollerShutter(pyvlx, frame.node_id, frame.name, frame.serial_number, frame.current_position)
 
-    if frame.node_type in [
-        NodeTypeWithSubtype.GARAGE_DOOR_OPENER,
-        NodeTypeWithSubtype.LINEAR_ANGULAR_POSITION_OF_GARAGE_DOOR,
-    ]:
-        return GarageDoor(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-            position_parameter=frame.current_position,
-        )
+        case NodeType.EXTERNAL_VENETIAN_BLIND | NodeType.LOUVRE_BLIND:  # 17, 18
+            return Blind(pyvlx, frame.node_id, frame.name, frame.serial_number, frame.current_position)
 
-    if frame.node_type == NodeTypeWithSubtype.GATE_OPENER:
-        return Gate(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-            position_parameter=frame.current_position,
-        )
+        case NodeType.ON_OFF_SWITCH:  # 15
+            return OnOffSwitch(pyvlx, frame.node_id, frame.name, frame.serial_number)
 
-    if frame.node_type == NodeTypeWithSubtype.GATE_OPENER_ANGULAR_POSITION:
-        return Gate(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-            position_parameter=frame.current_position,
-        )
+        case NodeType.EXTERIOR_HEATING: #21
+            return ExteriorHeating(pyvlx, frame.node_id, frame.name, frame.serial_number)
 
-    if frame.node_type == NodeTypeWithSubtype.BLADE_OPENER:
-        return Blade(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-            position_parameter=frame.current_position,
-        )
-
-    if frame.node_type == NodeTypeWithSubtype.LIGHT:
-        return Light(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-        )
-
-    if frame.node_type == NodeTypeWithSubtype.LIGHT_ON_OFF:
-        return OnOffLight(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-        )
-
-    if frame.node_type == NodeTypeWithSubtype.EXTERIOR_HEATING:
-        return ExteriorHeating(
-            pyvlx=pyvlx,
-            node_id=frame.node_id,
-            name=frame.name,
-            serial_number=frame.serial_number,
-        )
+        case NodeType.BLADE_OPENER:  # 29
+            return Blade(pyvlx, frame.node_id, frame.name, frame.serial_number, frame.current_position)
 
     PYVLXLOG.warning("%s not implemented", frame.node_type)
     return None
