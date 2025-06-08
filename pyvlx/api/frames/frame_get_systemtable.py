@@ -12,7 +12,7 @@ class FrameGetSystemTableRequest(FrameBase):
 
     def __init__(self) -> None:
         """Init Frame."""
-        super().__init__(Command.GW_CS_GET_SYSTEMTABLE_DATQ_REQ)
+        super().__init__(Command.GW_CS_GET_SYSTEMTABLE_DATA_REQ)
 
     def __str__(self) -> str:
         """Return human readable string."""
