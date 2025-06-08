@@ -201,7 +201,7 @@ def create_frame(command: Command) -> Optional[FrameBase]:
     if command == Command.GW_STATUS_REQUEST_NTF:
         return FrameStatusRequestNotification()
 
-    if command == Command.GW_CS_GET_SYSTEMTABLE_DATQ_REQ:
+    if command == Command.GW_CS_GET_SYSTEMTABLE_DATA_REQ:
         return FrameGetSystemTableRequest()
     if command == Command.GW_CS_GET_SYSTEMTABLE_DATA_CFM:
         return FrameGetSystemTableConfirmation()
