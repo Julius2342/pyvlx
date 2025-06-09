@@ -19,7 +19,17 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ matrix.python-version }}        
+    - name: Cache pip packages
+      uses: actions/cache@v4
+      env:
+        cache-name: cache-pypi-modules
+      with:
+        # pip cache files are stored in `~/.cache/pip` on Linux
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-
     - name: Pydocstyle
       run: pydocstyle pyvlx test/*.py *.py examples/*.py
   flake8:
@@ -33,6 +43,16 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Cache pip packages
+      uses: actions/cache@v4
+      env:
+        cache-name: cache-pypi-modules
+      with:
+        # pip cache files are stored in `~/.cache/pip` on Linux
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-flake8-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-flake8-${{ env.cache-name }}-
     - name: Flake8
       run: flake8 
   pylint:
