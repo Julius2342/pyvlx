@@ -1,8 +1,11 @@
 """Frames for receiving system table from gateway."""
 from pyvlx.actutator import Actutator
-from pyvlx.const import (Command, Manufactor, NodeTypeWithSubtype, PowerMode, TurnAround )
+from pyvlx.const import (
+    Command, Manufactor, NodeTypeWithSubtype, PowerMode, TurnAround)
 from pyvlx.exception import PyVLXException
+
 from .frame import FrameBase
+
 
 class FrameGetSystemTableRequest(FrameBase):
     """Frame for requesting system table."""
@@ -17,6 +20,7 @@ class FrameGetSystemTableRequest(FrameBase):
         """Return human readable string."""
         return '<{}/>'.format(type(self).__name__)
 
+
 class FrameGetSystemTableConfirmation(FrameBase):
     """Frame for confirmation for system table request."""
 
@@ -30,26 +34,43 @@ class FrameGetSystemTableConfirmation(FrameBase):
         """Return human readable string."""
         return '<{}/>'.format(type(self).__name__)
 
+
+class ActutatorList(list):
+    """a useless class for MyPy."""
+
+    def __init__(self, init: list[Actutator]) -> None:
+        """Init a list."""
+        self.acts: list[Actutator] = init
+
+    def __getitem__(self, key: int) -> Actutator:  # type: ignore[override]
+        """Get an item."""
+        return super().__getitem__(key)
+
+    def __setitem__(self, key: int, value: Actutator) -> None:  # type: ignore[override]
+        """Set an item."""
+        self.acts[key] = value
+
+
 class FrameGetSystemTableNotification(FrameBase):
     """Frame for scene list notification."""
 
     def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_CS_GET_SYSTEMTABLE_DATA_NTF)
-        self.actutators = []
+        self.actutators = ActutatorList([])
         self.remaining_objects = 0
 
     def get_payload(self) -> bytes:
         """Return Payload."""
-        #TODO Paquet are limited to 200 bytes so KLF200 would never send more that 10 entries at once
+        # TODO Paquet are limited to 200 bytes so KLF200 would never send more that 10 entries at once
         ret = bytes([len(self.actutators)])
         for i in self.actutators:
-            ret += self.actutators[i].idx
+            ret += bytes(self.actutators[i].idx)
             ret += self.actutators[i].address
-            ret += self.actutators[i].subtype
-            ret += (self.actutators[i].turn_around_time + self.actutators[i].rf * 16
-                 + self.actutators[i].io * 32 + self.actutators[i].power_save_mode * 64)
-            ret += self.actutators[i].manufactor
+            ret += bytes(self.actutators[i].subtype.value)
+            ret += bytes(self.actutators[i].turn_around_time.value + self.actutators[i].rf * 16
+                         + self.actutators[i].io * 32 + self.actutators[i].power_save_mode.value * 64)
+            ret += bytes(self.actutators[i].manufactor.value)
             ret += self.actutators[i].backbone
         ret += bytes([self.remaining_objects])
         return ret
@@ -60,19 +81,18 @@ class FrameGetSystemTableNotification(FrameBase):
         predicted_len = number_of_objects * 11 + 2
         if len(payload) != predicted_len:
             raise PyVLXException("system_objects_notification_wrong_length")
-        self.remaining_objects = payload[number_of_objects * 11 + 1 ]
-        self.actutators = []
+        self.remaining_objects = payload[number_of_objects * 11 + 1]
         for i in range(number_of_objects):
             self.actutators.append(Actutator(
                 payload[(i * 11 + 1)],
                 payload[(i * 11 + 2) : (i * 11 + 5)],
-                NodeTypeWithSubtype( int.from_bytes( payload[(i * 11 + 5) : (i * 11 + 7)] ) ) ,
-                PowerMode( payload[(i * 11 + 7)] >> 6 & 3 ), #bit 0-1 power_save_mode
-                payload[(i * 11 + 7)] >> 5 & 1,              #bit2 io membership
-                payload[(i * 11 + 7)] >> 4 & 1,              #bit3 rf support
-                                                             #bit4-5 reserved
-                TurnAround( payload[(i * 11 + 7)] % 4 ),     #bit6-7 actutatortime
-                Manufactor( payload[(i * 11 + 8)] ),
+                NodeTypeWithSubtype(int.from_bytes(payload[(i * 11 + 5) : (i * 11 + 7)])) ,
+                PowerMode(payload[(i * 11 + 7)] >> 6 & 3),  # bit 0-1 power_save_mode
+                bool(payload[(i * 11 + 7)] >> 5 & 1),       # bit2 io membership
+                bool(payload[(i * 11 + 7)] >> 4 & 1),       # bit3 rf support
+                                                            # bit4-5 reserved
+                TurnAround(payload[(i * 11 + 7)] % 4),      # bit6-7 actutatortime
+                Manufactor(payload[(i * 11 + 8)]),
                 payload[(i * 11 + 9) : (i * 11 + 12)]
             ))
 

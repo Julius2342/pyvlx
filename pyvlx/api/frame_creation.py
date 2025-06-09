@@ -25,8 +25,9 @@ from .frames import (
     FrameGetProtocolVersionRequest, FrameGetSceneListConfirmation,
     FrameGetSceneListNotification, FrameGetSceneListRequest,
     FrameGetStateConfirmation, FrameGetStateRequest,
-    FrameGetVersionConfirmation, FrameGetVersionRequest,
-    FrameHouseStatusMonitorDisableConfirmation,
+    FrameGetSystemTableConfirmation, FrameGetSystemTableNotification,
+    FrameGetSystemTableRequest, FrameGetVersionConfirmation,
+    FrameGetVersionRequest, FrameHouseStatusMonitorDisableConfirmation,
     FrameHouseStatusMonitorDisableRequest,
     FrameHouseStatusMonitorEnableConfirmation,
     FrameHouseStatusMonitorEnableRequest, FrameLeaveLearnStateConfirmation,
@@ -37,9 +38,7 @@ from .frames import (
     FrameSessionFinishedNotification, FrameSetNodeNameConfirmation,
     FrameSetNodeNameRequest, FrameSetUTCConfirmation, FrameSetUTCRequest,
     FrameStatusRequestConfirmation, FrameStatusRequestNotification,
-    FrameStatusRequestRequest, extract_from_frame,
-    FrameGetSystemTableRequest, FrameGetSystemTableConfirmation, FrameGetSystemTableNotification
-)
+    FrameStatusRequestRequest, extract_from_frame)
 
 
 def frame_from_raw(raw: bytes) -> Optional[FrameBase]:
