@@ -161,6 +161,7 @@ jobs:
       run: isort --check-only test examples pyvlx
   build:
     runs-on: ubuntu-latest
+    needs: ["pydocstyle","flake8", "pylint", "mypy", "pytest", "isort"]
     strategy:
       matrix:
         python-version: ["3.11", "3.12"]
@@ -202,7 +203,7 @@ jobs:
   coverage:
     name: Process test coverage
     runs-on: ubuntu-latest
-    needs: ["build", "pydocstyle","flake8", "pylint", "mypy", "pytest", "isort"]
+    needs: ["build"]
     strategy:
       matrix:
         python-version: ["3.11"]
