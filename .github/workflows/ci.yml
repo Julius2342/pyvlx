@@ -1,5 +1,4 @@
 name: CI
-
 on:
   push:
     branches:
@@ -7,7 +6,6 @@ on:
   pull_request:
     branches:
       - '**' # run on all branches
-
 jobs:
   pydocstyle:
     runs-on: ubuntu-latest
@@ -193,6 +191,7 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
+    - run: mkdir .coverage
     - name: Upload coverage artifact
       uses: actions/upload-artifact@v4
       with:
