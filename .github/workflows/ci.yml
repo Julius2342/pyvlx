@@ -191,7 +191,6 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
-    - run: mkdir .coverage
     - name: Upload coverage artifact
       uses: actions/upload-artifact@v4
       with:
