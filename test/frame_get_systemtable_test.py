@@ -53,7 +53,7 @@ class TestFrameGetSystemTableRequest(unittest.TestCase):
         frame = frame_from_raw(self.EMPTY_NOTIFY)
         self.assertTrue(isinstance(frame, FrameGetSystemTableNotification))
         self.assertEqual(frame.remaining_objects, 114)
-        self.assertEqual(len(frame.actutators), 0)
+        self.assertEqual(len(frame.actuators), 0)
 
     def test_notify_empty_str(self):
         """Test parse FrameGetSystemTableNotification from raw."""
@@ -67,16 +67,16 @@ class TestFrameGetSystemTableRequest(unittest.TestCase):
         frame = frame_from_raw(self.ONE_NOTIFY)
         self.assertTrue(isinstance(frame, FrameGetSystemTableNotification))
         self.assertEqual(frame.remaining_objects, 113)
-        self.assertEqual(len(frame.actutators), 1)
-        self.assertEqual(frame.actutators[0].idx, 1)
-        self.assertEqual(frame.actutators[0].address, b"\x12\x34\x56")
-        self.assertEqual(frame.actutators[0].subtype, NodeTypeWithSubtype.VENTILATION_POINT_AIR_TRANSFER)
-        self.assertEqual(frame.actutators[0].power_save_mode, PowerMode.LOW_POWER_MODE)
-        self.assertEqual(frame.actutators[0].io, True)
-        self.assertEqual(frame.actutators[0].rf, True)
-        self.assertEqual(frame.actutators[0].turn_around_time, TurnAround.WITHIN_20MS)
-        self.assertEqual(frame.actutators[0].manufactor, Manufactor.OVERKIZ)
-        self.assertEqual(frame.actutators[0].backbone, b"\x65\x43\x21")
+        self.assertEqual(len(frame.actuators), 1)
+        self.assertEqual(frame.actuators[0].idx, 1)
+        self.assertEqual(frame.actuators[0].address, b"\x12\x34\x56")
+        self.assertEqual(frame.actuators[0].subtype, NodeTypeWithSubtype.VENTILATION_POINT_AIR_TRANSFER)
+        self.assertEqual(frame.actuators[0].power_save_mode, PowerMode.LOW_POWER_MODE)
+        self.assertEqual(frame.actuators[0].io, True)
+        self.assertEqual(frame.actuators[0].rf, True)
+        self.assertEqual(frame.actuators[0].turn_around_time, TurnAround.WITHIN_20MS)
+        self.assertEqual(frame.actuators[0].manufactor, Manufactor.OVERKIZ)
+        self.assertEqual(frame.actuators[0].backbone, b"\x65\x43\x21")
 
     def test_notify_one_str(self):
         """Test parse FrameGetSystemTableNotification from raw."""
@@ -84,7 +84,7 @@ class TestFrameGetSystemTableRequest(unittest.TestCase):
         self.assertEqual(
             str(frame),
             '<FrameGetSystemTableNotification objects="1" remaining_objects="113">'
-            '<Actutator index="1" address="18.52.86" type="VENTILATION_POINT" subtype="VENTILATION_POINT_AIR_TRANSFER" '
+            '<Actuator index="1" address="18.52.86" type="VENTILATION_POINT" subtype="VENTILATION_POINT_AIR_TRANSFER" '
             'powerSaveMode="LOW_POWER_MODE" io="true" rf="true" turnAroundTime="WITHIN_20MS" manufactor="OVERKIZ" backbone="101.67.33"/>'
             '</FrameGetSystemTableNotification>'
         )
