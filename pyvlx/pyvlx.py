@@ -8,7 +8,7 @@ and roller shutters.
 import asyncio
 from typing import Optional
 
-from .actutators import Actutators
+from .actuators import Actuators
 from .api import get_limitation
 from .api.frames import FrameBase
 from .config import Config
@@ -48,7 +48,7 @@ class PyVLX:
         self.connection.register_frame_received_cb(self.node_updater.process_frame)
 
         self.scenes = Scenes(self)
-        self.actutators = Actutators(self)
+        self.actuators = Actuators(self)
         self.version = None
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
@@ -120,9 +120,9 @@ class PyVLX:
         """Load scenes from KLF 200."""
         await self.scenes.load()
 
-    async def load_actutators(self) -> None:
-        """Load actutators."""
-        await self.actutators.load()
+    async def load_actuators(self) -> None:
+        """Load actuators."""
+        await self.actuators.load()
 
     async def get_limitation(self, node_id: int) -> None:
         """Return limitation."""
