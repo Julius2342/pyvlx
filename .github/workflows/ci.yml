@@ -9,11 +9,50 @@ on:
       - '**' # run on all branches
 
 jobs:
+  pydocstyle:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Pydocstyle
+      run: pydocstyle pyvlx test/*.py *.py examples/*.py
+  flake8:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Flake8
+      run: flake8 
+  pylint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Linter Pylint
+      run: PYTHONPATH=. pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.11", "3.12", "3.13"]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -42,10 +81,6 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
-    - name: Linter Pydocstyle
-      run: pydocstyle pyvlx test/*.py *.py examples/*.py
-    - name: Linter Flake8
-      run: flake8
     - name: Linter Pylint
       run: PYTHONPATH=. pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
     - name: Mypy
