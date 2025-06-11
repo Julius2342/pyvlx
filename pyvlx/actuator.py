@@ -1,18 +1,18 @@
-"""Module for Actutator known by KLF200."""
+"""Module for Actuator known by KLF200."""
 from math import floor
 
 from pyvlx.const import (
     Manufactor, NodeType, NodeTypeWithSubtype, PowerMode, TurnAround)
 
 
-class Actutator() :
+class Actuator() :
     """Frame for confirmation for get network setup requests."""
 
     # pylint: disable-next=too-many-positional-arguments
     def __init__(self, idx: int = -1, address : bytes = bytes(3), subtype: NodeTypeWithSubtype = NodeTypeWithSubtype.NO_TYPE,
                  power_save_mode: PowerMode = PowerMode.ALWAYS_ALIVE, io: bool = False, rf: bool = False,
                  turn_around_time : TurnAround = TurnAround.NONE, manufactor: Manufactor = Manufactor.NONE, backbone : bytes = bytes(3)) :
-        """Create a new instance of Actutator."""
+        """Create a new instance of Actuator."""
         self.idx = idx
         self.address = address
         self.subtype = subtype
@@ -25,7 +25,7 @@ class Actutator() :
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<Actutator index="{}" address="{}" type="{}" subtype="{}" powerSaveMode="{}" io="{}" rf="{}"'\
+        return '<Actuator index="{}" address="{}" type="{}" subtype="{}" powerSaveMode="{}" io="{}" rf="{}"'\
                ' turnAroundTime="{}" manufactor="{}" backbone="{}"/>'.format(self.idx,
                                                                              ".".join(str(c) for c in self.address),
                                                                              self.get_node_type().name,

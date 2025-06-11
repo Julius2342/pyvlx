@@ -1,5 +1,5 @@
 """Frames for receiving system table from gateway."""
-from pyvlx.actutator import Actutator
+from pyvlx.actuator import Actuator
 from pyvlx.const import (
     Command, Manufactor, NodeTypeWithSubtype, PowerMode, TurnAround)
 from pyvlx.exception import PyVLXException
@@ -35,18 +35,18 @@ class FrameGetSystemTableConfirmation(FrameBase):
         return '<{}/>'.format(type(self).__name__)
 
 
-class ActutatorList(list):
+class ActuatorList(list):
     """a useless class for MyPy."""
 
-    def __init__(self, init: list[Actutator]) -> None:
+    def __init__(self, init: list[Actuator]) -> None:
         """Init a list."""
-        self.acts: list[Actutator] = init
+        self.acts: list[Actuator] = init
 
-    def __getitem__(self, key: int) -> Actutator:  # type: ignore[override]
+    def __getitem__(self, key: int) -> Actuator:  # type: ignore[override]
         """Get an item."""
         return super().__getitem__(key)
 
-    def __setitem__(self, key: int, value: Actutator) -> None:  # type: ignore[override]
+    def __setitem__(self, key: int, value: Actuator) -> None:  # type: ignore[override]
         """Set an item."""
         self.acts[key] = value
 
@@ -57,21 +57,21 @@ class FrameGetSystemTableNotification(FrameBase):
     def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_CS_GET_SYSTEMTABLE_DATA_NTF)
-        self.actutators = ActutatorList([])
+        self.actuators = ActuatorList([])
         self.remaining_objects = 0
 
     def get_payload(self) -> bytes:
         """Return Payload."""
         # TODO Paquet are limited to 200 bytes so KLF200 would never send more that 10 entries at once
-        ret = bytes([len(self.actutators)])
-        for i in self.actutators:
-            ret += bytes(self.actutators[i].idx)
-            ret += self.actutators[i].address
-            ret += bytes(self.actutators[i].subtype.value)
-            ret += bytes(self.actutators[i].turn_around_time.value + self.actutators[i].rf * 16
-                         + self.actutators[i].io * 32 + self.actutators[i].power_save_mode.value * 64)
-            ret += bytes(self.actutators[i].manufactor.value)
-            ret += self.actutators[i].backbone
+        ret = bytes([len(self.actuators)])
+        for i in self.actuators:
+            ret += bytes(self.actuators[i].idx)
+            ret += self.actuators[i].address
+            ret += bytes(self.actuators[i].subtype.value)
+            ret += bytes(self.actuators[i].turn_around_time.value + self.actuators[i].rf * 16
+                         + self.actuators[i].io * 32 + self.actuators[i].power_save_mode.value * 64)
+            ret += bytes(self.actuators[i].manufactor.value)
+            ret += self.actuators[i].backbone
         ret += bytes([self.remaining_objects])
         return ret
 
@@ -83,7 +83,7 @@ class FrameGetSystemTableNotification(FrameBase):
             raise PyVLXException("system_objects_notification_wrong_length")
         self.remaining_objects = payload[number_of_objects * 11 + 1]
         for i in range(number_of_objects):
-            self.actutators.append(Actutator(
+            self.actuators.append(Actuator(
                 payload[(i * 11 + 1)],
                 payload[(i * 11 + 2) : (i * 11 + 5)],
                 NodeTypeWithSubtype(int.from_bytes(payload[(i * 11 + 5) : (i * 11 + 7)])) ,
@@ -91,7 +91,7 @@ class FrameGetSystemTableNotification(FrameBase):
                 bool(payload[(i * 11 + 7)] >> 5 & 1),       # bit2 io membership
                 bool(payload[(i * 11 + 7)] >> 4 & 1),       # bit3 rf support
                                                             # bit4-5 reserved
-                TurnAround(payload[(i * 11 + 7)] % 4),      # bit6-7 actutatortime
+                TurnAround(payload[(i * 11 + 7)] % 4),      # bit6-7 actuatortime
                 Manufactor(payload[(i * 11 + 8)]),
                 payload[(i * 11 + 9) : (i * 11 + 12)]
             ))
@@ -99,8 +99,8 @@ class FrameGetSystemTableNotification(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         ret = '<FrameGetSystemTableNotification objects="{}" remaining_objects="{}">'.format(
-            len(self.actutators), self.remaining_objects
+            len(self.actuators), self.remaining_objects
         )
-        for actutator in self.actutators :
-            ret += str(actutator)
+        for actuator in self.actuators :
+            ret += str(actuator)
         return ret + "</FrameGetSystemTableNotification>"
