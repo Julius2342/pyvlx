@@ -238,6 +238,7 @@ jobs:
       uses: actions/download-artifact@v4
     - name: Create coverage report
       run: |
+        find . -name '.coverage*'
         coverage combine
         coverage report --fail-under=79
 
