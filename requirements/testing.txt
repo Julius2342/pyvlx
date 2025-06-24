@@ -9,4 +9,4 @@ pytest==8.4.1
 pytest-cov==6.2.0
 setuptools==80.9.0
 twine==6.1.0
-mypy==1.16.0
+mypy==1.16.1
