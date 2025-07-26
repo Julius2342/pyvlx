@@ -140,6 +140,8 @@ class NodeUpdater:
                     node.position = position
                     node.target = target
                     PYVLXLOG.debug("%s position changed to: %s", node.name, position)
+                    # new: Set state as string
+                    node.state = str(frame.state)
                 await node.after_update()
             elif isinstance(node, LighteningDevice):
                 intensity = Intensity(frame.current_position)
