@@ -44,7 +44,7 @@ class TestPosition(unittest.TestCase):
         self.assertEqual(Position(position_percent=50).position, 25600)
         self.assertEqual(Position(position=12345).position_percent, 24)
         self.assertEqual(Position(position=51200).position_percent, 100)
-        # test tolerance for devices that report positions only close to 100% 
+        # test tolerance for devices that report positions only close to 100%
         self.assertEqual(Position(position=51160).position_percent, 100)
 
     def test_fallback_to_unknown(self) -> None:
