@@ -21,7 +21,7 @@ class VeluxHost():
 
 
 def sanitize_hostname(hostname: str) -> str:
-    """Function to sanitize KLF200 hostname."""
+    """Sanitize KLF200 hostname."""
     hostname = hostname.upper()
     hostname = hostname.replace("._HTTP._TCP.LOCAL.", "")
     # KLF report it's hostname within Zeroconf ServiceInfo with the "LAN_" prefix, on DHCP requests without
