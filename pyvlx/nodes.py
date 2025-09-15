@@ -16,6 +16,8 @@ class Nodes:
     def __init__(self, pyvlx: "PyVLX"):
         """Initialize Nodes object."""
         self.pyvlx = pyvlx
+        #new: node state string
+        self.state: str = "unknown"
         self.__nodes: List[Node] = []
 
     def __iter__(self) -> Iterator[Node]:
