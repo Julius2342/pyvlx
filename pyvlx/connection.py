@@ -111,11 +111,18 @@ class Connection:
         """Connect to gateway via SSL."""
         tcp_client = TCPTransport(self.frame_received_cb, connection_lost_cb=self.on_connection_lost)
         assert self.config.host is not None
+        # Create a custom SSL context for KLF200 compatibility
+        ssl_context = ssl.create_default_context()
+        # Disable Python 3.13's strict validation flags
+        if hasattr(ssl, 'VERIFY_X509_STRICT'):
+            ssl_context.verify_flags &= ~ssl.VERIFY_X509_STRICT
+        if hasattr(ssl, 'VERIFY_X509_PARTIAL_CHAIN'):
+            ssl_context.verify_flags &= ~ssl.VERIFY_X509_PARTIAL_CHAIN
         self.transport, _ = await self.loop.create_connection(
             lambda: tcp_client,
             host=self.config.host,
             port=self.config.port,
-            ssl=self.create_ssl_context(),
+            ssl=ssl_context,
         )
         self.connected = True
         self.connection_counter += 1
