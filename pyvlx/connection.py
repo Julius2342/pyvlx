@@ -118,6 +118,9 @@ class Connection:
             ssl_context.verify_flags &= ~ssl.VERIFY_X509_STRICT
         if hasattr(ssl, 'VERIFY_X509_PARTIAL_CHAIN'):
             ssl_context.verify_flags &= ~ssl.VERIFY_X509_PARTIAL_CHAIN
+        # KLF200 uses self-signed certificates - disable verification
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
         self.transport, _ = await self.loop.create_connection(
             lambda: tcp_client,
             host=self.config.host,
