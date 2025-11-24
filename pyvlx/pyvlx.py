@@ -101,11 +101,11 @@ class PyVLX:
             try:
                 # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
                 if self.klf200.house_status_monitor_enabled:
-                    await self.klf200.house_status_monitor_disable(pyvlx=self, timeout=1)
+                    await self.klf200.house_status_monitor_disable(pyvlx=self, timeout=5)
                 # Reboot KLF200 when disconnecting to avoid unresponsive KLF200.
                 await self.klf200.reboot()
             except (OSError, PyVLXException):
-                pass
+                PYVLXLOG.exception("Error during disconnect preparations")
             self.connection.disconnect()
             if self.connection.tasks:
                 await asyncio.gather(*self.connection.tasks)  # Wait for all tasks to finish
