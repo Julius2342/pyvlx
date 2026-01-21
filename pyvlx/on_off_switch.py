@@ -22,7 +22,9 @@ class OnOffSwitch(Node):
     async def set_state(self, parameter: SwitchParameter) -> None:
         """Set switch to desired state."""
         command = CommandSend(
-            pyvlx=self.pyvlx, node_id=self.node_id, parameter=parameter
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            parameter=parameter,
         )
         await command.send()
         await self.after_update()
