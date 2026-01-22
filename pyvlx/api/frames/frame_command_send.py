@@ -109,13 +109,11 @@ class FrameCommandSendRequest(FrameBase):
                 str(key),
                 Position(Parameter(bytes(value))),
             )
-        fpi1 = "0x{:02x}".format(self.fpi1)
-        fpi2 = "0x{:02x}".format(self.fpi2)
         return (
             '<{} node_ids="{}" active_parameter="{}" parameter="{}" fpi1="{}" fpi2="{}" functional_parameter="{}" '
             'session_id="{}" originator="{}"/>'.format(
-                type(self).__name__, self.node_ids, self.active_parameter,
-                self.parameter, fpi1, fpi2, functional_parameter,
+                type(self).__name__, self.node_ids, self.active_parameter, self.parameter,
+                "0x{:02x}".format(self.fpi1), "0x{:02x}".format(self.fpi2), functional_parameter,
                 self.session_id, self.originator,
             )
         )
