@@ -46,10 +46,10 @@ class FrameCommandSendRequest(FrameBase):
                 self.fpi1 += 2 ** (8 - i)
 
                 # this distinction is only needed when fp9..fp16 are actually used, so commented out for now
-                #if i < 9:
-                #    self.fpi1 += 2 ** (8 - i)
-                #if i >= 9:
-                #    self.fpi2 += 2 ** (16 - i)
+                # if i < 9:
+                #     self.fpi1 += 2 ** (8 - i)
+                # if i >= 9:
+                #     self.fpi2 += 2 ** (16 - i)
             else:
                 self.functional_parameter[key] = Parameter(raw=bytes(2))
 
