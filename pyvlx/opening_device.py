@@ -430,8 +430,10 @@ class Blind(OpeningDevice):
         self.target_orientation = orientation
         self.orientation = orientation
 
-        fp : FunctionalParams = {}
-        fp["fp3"] = Position(position_percent=0) if self.target_position == Position(position_percent=0) else self.target_orientation
+        fp : FunctionalParams = {"fp3" :
+                                 Position(position_percent=0)
+                                 if self.target_position == Position(position_percent=0)
+                                 else self.target_orientation}
 
         # print("Orientation in device: %s " % (orientation))
         command = CommandSend(
