@@ -20,6 +20,7 @@ class CommandSend(ApiEvent):
 
     def __init__(
             self,
+            *,
             pyvlx: "PyVLX",
             node_id: int,
             parameter: Parameter,
