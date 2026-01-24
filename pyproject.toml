@@ -34,9 +34,6 @@ Homepage = "https://github.com/Julius2342/pyvlx"
 Source = "https://github.com/Julius2342/pyvlx"
 "Bug Tracker" = "https://github.com/Julius2342/pyvlx/issues"
 
-[tool.setuptools]
-zip-safe = false
-
 [tool.setuptools.packages.find]
 exclude = ["test*"]
 
