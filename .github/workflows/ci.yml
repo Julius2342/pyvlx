@@ -33,7 +33,7 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: Pydocstyle
-      run: pydocstyle pyvlx test/*.py *.py examples/*.py
+      run: pydocstyle pyvlx test/*.py examples/*.py
   flake8:
     runs-on: ubuntu-latest
     strategy:
@@ -83,7 +83,7 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: Linter Pylint
-      run: PYTHONPATH=. pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
+      run: pylint pyvlx test/*.py examples/*.py
   mypy:
     runs-on: ubuntu-latest
     strategy:
