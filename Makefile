@@ -17,7 +17,7 @@ all:
 	@echo ""
 
 test:
-	PYTHONPATH="${PYTHONPATH}:/" pytest
+	pytest
 
 build:
 	@python3 -m build
