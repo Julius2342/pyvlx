@@ -17,16 +17,6 @@ jobs:
       uses: actions/setup-python@v6
       with:
         python-version: "3.x"        
-    - name: Cache pip packages
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-pypi-modules
-      with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: Pydocstyle
@@ -39,16 +29,6 @@ jobs:
       uses: actions/setup-python@v6
       with:
         python-version: "3.x"
-    - name: Cache pip packages
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-pypi-modules
-      with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-flake8-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-flake8-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: Flake8
@@ -61,16 +41,6 @@ jobs:
       uses: actions/setup-python@v6
       with:
         python-version: "3.x"
-    - name: Cache pip packages
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-pypi-modules
-      with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pylint-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pylint-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: Linter Pylint
@@ -83,16 +53,6 @@ jobs:
       uses: actions/setup-python@v6
       with:
         python-version: "3.x"
-    - name: Cache pip packages
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-pypi-modules
-      with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-isort-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-isort-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: Isort
