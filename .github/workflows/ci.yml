@@ -11,15 +11,12 @@ on:
 jobs:
   pydocstyle:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.12"]
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v6
       with:
-        python-version: ${{ matrix.python-version }}        
+        python-version: "3.x"        
     - name: Cache pip packages
       uses: actions/cache@v4
       env:
@@ -33,18 +30,15 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: Pydocstyle
-      run: pydocstyle pyvlx test/*.py *.py examples/*.py
+      run: pydocstyle pyvlx test/*.py examples/*.py
   flake8:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.12"]
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v6
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: "3.x"
     - name: Cache pip packages
       uses: actions/cache@v4
       env:
@@ -61,15 +55,12 @@ jobs:
       run: flake8 
   pylint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.12"]
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v6
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: "3.x"
     - name: Cache pip packages
       uses: actions/cache@v4
       env:
@@ -83,7 +74,29 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: Linter Pylint
-      run: PYTHONPATH=. pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
+      run: pylint pyvlx test/*.py examples/*.py
+  isort:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.x"
+    - name: Cache pip packages
+      uses: actions/cache@v4
+      env:
+        cache-name: cache-pypi-modules
+      with:
+        # pip cache files are stored in `~/.cache/pip` on Linux
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-isort-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-isort-${{ env.cache-name }}-
+    - name: Install dependencies
+      run: pip install -r requirements/testing.txt
+    - name: Isort
+      run: isort --check-only test examples pyvlx
   mypy:
     runs-on: ubuntu-latest
     strategy:
@@ -92,7 +105,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
@@ -117,7 +130,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
@@ -133,32 +146,7 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: pytest
-      run: PYTHONPATH=. pytest --cov pyvlx --cov-report xml
-  isort:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.12"]
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Cache pip packages
-      uses: actions/cache@v4
-      env:
-        cache-name: cache-pypi-modules
-      with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-isort-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-isort-${{ env.cache-name }}-
-    - name: Install dependencies
-      run: pip install -r requirements/testing.txt
-    - name: Isort
-      run: isort --check-only test examples pyvlx
+      run: pytest --cov pyvlx --cov-report xml
 
   notify-build:
     name: Notify build and publish workflow 
