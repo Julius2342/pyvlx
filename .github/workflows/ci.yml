@@ -1,5 +1,6 @@
 name: CI
 on:
+  workflow_dispatch: # allow manual triggering
   push:
     branches:
       - '**' # run on all branches
