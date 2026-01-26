@@ -1,6 +1,6 @@
 [project]
 name = "pyvlx"
-version = "0.2.28"
+dynamic = ["version"]
 description = "PyVLX is a wrapper for the Velux KLF 200 API. PyVLX enables you to run scenes and or open and close velux windows."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -31,7 +31,7 @@ Source = "https://github.com/Julius2342/pyvlx"
 "Bug Tracker" = "https://github.com/Julius2342/pyvlx/issues"
 
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0", "setuptools-scm>=8.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -39,6 +39,10 @@ exclude = ["test*"]
 
 [tool.setuptools.package-data]
 pyvlx = ["py.typed"]
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
 
 [tool.mypy]
 show_error_codes = true
