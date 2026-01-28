@@ -102,8 +102,8 @@ class Connection:
         self.connected = False
         PYVLXLOG.debug("TCP transport closed.")
         for connection_closed_cb in self.connection_closed_cbs:
-            if asyncio.iscoroutine(connection_closed_cb()):
-                task = self.loop.create_task(connection_closed_cb())
+            if asyncio.iscoroutine(coroutine := connection_closed_cb()):
+                task = self.loop.create_task(coroutine)
                 self.tasks.add(task)
                 task.add_done_callback(self.tasks.remove)
 
@@ -123,8 +123,8 @@ class Connection:
             "Amount of connections since last HA start: %s", self.connection_counter
         )
         for connection_opened_cb in self.connection_opened_cbs:
-            if asyncio.iscoroutine(connection_opened_cb()):
-                task = self.loop.create_task(connection_opened_cb())
+            if asyncio.iscoroutine(result := connection_opened_cb()):
+                task = self.loop.create_task(result)
                 self.tasks.add(task)
                 task.add_done_callback(self.tasks.remove)
 
