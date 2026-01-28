@@ -120,11 +120,11 @@ class Connection:
         self.connected = True
         self.connection_counter += 1
         PYVLXLOG.debug(
-            "Amount of connections since last HA start: %s", self.connection_counter
+            "Number of connections since last HA start: %s", self.connection_counter
         )
         for connection_opened_cb in self.connection_opened_cbs:
-            if asyncio.iscoroutine(result := connection_opened_cb()):
-                task = self.loop.create_task(result)
+            if asyncio.iscoroutine(coroutine := connection_opened_cb()):
+                task = self.loop.create_task(coroutine)
                 self.tasks.add(task)
                 task.add_done_callback(self.tasks.remove)
 
