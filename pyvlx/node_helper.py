@@ -5,7 +5,7 @@ from .api.frames import (
     FrameGetAllNodesInformationNotification,
     FrameGetNodeInformationNotification)
 from .const import NodeTypeWithSubtype
-from .lightening_device import Light
+from .lightening_device import Light, OnOffLight
 from .log import PYVLXLOG
 from .node import Node
 from .on_off_switch import OnOffSwitch
@@ -153,8 +153,16 @@ def convert_frame_to_node(
             position_parameter=frame.current_position,
         )
 
-    if frame.node_type in [NodeTypeWithSubtype.LIGHT, NodeTypeWithSubtype.LIGHT_ON_OFF]:
+    if frame.node_type == NodeTypeWithSubtype.LIGHT:
         return Light(
+            pyvlx=pyvlx,
+            node_id=frame.node_id,
+            name=frame.name,
+            serial_number=frame.serial_number,
+        )
+
+    if frame.node_type == NodeTypeWithSubtype.LIGHT_ON_OFF:
+        return OnOffLight(
             pyvlx=pyvlx,
             node_id=frame.node_id,
             name=frame.name,
