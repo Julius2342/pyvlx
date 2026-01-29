@@ -435,7 +435,6 @@ class Blind(OpeningDevice):
                                  if self.target_position == Position(position_percent=0)
                                  else self.target_orientation}
 
-        # print("Orientation in device: %s " % (orientation))
         command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
