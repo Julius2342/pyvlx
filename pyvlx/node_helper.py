@@ -82,7 +82,7 @@ def convert_frame_to_node(
     # Blinds have position and orientation (inherit frame.current_position_fp3) attribute
     if frame.node_type in [
         NodeTypeWithSubtype.EXTERIOR_VENETIAN_BLIND,
-        NodeTypeWithSubtype.ADJUSTABLE_SLUTS_ROLLING_SHUTTER,
+        NodeTypeWithSubtype.ADJUSTABLE_SLATS_ROLLING_SHUTTER,
         NodeTypeWithSubtype.LOUVER_BLIND,
     ]:
         return Blind(
@@ -116,7 +116,7 @@ def convert_frame_to_node(
 
     if frame.node_type in [
         NodeTypeWithSubtype.GARAGE_DOOR_OPENER,
-        NodeTypeWithSubtype.LINAR_ANGULAR_POSITION_OF_GARAGE_DOOR,
+        NodeTypeWithSubtype.LINEAR_ANGULAR_POSITION_OF_GARAGE_DOOR,
     ]:
         return GarageDoor(
             pyvlx=pyvlx,
