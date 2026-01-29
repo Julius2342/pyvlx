@@ -24,7 +24,6 @@ class TestFrameCommandSendRequest(unittest.TestCase):
     def test_bytes(self) -> None:
         """Test FrameCommandSendRequest with NO_TYPE."""
         frame = FrameCommandSendRequest(
-            functional_parameter={},
             node_ids=[1, 2, 3],
             parameter=Position(position_percent=75),
             session_id=1000,
@@ -61,7 +60,7 @@ class TestFrameCommandSendRequest(unittest.TestCase):
 
     def test_wrong_payload(self) -> None:
         """Test wrong payload length, 2 scenes in len, only one provided."""
-        frame = FrameCommandSendRequest(functional_parameter={})
+        frame = FrameCommandSendRequest()
         with self.assertRaises(PyVLXException) as ctx:
             frame.from_payload(
                 b"\x03\xe8\x01\x03\x00\x00\x0009\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
