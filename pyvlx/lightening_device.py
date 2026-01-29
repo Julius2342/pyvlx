@@ -88,4 +88,13 @@ class Light(LighteningDevice):
 
 
 class OnOffLight(LighteningDevice):
-    """Lights supporting on/off only."""
+    """Lights supporting on/off only.
+
+    Note:
+        This class inherits :meth:`set_intensity` from :class:`LighteningDevice`,
+        but the underlying hardware only supports binary on/off operation.
+        Use :meth:`turn_on` and :meth:`turn_off` for normal control. Calling
+        :meth:`set_intensity` with intermediate values may not have the expected
+        effect and will typically be handled by the device as a simple on/off
+        command.
+    """
