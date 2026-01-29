@@ -431,9 +431,9 @@ class Blind(OpeningDevice):
         self.orientation = orientation
 
         fp: FunctionalParams = {"fp3":
-                                 Position(position_percent=0)
-                                 if self.target_position == Position(position_percent=0)
-                                 else self.target_orientation}
+                                Position(position_percent=0)
+                                if self.target_position == Position(position_percent=0)
+                                else self.target_orientation}
 
         command = CommandSend(
             pyvlx=self.pyvlx,
