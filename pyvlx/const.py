@@ -314,7 +314,7 @@ class NodeTypeWithSubtype(Enum):
     @classmethod
     def _missing_(cls, value: Any) -> Optional[Self]:
         if isinstance(value, int):
-            PYVLXLOG.warning("Unknown node type 0x%xd", value)
+            PYVLXLOG.warning("Unknown node type 0x%x", value)
             return cast(Self, cls.NO_TYPE)
         return None
 
