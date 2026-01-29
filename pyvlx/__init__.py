@@ -3,7 +3,7 @@
 from .discovery import VeluxDiscovery
 from .exception import PyVLXException
 from .klf200gateway import Klf200Gateway
-from .lightening_device import Light, LighteningDevice
+from .lightening_device import Light, LighteningDevice, OnOffLight
 from .log import PYVLXLOG
 from .node import Node
 from .nodes import Nodes
