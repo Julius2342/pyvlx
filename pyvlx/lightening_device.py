@@ -83,6 +83,10 @@ class LighteningDevice(Node):
         )
 
 
+class ExteriorHeating(LighteningDevice):
+    """Lights that support setting brightness."""
+
+
 class Light(LighteningDevice):
     """Lights that support setting brightness."""
 
