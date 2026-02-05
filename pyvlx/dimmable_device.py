@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-class LighteningDevice(Node):
+class DimmableDevice(Node):
     """Meta class for turning on device with one main parameter for intensity."""
 
     def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
@@ -84,13 +84,13 @@ class LighteningDevice(Node):
         )
 
 
-class ExteriorHeating(LighteningDevice):
+class ExteriorHeating(DimmableDevice):
     """Exterior heating device that supports setting intensity."""
 
 
-class Light(LighteningDevice):
+class Light(DimmableDevice):
     """Lights that support setting brightness."""
 
 
-class OnOffLight(LighteningDevice):
+class OnOffLight(DimmableDevice):
     """Lights supporting on/off only."""

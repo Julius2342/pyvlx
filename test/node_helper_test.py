@@ -8,7 +8,7 @@ from pyvlx import (
 from pyvlx.api.frames import FrameGetNodeInformationNotification
 from pyvlx.connection import Connection
 from pyvlx.const import NodeTypeWithSubtype
-from pyvlx.lightening_device import ExteriorHeating
+from pyvlx.dimmable_device import ExteriorHeating
 from pyvlx.node_helper import convert_frame_to_node
 
 

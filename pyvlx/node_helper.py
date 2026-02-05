@@ -5,7 +5,7 @@ from .api.frames import (
     FrameGetAllNodesInformationNotification,
     FrameGetNodeInformationNotification)
 from .const import NodeTypeWithSubtype
-from .lightening_device import ExteriorHeating, Light, OnOffLight
+from .dimmable_device import ExteriorHeating, Light, OnOffLight
 from .log import PYVLXLOG
 from .node import Node
 from .on_off_switch import OnOffSwitch
