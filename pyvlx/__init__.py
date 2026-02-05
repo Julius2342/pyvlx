@@ -1,9 +1,9 @@
 """Module for accessing KLF 200 gateway with python."""
 
+from .dimmable_device import DimmableDevice, ExteriorHeating, Light, OnOffLight
 from .discovery import VeluxDiscovery
 from .exception import PyVLXException
 from .klf200gateway import Klf200Gateway
-from .dimmable_device import ExteriorHeating, Light, DimmableDevice, OnOffLight
 from .log import PYVLXLOG
 from .node import Node
 from .nodes import Nodes
