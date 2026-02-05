@@ -117,7 +117,7 @@ class TestNodeHelper(unittest.TestCase):
         frame = FrameGetNodeInformationNotification()
         frame.node_id = 23
         frame.name = "Fnord23"
-        frame.node_type = NodeTypeWithSubtype.LINAR_ANGULAR_POSITION_OF_GARAGE_DOOR
+        frame.node_type = NodeTypeWithSubtype.LINEAR_ANGULAR_POSITION_OF_GARAGE_DOOR
         frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         node = convert_frame_to_node(self.pyvlx, frame)
         self.assertEqual(
