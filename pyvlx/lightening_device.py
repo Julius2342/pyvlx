@@ -32,7 +32,8 @@ class LighteningDevice(Node):
         """Set light to desired intensity.
 
         Parameters:
-            * intensity: Intensity object containing the target intensity.
+            * intensity: Intensity object containing the target intensity. Note that for all known devices 
+             using Intensity, the intensity_percent is inverted, meaning that 0% is full brightness and 100% is off.
             * wait_for_completion: If set, function will return
                 after device has reached target intensity.
 
@@ -84,7 +85,7 @@ class LighteningDevice(Node):
 
 
 class ExteriorHeating(LighteningDevice):
-    """Lights that support setting brightness."""
+    """Exterior heating device that supports setting intensity."""
 
 
 class Light(LighteningDevice):
