@@ -32,8 +32,8 @@ class DimmableDevice(Node):
         """Set light to desired intensity.
 
         Parameters:
-            * intensity: Intensity object containing the target intensity. Note that for all known devices
-             using Intensity, the intensity_percent is inverted, meaning that 0% is full brightness and 100% is off.
+            * intensity: Intensity object containing the target intensity.
+                0% means off, 100% means fully on.
             * wait_for_completion: If set, function will return
                 after device has reached target intensity.
 
@@ -56,7 +56,7 @@ class DimmableDevice(Node):
 
         """
         await self.set_intensity(
-            intensity=Intensity(intensity_percent=0),
+            intensity=Intensity(intensity_percent=100),
             wait_for_completion=wait_for_completion,
         )
 
@@ -69,7 +69,7 @@ class DimmableDevice(Node):
 
         """
         await self.set_intensity(
-            intensity=Intensity(intensity_percent=100),
+            intensity=Intensity(intensity_percent=0),
             wait_for_completion=wait_for_completion,
         )
 
