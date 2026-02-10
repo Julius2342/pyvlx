@@ -1,7 +1,8 @@
 """Module for enum and consts."""
 from enum import Enum
+from typing import Any, Optional, Self, cast
 
-from typing_extensions import Any
+from .log import PYVLXLOG
 
 
 class Command(Enum):
@@ -278,13 +279,13 @@ class NodeTypeWithSubtype(Enum):
     NO_TYPE = 0
     INTERIOR_VENETIAN_BLIND = 0x0040
     ROLLER_SHUTTER = 0x0080
-    ADJUSTABLE_SLUTS_ROLLING_SHUTTER = 0x0081
-    ADJUSTABLE_SLUTS_ROLLING_SHUTTER_WITH_PROJECTION = 0x0082
+    ADJUSTABLE_SLATS_ROLLING_SHUTTER = 0x0081
+    ADJUSTABLE_SLATS_ROLLING_SHUTTER_WITH_PROJECTION = 0x0082
     VERTICAL_EXTERIOR_AWNING = 0x00C0
     WINDOW_OPENER = 0x0100
     WINDOW_OPENER_WITH_RAIN_SENSOR = 0x0101
     GARAGE_DOOR_OPENER = 0x0140
-    LINAR_ANGULAR_POSITION_OF_GARAGE_DOOR = 0x017A
+    LINEAR_ANGULAR_POSITION_OF_GARAGE_DOOR = 0x017A
     LIGHT = 0x0180
     LIGHT_ON_OFF = 0x01BA
     GATE_OPENER = 0x01C0
@@ -295,6 +296,9 @@ class NodeTypeWithSubtype(Enum):
     DUAL_ROLLER_SHUTTER = 0x0340
     ON_OFF_SWITCH = 0x03C0
     HORIZONTAL_AWNING = 0x0400
+    # Not documented by Velux but reported by some devices
+    # Velux support refuses to provide additional information about this node sub type
+    HORIZONTAL_AWNING_ALT = 0x0401
     EXTERIOR_VENETIAN_BLIND = 0x0440
     LOUVER_BLIND = 0x0480
     CURTAIN_TRACK = 0x04C0
@@ -306,6 +310,13 @@ class NodeTypeWithSubtype(Enum):
     SWINGING_SHUTTERS = 0x0600
     SWINGING_SHUTTER_WITH_INDEPENDENT_LEAVES = 0x0601
     BLADE_OPENER = 0x0740
+
+    @classmethod
+    def _missing_(cls, value: Any) -> Optional[Self]:
+        if isinstance(value, int):
+            PYVLXLOG.warning("Unknown node type 0x%x", value)
+            return cast(Self, cls.NO_TYPE)
+        return None
 
 
 class NodeType(Enum):

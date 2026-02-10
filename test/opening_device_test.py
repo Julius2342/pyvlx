@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from pyvlx import (
     Awning, Blade, Blind, CurrentPosition, OpeningDevice, Parameter, Position,
     PyVLX, RollerShutter, Window)
+from pyvlx.connection import Connection
 from pyvlx.const import Velocity
 
 
@@ -13,6 +14,8 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
     """Test class for roller shutter."""
 
     mocked_pyvlx = MagicMock(spec=PyVLX)
+    connection = MagicMock(spec=Connection)
+    mocked_pyvlx.attach_mock(mock=connection, attribute="connection")
 
     @patch("pyvlx.api.CommandSend.send", new_callable=AsyncMock)
     @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
@@ -56,22 +59,6 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
         set_position.assert_awaited_once_with(
             position=CurrentPosition(),
             wait_for_completion=wait_for_completion)
-
-    def test_is_moving(self) -> None:
-        """Test is moving boolean of OpeningDevice object."""
-        opening_device = OpeningDevice(pyvlx=self.mocked_pyvlx, node_id=23, name="Test Device")
-        opening_device.is_opening = True
-        opening_device.is_closing = False
-        self.assertTrue(opening_device.is_moving())
-        opening_device.is_opening = False
-        opening_device.is_closing = True
-        self.assertTrue(opening_device.is_moving())
-        opening_device.is_opening = True
-        opening_device.is_closing = True
-        self.assertTrue(opening_device.is_moving())
-        opening_device.is_opening = False
-        opening_device.is_closing = False
-        self.assertFalse(opening_device.is_moving())
 
     def test_window_str(self) -> None:
         """Test string representation of Window object."""

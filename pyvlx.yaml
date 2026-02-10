@@ -1,4 +1,5 @@
 
 config:
     host: "192.168.2.102"
+    # use WiFi password here, not the web login
     password: "velux123"

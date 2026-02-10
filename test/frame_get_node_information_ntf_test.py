@@ -26,6 +26,16 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         b"\x11\xd7\x00\x01\x03\x03\x02\x03\x0501234567890123456789\x65"
     )
 
+    EXAMPLE_FRAME_UNKNOWN_TYPE = (
+        b"\x00\x7f\x02\x10\x17\x04\xd2\x02Fnord23\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        b"\x00\x00\x00\x00\x00\x00\x00\x01\x99\x99\x17\r\x01\x01\x07\x01"
+        b"\x02\x03\x04\x05\x06\x06\x08\x01\x00\x0c\x00{\x04\xd2\t)\r\x80"
+        b"\x11\xd7\x00\x01\x03\x03\x02\x03\x0501234567890123456789\x25"
+    )
+
     def test_bytes(self) -> None:
         """Test FrameGetNodeInformationNotification."""
         frame = FrameGetNodeInformationNotification()
@@ -63,6 +73,36 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         self.assertEqual(frame.name, "Fnord23")
         self.assertEqual(frame.velocity, Velocity.SILENT)
         self.assertEqual(frame.node_type, NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND)
+        self.assertEqual(frame.product_group, 23)
+        self.assertEqual(frame.product_type, 13)
+        self.assertEqual(frame.node_variation, NodeVariation.TOPHUNG)
+        self.assertEqual(frame.power_mode, 1)
+        self.assertEqual(frame.build_number, 7)
+        self.assertEqual(frame.serial_number, "01:02:03:04:05:06:06:08")
+        self.assertEqual(frame.state, OperatingState.ERROR_EXECUTING)
+        self.assertEqual(Position(frame.current_position).position, 12)
+        self.assertEqual(Position(frame.target).position, 123)
+        self.assertEqual(Position(frame.current_position_fp1).position, 1234)
+        self.assertEqual(Position(frame.current_position_fp2).position, 2345)
+        self.assertEqual(Position(frame.current_position_fp3).position, 3456)
+        self.assertEqual(Position(frame.current_position_fp4).position, 4567)
+        self.assertEqual(frame.remaining_time, 1)
+        self.assertEqual(frame.timestamp, 50528771)
+        self.assertEqual(
+            str(frame.alias_array),
+            "3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839",
+        )
+
+    def test_frame_from_raw_unknown_type(self) -> None:
+        """Test parse FrameGetNodeInformationNotification from raw."""
+        frame = frame_from_raw(self.EXAMPLE_FRAME_UNKNOWN_TYPE)
+        self.assertTrue(isinstance(frame, FrameGetNodeInformationNotification))
+        self.assertEqual(frame.node_id, 23)
+        self.assertEqual(frame.order, 1234)
+        self.assertEqual(frame.placement, 2)
+        self.assertEqual(frame.name, "Fnord23")
+        self.assertEqual(frame.velocity, Velocity.SILENT)
+        self.assertEqual(frame.node_type, NodeTypeWithSubtype.NO_TYPE)
         self.assertEqual(frame.product_group, 23)
         self.assertEqual(frame.product_type, 13)
         self.assertEqual(frame.node_variation, NodeVariation.TOPHUNG)
