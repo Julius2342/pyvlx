@@ -1,14 +1,18 @@
 """Module for lights."""
+from typing import TYPE_CHECKING, Optional
+
 from .api import CommandSend
-from .exception import PyVLXException
 from .node import Node
 from .parameter import Intensity
+
+if TYPE_CHECKING:
+    from pyvlx import PyVLX
 
 
 class LighteningDevice(Node):
     """Meta class for turning on device with one main parameter for intensity."""
 
-    def __init__(self, pyvlx, node_id, name, serial_number):
+    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
         """Initialize turning on device.
 
         Parameters:
@@ -24,7 +28,7 @@ class LighteningDevice(Node):
         )
         self.intensity = Intensity()
 
-    async def set_intensity(self, intensity, wait_for_completion=True):
+    async def set_intensity(self, intensity: Intensity, wait_for_completion: bool = True) -> None:
         """Set light to desired intensity.
 
         Parameters:
@@ -33,18 +37,16 @@ class LighteningDevice(Node):
                 after device has reached target intensity.
 
         """
-        command_send = CommandSend(
+        command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=intensity,
         )
-        await command_send.do_api_call()
-        if not command_send.success:
-            raise PyVLXException("Unable to send command")
+        await command.send()
         await self.after_update()
 
-    async def turn_on(self, wait_for_completion=True):
+    async def turn_on(self, wait_for_completion: bool = True) -> None:
         """Turn on light.
 
         Parameters:
@@ -57,7 +59,7 @@ class LighteningDevice(Node):
             wait_for_completion=wait_for_completion,
         )
 
-    async def turn_off(self, wait_for_completion=True):
+    async def turn_off(self, wait_for_completion: bool = True) -> None:
         """Turn off light.
 
         Parameters:
@@ -74,7 +76,7 @@ class LighteningDevice(Node):
 class Light(LighteningDevice):
     """Light object."""
 
-    def __init__(self, pyvlx, node_id, name, serial_number):
+    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
         """Initialize Light class.
 
         Parameters:
@@ -89,7 +91,7 @@ class Light(LighteningDevice):
             pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return object as readable string."""
         return (
             '<{} name="{}" '

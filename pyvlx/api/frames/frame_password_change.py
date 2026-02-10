@@ -1,5 +1,6 @@
 """Module for password enter frame classes."""
 from enum import Enum
+from typing import Optional
 
 from pyvlx.const import Command
 from pyvlx.exception import PyVLXException
@@ -14,13 +15,13 @@ class FramePasswordChangeRequest(FrameBase):
     MAX_SIZE = 32
     PAYLOAD_LEN = 64
 
-    def __init__(self, currentpassword=None, newpassword=None):
+    def __init__(self, currentpassword: Optional[str] = None, newpassword: Optional[str] = None):
         """Init Frame."""
         super().__init__(Command.GW_PASSWORD_CHANGE_REQ)
         self.currentpassword = currentpassword
         self.newpassword = newpassword
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         if self.currentpassword is None:
             raise PyVLXException("currentpassword is none")
@@ -34,12 +35,12 @@ class FramePasswordChangeRequest(FrameBase):
         return string_to_bytes(self.currentpassword,
                                self.MAX_SIZE)+string_to_bytes(self.newpassword, self.MAX_SIZE)
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.currentpassword = bytes_to_string(payload[0:32])
         self.newpassword = bytes_to_string(payload[32:])
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         currentpassword_esc = (
             None if self.currentpassword is None else "{}****".format(self.currentpassword[:2])
@@ -63,20 +64,20 @@ class FramePasswordChangeConfirmation(FrameBase):
 
     PAYLOAD_LEN = 1
 
-    def __init__(self, status=PasswordChangeConfirmationStatus.SUCCESSFUL):
+    def __init__(self, status: PasswordChangeConfirmationStatus = PasswordChangeConfirmationStatus.SUCCESSFUL):
         """Init Frame."""
         super().__init__(Command.GW_PASSWORD_CHANGE_CFM)
         self.status = status
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         return bytes([self.status.value])
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.status = PasswordChangeConfirmationStatus(payload[0])
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} status="{}"/>'.format(type(self).__name__, self.status)
 
@@ -87,12 +88,12 @@ class FramePasswordChangeNotification(FrameBase):
     MAX_SIZE = 32
     PAYLOAD_LEN = 32
 
-    def __init__(self, newpassword=None):
+    def __init__(self, newpassword: Optional[str] = None):
         """Init Frame."""
         super().__init__(Command.GW_PASSWORD_CHANGE_NTF)
         self.newpassword = newpassword
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         if self.newpassword is None:
             raise PyVLXException("newpassword is none")
@@ -101,11 +102,11 @@ class FramePasswordChangeNotification(FrameBase):
 
         return string_to_bytes(self.newpassword, self.MAX_SIZE)
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.newpassword = bytes_to_string(payload)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         newpassword_esc = (
             None if self.newpassword is None else "{}****".format(self.newpassword[:2])

@@ -24,7 +24,7 @@ class RollerShutter(Device):
         typeid = item['typeId']
         return cls(pyvlx, ident, name, subtype, typeid)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return object as readable string."""
         return '<RollerShutter name="{0}" ' \
             'id="{1}" ' \

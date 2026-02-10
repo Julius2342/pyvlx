@@ -1,5 +1,6 @@
 """Module for password enter frame classes."""
 from enum import Enum
+from typing import Optional
 
 from pyvlx.const import Command
 from pyvlx.exception import PyVLXException
@@ -14,12 +15,12 @@ class FramePasswordEnterRequest(FrameBase):
     MAX_SIZE = 32
     PAYLOAD_LEN = 32
 
-    def __init__(self, password=None):
+    def __init__(self, password: Optional[str] = None):
         """Init Frame."""
         super().__init__(Command.GW_PASSWORD_ENTER_REQ)
         self.password = password
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         if self.password is None:
             raise PyVLXException("password is none")
@@ -27,11 +28,11 @@ class FramePasswordEnterRequest(FrameBase):
             raise PyVLXException("password is too long")
         return string_to_bytes(self.password, self.MAX_SIZE)
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.password = bytes_to_string(payload)
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         password_esc = (
             None if self.password is None else "{}****".format(self.password[:2])
@@ -51,19 +52,19 @@ class FramePasswordEnterConfirmation(FrameBase):
 
     PAYLOAD_LEN = 1
 
-    def __init__(self, status=PasswordEnterConfirmationStatus.SUCCESSFUL):
+    def __init__(self, status: PasswordEnterConfirmationStatus = PasswordEnterConfirmationStatus.SUCCESSFUL):
         """Init Frame."""
         super().__init__(Command.GW_PASSWORD_ENTER_CFM)
         self.status = status
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
         return bytes([self.status.value])
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.status = PasswordEnterConfirmationStatus(payload[0])
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} status="{}"/>'.format(type(self).__name__, self.status)
