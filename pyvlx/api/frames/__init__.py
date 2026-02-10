@@ -8,10 +8,10 @@ from .frame_activate_scene import (
     FrameActivateSceneRequest)
 from .frame_activation_log_updated import FrameActivationLogUpdatedNotification
 from .frame_command_send import (
+    CommandNotificationRunStatus, CommandNotificationStatusReply,
     CommandSendConfirmationStatus, FrameCommandRemainingTimeNotification,
     FrameCommandRunStatusNotification, FrameCommandSendConfirmation,
-    FrameCommandSendRequest, FrameSessionFinishedNotification,
-    CommandNotificationRunStatus, CommandNotificationStatusReply)
+    FrameCommandSendRequest, FrameSessionFinishedNotification)
 from .frame_discover_nodes import (
     FrameDiscoverNodesConfirmation, FrameDiscoverNodesNotification,
     FrameDiscoverNodesRequest)
