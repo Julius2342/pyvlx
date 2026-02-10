@@ -152,12 +152,14 @@ class FrameCommandSendConfirmation(FrameBase):
             type(self).__name__, self.session_id, self.status
         )
 
+
 class CommandNotificationRunStatus(Enum):
     """Enum class for run_status parameter in FrameCommandRunStatusNotification."""
 
     EXECUTION_COMPLETED = 0
     EXECUTION_FAILED = 1
     EXECUTION_ACTIVE = 2
+
 
 class CommandNotificationStatusReply(Enum):
     """Enum class for status_reply parameter in FrameCommandRunStatusNotification."""
@@ -207,6 +209,7 @@ class CommandNotificationStatusReply(Enum):
     LIMITATION_BY_AUTOMATIC_CYCLE = 0xED
     LIMITATION_BY_EMERGENCY = 0xEE
 
+
 class FrameCommandRunStatusNotification(FrameBase):
     """Frame for run status notification in scope of command send frame."""
 
@@ -214,13 +217,14 @@ class FrameCommandRunStatusNotification(FrameBase):
 
     def __init__(
             self,
+            *,
             session_id: Optional[int] = None,
             status_id: Optional[int] = None,
             index_id: Optional[int] = None,
             node_parameter: Optional[int] = None,
             parameter_value: Optional[int] = None,
             run_status: Optional[CommandNotificationRunStatus] = None,
-            status_reply: CommandNotificationStatusReply = None,
+            status_reply: Optional[CommandNotificationStatusReply] = None,
     ):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_RUN_STATUS_NTF)

@@ -2,7 +2,9 @@
 import unittest
 
 from pyvlx.api.frame_creation import frame_from_raw
-from pyvlx.api.frames import FrameCommandRunStatusNotification, CommandNotificationRunStatus, CommandNotificationStatusReply
+from pyvlx.api.frames import (
+    CommandNotificationRunStatus, CommandNotificationStatusReply,
+    FrameCommandRunStatusNotification)
 
 
 class TestFrameCommandRunStatusNotification(unittest.TestCase):
@@ -30,7 +32,7 @@ class TestFrameCommandRunStatusNotification(unittest.TestCase):
     def test_frame_from_raw(self):
         """Test parse FrameCommandRunStatusNotification from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
-        self.assertTrue(isinstance(frame, FrameCommandRunStatusNotification))
+        self.assertIsInstance(frame, FrameCommandRunStatusNotification)
         self.assertEqual(frame.session_id, 1000)
         self.assertEqual(frame.status_id, 7)
         self.assertEqual(frame.index_id, 23)
