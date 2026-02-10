@@ -2,7 +2,7 @@
 import asyncio
 from asyncio import Event, Future, Task
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any, Optional, Set
 
 from zeroconf import IPVersion
 from zeroconf.asyncio import (
@@ -20,6 +20,15 @@ class VeluxHost():
     ip_address: str
 
 
+def sanitize_hostname(hostname: str) -> str:
+    """Sanitize KLF200 hostname."""
+    hostname = hostname.upper()
+    hostname = hostname.replace("._HTTP._TCP.LOCAL.", "")
+    # KLF report it's hostname within Zeroconf ServiceInfo with the "LAN_" prefix, on DHCP requests without
+    hostname = hostname.replace("LAN_", "")
+    return hostname
+
+
 class VeluxDiscovery():
     """Class to discover Velux KLF200 devices on the network."""
 
@@ -34,14 +43,15 @@ class VeluxDiscovery():
         """Listen for zeroconf ServiceInfo."""
         self.hosts.clear()
         service_names: list[str] = []
-        tasks: list[Task] = []
+        tasks: Set[Task] = set()
         got_host: Event = Event()
 
         def add_info_and_host(fut: Future) -> None:
             info: AsyncServiceInfo = fut.result()
             self.infos.append(info)
+            hostname = sanitize_hostname(info.name)
             host = VeluxHost(
-                hostname=info.name.replace("._http._tcp.local.", ""),
+                hostname=hostname,
                 ip_address=info.parsed_addresses(version=IPVersion.V4Only)[0],
             )
             self.hosts.append(host)
@@ -52,8 +62,9 @@ class VeluxDiscovery():
                 if name not in service_names:
                     service_names.append(name)
                     task = asyncio.create_task(self.zc.async_get_service_info(type_=SERVICE_TYPE, name=name))
+                    tasks.add(task)
                     task.add_done_callback(add_info_and_host)
-                    tasks.append(task)
+                    task.add_done_callback(tasks.remove)
 
         browser: AsyncServiceBrowser = AsyncServiceBrowser(self.zc.zeroconf, SERVICE_TYPE, handlers=[handler])
         if expected_hosts:
@@ -63,7 +74,8 @@ class VeluxDiscovery():
         while not self.hosts:
             await asyncio.sleep(min_wait_time)
         await browser.async_cancel()
-        await asyncio.gather(*tasks)
+        if tasks:
+            await asyncio.gather(*tasks)
 
     async def async_discover_hosts(
         self,

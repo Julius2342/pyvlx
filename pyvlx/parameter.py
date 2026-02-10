@@ -216,7 +216,7 @@ class Position(Parameter):
     def closed(self) -> bool:
         """Return true if position is set to fully closed."""
         # Consider closed even if raw is not exactly 51200 (tolerance for devices like Velux SML)
-        return self.raw == self.from_int(Position.MAX)
+        return self.to_percent(self.raw) == self.to_percent(self.from_int(Position.MAX))
 
     @property
     def position(self) -> int:

@@ -51,7 +51,6 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
-        PYVLXLOG.debug("Loadig pyvlx v0.2.24")
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
@@ -101,14 +100,15 @@ class PyVLX:
         if self.connection.connected:
             try:
                 # If the connection will be closed while house status monitor is enabled, a reconnection will fail on SSL handshake.
-                await self.klf200.house_status_monitor_disable(pyvlx=self, timeout=1)
+                if self.klf200.house_status_monitor_enabled:
+                    await self.klf200.house_status_monitor_disable(pyvlx=self, timeout=5)
                 # Reboot KLF200 when disconnecting to avoid unresponsive KLF200.
                 await self.klf200.reboot()
             except (OSError, PyVLXException):
-                pass
+                PYVLXLOG.exception("Error during disconnect preparations")
             self.connection.disconnect()
-        if self.connection.tasks:
-            await asyncio.gather(*self.connection.tasks)
+            if self.connection.tasks:
+                await asyncio.gather(*self.connection.tasks)  # Wait for all tasks to finish
 
     async def load_nodes(self, node_id: Optional[int] = None) -> None:
         """Load devices from KLF 200, if no node_id is specified all nodes are loaded."""
