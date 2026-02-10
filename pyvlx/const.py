@@ -669,7 +669,7 @@ class RunStatus(Enum):
     EXECUTION_COMPLETED = 0  # Execution is completed with no errors.
     EXECUTION_FAILED = 1     # Execution has failed. (Get specifics in the following error code)
     UNKNOWN_RUN_STATUS = 255  # Unknown run status.
- 
+
     @classmethod
     def _missing_(cls, value: object) -> Any:
         return cls.UNKNOWN_RUN_STATUS
