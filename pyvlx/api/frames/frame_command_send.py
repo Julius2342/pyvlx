@@ -8,6 +8,7 @@ from pyvlx.parameter import FunctionalParams, Parameter, Position
 
 from .frame import FrameBase
 
+
 class FrameCommandSendRequest(FrameBase):
     """Frame for sending command to gw."""
 
