@@ -45,7 +45,8 @@ class OpeningDevice(Node):
             pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
         )
         self.position: Position = Position(parameter=position_parameter)
-        self.target: Position = Position(parameter=position_parameter)        self.limitation_min = IgnorePosition()
+        self.target: Position = Position(parameter=position_parameter)
+        self.limitation_min = IgnorePosition()
         self.limitation_max = IgnorePosition()
         self.limitation_time = 255
         self.limitation_originator = Originator.USER

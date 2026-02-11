@@ -70,7 +70,9 @@ class NodeUpdater:
             if position_lower_curtain.position <= Parameter.MAX:
                 node.position_lower_curtain = position_lower_curtain
                 PYVLXLOG.debug(
-                    "%s orientation changed to: %s", node.name, orientation
+                    "%s position lower curtain changed to: %s",
+                    node.name,
+                    position_lower_curtain,
                 )
             await node.after_update()
 
