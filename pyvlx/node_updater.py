@@ -99,81 +99,85 @@ class NodeUpdater:
                 FrameNodeStatePositionChangedNotification,
             ),
         ):
-            PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
-            if frame.node_id not in self.pyvlx.nodes:
-                return
-            node = self.pyvlx.nodes[frame.node_id]
-            position = Position(frame.current_position)
-            target: Any = Position(frame.target)
-            # KLF transmits for functional parameters basically always 'No feed-back value known’ (0xF7FF).
-            # In home assistant this cause unreasonable values like -23%. Therefore a check is implemented
-            # whether the frame parameter is inside the maximum range.
-
-            # Set opening device status
-            if isinstance(node, OpeningDevice):
-                if (position.position > target.position <= Parameter.MAX) and (
-                    (frame.state == OperatingState.EXECUTING)
-                    or frame.remaining_time > 0
-                ):
-                    node.is_opening = True
-                    PYVLXLOG.debug("%s is opening", node.name)
-                    node.state_received_at = datetime.datetime.now()
-                    node.estimated_completion = (
-                        node.state_received_at
-                        + datetime.timedelta(0, frame.remaining_time)
-                    )
-                    PYVLXLOG.debug(
-                        "%s will be opening until", node.estimated_completion
-                    )
-                elif (position.position < target.position <= Parameter.MAX) and (
-                    (frame.state == OperatingState.EXECUTING)
-                    or frame.remaining_time > 0
-                ):
-                    node.is_closing = True
-                    PYVLXLOG.debug("%s is closing", node.name)
-                    node.state_received_at = datetime.datetime.now()
-                    node.estimated_completion = (
-                        node.state_received_at
-                        + datetime.timedelta(0, frame.remaining_time)
-                    )
-                    PYVLXLOG.debug(
-                        "%s will be closing until", node.estimated_completion
-                    )
-                else:
-                    if node.is_opening:
-                        node.is_opening = False
-                        node.state_received_at = None
-                        node.estimated_completion = None
-                        PYVLXLOG.debug("%s stops opening", node.name)
-                    if node.is_closing:
-                        node.is_closing = False
-                        PYVLXLOG.debug("%s stops closing", node.name)
-
-            # Set main parameter
-            if isinstance(node, OpeningDevice):
-                if position.position <= Parameter.MAX:
-                    node.position = position
-                    node.target = target
-                    PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-                await node.after_update()
-            elif isinstance(node, DimmableDevice):
-                intensity = Intensity(frame.current_position)
-                if intensity.intensity <= Parameter.MAX:
-                    node.intensity = intensity
-                    PYVLXLOG.debug("%s intensity changed to: %s", node.name, intensity)
-                await node.after_update()
-            elif isinstance(node, OnOffSwitch):
-                state = SwitchParameter(frame.current_position)
-                target = SwitchParameter(frame.target)
-                if state.state == target.state:
-                    if state.state == Parameter.ON:
-                        node.parameter = state
-                        PYVLXLOG.debug("%s state changed to: %s", node.name, state)
-                    elif state.state == Parameter.OFF:
-                        node.parameter = state
-                        PYVLXLOG.debug("%s state changed to: %s", node.name, state)
-                    await node.after_update()
+            await self.process_frame_node_state_notification(frame)
         elif isinstance(frame, FrameStatusRequestNotification):
             await self.process_frame_status_request_notification(frame)
         elif isinstance(frame, FrameGetLimitationStatusNotification):
             await self.process_frame_limitation_status_notification(frame)
+
+    async def process_frame_node_state_notification(self, frame: FrameBase) -> None:
+        """Process FrameGetAllNodesInformationNotification and FrameNodeStatePositionChangedNotification."""
+        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
+        if frame.node_id not in self.pyvlx.nodes:
+            return
+        node = self.pyvlx.nodes[frame.node_id]
+        position = Position(frame.current_position)
+        target: Any = Position(frame.target)
+        # KLF transmits for functional parameters basically always 'No feed-back value known’ (0xF7FF).
+        # In home assistant this causes unreasonable values like -23%. Therefore a check is implemented
+        # whether the frame parameter is inside the maximum range.
+
+        # Set opening device status
+        if isinstance(node, OpeningDevice):
+            if (position.position > target.position <= Parameter.MAX) and (
+                (frame.state == OperatingState.EXECUTING)
+                or frame.remaining_time > 0
+            ):
+                node.is_opening = True
+                PYVLXLOG.debug("%s is opening", node.name)
+                node.state_received_at = datetime.datetime.now()
+                node.estimated_completion = (
+                    node.state_received_at
+                    + datetime.timedelta(0, frame.remaining_time)
+                )
+                PYVLXLOG.debug(
+                    "%s will be opening until", node.estimated_completion
+                )
+            elif (position.position < target.position <= Parameter.MAX) and (
+                (frame.state == OperatingState.EXECUTING)
+                or frame.remaining_time > 0
+            ):
+                node.is_closing = True
+                PYVLXLOG.debug("%s is closing", node.name)
+                node.state_received_at = datetime.datetime.now()
+                node.estimated_completion = (
+                    node.state_received_at
+                    + datetime.timedelta(0, frame.remaining_time)
+                )
+                PYVLXLOG.debug(
+                    "%s will be closing until", node.estimated_completion
+                )
+            else:
+                if node.is_opening:
+                    node.is_opening = False
+                    node.state_received_at = None
+                    node.estimated_completion = None
+                    PYVLXLOG.debug("%s stops opening", node.name)
+                if node.is_closing:
+                    node.is_closing = False
+                    PYVLXLOG.debug("%s stops closing", node.name)
+
+        # Set main parameter
+        if isinstance(node, OpeningDevice):
+            if position.position <= Parameter.MAX:
+                node.position = position
+                node.target = target
+                PYVLXLOG.debug("%s position changed to: %s", node.name, position)
+            await node.after_update()
+        elif isinstance(node, DimmableDevice):
+            intensity = Intensity(frame.current_position)
+            if intensity.intensity <= Parameter.MAX:
+                node.intensity = intensity
+                PYVLXLOG.debug("%s intensity changed to: %s", node.name, intensity)
+            await node.after_update()
+        elif isinstance(node, OnOffSwitch):
+            state = SwitchParameter(frame.current_position)
+            target = SwitchParameter(frame.target)
+            if state.state == target.state:
+                if state.state == Parameter.ON:
+                    node.parameter = state
+                    PYVLXLOG.debug("%s state changed to: %s", node.name, state)
+                elif state.state == Parameter.OFF:
+                    node.parameter = state
+                    PYVLXLOG.debug("%s state changed to: %s", node.name, state)
+                await node.after_update()
