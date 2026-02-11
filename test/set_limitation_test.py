@@ -1,6 +1,7 @@
 """Unit test for limitation."""
 import asyncio
 import unittest
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -29,11 +30,10 @@ class TestSetLimitation(unittest.TestCase):
 
     def setUp(self):
         """Set up TestSetLimitation."""
-        self.pyvlx = PyVLX()
+        self.pyvlx = MagicMock(spec=PyVLX)
 
     def test_handle_frames_accepted(self):
         """Test handle frame."""
-        self.pyvlx = PyVLX()
         limit = SetLimitation(self.pyvlx, 1)
 
         frame = FrameSetLimitationConfirmation()
@@ -43,7 +43,6 @@ class TestSetLimitation(unittest.TestCase):
 
     def test_handle_frame_rejected(self):
         """Test handle frame."""
-        self.pyvlx = PyVLX()
         limit = SetLimitation(self.pyvlx, 1)
 
         frame = FrameSetLimitationConfirmation()
@@ -53,7 +52,6 @@ class TestSetLimitation(unittest.TestCase):
 
     def test_request_frame(self):
         """Test initiating frame."""
-        self.pyvlx = PyVLX()
         limit = SetLimitation(self.pyvlx, 1, Position(position_percent=30),
                               Position(position_percent=70))
         req_frame = limit.request_frame()
@@ -67,7 +65,6 @@ class TestSetLimitation(unittest.TestCase):
 
     def test_request_clear_frame(self):
         """Test initiating frame."""
-        self.pyvlx = PyVLX()
         limit = SetLimitation(self.pyvlx, 1, limitation_time=255)
         req_frame = limit.request_frame()
         self.assertIsInstance(req_frame, FrameSetLimitationRequest)
