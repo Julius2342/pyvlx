@@ -19,7 +19,7 @@ jobs:
       with:
         python-version: "3.x"        
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
@@ -41,7 +41,7 @@ jobs:
       with:
         python-version: "3.x"
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
@@ -63,7 +63,7 @@ jobs:
       with:
         python-version: "3.x"
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
@@ -85,7 +85,7 @@ jobs:
       with:
         python-version: "3.x"
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
@@ -110,7 +110,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
@@ -135,7 +135,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
