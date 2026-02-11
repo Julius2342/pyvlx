@@ -5,6 +5,8 @@ PyVLX - controling VELUX windows with Python
 
 PyVLX uses the Velux KLF 200 interface to control io-Homecontrol devices, e.g. Velux Windows.
 
+Please note: The KLF 200 is discontinued by Velux and even though the KLF 150 is marketed as its replacement device, it does **not** work with this library (it is missing the local API) unfortunately. 
+
 Installation
 ------------
 
@@ -17,34 +19,21 @@ pip3 install pyvlx
 Home Assistant Plugin
 ---------------------
 
-PyVLX is used within [Home Assistant](https://www.home-assistant.io/components/velux/). To enable it add the following lines to your ~/.homeassistant/configuration.yml:
+PyVLX is used within [Home Assistant](https://www.home-assistant.io/integrations/velux/). The HA Velux integration can be added in the HA UI.
 
-```yaml
-velux:
-    host: "192.168.0.0"
-    password: "1ADwl48dka"
-```
+*Please note that to connect you need to use the WiFi password, not the web login.*
 
-*Please note that this uses the WiFi password, not the web login.*
-
-For debugging frames add:
-
-```yaml
-logger:
-  default: warning
-  logs:
-    homeassistant.components.velux: debug
-    pyvlx: debug
-```
-
+For debugging frames enable debug logging for the Velux integration in the HA UI.
 
 Basic Operations
 ----------------
 
 ```python
-"""Just a demo of the new PyVLX module."""
+"""Just a demo of the PyVLX module."""
 import asyncio
-from pyvlx import PyVLX, Position
+import logging
+
+from pyvlx import Position, PyVLX
 
 
 async def main(loop):
@@ -63,24 +52,20 @@ async def main(loop):
     await pyvlx.nodes['Bath'].close()
     await pyvlx.nodes['Bath'].set_position(Position(position_percent=45))
 
-    # Read limits of windows
-    # limit = await pyvlx.nodes['Bath'].get_limitation()
-    # limit.min_value
-    # limit.max_value
-    
     # Changing of on-off switches:
     # await pyvlx.nodes['CoffeeMaker'].set_on()
     # await pyvlx.nodes['CoffeeMaker'].set_off()
 
     # You can easily rename nodes:
     # await pyvlx.nodes["Window 10"].rename("Window 11")
-        
+
     await pyvlx.disconnect()
 
 if __name__ == '__main__':
-    # pylint: disable=invalid-name
-    LOOP = asyncio.get_event_loop()
-    LOOP.run_until_complete(main(LOOP))
-    # LOOP.run_forever()
-    LOOP.close()
+    logging.basicConfig(level=logging.DEBUG)
+
+    myloop = asyncio.new_event_loop()
+    myloop.run_until_complete(main(myloop))
+    # loop.run_forever()
+    myloop.close()
 ```

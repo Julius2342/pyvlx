@@ -7,6 +7,7 @@ pydocstyle==6.3.0
 pylint==4.0.3
 pytest==9.0.2
 pytest-cov==7.0.0
-build==1.2.2
+build==1.4.0
+setuptools-scm>=8.0
 twine==6.2.0
 mypy==1.19.1

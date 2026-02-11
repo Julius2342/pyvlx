@@ -6,7 +6,7 @@ from .api.frames import (
     FrameBase, FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
 from .const import NodeParameter, OperatingState
-from .lightening_device import LighteningDevice
+from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
 from .opening_device import Blind, DualRollerShutter, OpeningDevice
@@ -141,7 +141,7 @@ class NodeUpdater:
                     node.target = target
                     PYVLXLOG.debug("%s position changed to: %s", node.name, position)
                 await node.after_update()
-            elif isinstance(node, LighteningDevice):
+            elif isinstance(node, DimmableDevice):
                 intensity = Intensity(frame.current_position)
                 if intensity.intensity <= Parameter.MAX:
                     node.intensity = intensity
