@@ -5,5 +5,5 @@ omit =
 
 
 [report]
-exclude_lines =
+exclude_lines = 
     if TYPE_CHECKING:
