@@ -13,6 +13,7 @@ from .api.frames import FrameBase
 from .config import Config
 from .connection import Connection
 from .exception import PyVLXException
+from .const import LimitationType
 from .heartbeat import Heartbeat
 from .klf200gateway import Klf200Gateway
 from .log import PYVLXLOG
@@ -120,5 +121,7 @@ class PyVLX:
 
     async def get_limitation(self, node_id: int) -> None:
         """Return limitation."""
-        limit = get_limitation.GetLimitation(self, node_id)
+        limit = get_limitation.GetLimitation(self, node_id, limitation_type=LimitationType.MIN_LIMITATION)
+        await limit.do_api_call()
+        limit = get_limitation.GetLimitation(self, node_id, limitation_type=LimitationType.MAX_LIMITATION)
         await limit.do_api_call()

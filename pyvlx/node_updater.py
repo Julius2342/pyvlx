@@ -4,13 +4,14 @@ from typing import TYPE_CHECKING, Any
 
 from .api.frames import (
     FrameBase, FrameGetAllNodesInformationNotification,
+    FrameGetLimitationStatusNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
 from .const import NodeParameter, OperatingState
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
 from .opening_device import Blind, DualRollerShutter, OpeningDevice
-from .parameter import Intensity, Parameter, Position, SwitchParameter
+from .parameter import Intensity, LimitationTime, Parameter, Position, SwitchParameter
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -73,6 +74,19 @@ class NodeUpdater:
                     node.name,
                     position_lower_curtain,
                 )
+            await node.after_update()
+
+    async def process_frame_limitation_status_notification(self, frame: FrameGetLimitationStatusNotification):
+        """Process FrameGetLimitationStatusNotification."""
+        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
+        if frame.node_id not in self.pyvlx.nodes:
+            return
+        node = self.pyvlx.nodes[frame.node_id]
+        if isinstance(node, OpeningDevice):
+            node.limitation_max = Position(position=frame.max_value)
+            node.limitation_min = Position(position=frame.min_value)
+            node.limitation_originator = frame.limit_originator
+            node.limitation_time = LimitationTime(limit_raw=frame.limit_time)
             await node.after_update()
 
     async def process_frame(self, frame: FrameBase) -> None:
@@ -160,3 +174,5 @@ class NodeUpdater:
                     await node.after_update()
         elif isinstance(frame, FrameStatusRequestNotification):
             await self.process_frame_status_request_notification(frame)
+        elif isinstance(frame, FrameGetLimitationStatusNotification):
+            await self.process_frame_limitation_status_notification(frame)
