@@ -2,7 +2,7 @@
 from enum import Enum
 from typing import List, Optional
 
-from pyvlx.const import Command, Originator, Priority
+from pyvlx.const import Command, Originator, Priority, RunStatus, StatusReply
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter, Position
 
@@ -153,63 +153,6 @@ class FrameCommandSendConfirmation(FrameBase):
         )
 
 
-class CommandNotificationRunStatus(Enum):
-    """Enum class for run_status parameter in FrameCommandRunStatusNotification."""
-
-    EXECUTION_COMPLETED = 0
-    EXECUTION_FAILED = 1
-    EXECUTION_ACTIVE = 2
-
-
-class CommandNotificationStatusReply(Enum):
-    """Enum class for status_reply parameter in FrameCommandRunStatusNotification."""
-
-    UNKNOWN_STATUS_REPLY = 0x00
-    COMMAND_COMPLETED_OK = 0x01
-    NO_CONTACT = 0x02
-    MANUALLY_OPERATED = 0x03
-    BLOCKED = 0x04
-    WRONG_SYSTEMKEY = 0x05
-    PRIORITY_LEVEL_LOCKED = 0x06
-    REACHED_WRONG_POSITION = 0x07
-    ERROR_DURING_EXECUTION = 0x08
-    NO_EXECUTION = 0x09
-    CALIBRATING = 0x0A
-    POWER_CONSUMPTION_TOO_HIGH = 0x0B
-    POWER_CONSUMPTION_TOO_LOW = 0x0C
-    LOCK_POSITION_OPEN = 0x0D
-    MOTION_TIME_TOO_LONG__COMMUNICATION_ENDED = 0x0E
-    THERMAL_PROTECTION = 0x0F
-    PRODUCT_NOT_OPERATIONAL = 0x10
-    FILTER_MAINTENANCE_NEEDED = 0x11
-    BATTERY_LEVEL = 0x12
-    TARGET_MODIFIED = 0x13
-    MODE_NOT_IMPLEMENTED = 0x14
-    COMMAND_INCOMPATIBLE_TO_MOVEMENT = 0x15
-    USER_ACTION = 0x16
-    DEAD_BOLT_ERROR = 0x17
-    AUTOMATIC_CYCLE_ENGAGED = 0x18
-    WRONG_LOAD_CONNECTED = 0x19
-    COLOUR_NOT_REACHABLE = 0x1A
-    TARGET_NOT_REACHABLE = 0x1B
-    BAD_INDEX_RECEIVED = 0x1C
-    COMMAND_OVERRULED = 0x1D
-    NODE_WAITING_FOR_POWER = 0x1E
-    INFORMATION_CODE = 0xDF
-    PARAMETER_LIMITED = 0xE0
-    LIMITATION_BY_LOCAL_USER = 0xE1
-    LIMITATION_BY_USER = 0xE2
-    LIMITATION_BY_RAIN = 0xE3
-    LIMITATION_BY_TIMER = 0xE4
-    LIMITATION_BY_UPS = 0xE6
-    LIMITATION_BY_UNKNOWN_DEVICE = 0xE7
-    LIMITATION_BY_SAAC = 0xEA
-    LIMITATION_BY_WIND = 0xEB
-    LIMITATION_BY_MYSELF = 0xEC
-    LIMITATION_BY_AUTOMATIC_CYCLE = 0xED
-    LIMITATION_BY_EMERGENCY = 0xEE
-
-
 class FrameCommandRunStatusNotification(FrameBase):
     """Frame for run status notification in scope of command send frame."""
 
@@ -223,8 +166,8 @@ class FrameCommandRunStatusNotification(FrameBase):
             index_id: Optional[int] = None,
             node_parameter: Optional[int] = None,
             parameter_value: Optional[int] = None,
-            run_status: Optional[CommandNotificationRunStatus] = None,
-            status_reply: Optional[CommandNotificationStatusReply] = None,
+            run_status: Optional[RunStatus] = None,
+            status_reply: Optional[StatusReply] = None,
     ):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_RUN_STATUS_NTF)
@@ -264,8 +207,8 @@ class FrameCommandRunStatusNotification(FrameBase):
         self.index_id = payload[3]
         self.node_parameter = payload[4]
         self.parameter_value = payload[5] * 256 + payload[6]
-        self.run_status = CommandNotificationRunStatus(payload[7])
-        self.status_reply = CommandNotificationStatusReply(payload[8])
+        self.run_status = RunStatus(payload[7])
+        self.status_reply = StatusReply(payload[8])
 
     def __str__(self) -> str:
         """Return human readable string."""
