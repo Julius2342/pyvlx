@@ -5,3 +5,10 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+
+- package-ecosystem: "github-actions"
+  # Directory needs to be "/" even though files are stored `.github/workflows`
+  directory: "/"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 10
