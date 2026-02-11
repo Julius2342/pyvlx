@@ -12,8 +12,8 @@ from .api import get_limitation
 from .api.frames import FrameBase
 from .config import Config
 from .connection import Connection
-from .exception import PyVLXException
 from .const import LimitationType
+from .exception import PyVLXException
 from .heartbeat import Heartbeat
 from .klf200gateway import Klf200Gateway
 from .log import PYVLXLOG

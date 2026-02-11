@@ -11,7 +11,8 @@ from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
 from .opening_device import Blind, DualRollerShutter, OpeningDevice
-from .parameter import Intensity, LimitationTime, Parameter, Position, SwitchParameter
+from .parameter import (
+    Intensity, LimitationTime, Parameter, Position, SwitchParameter)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX

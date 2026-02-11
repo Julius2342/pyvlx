@@ -1,6 +1,5 @@
 """Module for Position class."""
 import math
-
 from typing import Optional
 
 from .exception import PyVLXException
