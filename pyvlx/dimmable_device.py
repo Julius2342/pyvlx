@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-class LighteningDevice(Node):
+class DimmableDevice(Node):
     """Meta class for turning on device with one main parameter for intensity."""
 
     def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
@@ -33,6 +33,7 @@ class LighteningDevice(Node):
 
         Parameters:
             * intensity: Intensity object containing the target intensity.
+                0% means off, 100% means fully on.
             * wait_for_completion: If set, function will return
                 after device has reached target intensity.
 
@@ -55,7 +56,7 @@ class LighteningDevice(Node):
 
         """
         await self.set_intensity(
-            intensity=Intensity(intensity_percent=0),
+            intensity=Intensity(intensity_percent=100),
             wait_for_completion=wait_for_completion,
         )
 
@@ -68,27 +69,8 @@ class LighteningDevice(Node):
 
         """
         await self.set_intensity(
-            intensity=Intensity(intensity_percent=100),
+            intensity=Intensity(intensity_percent=0),
             wait_for_completion=wait_for_completion,
-        )
-
-
-class Light(LighteningDevice):
-    """Light object."""
-
-    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
-        """Initialize Light class.
-
-        Parameters:
-            * pyvlx: PyVLX object
-            * node_id: internal id for addressing nodes.
-                Provided by KLF 200 device
-            * name: node name
-            * serial_number: serial number of the node.
-
-        """
-        super().__init__(
-            pyvlx=pyvlx, node_id=node_id, name=name, serial_number=serial_number
         )
 
     def __str__(self) -> str:
@@ -100,3 +82,15 @@ class Light(LighteningDevice):
                 type(self).__name__, self.name, self.node_id, self.serial_number
             )
         )
+
+
+class ExteriorHeating(DimmableDevice):
+    """Exterior heating device that supports setting intensity."""
+
+
+class Light(DimmableDevice):
+    """Lights that support setting brightness."""
+
+
+class OnOffLight(DimmableDevice):
+    """Lights supporting on/off only."""

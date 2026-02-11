@@ -273,7 +273,11 @@ class IgnorePosition(Position):
 
 
 class Intensity(Parameter):
-    """Class for storing an intensity."""
+    """Class for storing an intensity, used in DimmableDevice.
+
+    - 0% means off
+    - 100% means fully on
+    """
 
     def __init__(
         self,
@@ -297,13 +301,13 @@ class Intensity(Parameter):
 
     @property
     def on(self) -> bool:  # pylint: disable=invalid-name
-        """Return true if intensity is set to fully turn on."""
-        return self.raw == self.from_int(Intensity.MIN)
+        """Intensity at maximum power (fully on)."""
+        return self.raw == self.from_int(Intensity.ON)
 
     @property
     def off(self) -> bool:
-        """Return true if intensity is set to fully turn off."""
-        return self.raw == bytes([self.MAX >> 8 & 255, self.MAX & 255])
+        """Intensity off state (no power)."""
+        return self.raw == self.from_int(Intensity.OFF)
 
     @property
     def intensity(self) -> int:
@@ -315,10 +319,34 @@ class Intensity(Parameter):
         """Setter of internal raw via intensity."""
         self.raw = self.from_int(intensity)
 
+    @staticmethod
+    def from_percent(percent: int) -> bytes:
+        """Create raw value out of percent intensity.
+
+        For Intensity, 0% = off , 100% = fully on.
+        This inverts the raw value: 0% -> 200, 100% -> 0.
+        """
+        if not isinstance(percent, int):
+            raise PyVLXException("Intensity::percent_has_to_be_int")
+        if percent < 0:
+            raise PyVLXException("Intensity::percent_has_to_be_positive")
+        if percent > 100:
+            raise PyVLXException("Intensity::percent_out_of_range")
+        # Invert: 0% = off (200), 100% = on (0)
+        return bytes([(100 - percent) * 2, 0])
+
+    @staticmethod
+    def to_percent(raw: bytes) -> int:
+        """Create percent intensity value out of raw.
+
+        For Intensity, raw value 0 = 100% (fully on), raw value 200 = 0% (off).
+        """
+        # Invert: raw 0 = 100%, raw 200 = 0%
+        return int(100 - raw[0] / 2 + 0.5)
+
     @property
     def intensity_percent(self) -> int:
         """Intensity percent property."""
-        # unclear why it returns a <property object> here
         return int(self.to_percent(self.raw))
 
     @intensity_percent.setter
@@ -330,6 +358,12 @@ class Intensity(Parameter):
         """Return string representation of object."""
         if self.raw == self.from_int(Intensity.UNKNOWN_VALUE):
             return "UNKNOWN"
+        if self.raw == self.from_int(Intensity.CURRENT):
+            return "CURRENT"
+        if self.raw == self.from_int(Intensity.TARGET):
+            return "TARGET"
+        if self.raw == self.from_int(Intensity.IGNORE):
+            return "IGNORE"
         return "{} %".format(self.intensity_percent)
 
 

@@ -3,6 +3,7 @@ import unittest
 
 from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import FrameCommandRunStatusNotification
+from pyvlx.const import RunStatus, StatusReply
 
 
 class TestFrameCommandRunStatusNotification(unittest.TestCase):
@@ -11,7 +12,7 @@ class TestFrameCommandRunStatusNotification(unittest.TestCase):
     # pylint: disable=too-many-public-methods,invalid-name
 
     EXAMPLE_FRAME = (
-        b"\x00\x10\x03\x02\x03\xe8\x07\x17*\x059\x00\x00\x00\x00\x00\x00\xfc"
+        b"\x00\x10\x03\x02\x03\xe8\x07\x17*\x059\x01\xe3\x00\x00\x00\x00\x1e"
     )
 
     def test_bytes(self):
@@ -22,18 +23,22 @@ class TestFrameCommandRunStatusNotification(unittest.TestCase):
             index_id=23,
             node_parameter=42,
             parameter_value=1337,
+            run_status=RunStatus.EXECUTION_FAILED,
+            status_reply=StatusReply.LIMITATION_BY_RAIN,
         )
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
     def test_frame_from_raw(self):
         """Test parse FrameCommandRunStatusNotification from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
-        self.assertTrue(isinstance(frame, FrameCommandRunStatusNotification))
+        self.assertIsInstance(frame, FrameCommandRunStatusNotification)
         self.assertEqual(frame.session_id, 1000)
         self.assertEqual(frame.status_id, 7)
         self.assertEqual(frame.index_id, 23)
         self.assertEqual(frame.node_parameter, 42)
         self.assertEqual(frame.parameter_value, 1337)
+        self.assertEqual(frame.run_status, RunStatus.EXECUTION_FAILED)
+        self.assertEqual(frame.status_reply, StatusReply.LIMITATION_BY_RAIN)
 
     def test_str(self):
         """Test string representation of FrameCommandRunStatusNotification."""
@@ -43,8 +48,12 @@ class TestFrameCommandRunStatusNotification(unittest.TestCase):
             index_id=23,
             node_parameter=42,
             parameter_value=1337,
+            run_status=RunStatus.EXECUTION_FAILED,
+            status_reply=StatusReply.LIMITATION_BY_RAIN,
         )
         self.assertEqual(
             str(frame),
-            '<FrameCommandRunStatusNotification session_id="1000" status_id="7" index_id="23" node_parameter="42" parameter_value="1337"/>',
+            '<FrameCommandRunStatusNotification session_id="1000" status_id="7" index_id="23" node_parameter="42" '
+            'parameter_value="1337" run_status="RunStatus.EXECUTION_FAILED" '
+            'status_reply="StatusReply.LIMITATION_BY_RAIN"/>',
         )

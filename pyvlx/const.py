@@ -1,6 +1,8 @@
 """Module for enum and consts."""
 from enum import Enum
-from typing import Any
+from typing import Any, Optional, Self, cast
+
+from .log import PYVLXLOG
 
 
 class Command(Enum):
@@ -277,13 +279,13 @@ class NodeTypeWithSubtype(Enum):
     NO_TYPE = 0
     INTERIOR_VENETIAN_BLIND = 0x0040
     ROLLER_SHUTTER = 0x0080
-    ADJUSTABLE_SLUTS_ROLLING_SHUTTER = 0x0081
-    ADJUSTABLE_SLUTS_ROLLING_SHUTTER_WITH_PROJECTION = 0x0082
+    ADJUSTABLE_SLATS_ROLLING_SHUTTER = 0x0081
+    ADJUSTABLE_SLATS_ROLLING_SHUTTER_WITH_PROJECTION = 0x0082
     VERTICAL_EXTERIOR_AWNING = 0x00C0
     WINDOW_OPENER = 0x0100
     WINDOW_OPENER_WITH_RAIN_SENSOR = 0x0101
     GARAGE_DOOR_OPENER = 0x0140
-    LINAR_ANGULAR_POSITION_OF_GARAGE_DOOR = 0x017A
+    LINEAR_ANGULAR_POSITION_OF_GARAGE_DOOR = 0x017A
     LIGHT = 0x0180
     LIGHT_ON_OFF = 0x01BA
     GATE_OPENER = 0x01C0
@@ -308,6 +310,13 @@ class NodeTypeWithSubtype(Enum):
     SWINGING_SHUTTERS = 0x0600
     SWINGING_SHUTTER_WITH_INDEPENDENT_LEAVES = 0x0601
     BLADE_OPENER = 0x0740
+
+    @classmethod
+    def _missing_(cls, value: Any) -> Optional[Self]:
+        if isinstance(value, int):
+            PYVLXLOG.warning("Unknown node type 0x%x", value)
+            return cast(Self, cls.NO_TYPE)
+        return None
 
 
 class NodeType(Enum):
@@ -668,7 +677,11 @@ class RunStatus(Enum):
 
     EXECUTION_COMPLETED = 0  # Execution is completed with no errors.
     EXECUTION_FAILED = 1     # Execution has failed. (Get specifics in the following error code)
-    EXECUTION_ACTIVE = 2     # Execution is still active.
+    UNKNOWN_RUN_STATUS = 255  # Unknown run status.
+
+    @classmethod
+    def _missing_(cls, value: object) -> Any:
+        return cls.UNKNOWN_RUN_STATUS
 
 
 class StatusType(Enum):

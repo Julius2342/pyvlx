@@ -7,11 +7,11 @@ from pyvlx.connection import Connection
 
 
 # pylint: disable=too-many-public-methods,invalid-name
-class TestLighteningDevice(unittest.TestCase):
+class TestDimmableDevice(unittest.TestCase):
     """Test class for lights."""
 
     def setUp(self) -> None:
-        """Set up TestGetLimitation."""
+        """Set up TestDimmableDevice."""
         self.pyvlx = MagicMock(spec=PyVLX)
         connection = MagicMock(spec=Connection)
         self.pyvlx.attach_mock(mock=connection, attribute="connection")
