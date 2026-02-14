@@ -11,7 +11,7 @@ from .const import LimitationType, Originator, Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, DualRollerShutterPosition, IgnorePosition,
+    CurrentPosition, DualRollerShutterPosition, IgnorePosition, LimitationTime,
     LimitationTimeClearAll, Parameter, Position, TargetPosition)
 
 if TYPE_CHECKING:
@@ -45,10 +45,10 @@ class OpeningDevice(Node):
         )
         self.position: Position = Position(parameter=position_parameter)
         self.target: Position = Position(parameter=position_parameter)
-        self.limitation_min = IgnorePosition()
-        self.limitation_max = IgnorePosition()
-        self.limitation_time = 255
-        self.limitation_originator = Originator.USER
+        self.limitation_min: Position = IgnorePosition()
+        self.limitation_max: Position = IgnorePosition()
+        self.limitation_time: LimitationTime = LimitationTimeClearAll()
+        self.limitation_originator: Originator = Originator.USER
 
         self.is_opening: bool = False
         self.is_closing: bool = False
@@ -160,7 +160,9 @@ class OpeningDevice(Node):
             position=CurrentPosition(), wait_for_completion=wait_for_completion
         )
 
-    async def set_position_limitations(self, position_min=Position(position_percent=0), position_max=Position(position_percent=100)):
+    async def set_position_limitations(self,
+                                       position_min: Position = Position(position_percent=0),
+                                       position_max: Position = Position(position_percent=100)) -> None:
         """Set a minimum and maximum position limit.
 
         Parameters:
@@ -182,7 +184,7 @@ class OpeningDevice(Node):
         self.limitation_max = position_max
         await self.after_update()
 
-    async def clear_position_limitations(self):
+    async def clear_position_limitations(self) -> None:
         """Set position limits.
 
         Parameters:
@@ -202,7 +204,7 @@ class OpeningDevice(Node):
         self.limitation_max = IgnorePosition()
         await self.after_update()
 
-    async def get_limitation(self):
+    async def get_limitation(self) -> GetLimitation:
         """Return limitaation."""
         get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
         await get_limitation.do_api_call()
@@ -210,7 +212,7 @@ class OpeningDevice(Node):
             raise PyVLXException("Unable to send command")
         return get_limitation
 
-    async def get_limitation_max(self):
+    async def get_limitation_max(self) -> GetLimitation:
         """Return maximum limitation."""
         get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id, limitation_type=LimitationType.MAX_LIMITATION)
         await get_limitation.do_api_call()
@@ -313,7 +315,7 @@ class Window(OpeningDevice):
             self.position,
         )
 
-    async def get_limitation(self):
+    async def get_limitation(self) -> GetLimitation:
         """Return limitaation."""
         get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
         await get_limitation.do_api_call()

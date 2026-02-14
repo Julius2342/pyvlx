@@ -1,12 +1,12 @@
 """Module for updating nodes via frames."""
 import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Union
 
 from .api.frames import (
     FrameBase, FrameGetAllNodesInformationNotification,
     FrameGetLimitationStatusNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
-from .const import NodeParameter, OperatingState
+from .const import NodeParameter, OperatingState, Originator
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
@@ -25,87 +25,9 @@ class NodeUpdater:
         """Initialize NodeUpdater object."""
         self.pyvlx = pyvlx
 
-    async def process_frame_status_request_notification(
-        self, frame: FrameStatusRequestNotification
+    async def process_frame_node_state_notification(
+        self, frame: Union[FrameGetAllNodesInformationNotification, FrameNodeStatePositionChangedNotification]
     ) -> None:
-        """Process FrameStatusRequestNotification."""
-        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
-        if frame.node_id not in self.pyvlx.nodes:
-            return
-        node = self.pyvlx.nodes[frame.node_id]
-        if isinstance(node, Blind):
-            if NodeParameter(0) not in frame.parameter_data:  # MP missing in frame
-                return
-            if NodeParameter(3) not in frame.parameter_data:  # FP3 missing in frame
-                return
-            position = Position(frame.parameter_data[NodeParameter(0)])
-            orientation = Position(frame.parameter_data[NodeParameter(3)])
-            if position.position <= Parameter.MAX:
-                node.position = position
-                PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-            if orientation.position <= Parameter.MAX:
-                node.orientation = orientation
-                PYVLXLOG.debug("%s orientation changed to: %s", node.name, orientation)
-            await node.after_update()
-
-        if isinstance(node, DualRollerShutter):
-            if NodeParameter(0) not in frame.parameter_data:  # MP missing in frame
-                return
-            if NodeParameter(1) not in frame.parameter_data:  # FP1 missing in frame
-                return
-            if NodeParameter(2) not in frame.parameter_data:  # FP2 missing in frame
-                return
-            position = Position(frame.parameter_data[NodeParameter(0)])
-            position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
-            position_lower_curtain = Position(frame.parameter_data[NodeParameter(2)])
-            if position.position <= Parameter.MAX:
-                node.position = position
-                PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-            if position_upper_curtain.position <= Parameter.MAX:
-                node.position_upper_curtain = position_upper_curtain
-                PYVLXLOG.debug(
-                    "%s position upper curtain changed to: %s",
-                    node.name,
-                    position_upper_curtain,
-                )
-            if position_lower_curtain.position <= Parameter.MAX:
-                node.position_lower_curtain = position_lower_curtain
-                PYVLXLOG.debug(
-                    "%s position lower curtain changed to: %s",
-                    node.name,
-                    position_lower_curtain,
-                )
-            await node.after_update()
-
-    async def process_frame_limitation_status_notification(self, frame: FrameGetLimitationStatusNotification):
-        """Process FrameGetLimitationStatusNotification."""
-        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
-        if frame.node_id not in self.pyvlx.nodes:
-            return
-        node = self.pyvlx.nodes[frame.node_id]
-        if isinstance(node, OpeningDevice):
-            node.limitation_max = Position(position=frame.max_value)
-            node.limitation_min = Position(position=frame.min_value)
-            node.limitation_originator = frame.limit_originator
-            node.limitation_time = LimitationTime(limit_raw=frame.limit_time)
-            await node.after_update()
-
-    async def process_frame(self, frame: FrameBase) -> None:
-        """Update nodes via frame, usually received by house monitor."""
-        if isinstance(
-            frame,
-            (
-                FrameGetAllNodesInformationNotification,
-                FrameNodeStatePositionChangedNotification,
-            ),
-        ):
-            await self.process_frame_node_state_notification(frame)
-        elif isinstance(frame, FrameStatusRequestNotification):
-            await self.process_frame_status_request_notification(frame)
-        elif isinstance(frame, FrameGetLimitationStatusNotification):
-            await self.process_frame_limitation_status_notification(frame)
-
-    async def process_frame_node_state_notification(self, frame: FrameBase) -> None:
         """Process FrameGetAllNodesInformationNotification and FrameNodeStatePositionChangedNotification."""
         PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
         if frame.node_id not in self.pyvlx.nodes:
@@ -181,3 +103,83 @@ class NodeUpdater:
                     node.parameter = state
                     PYVLXLOG.debug("%s state changed to: %s", node.name, state)
                 await node.after_update()
+
+    async def process_frame_status_request_notification(
+        self, frame: FrameStatusRequestNotification
+    ) -> None:
+        """Process FrameStatusRequestNotification."""
+        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
+        if frame.node_id not in self.pyvlx.nodes:
+            return
+        node = self.pyvlx.nodes[frame.node_id]
+        if isinstance(node, Blind):
+            if NodeParameter(0) not in frame.parameter_data:  # MP missing in frame
+                return
+            if NodeParameter(3) not in frame.parameter_data:  # FP3 missing in frame
+                return
+            position = Position(frame.parameter_data[NodeParameter(0)])
+            orientation = Position(frame.parameter_data[NodeParameter(3)])
+            if position.position <= Parameter.MAX:
+                node.position = position
+                PYVLXLOG.debug("%s position changed to: %s", node.name, position)
+            if orientation.position <= Parameter.MAX:
+                node.orientation = orientation
+                PYVLXLOG.debug("%s orientation changed to: %s", node.name, orientation)
+            await node.after_update()
+
+        if isinstance(node, DualRollerShutter):
+            if NodeParameter(0) not in frame.parameter_data:  # MP missing in frame
+                return
+            if NodeParameter(1) not in frame.parameter_data:  # FP1 missing in frame
+                return
+            if NodeParameter(2) not in frame.parameter_data:  # FP2 missing in frame
+                return
+            position = Position(frame.parameter_data[NodeParameter(0)])
+            position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
+            position_lower_curtain = Position(frame.parameter_data[NodeParameter(2)])
+            if position.position <= Parameter.MAX:
+                node.position = position
+                PYVLXLOG.debug("%s position changed to: %s", node.name, position)
+            if position_upper_curtain.position <= Parameter.MAX:
+                node.position_upper_curtain = position_upper_curtain
+                PYVLXLOG.debug(
+                    "%s position upper curtain changed to: %s",
+                    node.name,
+                    position_upper_curtain,
+                )
+            if position_lower_curtain.position <= Parameter.MAX:
+                node.position_lower_curtain = position_lower_curtain
+                PYVLXLOG.debug(
+                    "%s position lower curtain changed to: %s",
+                    node.name,
+                    position_lower_curtain,
+                )
+            await node.after_update()
+
+    async def process_frame_limitation_status_notification(self, frame: FrameGetLimitationStatusNotification) -> None:
+        """Process FrameGetLimitationStatusNotification."""
+        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
+        if frame.node_id not in self.pyvlx.nodes:
+            return
+        node = self.pyvlx.nodes[frame.node_id]
+        if isinstance(node, OpeningDevice):
+            node.limitation_max = Position(position=int.from_bytes(frame.max_value) if frame.max_value else None)
+            node.limitation_min = Position(position=int.from_bytes(frame.min_value) if frame.min_value else None)
+            node.limitation_originator = frame.limit_originator if frame.limit_originator else Originator.USER
+            node.limitation_time = LimitationTime(time_coded=frame.limit_time)
+            await node.after_update()
+
+    async def process_frame(self, frame: FrameBase) -> None:
+        """Update nodes via frame, usually received by house monitor."""
+        if isinstance(
+            frame,
+            (
+                FrameGetAllNodesInformationNotification,
+                FrameNodeStatePositionChangedNotification,
+            ),
+        ):
+            await self.process_frame_node_state_notification(frame)
+        elif isinstance(frame, FrameStatusRequestNotification):
+            await self.process_frame_status_request_notification(frame)
+        elif isinstance(frame, FrameGetLimitationStatusNotification):
+            await self.process_frame_limitation_status_notification(frame)

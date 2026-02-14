@@ -4,6 +4,7 @@ import unittest
 from unittest.mock import MagicMock
 
 import pytest
+from pytest import FixtureRequest
 
 from pyvlx import PyVLX
 from pyvlx.api.frames.frame_set_limitation import (
@@ -16,7 +17,7 @@ from pyvlx.parameter import (
 
 
 @pytest.fixture(scope="class")
-def event_loop_instance(request):
+def event_loop_instance(request: FixtureRequest) -> None:
     """Add the event_loop as an attribute to the unittest style test class."""
     request.cls.event_loop = asyncio.get_event_loop_policy().new_event_loop()
     yield
@@ -28,11 +29,11 @@ def event_loop_instance(request):
 class TestSetLimitation(unittest.TestCase):
     """Test class for Limitation."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Set up TestSetLimitation."""
         self.pyvlx = MagicMock(spec=PyVLX)
 
-    def test_handle_frames_accepted(self):
+    def test_handle_frames_accepted(self) -> None:
         """Test handle frame."""
         limit = SetLimitation(self.pyvlx, 1)
 
@@ -41,7 +42,7 @@ class TestSetLimitation(unittest.TestCase):
         self.assertTrue(self.event_loop.run_until_complete(limit.handle_frame(frame)))
         self.assertTrue(limit.success)
 
-    def test_handle_frame_rejected(self):
+    def test_handle_frame_rejected(self) -> None:
         """Test handle frame."""
         limit = SetLimitation(self.pyvlx, 1)
 
@@ -50,7 +51,7 @@ class TestSetLimitation(unittest.TestCase):
         self.assertTrue(self.event_loop.run_until_complete(limit.handle_frame(frame)))
         self.assertFalse(limit.success)
 
-    def test_request_frame(self):
+    def test_request_frame(self) -> None:
         """Test initiating frame."""
         limit = SetLimitation(self.pyvlx, 1, Position(position_percent=30),
                               Position(position_percent=70))
@@ -63,9 +64,9 @@ class TestSetLimitation(unittest.TestCase):
         self.assertTrue(req_frame.limitation_value_max, Position(position_percent=70))
         self.assertTrue(req_frame.limitation_time, LimitationTime(60))
 
-    def test_request_clear_frame(self):
+    def test_request_clear_frame(self) -> None:
         """Test initiating frame."""
-        limit = SetLimitation(self.pyvlx, 1, limitation_time=255)
+        limit = SetLimitation(self.pyvlx, 1, limitation_time=LimitationTimeClearAll())
         req_frame = limit.request_frame()
         self.assertIsInstance(req_frame, FrameSetLimitationRequest)
         self.assertTrue(req_frame.session_id, 1)
@@ -73,4 +74,4 @@ class TestSetLimitation(unittest.TestCase):
         self.assertTrue(req_frame.originator, Originator.USER)
         self.assertTrue(req_frame.limitation_value_min, IgnorePosition())
         self.assertTrue(req_frame.limitation_value_max, IgnorePosition())
-        self.assertTrue(req_frame.limitation_time, LimitationTimeClearAll())
+        self.assertTrue(req_frame.limitation_time, LimitationTimeClearAll().get_time_coded())

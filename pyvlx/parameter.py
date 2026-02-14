@@ -399,59 +399,53 @@ class LimitationTime:
     CLEAR_MASTER = 254
     CLEAR_ALL = 255
 
-    def __init__(self, time=None, limitation_time=None, limit_raw=None):
+    def __init__(self,
+                 time: Optional[int] = None,
+                 time_coded: Optional[int] = None) -> None:
         """Initialize limitation time from seconds, bus value or another limitation time object."""
-        self.raw = LimitationTime.CLEAR_MASTER
-        if limit_raw is not None:
-            self.raw = limit_raw
-        if limitation_time is not None:
-            self.raw = limitation_time
+        self.time_coded = LimitationTime.CLEAR_MASTER
+        if time_coded is not None:
+            self.time_coded = time_coded
         elif time is not None:
             if time > 7590:
-                self.raw = 252
+                self.time_coded = 252
             else:
-                self.raw = math.ceil(time / 30) - 1
-        self.raw = bytes([self.raw])
+                self.time_coded = math.ceil(time / 30) - 1
 
-    def __bytes__(self):
-        """Convert object in byte representation."""
-        return self.raw
-
-    def __eq__(self, other):
-        """Equal operator."""
-        return bytes(self) == bytes(other)
-
-    def get_time(self):
+    def get_time(self) -> int:
         """Get limitation time in seconds or a subclass of LimitationTime."""
-        time_value = self.raw[0]
-        if time_value == LimitationTime.UNLIMITED:
-            return LimitationTimeUnlimited()
-        if time_value == LimitationTime.CLEAR_MASTER:
-            return LimitationTimeClearMaster()
-        if time_value == LimitationTime.CLEAR_ALL:
-            return LimitationTimeClearAll()
-        return (time_value + 1) * 30
+        if self.time_coded == LimitationTime.UNLIMITED:
+            return LimitationTime.UNLIMITED
+        if self.time_coded == LimitationTime.CLEAR_MASTER:
+            return LimitationTime.CLEAR_MASTER
+        if self.time_coded == LimitationTime.CLEAR_ALL:
+            return LimitationTime.CLEAR_ALL
+        return (self.time_coded + 1) * 30
+
+    def get_time_coded(self) -> int:
+        """Get limitation time as coded value."""
+        return self.time_coded
 
 
 class LimitationTimeUnlimited(LimitationTime):
     """Limitation time does not end."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize object representing unlimited Time."""
-        super().__init__(limitation_time=LimitationTime.UNLIMITED)
+        super().__init__(time_coded=LimitationTime.UNLIMITED)
 
 
 class LimitationTimeClearMaster(LimitationTime):
     """Clear all limitation entries for this Master."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize object representing clear all limits for master."""
-        super().__init__(limitation_time=LimitationTime.CLEAR_MASTER)
+        super().__init__(time_coded=LimitationTime.CLEAR_MASTER)
 
 
 class LimitationTimeClearAll(LimitationTime):
     """Clear all limitation entries."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize object representing clear all limits."""
-        super().__init__(limitation_time=LimitationTime.CLEAR_ALL)
+        super().__init__(time_coded=LimitationTime.CLEAR_ALL)

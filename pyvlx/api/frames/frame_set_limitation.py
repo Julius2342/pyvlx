@@ -1,6 +1,7 @@
 
 """Module for get local time classes."""
 from enum import Enum
+from typing import Optional
 
 from pyvlx.const import Command, Originator, Priority
 
@@ -12,7 +13,12 @@ class FrameSetLimitationRequest(FrameBase):
 
     PAYLOAD_LEN = 31
 
-    def __init__(self, node_ids=None, session_id=None, limitation_value_min=None, limitation_value_max=None, limitation_time=None):
+    def __init__(self,
+                 node_ids: Optional[list] = None,
+                 session_id: Optional[int] = None,
+                 limitation_value_min: Optional[int] = None,
+                 limitation_value_max: Optional[int] = None,
+                 limitation_time: Optional[int] = None):
         """Init Frame."""
         super().__init__(Command.GW_SET_LIMITATION_REQ)
         self.session_id = session_id
@@ -25,8 +31,14 @@ class FrameSetLimitationRequest(FrameBase):
         self.limitation_value_max = limitation_value_max
         self.limitation_time = limitation_time
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
+        assert self.session_id is not None
+        assert self.limitation_value_min is not None
+        assert self.limitation_value_max is not None
+        assert self.limitation_time is not None
+        assert self.node_ids is not None
+
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([self.originator.value])
         ret += bytes([self.priority.value])
@@ -38,7 +50,7 @@ class FrameSetLimitationRequest(FrameBase):
         ret += bytes(self.limitation_time)
         return ret
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return f'<{type(self).__name__} node_ids="{self.node_ids}" ' \
                f'session_id="{self.session_id}" originator="{self.originator}" />'
@@ -56,24 +68,26 @@ class FrameSetLimitationConfirmation(FrameBase):
 
     PAYLOAD_LEN = 3
 
-    def __init__(self, session_id=None, status=None):
+    def __init__(self, session_id: Optional[int] = None, status: Optional[SetLimitationRequestStatus] = None):
         """Init Frame."""
         super().__init__(Command.GW_SET_LIMITATION_CFM)
         self.session_id = session_id
         self.status = status
 
-    def get_payload(self):
+    def get_payload(self) -> bytes:
         """Return Payload."""
+        assert self.session_id is not None
+        assert self.status is not None
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
         ret += bytes([self.status.value])
         return ret
 
-    def from_payload(self, payload):
+    def from_payload(self, payload: bytes) -> None:
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
         self.status = SetLimitationRequestStatus(payload[2])
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return human readable string."""
         return '<{} session_id="{}" status="{}"/>'.format(
             type(self).__name__, self.session_id, self.status
