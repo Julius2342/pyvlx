@@ -88,12 +88,12 @@ class NodeUpdater:
             if frame.node_id not in self.pyvlx.nodes:
                 return
             node = self.pyvlx.nodes[frame.node_id]
-            
+
             # Set last_frame_state from frame
             if hasattr(frame, 'state'):
                 node.last_frame_state = frame.state
                 PYVLXLOG.debug("%s last_frame_state changed to: %s", node.name, frame.state)
-            
+
             position = Position(frame.current_position)
             target: Any = Position(frame.target)
             # KLF transmits for functional parameters basically always 'No feed-back value known’ (0xF7FF).
