@@ -2,7 +2,7 @@
 from math import floor
 
 from pyvlx.const import (
-    Manufactor, NodeType, NodeTypeWithSubtype, PowerMode, TurnAround)
+    Manufacturer, NodeType, NodeTypeWithSubtype, PowerMode, TurnAround)
 
 
 class Actuator() :
@@ -11,7 +11,7 @@ class Actuator() :
     # pylint: disable-next=too-many-positional-arguments
     def __init__(self, idx: int = -1, address : bytes = bytes(3), subtype: NodeTypeWithSubtype = NodeTypeWithSubtype.NO_TYPE,
                  power_save_mode: PowerMode = PowerMode.ALWAYS_ALIVE, io: bool = False, rf: bool = False,
-                 turn_around_time : TurnAround = TurnAround.NONE, manufactor: Manufactor = Manufactor.NONE, backbone : bytes = bytes(3)) :
+                 turn_around_time : TurnAround = TurnAround.NONE, manufacturer: Manufacturer = Manufacturer.NONE, backbone : bytes = bytes(3)) :
         """Create a new instance of Actuator."""
         self.idx = idx
         self.address = address
@@ -20,13 +20,13 @@ class Actuator() :
         self.io = io
         self.rf = rf
         self.turn_around_time = turn_around_time
-        self.manufactor = manufactor
+        self.manufacturer = manufacturer
         self.backbone = backbone
 
     def __str__(self) -> str:
         """Return human readable string."""
         return '<Actuator index="{}" address="{}" type="{}" subtype="{}" powerSaveMode="{}" io="{}" rf="{}"'\
-               ' turnAroundTime="{}" manufactor="{}" backbone="{}"/>'.format(self.idx,
+               ' turnAroundTime="{}" manufacturer="{}" backbone="{}"/>'.format(self.idx,
                                                                              ".".join(str(c) for c in self.address),
                                                                              self.get_node_type().name,
                                                                              self.subtype.name,
@@ -34,7 +34,7 @@ class Actuator() :
                                                                              'true' if self.io else 'false',
                                                                              'true' if self.rf else 'false',
                                                                              self.turn_around_time.name,
-                                                                             self.manufactor.name,
+                                                                             self.manufacturer.name,
                                                                              ".".join(str(c) for c in self.backbone))
 
     def get_node_type(self) -> NodeType:

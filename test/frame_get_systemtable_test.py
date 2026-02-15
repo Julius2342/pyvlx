@@ -5,7 +5,7 @@ from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import (
     FrameGetSystemTableConfirmation, FrameGetSystemTableNotification,
     FrameGetSystemTableRequest)
-from pyvlx.const import Manufactor, NodeTypeWithSubtype, PowerMode, TurnAround
+from pyvlx.const import Manufacturer, NodeTypeWithSubtype, PowerMode, TurnAround
 
 
 class TestFrameGetSystemTableRequest(unittest.TestCase):
@@ -75,7 +75,7 @@ class TestFrameGetSystemTableRequest(unittest.TestCase):
         self.assertEqual(frame.actuators[0].io, True)
         self.assertEqual(frame.actuators[0].rf, True)
         self.assertEqual(frame.actuators[0].turn_around_time, TurnAround.WITHIN_20MS)
-        self.assertEqual(frame.actuators[0].manufactor, Manufactor.OVERKIZ)
+        self.assertEqual(frame.actuators[0].manufacturer, Manufacturer.OVERKIZ)
         self.assertEqual(frame.actuators[0].backbone, b"\x65\x43\x21")
 
     def test_notify_one_str(self):
@@ -85,6 +85,6 @@ class TestFrameGetSystemTableRequest(unittest.TestCase):
             str(frame),
             '<FrameGetSystemTableNotification objects="1" remaining_objects="113">'
             '<Actuator index="1" address="18.52.86" type="VENTILATION_POINT" subtype="VENTILATION_POINT_AIR_TRANSFER" '
-            'powerSaveMode="LOW_POWER_MODE" io="true" rf="true" turnAroundTime="WITHIN_20MS" manufactor="OVERKIZ" backbone="101.67.33"/>'
+            'powerSaveMode="LOW_POWER_MODE" io="true" rf="true" turnAroundTime="WITHIN_20MS" manufacturer="OVERKIZ" backbone="101.67.33"/>'
             '</FrameGetSystemTableNotification>'
         )

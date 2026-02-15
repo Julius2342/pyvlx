@@ -1,7 +1,7 @@
 """Frames for receiving system table from gateway."""
 from pyvlx.actuator import Actuator
 from pyvlx.const import (
-    Command, Manufactor, NodeTypeWithSubtype, PowerMode, TurnAround)
+    Command, Manufacturer, NodeTypeWithSubtype, PowerMode, TurnAround)
 from pyvlx.exception import PyVLXException
 
 from .frame import FrameBase
@@ -70,7 +70,7 @@ class FrameGetSystemTableNotification(FrameBase):
             ret += bytes(self.actuators[i].subtype.value)
             ret += bytes(self.actuators[i].turn_around_time.value + self.actuators[i].rf * 16
                          + self.actuators[i].io * 32 + self.actuators[i].power_save_mode.value * 64)
-            ret += bytes(self.actuators[i].manufactor.value)
+            ret += bytes(self.actuators[i].manufacturer.value)
             ret += self.actuators[i].backbone
         ret += bytes([self.remaining_objects])
         return ret
@@ -92,7 +92,7 @@ class FrameGetSystemTableNotification(FrameBase):
                 bool(payload[(i * 11 + 7)] >> 4 & 1),       # bit3 rf support
                                                             # bit4-5 reserved
                 TurnAround(payload[(i * 11 + 7)] % 4),      # bit6-7 actuatortime
-                Manufactor(payload[(i * 11 + 8)]),
+                Manufacturer(payload[(i * 11 + 8)]),
                 payload[(i * 11 + 9) : (i * 11 + 12)]
             ))
 
