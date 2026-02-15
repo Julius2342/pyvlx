@@ -37,12 +37,15 @@ class FrameGetSystemTableConfirmation(FrameBase):
 
 class ActuatorList(list):
     """a useless class for MyPy."""
+
     def __init__(self, init: list[Actuator]) -> None:
         """Init a list."""
         self.acts: list[Actuator] = init
+
     def __getitem__(self, key: int) -> Actuator:  # type: ignore[override]
         """Get an item."""
         return super().__getitem__(key)
+
     def __setitem__(self, key: int, value: Actuator) -> None:  # type: ignore[override]
         """Set an item."""
         self.acts[key] = value
