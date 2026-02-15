@@ -5,7 +5,8 @@ from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import (
     FrameGetSystemTableConfirmation, FrameGetSystemTableNotification,
     FrameGetSystemTableRequest)
-from pyvlx.const import Manufacturer, NodeTypeWithSubtype, PowerMode, TurnAround
+from pyvlx.const import (
+    Manufacturer, NodeTypeWithSubtype, PowerMode, TurnAround)
 
 
 class TestFrameGetSystemTableRequest(unittest.TestCase):
