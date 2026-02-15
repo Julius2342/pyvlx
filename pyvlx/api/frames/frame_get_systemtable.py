@@ -35,43 +35,27 @@ class FrameGetSystemTableConfirmation(FrameBase):
         return '<{}/>'.format(type(self).__name__)
 
 
-class ActuatorList(list):
-    """a useless class for MyPy."""
-
-    def __init__(self, init: list[Actuator]) -> None:
-        """Init a list."""
-        self.acts: list[Actuator] = init
-
-    def __getitem__(self, key: int) -> Actuator:  # type: ignore[override]
-        """Get an item."""
-        return super().__getitem__(key)
-
-    def __setitem__(self, key: int, value: Actuator) -> None:  # type: ignore[override]
-        """Set an item."""
-        self.acts[key] = value
-
-
 class FrameGetSystemTableNotification(FrameBase):
     """Frame for scene list notification."""
 
     def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_CS_GET_SYSTEMTABLE_DATA_NTF)
-        self.actuators = ActuatorList([])
+        self.actuators: list[Actuator] = []
         self.remaining_objects = 0
 
     def get_payload(self) -> bytes:
         """Return Payload."""
         # TODO Paquet are limited to 200 bytes so KLF200 would never send more that 10 entries at once
         ret = bytes([len(self.actuators)])
-        for i in self.actuators:
-            ret += bytes(self.actuators[i].idx)
-            ret += self.actuators[i].address
-            ret += bytes(self.actuators[i].subtype.value)
-            ret += bytes(self.actuators[i].turn_around_time.value + self.actuators[i].rf * 16
-                         + self.actuators[i].io * 32 + self.actuators[i].power_save_mode.value * 64)
-            ret += bytes(self.actuators[i].manufacturer.value)
-            ret += self.actuators[i].backbone
+        for actutator in self.actuators:
+            ret += bytes(actuator.idx)
+            ret += actuator.address
+            ret += bytes(actuator.subtype.value)
+            ret += bytes(actuator.turn_around_time.value + actuator.rf * 16
+                         + actuator.io * 32 + actuator.power_save_mode.value * 64)
+            ret += bytes(actuator.manufacturer.value)
+            ret += actuator.backbone
         ret += bytes([self.remaining_objects])
         return ret
 
