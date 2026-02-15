@@ -62,7 +62,7 @@ class TestSetLimitation(unittest.TestCase):
         self.assertTrue(req_frame.originator, Originator.USER)
         self.assertTrue(req_frame.limitation_value_min, Position(position_percent=30))
         self.assertTrue(req_frame.limitation_value_max, Position(position_percent=70))
-        self.assertTrue(req_frame.limitation_time, LimitationTime(60))
+        self.assertTrue(req_frame.limitation_time, LimitationTime(time=60))
 
     def test_request_clear_frame(self) -> None:
         """Test initiating frame."""
@@ -74,4 +74,4 @@ class TestSetLimitation(unittest.TestCase):
         self.assertTrue(req_frame.originator, Originator.USER)
         self.assertTrue(req_frame.limitation_value_min, IgnorePosition())
         self.assertTrue(req_frame.limitation_value_max, IgnorePosition())
-        self.assertTrue(req_frame.limitation_time, LimitationTimeClearAll().get_time_coded())
+        self.assertTrue(req_frame.limitation_time, LimitationTimeClearAll())

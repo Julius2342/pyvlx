@@ -14,25 +14,16 @@ class TestLimitationTime(unittest.TestCase):
     def test_limitation_time_fixed(self):
         """Test fixed limitation time."""
         self.assertEqual(LimitationTime().raw, b"\xFE")
-        self.assertEqual(LimitationTime(29).raw, b"\x00")
-        self.assertEqual(LimitationTime(30).raw, b"\x00")
-        self.assertEqual(LimitationTime(59).raw, b"\x01")
-        self.assertEqual(LimitationTime(60).raw, b"\x01")
-        self.assertEqual(LimitationTime(7589).raw, b"\xFC")
-        self.assertEqual(LimitationTime(7590).raw, b"\xFC")
-        self.assertEqual(LimitationTime(7591).raw, b"\xFC")
+        self.assertEqual(LimitationTime(time=29).raw, b"\x00")
+        self.assertEqual(LimitationTime(time=30).raw, b"\x00")
+        self.assertEqual(LimitationTime(time=59).raw, b"\x01")
+        self.assertEqual(LimitationTime(time=60).raw, b"\x01")
+        self.assertEqual(LimitationTime(time=7589).raw, b"\xFC")
+        self.assertEqual(LimitationTime(time=7590).raw, b"\xFC")
+        self.assertEqual(LimitationTime(time=7591).raw, b"\xFC")
 
     def test_limitation_time_constants(self):
         """Test limitation time constants."""
         self.assertEqual(LimitationTimeUnlimited().raw, b"\xFD")
         self.assertEqual(LimitationTimeClearMaster().raw, b"\xFE")
         self.assertEqual(LimitationTimeClearAll().raw, b"\xFF")
-
-    def test_from_raw(self):
-        """Test limitation time convertion from raw value."""
-        self.assertEqual(LimitationTime(time_coded=0).get_time(), 30)
-        self.assertEqual(LimitationTime(time_coded=1).get_time(), 60)
-        self.assertEqual(LimitationTime(time_coded=252).get_time(), 7590)
-        self.assertEqual(LimitationTime(time_coded=253).get_time(), LimitationTimeUnlimited().get_time())
-        self.assertEqual(LimitationTime(time_coded=254).get_time(), LimitationTimeClearMaster().get_time())
-        self.assertEqual(LimitationTime(time_coded=255).get_time(), LimitationTimeClearAll().get_time())

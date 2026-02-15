@@ -48,6 +48,6 @@ class SetLimitation(ApiEvent):
         self.session_id = get_new_session_id()
         return FrameSetLimitationRequest(
             node_ids=[self.node_id], session_id=self.session_id,
-            limitation_value_min=self.limitation_value_min.position,
-            limitation_value_max=self.limitation_value_max.position,
-            limitation_time=self.limitation_time.get_time_coded())
+            limitation_value_min=self.limitation_value_min,
+            limitation_value_max=self.limitation_value_max,
+            limitation_time=self.limitation_time)

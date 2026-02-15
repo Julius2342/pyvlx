@@ -12,7 +12,8 @@ from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
 from .opening_device import Blind, DualRollerShutter, OpeningDevice
 from .parameter import (
-    Intensity, LimitationTime, Parameter, Position, SwitchParameter)
+    Intensity, LimitationTime, LimitationTimeClearAll, Parameter, Position,
+    SwitchParameter)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -166,7 +167,7 @@ class NodeUpdater:
             node.limitation_max = Position(position=int.from_bytes(frame.max_value) if frame.max_value else None)
             node.limitation_min = Position(position=int.from_bytes(frame.min_value) if frame.min_value else None)
             node.limitation_originator = frame.limit_originator if frame.limit_originator else Originator.USER
-            node.limitation_time = LimitationTime(time_coded=frame.limit_time)
+            node.limitation_time = LimitationTime(limit_raw=bytes([frame.limit_time])) if frame.limit_time is not None else LimitationTimeClearAll()
             await node.after_update()
 
     async def process_frame(self, frame: FrameBase) -> None:

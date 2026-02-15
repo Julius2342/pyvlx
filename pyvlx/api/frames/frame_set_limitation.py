@@ -4,6 +4,7 @@ from enum import Enum
 from typing import Optional
 
 from pyvlx.const import Command, Originator, Priority
+from pyvlx.parameter import LimitationTime, Position
 
 from .frame import FrameBase
 
@@ -16,9 +17,9 @@ class FrameSetLimitationRequest(FrameBase):
     def __init__(self,
                  node_ids: Optional[list] = None,
                  session_id: Optional[int] = None,
-                 limitation_value_min: Optional[int] = None,
-                 limitation_value_max: Optional[int] = None,
-                 limitation_time: Optional[int] = None):
+                 limitation_value_min: Optional[Position] = None,
+                 limitation_value_max: Optional[Position] = None,
+                 limitation_time: Optional[LimitationTime] = None):
         """Init Frame."""
         super().__init__(Command.GW_SET_LIMITATION_REQ)
         self.session_id = session_id

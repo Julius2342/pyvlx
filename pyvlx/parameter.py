@@ -392,7 +392,7 @@ class DualRollerShutterPosition(Position):
         super().__init__(position=Position.DUAL_SHUTTER_CURTAINS)
 
 
-class LimitationTime:
+class LimitationTime(Parameter):
     """Class for storing limitation time for position limitation."""
 
     UNLIMITED = 253
@@ -400,31 +400,22 @@ class LimitationTime:
     CLEAR_ALL = 255
 
     def __init__(self,
+                 parameter: Optional[Parameter] = None,
                  time: Optional[int] = None,
-                 time_coded: Optional[int] = None) -> None:
+                 limit_raw: Optional[bytes] = None) -> None:
         """Initialize limitation time from seconds, bus value or another limitation time object."""
-        self.time_coded = LimitationTime.CLEAR_MASTER
-        if time_coded is not None:
-            self.time_coded = time_coded
+        super().__init__()
+        if parameter is not None:
+            self.from_parameter(parameter)
+        elif limit_raw is not None:
+            self.raw = limit_raw
         elif time is not None:
             if time > 7590:
-                self.time_coded = 252
+                self.raw = bytes([252])
             else:
-                self.time_coded = math.ceil(time / 30) - 1
-
-    def get_time(self) -> int:
-        """Get limitation time in seconds or a subclass of LimitationTime."""
-        if self.time_coded == LimitationTime.UNLIMITED:
-            return LimitationTime.UNLIMITED
-        if self.time_coded == LimitationTime.CLEAR_MASTER:
-            return LimitationTime.CLEAR_MASTER
-        if self.time_coded == LimitationTime.CLEAR_ALL:
-            return LimitationTime.CLEAR_ALL
-        return (self.time_coded + 1) * 30
-
-    def get_time_coded(self) -> int:
-        """Get limitation time as coded value."""
-        return self.time_coded
+                self.raw = bytes([math.ceil(time / 30) - 1])
+        else:
+            self.raw = bytes([LimitationTime.CLEAR_MASTER])
 
 
 class LimitationTimeUnlimited(LimitationTime):
@@ -432,7 +423,7 @@ class LimitationTimeUnlimited(LimitationTime):
 
     def __init__(self) -> None:
         """Initialize object representing unlimited Time."""
-        super().__init__(time_coded=LimitationTime.UNLIMITED)
+        super().__init__(limit_raw=bytes([LimitationTime.UNLIMITED]))
 
 
 class LimitationTimeClearMaster(LimitationTime):
@@ -440,7 +431,7 @@ class LimitationTimeClearMaster(LimitationTime):
 
     def __init__(self) -> None:
         """Initialize object representing clear all limits for master."""
-        super().__init__(time_coded=LimitationTime.CLEAR_MASTER)
+        super().__init__(limit_raw=bytes([LimitationTime.CLEAR_MASTER]))
 
 
 class LimitationTimeClearAll(LimitationTime):
@@ -448,4 +439,4 @@ class LimitationTimeClearAll(LimitationTime):
 
     def __init__(self) -> None:
         """Initialize object representing clear all limits."""
-        super().__init__(time_coded=LimitationTime.CLEAR_ALL)
+        super().__init__(limit_raw=bytes([LimitationTime.CLEAR_ALL]))
