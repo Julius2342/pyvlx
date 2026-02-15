@@ -44,7 +44,7 @@ def convert_frame_to_node(pyvlx: "PyVLX",
             return GarageDoor(pyvlx, frame.node_id, frame.name, frame.serial_number, frame.current_position)
 
         case NodeType.LIGHT:  # 6
-            if frame.node_type = NodeTypeWithSubtype.LIGHT_ON_OFF :
+            if frame.node_type == NodeTypeWithSubtype.LIGHT_ON_OFF :
                 return OnOffLight(pyvlx, frame.node_id, frame.name, frame.serial_number )
             else :
                 return Light(pyvlx, frame.node_id, frame.name, frame.serial_number)
