@@ -728,3 +728,8 @@ class Manufactor(Enum) :
     SECUYOU = 10
     OVERKIZ = 11
     ATLANTIC_GROUP = 12
+    UNKNWON = 255
+
+    @classmethod
+    def _missing_(cls, value: object) -> Any:
+        return cls.UNKNOWN
