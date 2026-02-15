@@ -35,29 +35,13 @@ class FrameGetSystemTableConfirmation(FrameBase):
         return '<{}/>'.format(type(self).__name__)
 
 
-class ActuatorList(list):
-    """a useless class for MyPy."""
-
-    def __init__(self, init: list[Actuator]) -> None:
-        """Init a list."""
-        self.acts: list[Actuator] = init
-
-    def __getitem__(self, key: int) -> Actuator:  # type: ignore[override]
-        """Get an item."""
-        return super().__getitem__(key)
-
-    def __setitem__(self, key: int, value: Actuator) -> None:  # type: ignore[override]
-        """Set an item."""
-        self.acts[key] = value
-
-
 class FrameGetSystemTableNotification(FrameBase):
-    """Frame for system table notification."""
+    """Frame for scene list notification."""
 
     def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_CS_GET_SYSTEMTABLE_DATA_NTF)
-        self.actuators = ActuatorList([])
+        self.actuators: list[Actuator] = []
         self.remaining_objects = 0
 
     def get_payload(self) -> bytes:
