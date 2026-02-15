@@ -52,7 +52,7 @@ class ActuatorList(list):
 
 
 class FrameGetSystemTableNotification(FrameBase):
-    """Frame for scene list notification."""
+    """Frame for system table notification."""
 
     def __init__(self) -> None:
         """Init Frame."""
