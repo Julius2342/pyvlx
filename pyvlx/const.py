@@ -552,10 +552,10 @@ class LockTime(Enum):
 class WinkTime(Enum):
     """Enum class for Wink Time."""
 
-    STOP = 0                # Stop wink.
-    BY_SECONDS = 1          # 1=Wink in 1 sec., 2= Wink in 2 sec. 253=Wink in 253 sec.
-    BY_MANUFACTUERER = 254  # Manufacturer specific wink time.
-    FOREVER = 255           # Wink forever.
+    STOP = 0               # Stop wink.
+    BY_SECONDS = 1         # 1=Wink in 1 sec., 2= Wink in 2 sec. 253=Wink in 253 sec.
+    BY_MANUFACTURER = 254  # Manufacturer specific wink time.
+    FOREVER = 255          # Wink forever.
 
 
 class NodeParameter(Enum):
@@ -715,8 +715,8 @@ class TurnAround(Enum) :
     def _missing_(cls, value: object) -> Any:
         return cls.NONE
 
-class Manufactor(Enum) :
-    """io-Manufactor."""
+class Manufacturer(Enum) :
+    """io-Manufacturer."""
 
     NONE = 0
     VELUX = 1
