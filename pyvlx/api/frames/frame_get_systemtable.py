@@ -48,14 +48,14 @@ class FrameGetSystemTableNotification(FrameBase):
         """Return Payload."""
         # TODO Paquet are limited to 200 bytes so KLF200 would never send more that 10 entries at once
         ret = bytes([len(self.actuators)])
-        for actutator in self.actuators:
-            ret += bytes(actuator.idx)
-            ret += actuator.address
-            ret += bytes(actuator.subtype.value)
-            ret += bytes(actuator.turn_around_time.value + actuator.rf * 16
-                         + actuator.io * 32 + actuator.power_save_mode.value * 64)
-            ret += bytes(actuator.manufacturer.value)
-            ret += actuator.backbone
+        for i in self.actuators:
+            ret += bytes(self.actuators[i].idx)
+            ret += self.actuators[i].address
+            ret += bytes(self.actuators[i].subtype.value)
+            ret += bytes(self.actuators[i].turn_around_time.value + self.actuators[i].rf * 16
+                         + self.actuators[i].io * 32 + self.actuators[i].power_save_mode.value * 64)
+            ret += bytes(self.actuators[i].manufacturer.value)
+            ret += self.actuators[i].backbone
         ret += bytes([self.remaining_objects])
         return ret
 
