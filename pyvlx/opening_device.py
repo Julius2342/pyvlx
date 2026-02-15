@@ -99,7 +99,7 @@ class OpeningDevice(Node):
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=position,
-            functional_parameter=kwargs,
+            **kwargs,
         )
         await command.send()
         await self.after_update()

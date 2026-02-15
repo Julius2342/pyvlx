@@ -17,26 +17,23 @@ all:
 	@echo ""
 
 test:
-	PYTHONPATH="${PYTHONPATH}:/" python3 -m unittest discover -s test -p "*_test.py" -b
+	pytest
 
 build:
-	@python3 setup.py sdist
-	@python3 setup.py egg_info
+	@python3 -m build
 
 pypi:
-	# python3 setup.py register -r pypi
-	#@python3 setup.py sdist upload -r pypi
 	@rm -f dist/*
-	@python setup.py sdist
+	@python3 -m build
 	@twine upload dist/*
 
 pylint:
-	@pylint --rcfile=.pylintrc pyvlx test/*.py *.py examples/*.py
+	@pylint pyvlx test/*.py examples/*.py
 
 pydocstyle:
-	 @pydocstyle pyvlx test/*.py test/*.py *.py examples/*.py
+	 @pydocstyle pyvlx test/*.py test/*.py examples/*.py
 
 coverage:
-	py.test --cov-report html --cov pyvlx --verbose
+	pytest --cov-report html --cov pyvlx --verbose
 
 .PHONY: test build

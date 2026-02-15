@@ -1,0 +1,88 @@
+[project]
+name = "pyvlx"
+dynamic = ["version"]
+description = "PyVLX is a wrapper for the Velux KLF 200 API. PyVLX enables you to run scenes and or open and close velux windows."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "LGPL-3.0-or-later"}
+keywords = ["velux", "KLF", "200", "home", "automation"]
+authors = [
+    {name = "Julius Mittenzwei", email = "julius@mittenzwei.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "Topic :: System :: Hardware :: Hardware Drivers",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "PyYAML",
+    "zeroconf",
+]
+
+[project.urls]
+Homepage = "https://github.com/Julius2342/pyvlx"
+Source = "https://github.com/Julius2342/pyvlx"
+"Bug Tracker" = "https://github.com/Julius2342/pyvlx/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "setuptools-scm>=8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+exclude = ["test*"]
+
+[tool.setuptools.package-data]
+pyvlx = ["py.typed"]
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+
+[tool.mypy]
+show_error_codes = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_untyped_calls = true
+check_untyped_defs = true
+
+[tool.isort]
+multi_line_output = 4
+skip = ["old_api"]
+
+[tool.pylint.main]
+max-branches = 20
+max-statements = 55
+
+[tool.pylint.messages_control]
+disable = [
+    "E1101",
+    "C0111",
+    "duplicate-code",
+    "fixme",
+    "locally-disabled",
+    "too-few-public-methods",
+    "too-many-arguments",
+    "too-many-instance-attributes",
+    "consider-using-f-string",
+]
+good-names = ["PAYLOAD_LEN", "i", "j"]
+
+[tool.pylint.reports]
+output-format = "colorized"
+reports = false
+
+[tool.pylint.format]
+indent-string = "    "
+max-line-length = 150
+max-positional-arguments = 7
+
+[tool.flake8]
+ignore = ["E203", "W503", "E226"]
+exclude = [".git", "bin", "lib", "deps", "build"]
+max-line-length = 160

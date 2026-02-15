@@ -3,10 +3,12 @@ import unittest
 from unittest.mock import MagicMock
 
 from pyvlx import (
-    Blade, Blind, GarageDoor, Gate, Light, PyVLX, RollerShutter, Window)
+    Blade, Blind, GarageDoor, Gate, Light, OnOffLight, PyVLX, RollerShutter,
+    Window)
 from pyvlx.api.frames import FrameGetNodeInformationNotification
 from pyvlx.connection import Connection
 from pyvlx.const import NodeTypeWithSubtype
+from pyvlx.dimmable_device import ExteriorHeating
 from pyvlx.node_helper import convert_frame_to_node
 
 
@@ -117,7 +119,7 @@ class TestNodeHelper(unittest.TestCase):
         frame = FrameGetNodeInformationNotification()
         frame.node_id = 23
         frame.name = "Fnord23"
-        frame.node_type = NodeTypeWithSubtype.LINAR_ANGULAR_POSITION_OF_GARAGE_DOOR
+        frame.node_type = NodeTypeWithSubtype.LINEAR_ANGULAR_POSITION_OF_GARAGE_DOOR
         frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         node = convert_frame_to_node(self.pyvlx, frame)
         self.assertEqual(
@@ -221,7 +223,25 @@ class TestNodeHelper(unittest.TestCase):
         node = convert_frame_to_node(self.pyvlx, frame)
         self.assertEqual(
             node,
-            Light(
+            OnOffLight(
+                pyvlx=self.pyvlx,
+                name="Fnord23",
+                node_id=23,
+                serial_number="aa:bb:aa:bb:aa:bb:aa:23",
+            ),
+        )
+
+    def test_exterior_heating(self) -> None:
+        """Test convert_frame_to_node with exterior heating."""
+        frame = FrameGetNodeInformationNotification()
+        frame.node_id = 23
+        frame.name = "Fnord23"
+        frame.node_type = NodeTypeWithSubtype.EXTERIOR_HEATING
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
+        node = convert_frame_to_node(self.pyvlx, frame)
+        self.assertEqual(
+            node,
+            ExteriorHeating(
                 pyvlx=self.pyvlx,
                 name="Fnord23",
                 node_id=23,

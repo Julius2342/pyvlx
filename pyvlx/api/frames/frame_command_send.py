@@ -2,7 +2,7 @@
 from enum import Enum
 from typing import List, Optional
 
-from pyvlx.const import Command, Originator, Priority
+from pyvlx.const import Command, Originator, Priority, RunStatus, StatusReply
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter, Position
 
@@ -160,11 +160,14 @@ class FrameCommandRunStatusNotification(FrameBase):
 
     def __init__(
             self,
+            *,
             session_id: Optional[int] = None,
             status_id: Optional[int] = None,
             index_id: Optional[int] = None,
             node_parameter: Optional[int] = None,
             parameter_value: Optional[int] = None,
+            run_status: Optional[RunStatus] = None,
+            status_reply: Optional[StatusReply] = None,
     ):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_RUN_STATUS_NTF)
@@ -173,6 +176,8 @@ class FrameCommandRunStatusNotification(FrameBase):
         self.index_id = index_id
         self.node_parameter = node_parameter
         self.parameter_value = parameter_value
+        self.run_status = run_status
+        self.status_reply = status_reply
 
     def get_payload(self) -> bytes:
         """Return Payload."""
@@ -186,9 +191,13 @@ class FrameCommandRunStatusNotification(FrameBase):
         ret += bytes([self.node_parameter])
         assert self.parameter_value is not None
         ret += bytes([self.parameter_value >> 8 & 255, self.parameter_value & 255])
+        assert self.run_status is not None
+        ret += bytes([self.run_status.value])
+        assert self.status_reply is not None
+        ret += bytes([self.status_reply.value])
 
-        # XXX: Missing implementation of run_status, status_reply and information_code
-        ret += bytes(6)
+        # XXX: Missing implementation of information_code
+        ret += bytes(4)
         return ret
 
     def from_payload(self, payload: bytes) -> None:
@@ -198,15 +207,17 @@ class FrameCommandRunStatusNotification(FrameBase):
         self.index_id = payload[3]
         self.node_parameter = payload[4]
         self.parameter_value = payload[5] * 256 + payload[6]
+        self.run_status = RunStatus(payload[7])
+        self.status_reply = StatusReply(payload[8])
 
     def __str__(self) -> str:
         """Return human readable string."""
         return (
             '<{} session_id="{}" status_id="{}" '
-            'index_id="{}" node_parameter="{}" parameter_value="{}"/>'.format(
+            'index_id="{}" node_parameter="{}" parameter_value="{}" run_status="{}" status_reply="{}"/>'.format(
                 type(self).__name__, self.session_id,
                 self.status_id, self.index_id,
-                self.node_parameter, self.parameter_value
+                self.node_parameter, self.parameter_value, self.run_status, self.status_reply
             )
         )
 

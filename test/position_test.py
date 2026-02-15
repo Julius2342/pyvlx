@@ -43,6 +43,9 @@ class TestPosition(unittest.TestCase):
         self.assertEqual(Position(Parameter(raw=b"\x0A\x05")).position, 2565)
         self.assertEqual(Position(position_percent=50).position, 25600)
         self.assertEqual(Position(position=12345).position_percent, 24)
+        self.assertEqual(Position(position=51200).position_percent, 100)
+        # test tolerance for devices that report positions only close to 100%
+        self.assertEqual(Position(position=51160).position_percent, 100)
 
     def test_fallback_to_unknown(self) -> None:
         """Test fallback to unknown."""
@@ -85,6 +88,12 @@ class TestPosition(unittest.TestCase):
         self.assertFalse(position_open.closed)
         self.assertTrue(position_open.open)
         position_closed = Position(position_percent=100)
+        self.assertTrue(position_closed.closed)
+        self.assertFalse(position_closed.open)
+        position_closed = Position(position=51200)
+        self.assertTrue(position_closed.closed)
+        self.assertFalse(position_closed.open)
+        position_closed = Position(position=51160)
         self.assertTrue(position_closed.closed)
         self.assertFalse(position_closed.open)
         position_half = Position(position_percent=50)
