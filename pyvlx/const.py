@@ -711,6 +711,9 @@ class TurnAround(Enum) :
     WITHIN_40MS = 3
     NONE = 4
 
+    @classmethod
+    def _missing_(cls, value: object) -> Any:
+        return cls.NONE
 
 class Manufactor(Enum) :
     """io-Manufactor."""
