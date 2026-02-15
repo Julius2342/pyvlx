@@ -715,6 +715,7 @@ class TurnAround(Enum) :
     def _missing_(cls, value: object) -> Any:
         return cls.NONE
 
+
 class Manufacturer(Enum) :
     """io-Manufacturer."""
 
@@ -731,7 +732,7 @@ class Manufacturer(Enum) :
     SECUYOU = 10
     OVERKIZ = 11
     ATLANTIC_GROUP = 12
-    UNKNWON = 255
+    UNKNOWN = 255
 
     @classmethod
     def _missing_(cls, value: object) -> Any:

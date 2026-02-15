@@ -27,15 +27,15 @@ class Actuator() :
         """Return human readable string."""
         return '<Actuator index="{}" address="{}" type="{}" subtype="{}" powerSaveMode="{}" io="{}" rf="{}"'\
                ' turnAroundTime="{}" manufacturer="{}" backbone="{}"/>'.format(self.idx,
-                                                                             ".".join(str(c) for c in self.address),
-                                                                             self.get_node_type().name,
-                                                                             self.subtype.name,
-                                                                             self.power_save_mode.name,
-                                                                             'true' if self.io else 'false',
-                                                                             'true' if self.rf else 'false',
-                                                                             self.turn_around_time.name,
-                                                                             self.manufacturer.name,
-                                                                             ".".join(str(c) for c in self.backbone))
+                                                                               ".".join(str(c) for c in self.address),
+                                                                               self.get_node_type().name,
+                                                                               self.subtype.name,
+                                                                               self.power_save_mode.name,
+                                                                               'true' if self.io else 'false',
+                                                                               'true' if self.rf else 'false',
+                                                                               self.turn_around_time.name,
+                                                                               self.manufacturer.name,
+                                                                               ".".join(str(c) for c in self.backbone))
 
     def get_node_type(self) -> NodeType:
         """Return actuator main type."""
