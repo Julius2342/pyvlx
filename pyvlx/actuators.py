@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-class Actuators() :
+class Actuators():
     """Object for storing node objects."""
 
     def __init__(self, pyvlx: "PyVLX"):
