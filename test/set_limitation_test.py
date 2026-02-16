@@ -54,24 +54,22 @@ class TestSetLimitation(unittest.TestCase):
     def test_request_frame(self) -> None:
         """Test initiating frame."""
         limit = SetLimitation(self.pyvlx, 1, Position(position_percent=30),
-                              Position(position_percent=70))
+                              Position(position_percent=70), LimitationTime(seconds=60))
         req_frame = limit.request_frame()
         self.assertIsInstance(req_frame, FrameSetLimitationRequest)
-        self.assertTrue(req_frame.session_id, 1)
-        self.assertTrue(req_frame.node_ids, [1])
-        self.assertTrue(req_frame.originator, Originator.USER)
-        self.assertTrue(req_frame.limitation_value_min, Position(position_percent=30))
-        self.assertTrue(req_frame.limitation_value_max, Position(position_percent=70))
-        self.assertTrue(req_frame.limitation_time, LimitationTime(time=60))
+        self.assertEqual(req_frame.node_ids, [1])
+        self.assertEqual(req_frame.originator, Originator.USER)
+        self.assertEqual(req_frame.limitation_value_min, Position(position_percent=30))
+        self.assertEqual(req_frame.limitation_value_max, Position(position_percent=70))
+        self.assertEqual(req_frame.limitation_time, LimitationTime(seconds=60))
 
     def test_request_clear_frame(self) -> None:
         """Test initiating frame."""
         limit = SetLimitation(self.pyvlx, 1, limitation_time=LimitationTimeClearAll())
         req_frame = limit.request_frame()
         self.assertIsInstance(req_frame, FrameSetLimitationRequest)
-        self.assertTrue(req_frame.session_id, 1)
-        self.assertTrue(req_frame.node_ids, [1])
-        self.assertTrue(req_frame.originator, Originator.USER)
-        self.assertTrue(req_frame.limitation_value_min, IgnorePosition())
-        self.assertTrue(req_frame.limitation_value_max, IgnorePosition())
-        self.assertTrue(req_frame.limitation_time, LimitationTimeClearAll())
+        self.assertEqual(req_frame.node_ids, [1])
+        self.assertEqual(req_frame.originator, Originator.USER)
+        self.assertEqual(req_frame.limitation_value_min, IgnorePosition())
+        self.assertEqual(req_frame.limitation_value_max, IgnorePosition())
+        self.assertEqual(req_frame.limitation_time, LimitationTimeClearAll())

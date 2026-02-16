@@ -1,4 +1,4 @@
-"""Module for retrieving limitation value from API."""
+"""Module for setting limitation value."""
 from typing import TYPE_CHECKING, Optional
 
 from pyvlx.const import Originator

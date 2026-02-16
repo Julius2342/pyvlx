@@ -5,9 +5,8 @@ from asyncio import Task
 from typing import TYPE_CHECKING, Any, Optional
 
 from .api.command_send import CommandSend
-from .api.get_limitation import GetLimitation
 from .api.set_limitation import SetLimitation
-from .const import LimitationType, Originator, Velocity
+from .const import Originator, Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
@@ -167,9 +166,7 @@ class OpeningDevice(Node):
 
         Parameters:
             * min_position: Position object containing the minimum position.
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
+            * max_position: Position object containing the maximum position.
         """
         command_set_limitation = SetLimitation(
             pyvlx=self.pyvlx,
@@ -185,7 +182,7 @@ class OpeningDevice(Node):
         await self.after_update()
 
     async def clear_position_limitations(self) -> None:
-        """Set position limits.
+        """Clear position limits.
 
         Parameters:
             * wait_for_completion: If set, function will return
@@ -204,21 +201,13 @@ class OpeningDevice(Node):
         self.limitation_max = IgnorePosition()
         await self.after_update()
 
-    async def get_limitation(self) -> GetLimitation:
-        """Return limitaation."""
-        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
-        await get_limitation.do_api_call()
-        if not get_limitation.success:
-            raise PyVLXException("Unable to send command")
-        return get_limitation
+    async def get_limitation_min(self) -> Position:
+        """Return minimum limitation."""
+        return self.limitation_min
 
-    async def get_limitation_max(self) -> GetLimitation:
+    async def get_limitation_max(self) -> Position:
         """Return maximum limitation."""
-        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id, limitation_type=LimitationType.MAX_LIMITATION)
-        await get_limitation.do_api_call()
-        if not get_limitation.success:
-            raise PyVLXException("Unable to send command")
-        return get_limitation
+        return self.limitation_max
 
     def is_moving(self) -> bool:
         """Return moving state of the cover."""
@@ -314,14 +303,6 @@ class Window(OpeningDevice):
             self.serial_number,
             self.position,
         )
-
-    async def get_limitation(self) -> GetLimitation:
-        """Return limitaation."""
-        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
-        await get_limitation.do_api_call()
-        if not get_limitation.success:
-            raise PyVLXException("Unable to send command")
-        return get_limitation
 
 
 class Blind(OpeningDevice):

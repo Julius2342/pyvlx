@@ -16,7 +16,7 @@ class TestFrameSetLimitation(unittest.TestCase):
         """Test FrameSetLimitationRequest bytes."""
         frame = FrameSetLimitationRequest(
             node_ids=[1], session_id=1, limitation_value_min=Position(position_percent=30),
-            limitation_value_max=Position(position_percent=70), limitation_time=LimitationTime(time=60))
+            limitation_value_max=Position(position_percent=70), limitation_time=LimitationTime(seconds=60))
         self.assertEqual(bytes(frame), b'\x00\x22\x03\x10\x00\x01\x01\x03\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
                                        b'\x00\x00\x00\x00\x00\x3C\x00\x8C\x00\x01\x83')
 
@@ -36,5 +36,11 @@ class TestFrameSetLimitation(unittest.TestCase):
 
     def test_str(self):
         """Test string representation of FrameSetLimitationRequest."""
-        frame = FrameSetLimitationRequest(node_ids=[1], session_id=1)
-        self.assertEqual(str(frame), '<FrameSetLimitationRequest node_ids="[1]" session_id="1" originator="Originator.USER" />')
+        frame = FrameSetLimitationRequest(node_ids=[1], session_id=1, limitation_value_min=Position(position_percent=30),
+                                          limitation_value_max=Position(position_percent=70), limitation_time=LimitationTime(seconds=60))
+        self.assertEqual(
+            str(frame),
+            '<FrameSetLimitationRequest node_ids="[1]" session_id="1" '
+            'originator="Originator.USER" limitation_value_min="30 %" '
+            'limitation_value_max="70 %" limitation_time="60 s" />'
+        )

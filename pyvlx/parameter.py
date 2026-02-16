@@ -401,7 +401,7 @@ class LimitationTime(Parameter):
 
     def __init__(self,
                  parameter: Optional[Parameter] = None,
-                 time: Optional[int] = None,
+                 seconds: Optional[int] = None,
                  limit_raw: Optional[bytes] = None) -> None:
         """Initialize limitation time from seconds, bus value or another limitation time object."""
         super().__init__()
@@ -409,13 +409,23 @@ class LimitationTime(Parameter):
             self.from_parameter(parameter)
         elif limit_raw is not None:
             self.raw = limit_raw
-        elif time is not None:
-            if time > 7590:
+        elif seconds is not None:
+            if seconds > 7590:
                 self.raw = bytes([252])
             else:
-                self.raw = bytes([math.ceil(time / 30) - 1])
+                self.raw = bytes([math.ceil(seconds / 30) - 1])
         else:
             self.raw = bytes([LimitationTime.CLEAR_MASTER])
+
+    def __str__(self) -> str:
+        """Return string representation of object."""
+        if self.raw == bytes([LimitationTime.UNLIMITED]):
+            return "UNLIMITED"
+        if self.raw == bytes([LimitationTime.CLEAR_MASTER]):
+            return "CLEAR_MASTER"
+        if self.raw == bytes([LimitationTime.CLEAR_ALL]):
+            return "CLEAR_ALL"
+        return "{} s".format((self.raw[0] + 1) * 30)
 
 
 class LimitationTimeUnlimited(LimitationTime):

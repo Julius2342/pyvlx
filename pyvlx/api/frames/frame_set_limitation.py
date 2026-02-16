@@ -1,5 +1,5 @@
 
-"""Module for get local time classes."""
+"""Module for set limitation classes."""
 from enum import Enum
 from typing import Optional
 
@@ -54,7 +54,10 @@ class FrameSetLimitationRequest(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return f'<{type(self).__name__} node_ids="{self.node_ids}" ' \
-               f'session_id="{self.session_id}" originator="{self.originator}" />'
+               f'session_id="{self.session_id}" originator="{self.originator}" ' \
+               f'limitation_value_min="{self.limitation_value_min}" ' \
+               f'limitation_value_max="{self.limitation_value_max}" ' \
+               f'limitation_time="{self.limitation_time}" />'
 
 
 class SetLimitationRequestStatus(Enum):

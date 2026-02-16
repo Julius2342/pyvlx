@@ -9,6 +9,9 @@ from pyvlx.api.frames.frame_set_limitation import (
 class TestFrameSetLimitationConfirmation(unittest.TestCase):
     """Test class for FrameSetLimitationConfirmation."""
 
+    EXAMPLE_FRAME_ACCEPTED = b'\x00\x06\x03\x11\x00\x01\x01\x14'
+    EXAMPLE_FRAME_REJECTED = b'\x00\x06\x03\x11\x00\x02\x00\x16'
+
     # pylint: disable=too-many-public-methods,invalid-name
 
     def test_bytes(self):
