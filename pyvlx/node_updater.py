@@ -91,7 +91,6 @@ class NodeUpdater:
 
             # Set last_frame_state from frame
             node.last_frame_state = frame.state
-            PYVLXLOG.debug("%s last_frame_state changed to: %s", node.name, frame.state)
 
             position = Position(frame.current_position)
             target: Any = Position(frame.target)
