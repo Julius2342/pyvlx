@@ -3,7 +3,8 @@ import asyncio
 import datetime
 from asyncio import Task
 from typing import TYPE_CHECKING, Any, Optional
-from warnings import deprecated
+
+from deprecated import deprecated
 
 from pyvlx.api.get_limitation import GetLimitation
 
