@@ -4,9 +4,11 @@ import datetime
 from asyncio import Task
 from typing import TYPE_CHECKING, Any, Optional
 
+from pyvlx.api.get_limitation import GetLimitation
+
 from .api.command_send import CommandSend
 from .api.set_limitation import SetLimitation
-from .const import Originator, Velocity
+from .const import LimitationType, Originator, Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
@@ -196,17 +198,39 @@ class OpeningDevice(Node):
         )
         await command_set_limitation.do_api_call()
         if not command_set_limitation.success:
-            raise PyVLXException("Unable to send command")
+            raise PyVLXException("Unable to clear limitations")
         self.limitation_min = IgnorePosition()
         self.limitation_max = IgnorePosition()
         await self.after_update()
 
     async def get_limitation_min(self) -> Position:
-        """Return minimum limitation."""
+        """Request and return minimum limitation."""
+        command_get_limitation = GetLimitation(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            limitation_type=LimitationType.MIN_LIMITATION
+        )
+        await command_get_limitation.do_api_call()
+        if not command_get_limitation.success:
+            raise PyVLXException("Unable to get minimum limitation")
+
+        self.limitation_min = Position(position_percent=command_get_limitation.min_value)
+
         return self.limitation_min
 
     async def get_limitation_max(self) -> Position:
-        """Return maximum limitation."""
+        """Request and return maximum limitation."""
+        command_get_limitation = GetLimitation(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            limitation_type=LimitationType.MAX_LIMITATION
+        )
+        await command_get_limitation.do_api_call()
+        if not command_get_limitation.success:
+            raise PyVLXException("Unable to get maximum limitation")
+
+        self.limitation_max = Position(position_percent=command_get_limitation.max_value)
+
         return self.limitation_max
 
     def is_moving(self) -> bool:
