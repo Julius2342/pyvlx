@@ -62,4 +62,4 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         await self.node_updater.process_frame(frame)
 
         # Verify that last_frame_state was set
-        self.assertEqual(opening_device.last_frame_state, OperatingState.DONE)
+        self.assertEqual(self.opening_device.last_frame_state, OperatingState.DONE)
