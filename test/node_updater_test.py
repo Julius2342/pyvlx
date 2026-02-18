@@ -11,7 +11,6 @@ from pyvlx.connection import Connection
 from pyvlx.const import OperatingState
 from pyvlx.node_updater import NodeUpdater
 
-
 class TestNodeUpdater(IsolatedAsyncioTestCase):
     """Test class for NodeUpdater."""
 
