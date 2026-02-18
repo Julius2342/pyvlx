@@ -46,9 +46,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         opening_device = OpeningDevice(
             pyvlx=self.pyvlx, node_id=42, name="Test device 2"
         )
-        self.pyvlx.nodes = MagicMock()
-        self.pyvlx.nodes.__contains__ = MagicMock(return_value=True)
-        self.pyvlx.nodes.__getitem__ = MagicMock(return_value=opening_device)
+        self.pyvlx.nodes[42] = opening_device
 
         # Create a frame with state
         frame = FrameGetAllNodesInformationNotification()
