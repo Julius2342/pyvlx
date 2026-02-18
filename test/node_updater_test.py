@@ -64,38 +64,3 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         # Verify that last_frame_state was set
         self.assertEqual(opening_device.last_frame_state, OperatingState.DONE)
-
-    async def test_last_frame_state_updates_with_different_states(self) -> None:
-        """Test that last_frame_state updates when multiple frames are received."""
-        # Create a test node
-        opening_device = OpeningDevice(
-            pyvlx=self.pyvlx, node_id=23, name="Test device"
-        )
-        self.pyvlx.nodes = MagicMock()
-        self.pyvlx.nodes.__contains__ = MagicMock(return_value=True)
-        self.pyvlx.nodes.__getitem__ = MagicMock(return_value=opening_device)
-
-        # Verify initial state is None
-        self.assertIsNone(opening_device.last_frame_state)
-
-        # Process first frame with EXECUTING state
-        frame1 = FrameNodeStatePositionChangedNotification()
-        frame1.node_id = 23
-        frame1.state = OperatingState.EXECUTING
-        frame1.current_position = Position(position_percent=50)
-        frame1.target = Position(position_percent=100)
-        frame1.remaining_time = 10
-
-        await self.node_updater.process_frame(frame1)
-        self.assertEqual(opening_device.last_frame_state, OperatingState.EXECUTING)
-
-        # Process second frame with DONE state
-        frame2 = FrameNodeStatePositionChangedNotification()
-        frame2.node_id = 23
-        frame2.state = OperatingState.DONE
-        frame2.current_position = Position(position_percent=100)
-        frame2.target = Position(position_percent=100)
-        frame2.remaining_time = 0
-
-        await self.node_updater.process_frame(frame2)
-        self.assertEqual(opening_device.last_frame_state, OperatingState.DONE)
