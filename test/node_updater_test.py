@@ -3,11 +3,13 @@ from unittest import IsolatedAsyncioTestCase
 from unittest.mock import MagicMock
 
 from pyvlx import OpeningDevice, Position, PyVLX
-from pyvlx.api.frames import (FrameGetAllNodesInformationNotification,
-                              FrameNodeStatePositionChangedNotification)
+from pyvlx.api.frames import (
+    FrameGetAllNodesInformationNotification,
+    FrameNodeStatePositionChangedNotification)
 from pyvlx.connection import Connection
 from pyvlx.const import OperatingState
 from pyvlx.node_updater import NodeUpdater
+
 
 class TestNodeUpdater(IsolatedAsyncioTestCase):
     """Test class for NodeUpdater."""
