@@ -38,7 +38,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         # Process the frame
         await self.node_updater.process_frame(frame)
         # Verify that last_frame_state was set
-        self.assertEqual(opening_device.last_frame_state, OperatingState.EXECUTING)
+        self.assertEqual(self.opening_device.last_frame_state, OperatingState.EXECUTING)
 
     async def test_last_frame_state_set_on_all_nodes_information(self) -> None:
         """Test that last_frame_state is set when FrameGetAllNodesInformationNotification is received."""
