@@ -22,7 +22,7 @@ class SetLimitation(ApiEvent):
     # If setting only one limit to a value, the other to Ignore, Default or Current, the gateway will reject the Frame.
     def __init__(self, pyvlx: "PyVLX", node_id: int, limitation_value_min: Position = IgnorePosition(),
                  limitation_value_max: Position = IgnorePosition(), limitation_time: LimitationTime = LimitationTimeUnlimited()):
-        """Initialize SceneList class."""
+        """Initialize SetLimitation class."""
         super().__init__(pyvlx=pyvlx)
         self.node_id = node_id
         self.limitation_value_min = limitation_value_min

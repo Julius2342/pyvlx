@@ -164,8 +164,8 @@ class OpeningDevice(Node):
         )
 
     async def set_position_limitations(self,
-                                       position_min: Position = Position(position_percent=0),
-                                       position_max: Position = Position(position_percent=100)) -> None:
+                                       position_min: Position,
+                                       position_max: Position) -> None:
         """Set a minimum and maximum position limit.
 
         Parameters:
@@ -206,7 +206,7 @@ class OpeningDevice(Node):
         await self.after_update()
 
     async def get_limitation_min(self) -> Position:
-        """Request and return minimum limitation."""
+        """Request and return minimum limitation from gateway."""
         command_get_limitation = GetLimitation(
             pyvlx=self.pyvlx,
             node_id=self.node_id,
@@ -221,7 +221,7 @@ class OpeningDevice(Node):
         return self.limitation_min
 
     async def get_limitation_max(self) -> Position:
-        """Request and return maximum limitation."""
+        """Request and return maximum limitation from gateway."""
         command_get_limitation = GetLimitation(
             pyvlx=self.pyvlx,
             node_id=self.node_id,
