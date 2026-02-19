@@ -4,14 +4,18 @@ import datetime
 from asyncio import Task
 from typing import TYPE_CHECKING, Any, Optional
 
+from deprecated import deprecated
+
+from pyvlx.api.get_limitation import GetLimitation
+
 from .api.command_send import CommandSend
-from .api.get_limitation import GetLimitation
-from .const import Velocity
+from .api.set_limitation import SetLimitation
+from .const import LimitationType, Originator, Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, DualRollerShutterPosition, IgnorePosition, Parameter,
-    Position, TargetPosition)
+    CurrentPosition, DualRollerShutterPosition, IgnorePosition, LimitationTime,
+    LimitationTimeClearAll, Parameter, Position, TargetPosition)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -44,6 +48,11 @@ class OpeningDevice(Node):
         )
         self.position: Position = Position(parameter=position_parameter)
         self.target: Position = Position(parameter=position_parameter)
+        self.limitation_min: Position = IgnorePosition()
+        self.limitation_max: Position = IgnorePosition()
+        self.limitation_time: LimitationTime = LimitationTimeClearAll()
+        self.limitation_originator: Originator = Originator.USER
+
         self.is_opening: bool = False
         self.is_closing: bool = False
         self.state_received_at: Optional[datetime.datetime] = None
@@ -154,6 +163,78 @@ class OpeningDevice(Node):
             position=CurrentPosition(), wait_for_completion=wait_for_completion
         )
 
+    async def set_position_limitations(self,
+                                       position_min: Position,
+                                       position_max: Position) -> None:
+        """Set a minimum and maximum position limit.
+
+        Parameters:
+            * min_position: Position object containing the minimum position.
+            * max_position: Position object containing the maximum position.
+        """
+        command_set_limitation = SetLimitation(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            limitation_value_min=position_min,
+            limitation_value_max=position_max
+        )
+        await command_set_limitation.do_api_call()
+        if not command_set_limitation.success:
+            raise PyVLXException("Unable to set limitations")
+        self.limitation_min = position_min
+        self.limitation_max = position_max
+        await self.after_update()
+
+    async def clear_position_limitations(self) -> None:
+        """Clear position limits.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+
+        """
+        command_set_limitation = SetLimitation(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            limitation_time=LimitationTimeClearAll(),
+        )
+        await command_set_limitation.do_api_call()
+        if not command_set_limitation.success:
+            raise PyVLXException("Unable to clear limitations")
+        self.limitation_min = IgnorePosition()
+        self.limitation_max = IgnorePosition()
+        await self.after_update()
+
+    async def get_limitation_min(self) -> Position:
+        """Request and return minimum limitation from gateway."""
+        command_get_limitation = GetLimitation(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            limitation_type=LimitationType.MIN_LIMITATION
+        )
+        await command_get_limitation.do_api_call()
+        if not command_get_limitation.success:
+            raise PyVLXException("Unable to get minimum limitation")
+
+        self.limitation_min = Position(position_percent=command_get_limitation.min_value)
+
+        return self.limitation_min
+
+    async def get_limitation_max(self) -> Position:
+        """Request and return maximum limitation from gateway."""
+        command_get_limitation = GetLimitation(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            limitation_type=LimitationType.MAX_LIMITATION
+        )
+        await command_get_limitation.do_api_call()
+        if not command_get_limitation.success:
+            raise PyVLXException("Unable to get maximum limitation")
+
+        self.limitation_max = Position(position_percent=command_get_limitation.max_value)
+
+        return self.limitation_max
+
     def is_moving(self) -> bool:
         """Return moving state of the cover."""
         return self.is_opening or self.is_closing
@@ -249,8 +330,9 @@ class Window(OpeningDevice):
             self.position,
         )
 
+    @deprecated("Use 'get_limitation_min' instead.")
     async def get_limitation(self) -> GetLimitation:
-        """Return limitation."""
+        """Request minimum limitation and return it as part of the GetLimitation object."""
         get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
         await get_limitation.do_api_call()
         if not get_limitation.success:

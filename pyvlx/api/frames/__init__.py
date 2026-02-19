@@ -67,6 +67,9 @@ from .frame_password_enter import (
     PasswordEnterConfirmationStatus)
 from .frame_reboot import (
     FrameGatewayRebootConfirmation, FrameGatewayRebootRequest)
+from .frame_set_limitation import (
+    FrameSetLimitationConfirmation, FrameSetLimitationRequest,
+    SetLimitationRequestStatus)
 from .frame_set_node_name import (
     FrameSetNodeNameConfirmation, FrameSetNodeNameRequest,
     SetNodeNameConfirmationStatus)

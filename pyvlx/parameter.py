@@ -1,4 +1,5 @@
 """Module for Position class."""
+import math
 from typing import Optional
 
 from .exception import PyVLXException
@@ -389,3 +390,63 @@ class DualRollerShutterPosition(Position):
     def __init__(self) -> None:
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.DUAL_SHUTTER_CURTAINS)
+
+
+class LimitationTime(Parameter):
+    """Class for storing limitation time for position limitation."""
+
+    UNLIMITED = 253
+    CLEAR_MASTER = 254
+    CLEAR_ALL = 255
+
+    def __init__(self,
+                 parameter: Optional[Parameter] = None,
+                 seconds: Optional[int] = None,
+                 limit_raw: Optional[bytes] = None) -> None:
+        """Initialize limitation time from seconds, bus value or another limitation time object."""
+        super().__init__()
+        if parameter is not None:
+            self.from_parameter(parameter)
+        elif limit_raw is not None:
+            self.raw = limit_raw
+        elif seconds is not None:
+            if seconds > 7590:
+                self.raw = bytes([252])
+            else:
+                self.raw = bytes([math.ceil(seconds / 30) - 1])
+        else:
+            self.raw = bytes([LimitationTime.CLEAR_MASTER])
+
+    def __str__(self) -> str:
+        """Return string representation of object."""
+        if self.raw == bytes([LimitationTime.UNLIMITED]):
+            return "UNLIMITED"
+        if self.raw == bytes([LimitationTime.CLEAR_MASTER]):
+            return "CLEAR_MASTER"
+        if self.raw == bytes([LimitationTime.CLEAR_ALL]):
+            return "CLEAR_ALL"
+        return "{} s".format((self.raw[0] + 1) * 30)
+
+
+class LimitationTimeUnlimited(LimitationTime):
+    """Limitation time does not end."""
+
+    def __init__(self) -> None:
+        """Initialize object representing unlimited Time."""
+        super().__init__(limit_raw=bytes([LimitationTime.UNLIMITED]))
+
+
+class LimitationTimeClearMaster(LimitationTime):
+    """Clear all limitation entries for this Master."""
+
+    def __init__(self) -> None:
+        """Initialize object representing clear all limits for master."""
+        super().__init__(limit_raw=bytes([LimitationTime.CLEAR_MASTER]))
+
+
+class LimitationTimeClearAll(LimitationTime):
+    """Clear all limitation entries."""
+
+    def __init__(self) -> None:
+        """Initialize object representing clear all limits."""
+        super().__init__(limit_raw=bytes([LimitationTime.CLEAR_ALL]))
