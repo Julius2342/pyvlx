@@ -51,6 +51,11 @@ Regenerate constraints after dependency intent changes in `pyproject.toml`:
 make requirements
 ```
 
+PR checklist:
+
+- If `pyproject.toml` dependency intent changed (runtime or optional dependency groups), run `make requirements` and commit updated `requirements/*.txt` in the same PR.
+- If dependencies did not change, do not modify `requirements/*.txt`.
+
 Equivalent direct commands:
 
 ```bash
