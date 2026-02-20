@@ -21,7 +21,7 @@ all:
 	@echo ""
 	@echo "build           -- build python package"
 	@echo ""
-	@echo "requirements    -- generate requirements/*.txt from pyproject.toml"
+	@echo "requirements    -- generate requirements/*.txt from requirements/*.in"
 	@echo ""
 	@echo "pypi            -- upload package to pypi"
 	@echo ""
@@ -38,7 +38,7 @@ isort:
 	@isort --check-only test examples pyvlx
 
 mypy:
-	@mypy --install-types --non-interactive pyvlx
+	@mypy pyvlx
 
 build:
 	@python3 -m build
@@ -59,8 +59,8 @@ coverage:
 
 requirements:
 	@python3 -m pip install pip-tools
-	@python3 -m piptools compile --strip-extras pyproject.toml --output-file requirements/production.txt
-	@python3 -m piptools compile --strip-extras pyproject.toml --extra test --extra lint --output-file requirements/testing.txt
-	@python3 -m piptools compile --strip-extras pyproject.toml --extra release --output-file requirements/release.txt
+	@python3 -m piptools compile --strip-extras requirements/production.in --output-file requirements/production.txt
+	@python3 -m piptools compile --strip-extras requirements/testing.in --output-file requirements/testing.txt
+	@python3 -m piptools compile --strip-extras requirements/release.in --output-file requirements/release.txt
 
 .PHONY: test build requirements

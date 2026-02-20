@@ -30,6 +30,7 @@ test = [
     "pytest>=9",
     "pytest-cov>=7",
     "mypy>=1.19",
+    "types-PyYAML>=6.0",
 ]
 lint = [
     "isort>=7",
