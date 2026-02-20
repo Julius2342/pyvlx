@@ -26,7 +26,7 @@ jobs:
       with:
         python-version: "3.x"
     - name: Install build dependencies
-      run: pip install -e .[release] -c requirements/release.txt
+      run: pip install -r requirements/release.txt
     - name: Build a binary wheel and a source tarball
       run: python3 -m build
     - name: Store the distribution packages

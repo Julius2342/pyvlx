@@ -5,6 +5,7 @@ on:
     types: [opened, synchronize, reopened]
     paths:
       - pyproject.toml
+      - requirements/*.in
 
 permissions:
   contents: write
@@ -27,13 +28,13 @@ jobs:
           python-version: "3.x"
 
       - name: Install pip-tools
-        run: python3 -m pip install pip-tools
+        run: python3 -m pip install pip-tools~=7.4
 
       - name: Regenerate requirements
         run: |
-          python3 -m piptools compile --strip-extras pyproject.toml --output-file requirements/production.txt
-          python3 -m piptools compile --strip-extras pyproject.toml --extra test --extra lint --output-file requirements/testing.txt
-          python3 -m piptools compile --strip-extras pyproject.toml --extra release --output-file requirements/release.txt
+          python3 -m piptools compile --strip-extras requirements/production.in --output-file requirements/production.txt
+          python3 -m piptools compile --strip-extras requirements/testing.in --output-file requirements/testing.txt
+          python3 -m piptools compile --strip-extras requirements/release.in --output-file requirements/release.txt
 
       - name: Commit and push if changed
         run: |

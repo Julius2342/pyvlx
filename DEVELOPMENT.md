@@ -7,8 +7,8 @@ This document describes local checks, dependency management, and release-related
 Install development dependencies:
 
 ```bash
-# Test and lint dependencies declared in pyproject.toml, pinned by constraints
-pip install -e .[test,lint] -c requirements/testing.txt
+# Fully locked test/lint environment (including package install)
+pip install -r requirements/testing.txt
 ```
 
 Run the full local check suite:
@@ -36,16 +36,17 @@ make coverage
 
 ## Dependency model
 
-- `pyproject.toml` is the source of truth for dependency intent:
+- `pyproject.toml` is the source of truth for package dependency intent:
   - `project.dependencies` for runtime requirements
   - `project.optional-dependencies.test` and `project.optional-dependencies.lint` for quality checks
   - `project.optional-dependencies.release` for packaging/release tooling
-- `requirements/*.txt` are pinned constraints files for reproducible installs in CI and local development.
+- `requirements/*.in` describe locked environment inputs for `pip-tools`.
+- `requirements/*.txt` are fully pinned lock files for reproducible installs in CI and local development.
 - Generated requirements files are committed.
 
 ## Requirements handling
 
-Regenerate constraints after dependency intent changes in `pyproject.toml`:
+Regenerate lock files after dependency intent changes in `pyproject.toml` or updates to `requirements/*.in`:
 
 ```bash
 make requirements
@@ -54,15 +55,16 @@ make requirements
 PR checklist:
 
 - If `pyproject.toml` dependency intent changed (runtime or optional dependency groups), run `make requirements` and commit updated `requirements/*.txt` in the same PR.
+- If `requirements/*.in` changed, run `make requirements` and commit updated `requirements/*.txt` in the same PR.
 - If dependencies did not change, do not modify `requirements/*.txt`.
 
 Equivalent direct commands:
 
 ```bash
 python3 -m pip install pip-tools
-python3 -m piptools compile --strip-extras pyproject.toml --output-file requirements/production.txt
-python3 -m piptools compile --strip-extras pyproject.toml --extra test --extra lint --output-file requirements/testing.txt
-python3 -m piptools compile --strip-extras pyproject.toml --extra release --output-file requirements/release.txt
+python3 -m piptools compile --strip-extras requirements/production.in --output-file requirements/production.txt
+python3 -m piptools compile --strip-extras requirements/testing.in --output-file requirements/testing.txt
+python3 -m piptools compile --strip-extras requirements/release.in --output-file requirements/release.txt
 ```
 
 ## CI vs manual operations
