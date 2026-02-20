@@ -10,8 +10,8 @@ from .const import Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, DualRollerShutterPosition, IgnorePosition, Parameter,
-    Position, TargetPosition)
+    CurrentPosition, DualRollerShutterPosition, FunctionalParams,
+    IgnorePosition, Parameter, Position, TargetPosition)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -78,7 +78,7 @@ class OpeningDevice(Node):
                 after device has reached target position.
 
         """
-        kwargs: Any = {}
+        fp: FunctionalParams = {}
 
         if (
             velocity is None or velocity is Velocity.DEFAULT
@@ -88,18 +88,18 @@ class OpeningDevice(Node):
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
                 if velocity is Velocity.SILENT:
-                    kwargs["fp1"] = Parameter(raw=b"\x00\x00")
+                    fp["fp1"] = Parameter(raw=b"\x00\x00")
                 else:
-                    kwargs["fp1"] = Parameter(raw=b"\xC8\x00")
+                    fp["fp1"] = Parameter(raw=b"\xC8\x00")
         elif isinstance(velocity, int):
-            kwargs["fp1"] = Position.from_percent(velocity)
+            fp["fp1"] = Position(position_percent=velocity)
 
         command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=position,
-            **kwargs,
+            functional_parameter=fp,
         )
         await command.send()
         await self.after_update()
@@ -313,14 +313,14 @@ class Blind(OpeningDevice):
 
         """
         self.target_position = position
-        kwargs: Any = {}
+        fp: FunctionalParams = {}
 
         if orientation is not None:
-            kwargs["fp3"] = orientation
+            fp["fp3"] = orientation
         elif self.target_position == Position(position_percent=0):
-            kwargs["fp3"] = Position(position_percent=0)
+            fp["fp3"] = Position(position_percent=0)
         else:
-            kwargs["fp3"] = IgnorePosition()
+            fp["fp3"] = IgnorePosition()
 
         if (
             velocity is None or velocity is Velocity.DEFAULT
@@ -330,19 +330,18 @@ class Blind(OpeningDevice):
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
                 if velocity is Velocity.SILENT:
-                    # The above code is declaring a variable called `kwargs`.
-                    kwargs["fp1"] = Parameter(raw=b"\x00\x00")
+                    fp["fp1"] = Parameter(raw=b"\x00\x00")
                 else:
-                    kwargs["fp1"] = Parameter(raw=b"\xC8\x00")
+                    fp["fp1"] = Parameter(raw=b"\xC8\x00")
         elif isinstance(velocity, int):
-            kwargs["fp1"] = Position.from_percent(velocity)
+            fp["fp1"] = Position(position_percent=velocity)
 
         command = CommandSend(
             pyvlx=self.pyvlx,
             node_id=self.node_id,
             parameter=position,
             wait_for_completion=wait_for_completion,
-            **kwargs
+            functional_parameter=fp
         )
         await command.send()
         await self.after_update()
@@ -431,19 +430,17 @@ class Blind(OpeningDevice):
         self.target_orientation = orientation
         self.orientation = orientation
 
-        fp3 = (
-            Position(position_percent=0)
-            if self.target_position == Position(position_percent=0)
-            else self.target_orientation
-        )
+        fp: FunctionalParams = {"fp3":
+                                Position(position_percent=0)
+                                if self.target_position == Position(position_percent=0)
+                                else self.target_orientation}
 
-        print("Orientation in device: %s " % (orientation))
         command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
             node_id=self.node_id,
             parameter=self.target_position,
-            fp3=fp3,
+            functional_parameter=fp,
         )
         await command.send()
         await self.after_update()
@@ -526,18 +523,18 @@ class DualRollerShutter(OpeningDevice):
             * wait_for_completion: If set, function will return
                 after device has reached target position.
         """
-        kwargs: Any = {}
+        fp: FunctionalParams = {}
 
         if curtain == "upper":
             self.target_position = DualRollerShutterPosition()
             self.active_parameter = 1
-            kwargs["fp1"] = position
-            kwargs["fp2"] = TargetPosition()
+            fp["fp1"] = position
+            fp["fp2"] = TargetPosition()
         elif curtain == "lower":
             self.target_position = DualRollerShutterPosition()
             self.active_parameter = 2
-            kwargs["fp1"] = TargetPosition()
-            kwargs["fp2"] = position
+            fp["fp1"] = TargetPosition()
+            fp["fp2"] = position
         else:
             self.target_position = position
             self.active_parameter = 0
@@ -550,11 +547,11 @@ class DualRollerShutter(OpeningDevice):
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
                 if velocity is Velocity.SILENT:
-                    kwargs["fp3"] = Parameter(raw=b"\x00\x00")
+                    fp["fp3"] = Parameter(raw=b"\x00\x00")
                 else:
-                    kwargs["fp3"] = Parameter(raw=b"\xC8\x00")
+                    fp["fp3"] = Parameter(raw=b"\xC8\x00")
         elif isinstance(velocity, int):
-            kwargs["fp3"] = Position.from_percent(velocity)
+            fp["fp3"] = Position(position_percent=velocity)
 
         command = CommandSend(
             pyvlx=self.pyvlx,
@@ -562,7 +559,7 @@ class DualRollerShutter(OpeningDevice):
             node_id=self.node_id,
             parameter=self.target_position,
             active_parameter=self.active_parameter,
-            **kwargs
+            functional_parameter=fp
         )
         await command.send()
         if position.position <= Position.MAX:
