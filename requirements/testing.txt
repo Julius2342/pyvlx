@@ -4,7 +4,7 @@
 #
 #    pip-compile --extra=lint --extra=test --output-file=requirements/testing.txt --strip-extras pyproject.toml
 #
-astroid==4.0.4
+astroid==4.1.0
     # via pylint
 coverage==7.13.4
     # via pytest-cov
