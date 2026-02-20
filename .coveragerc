@@ -1,9 +1,0 @@
-[run]
-source = pyvlx
-
-omit =
-
-
-[report]
-exclude_lines = 
-    if TYPE_CHECKING:

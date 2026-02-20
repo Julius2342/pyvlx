@@ -86,3 +86,15 @@ max-positional-arguments = 7
 ignore = ["E203", "W503", "E226"]
 exclude = [".git", "bin", "lib", "deps", "build"]
 max-line-length = 160
+
+[tool.coverage.run]
+source = ["pyvlx"]
+branch = true
+relative_files = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "if TYPE_CHECKING:",
+]
