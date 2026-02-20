@@ -25,11 +25,11 @@ jobs:
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[test,lint] -c requirements/testing.txt
     - name: Pydocstyle
       run: pydocstyle pyvlx test/*.py examples/*.py
   flake8:
@@ -47,11 +47,11 @@ jobs:
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-flake8-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-flake8-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-flake8-${{ env.cache-name }}-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[test,lint] -c requirements/testing.txt
     - name: Flake8
       run: flake8 
   pylint:
@@ -69,11 +69,11 @@ jobs:
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pylint-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pylint-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-pylint-${{ env.cache-name }}-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[test,lint] -c requirements/testing.txt
     - name: Linter Pylint
       run: pylint pyvlx test/*.py examples/*.py
   isort:
@@ -91,11 +91,11 @@ jobs:
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-isort-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-isort-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-isort-${{ env.cache-name }}-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[test,lint] -c requirements/testing.txt
     - name: Isort
       run: isort --check-only test examples pyvlx
   mypy:
@@ -116,11 +116,11 @@ jobs:
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-mypy-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-mypy-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-mypy-${{ env.cache-name }}-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[test,lint] -c requirements/testing.txt
     - name: Mypy
       run: mypy --install-types --non-interactive pyvlx
   pytest:
@@ -141,13 +141,13 @@ jobs:
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pytest-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pytest-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-pytest-${{ env.cache-name }}-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[test,lint] -c requirements/testing.txt
     - name: pytest
-      run: pytest --cov pyvlx --cov-report xml
+      run: pytest --cov --cov-report xml
 
   notify-build:
     name: Notify build and publish workflow 

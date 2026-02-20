@@ -21,8 +21,29 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "PyYAML",
-    "zeroconf",
+    "PyYAML>=6.0",
+    "zeroconf>=0.148",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=9",
+    "pytest-cov>=7",
+    "mypy>=1.19",
+]
+lint = [
+    "isort>=7",
+    "flake8>=7.3",
+    "flake8-isort>=7",
+    "flake8-pyproject>=1.2",
+    "pydocstyle>=6.3",
+    "pylint>=4",
+]
+release = [
+    "build>=1.4",
+    # Twine is only needed for manual/local uploads (Makefile pypi target);
+    # GitHub Actions publishing uses pypa/gh-action-pypi-publish instead.
+    "twine>=6.2",
 ]
 
 [project.urls]
@@ -86,3 +107,15 @@ max-positional-arguments = 7
 ignore = ["E203", "W503", "E226"]
 exclude = [".git", "bin", "lib", "deps", "build"]
 max-line-length = 160
+
+[tool.coverage.run]
+source = ["pyvlx"]
+branch = true
+relative_files = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "if TYPE_CHECKING:",
+]
