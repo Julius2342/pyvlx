@@ -41,6 +41,9 @@ from .frame_get_scene_list import (
 from .frame_get_state import (
     FrameGetStateConfirmation, FrameGetStateRequest, GatewayState,
     GatewaySubState)
+from .frame_get_systemtable import (
+    FrameGetSystemTableConfirmation, FrameGetSystemTableNotification,
+    FrameGetSystemTableRequest)
 from .frame_get_version import (
     FrameGetVersionConfirmation, FrameGetVersionRequest)
 from .frame_helper import calc_crc, extract_from_frame
