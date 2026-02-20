@@ -23,7 +23,7 @@ ifaddr==0.2.0
     # via zeroconf
 iniconfig==2.3.0
     # via pytest
-isort==7.0.0
+isort==8.0.0
     # via
     #   flake8-isort
     #   pylint
