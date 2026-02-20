@@ -5,6 +5,28 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+  groups:
+    runtime:
+      patterns:
+      - pyyaml
+      - zeroconf
+      - ifaddr
+    qa-tooling:
+      patterns:
+      - pytest*
+      - mypy*
+      - flake8*
+      - isort
+      - pylint
+      - pydocstyle
+    release-tooling:
+      patterns:
+      - build
+      - twine
+      - keyring
+      - readme-renderer
+      - requests*
+      - rich
 
 - package-ecosystem: "github-actions"
   # Directory needs to be "/" even though files are stored `.github/workflows`

@@ -1,0 +1,48 @@
+name: Refresh requirements for Dependabot
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    paths:
+      - pyproject.toml
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh-requirements:
+    if: github.actor == 'dependabot[bot]' && startsWith(github.event.pull_request.head.ref, 'dependabot/pip/')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out PR branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install pip-tools
+        run: python3 -m pip install pip-tools
+
+      - name: Regenerate requirements
+        run: |
+          python3 -m piptools compile --strip-extras pyproject.toml --output-file requirements/production.txt
+          python3 -m piptools compile --strip-extras pyproject.toml --extra test --extra lint --output-file requirements/testing.txt
+          python3 -m piptools compile --strip-extras pyproject.toml --extra release --output-file requirements/release.txt
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- requirements/production.txt requirements/testing.txt requirements/release.txt; then
+            echo "No generated requirements changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add requirements/production.txt requirements/testing.txt requirements/release.txt
+          git commit -m "chore: refresh generated requirements"
+          git push
