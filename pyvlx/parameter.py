@@ -392,7 +392,7 @@ class DualRollerShutterPosition(Position):
         super().__init__(position=Position.DUAL_SHUTTER_CURTAINS)
 
 
-class LimitationTime(Parameter):
+class LimitationTime():
     """Class for storing limitation time for position limitation."""
 
     UNLIMITED = 253
@@ -400,14 +400,11 @@ class LimitationTime(Parameter):
     CLEAR_ALL = 255
 
     def __init__(self,
-                 parameter: Optional[Parameter] = None,
                  seconds: Optional[int] = None,
                  limit_raw: Optional[bytes] = None) -> None:
         """Initialize limitation time from seconds, bus value or another limitation time object."""
         super().__init__()
-        if parameter is not None:
-            self.from_parameter(parameter)
-        elif limit_raw is not None:
+        if limit_raw is not None:
             self.raw = limit_raw
         elif seconds is not None:
             if seconds > 7590:
@@ -426,6 +423,16 @@ class LimitationTime(Parameter):
         if self.raw == bytes([LimitationTime.CLEAR_ALL]):
             return "CLEAR_ALL"
         return "{} s".format((self.raw[0] + 1) * 30)
+
+    def __eq__(self, value: object) -> bool:
+        """Equal operator."""
+        if not isinstance(value, LimitationTime):
+            return NotImplemented
+        return self.raw == value.raw
+
+    def __bytes__(self) -> bytes:
+        """Convert object in byte representation."""
+        return self.raw
 
 
 class LimitationTimeUnlimited(LimitationTime):
