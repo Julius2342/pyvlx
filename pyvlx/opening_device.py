@@ -164,8 +164,8 @@ class OpeningDevice(Node):
         )
 
     async def set_position_limitations(self,
-                                       position_min: Position,
-                                       position_max: Position) -> None:
+                                       position_min: Position = IgnorePosition(),
+                                       position_max: Position = IgnorePosition()) -> None:
         """Set a minimum and maximum position limit.
 
         Parameters:
