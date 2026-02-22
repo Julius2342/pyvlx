@@ -16,6 +16,11 @@ PyVLX can be installed via:
 pip3 install pyvlx
 ```
 
+Development
+-----------
+
+Contributor setup and dependency generation are documented in [DEVELOPMENT.md](DEVELOPMENT.md).
+
 Home Assistant Plugin
 ---------------------
 

@@ -13,19 +13,19 @@ jobs:
   pydocstyle:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Set up Python 3.x
       uses: actions/setup-python@v6
       with:
         python-version: "3.x"        
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-
     - name: Install dependencies
@@ -35,19 +35,19 @@ jobs:
   flake8:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Set up Python 3.x
       uses: actions/setup-python@v6
       with:
         python-version: "3.x"
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-flake8-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-flake8-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-flake8-${{ env.cache-name }}-
     - name: Install dependencies
@@ -57,19 +57,19 @@ jobs:
   pylint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Set up Python 3.x
       uses: actions/setup-python@v6
       with:
         python-version: "3.x"
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pylint-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pylint-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-pylint-${{ env.cache-name }}-
     - name: Install dependencies
@@ -79,19 +79,19 @@ jobs:
   isort:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Set up Python 3.x
       uses: actions/setup-python@v6
       with:
         python-version: "3.x"
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-isort-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-isort-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-isort-${{ env.cache-name }}-
     - name: Install dependencies
@@ -104,50 +104,50 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12", "3.13", "3.14"]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-mypy-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-mypy-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-mypy-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: Mypy
-      run: mypy --install-types --non-interactive pyvlx
+      run: mypy pyvlx
   pytest:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.11", "3.12", "3.13", "3.14"]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       env:
         cache-name: cache-pypi-modules
       with:
         # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pytest-${{ env.cache-name }}-${{ hashFiles('requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pytest-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
         restore-keys: |
           ${{ runner.os }}-pytest-${{ env.cache-name }}-
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: pytest
-      run: pytest --cov pyvlx --cov-report xml
+      run: pytest --cov --cov-report xml
 
   notify-build:
     name: Notify build and publish workflow 
