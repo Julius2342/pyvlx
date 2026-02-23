@@ -8,7 +8,7 @@ and roller shutters.
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, List, Optional
 
 from .api import SetNodeName
-from .const import OperatingState
+from .const import OperatingState, StatusReply
 from .exception import PyVLXException
 
 if TYPE_CHECKING:
@@ -27,6 +27,7 @@ class Node:
         self.name = name
         self.serial_number = serial_number
         self.last_frame_state: Optional[OperatingState] = None
+        self.last_frame_status_reply: Optional[StatusReply] = None
         self.device_updated_cbs: List[CallbackType] = []
         self.pyvlx.connection.register_connection_opened_cb(self.after_update)
         self.pyvlx.connection.register_connection_closed_cb(self.after_update)
