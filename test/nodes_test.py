@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 
 from pyvlx import Blind, Nodes, PyVLX, RollerShutter, Window
 from pyvlx.connection import Connection
+from pyvlx.const import OperatingState, StatusReply
 from pyvlx.node import Node
 
 # pylint: disable=too-many-public-methods,invalid-name
@@ -116,7 +117,9 @@ class TestNodes(unittest.TestCase):
             name="Test Abstract Node",
             serial_number="aa:bb:aa:bb:aa:bb:aa:23",
         )
+        node.last_frame_state = OperatingState.EXECUTING
+        node.last_frame_status_reply = StatusReply.BATTERY_LEVEL
         self.assertEqual(
             str(node),
-            '<Node name="Test Abstract Node" node_id="23" serial_number="aa:bb:aa:bb:aa:bb:aa:23"/>',
+            '<Node name="Test Abstract Node" node_id="23" serial_number="aa:bb:aa:bb:aa:bb:aa:23" last_frame_state="OperatingState.EXECUTING" last_frame_status_reply="StatusReply.BATTERY_LEVEL"/>',
         )
