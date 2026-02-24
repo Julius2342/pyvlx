@@ -121,5 +121,6 @@ class TestNodes(unittest.TestCase):
         node.last_frame_status_reply = StatusReply.BATTERY_LEVEL
         self.assertEqual(
             str(node),
-            '<Node name="Test Abstract Node" node_id="23" serial_number="aa:bb:aa:bb:aa:bb:aa:23" last_frame_state="OperatingState.EXECUTING" last_frame_status_reply="StatusReply.BATTERY_LEVEL"/>',
+            '<Node name="Test Abstract Node" node_id="23" serial_number="aa:bb:aa:bb:aa:bb:aa:23" '
+            'last_frame_state="OperatingState.EXECUTING" last_frame_status_reply="StatusReply.BATTERY_LEVEL"/>',
         )
