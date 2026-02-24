@@ -5,9 +5,7 @@ from unittest.mock import AsyncMock, MagicMock
 from pyvlx import Node, OpeningDevice, PyVLX
 from pyvlx.api.frames import (
     FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification,
-    FrameStatusRequestNotification,
-)
+    FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
 from pyvlx.connection import Connection
 from pyvlx.const import OperatingState, StatusReply
 from pyvlx.node_updater import NodeUpdater
