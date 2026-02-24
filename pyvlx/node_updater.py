@@ -59,7 +59,7 @@ class NodeUpdater:
                     PYVLXLOG.debug("%s orientation changed to: %s", node.name, orientation)
                     changed = True
 
-        if isinstance(node, DualRollerShutter):
+        elif isinstance(node, DualRollerShutter):
             if (
                 # MP, FP1 and FP2 are needed in frame, so check if they are present before accessing them
                 NodeParameter(0) in frame.parameter_data  # MP
