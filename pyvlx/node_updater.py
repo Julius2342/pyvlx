@@ -44,8 +44,9 @@ class NodeUpdater:
 
         if isinstance(node, Blind):
             if (
-                NodeParameter(0) in frame.parameter_data  # MP missing in frame
-                and NodeParameter(3) in frame.parameter_data  # FP3 missing in frame
+                # MP and FP3 are needed in frame, so check if they are present before accessing them
+                NodeParameter(0) in frame.parameter_data  # MP
+                and NodeParameter(3) in frame.parameter_data  # FP3
             ):
                 position = Position(frame.parameter_data[NodeParameter(0)])
                 orientation = Position(frame.parameter_data[NodeParameter(3)])
@@ -60,9 +61,10 @@ class NodeUpdater:
 
         if isinstance(node, DualRollerShutter):
             if (
-                NodeParameter(0) in frame.parameter_data  # MP missing in frame
-                and NodeParameter(1) in frame.parameter_data  # FP1 missing in frame
-                and NodeParameter(2) in frame.parameter_data  # FP2 missing in frame
+                # MP, FP1 and FP2 are needed in frame, so check if they are present before accessing them
+                NodeParameter(0) in frame.parameter_data  # MP
+                and NodeParameter(1) in frame.parameter_data  # FP1
+                and NodeParameter(2) in frame.parameter_data  # FP2
             ):
                 position = Position(frame.parameter_data[NodeParameter(0)])
                 position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
