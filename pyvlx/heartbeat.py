@@ -39,7 +39,7 @@ class Heartbeat:
     async def _start(self) -> None:
         if self.task is not None:
             await self.stop()
-        PYVLXLOG.debug("Heartbeat: initiating")
+        PYVLXLOG.debug("Heartbeat: creating")
         self.task = asyncio.create_task(self._run())
 
     def start(self) -> None:
