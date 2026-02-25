@@ -1,14 +1,16 @@
 """Unit test for NodeUpdater."""
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
 
-from pyvlx import OpeningDevice, PyVLX
+from pyvlx import Node, OpeningDevice, PyVLX
 from pyvlx.api.frames import (
     FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification)
+    FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
 from pyvlx.connection import Connection
-from pyvlx.const import OperatingState
+from pyvlx.const import NodeParameter, OperatingState, StatusReply
 from pyvlx.node_updater import NodeUpdater
+from pyvlx.opening_device import Blind, DualRollerShutter
+from pyvlx.parameter import Parameter, Position
 
 
 class TestNodeUpdater(IsolatedAsyncioTestCase):
@@ -57,3 +59,194 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         # Verify that last_frame_state was set
         self.assertEqual(opening_device.last_frame_state, OperatingState.DONE)
+
+    async def test_process_frame_status_request_notification(self) -> None:
+        """Test process_frame_status_request_notification updates status."""
+        mocked_pyvlx = MagicMock(spec=PyVLX)
+        mocked_node = MagicMock(spec=Node)
+        mocked_node.name = "Test node"
+        mocked_node.node_id = 1
+        mocked_node.last_frame_status_reply = None
+        mocked_node.after_update = AsyncMock()
+        mocked_pyvlx.nodes = {1: mocked_node}
+
+        updater = NodeUpdater(pyvlx=mocked_pyvlx)
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 1
+        frame.status_reply = StatusReply.BATTERY_LEVEL
+
+        await updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(mocked_node.last_frame_status_reply, StatusReply.BATTERY_LEVEL)
+        mocked_node.after_update.assert_awaited_once()
+
+    async def test_process_frame_status_request_notification_no_change(self) -> None:
+        """Test process_frame_status_request_notification without changes."""
+        mocked_pyvlx = MagicMock(spec=PyVLX)
+        mocked_node = MagicMock(spec=Node)
+        mocked_node.name = "Test node"
+        mocked_node.node_id = 1
+        mocked_node.last_frame_status_reply = StatusReply.BATTERY_LEVEL
+        mocked_node.after_update = AsyncMock()
+        mocked_pyvlx.nodes = {1: mocked_node}
+
+        updater = NodeUpdater(pyvlx=mocked_pyvlx)
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 1
+        frame.status_reply = StatusReply.BATTERY_LEVEL
+
+        await updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(mocked_node.last_frame_status_reply, StatusReply.BATTERY_LEVEL)
+        mocked_node.after_update.assert_not_awaited()
+
+    async def test_blind_position_changed_triggers_after_update(self) -> None:
+        """Test that a Blind frame with changed position triggers after_update() once."""
+        blind = Blind(
+            pyvlx=self.pyvlx, node_id=1, name="Test blind", serial_number=None
+        )
+        blind.position = Position(position_percent=0)
+        blind.orientation = Position(position_percent=0)
+        blind.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[1] = blind
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 1
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=50).raw),
+            NodeParameter(3): Parameter(Position(position_percent=75).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(blind.position, Position(position_percent=50))
+        self.assertEqual(blind.orientation, Position(position_percent=75))
+        blind.after_update.assert_awaited_once()
+
+    async def test_blind_no_change_skips_after_update(self) -> None:
+        """Test that a Blind frame with unchanged position and status_reply does not trigger after_update()."""
+        blind = Blind(
+            pyvlx=self.pyvlx, node_id=1, name="Test blind", serial_number=None
+        )
+        blind.position = Position(position_percent=50)
+        blind.orientation = Position(position_percent=75)
+        blind.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        blind.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[1] = blind
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 1
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=50).raw),
+            NodeParameter(3): Parameter(Position(position_percent=75).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        blind.after_update.assert_not_awaited()
+
+    async def test_blind_missing_params_but_status_reply_changed(self) -> None:
+        """Test that a Blind frame with missing MP/FP3 but changed status_reply triggers after_update()."""
+        blind = Blind(
+            pyvlx=self.pyvlx, node_id=1, name="Test blind", serial_number=None
+        )
+        blind.position = Position(position_percent=0)
+        blind.orientation = Position(position_percent=0)
+        blind.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        blind.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[1] = blind
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 1
+        frame.status_reply = StatusReply.BATTERY_LEVEL
+        frame.parameter_data = {}  # No MP or FP3
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        # Position should remain unchanged
+        self.assertEqual(blind.position, Position(position_percent=0))
+        self.assertEqual(blind.orientation, Position(position_percent=0))
+        # But status_reply changed, so after_update should be called
+        self.assertEqual(blind.last_frame_status_reply, StatusReply.BATTERY_LEVEL)
+        blind.after_update.assert_awaited_once()
+
+    async def test_dual_roller_shutter_position_changed_triggers_after_update(self) -> None:
+        """Test that a DualRollerShutter frame with changed positions triggers after_update() once."""
+        shutter = DualRollerShutter(
+            pyvlx=self.pyvlx, node_id=2, name="Test shutter", serial_number=None
+        )
+        shutter.position = Position(position_percent=0)
+        shutter.position_upper_curtain = Position(position_percent=0)
+        shutter.position_lower_curtain = Position(position_percent=0)
+        shutter.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[2] = shutter
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 2
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=30).raw),
+            NodeParameter(1): Parameter(Position(position_percent=40).raw),
+            NodeParameter(2): Parameter(Position(position_percent=60).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(shutter.position, Position(position_percent=30))
+        self.assertEqual(shutter.position_upper_curtain, Position(position_percent=40))
+        self.assertEqual(shutter.position_lower_curtain, Position(position_percent=60))
+        shutter.after_update.assert_awaited_once()
+
+    async def test_dual_roller_shutter_no_change_skips_after_update(self) -> None:
+        """Test that a DualRollerShutter frame with no changes does not trigger after_update()."""
+        shutter = DualRollerShutter(
+            pyvlx=self.pyvlx, node_id=2, name="Test shutter", serial_number=None
+        )
+        shutter.position = Position(position_percent=30)
+        shutter.position_upper_curtain = Position(position_percent=40)
+        shutter.position_lower_curtain = Position(position_percent=60)
+        shutter.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        shutter.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[2] = shutter
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 2
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=30).raw),
+            NodeParameter(1): Parameter(Position(position_percent=40).raw),
+            NodeParameter(2): Parameter(Position(position_percent=60).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        shutter.after_update.assert_not_awaited()
+
+    async def test_dual_roller_shutter_missing_params_but_status_reply_changed(self) -> None:
+        """Test that a DualRollerShutter frame with missing params but changed status_reply triggers after_update()."""
+        shutter = DualRollerShutter(
+            pyvlx=self.pyvlx, node_id=2, name="Test shutter", serial_number=None
+        )
+        shutter.position = Position(position_percent=0)
+        shutter.position_upper_curtain = Position(position_percent=0)
+        shutter.position_lower_curtain = Position(position_percent=0)
+        shutter.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        shutter.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[2] = shutter
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 2
+        frame.status_reply = StatusReply.BATTERY_LEVEL
+        frame.parameter_data = {}  # No MP, FP1, or FP2
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        # Positions unchanged
+        self.assertEqual(shutter.position, Position(position_percent=0))
+        self.assertEqual(shutter.position_upper_curtain, Position(position_percent=0))
+        self.assertEqual(shutter.position_lower_curtain, Position(position_percent=0))
+        # But status_reply changed
+        self.assertEqual(shutter.last_frame_status_reply, StatusReply.BATTERY_LEVEL)
+        shutter.after_update.assert_awaited_once()
