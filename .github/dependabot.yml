@@ -4,7 +4,6 @@ updates:
   directory: "/"
   exclude-paths:
   - "requirements/**"
-  versioning-strategy: increase
   schedule:
     interval: daily
   open-pull-requests-limit: 10
