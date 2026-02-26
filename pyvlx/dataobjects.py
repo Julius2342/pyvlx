@@ -55,10 +55,10 @@ class DtoLocalTime:
         payload += self.localtime.day.to_bytes(1, "big")
         payload += self.localtime.month.to_bytes(1, "big")
         payload += (self.localtime.year - 1900).to_bytes(2, "big")
-        if self.localtime.weekday == 6:
+        if (weekday := self.localtime.weekday()) == 6:
             payload += (0).to_bytes(1, "big")
         else:
-            payload += (self.localtime.weekday() + 1).to_bytes(1, "big")
+            payload += (weekday + 1).to_bytes(1, "big")
         payload += self.localtime.timetuple().tm_yday.to_bytes(2, "big")
         payload += (self.localtime.timetuple().tm_isdst).to_bytes(1, "big", signed=True)
         return payload

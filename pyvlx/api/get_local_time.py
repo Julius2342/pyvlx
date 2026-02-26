@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class GetLocalTime(ApiEvent):
-    """Class for retrieving firmware version from API."""
+    """Class for retrieving local time from API."""
 
     def __init__(self, pyvlx: "PyVLX"):
         """Initialize GetLocalTime class."""
