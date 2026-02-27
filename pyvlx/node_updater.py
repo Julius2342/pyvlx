@@ -153,7 +153,9 @@ class NodeUpdater:
         if isinstance(node, OpeningDevice):
             if position.position <= Parameter.MAX:
                 changed |= _update_property(node, "position", position)
-                changed |= _update_property(node, "target", target)
+                # update target but no need to run callbacks because target
+                #  is only used for internal processing in opening devices
+                _update_property(node, "target", target)
         elif isinstance(node, DimmableDevice):
             intensity = Intensity(frame.current_position)
             if intensity.intensity <= Parameter.MAX:
