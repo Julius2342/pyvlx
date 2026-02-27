@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-def _update_property(node: Any, prop_name: str, new_value: Any) -> bool:
+def _update_property(node: Any, prop_name: str, new_value: Any, log_unchanged: bool = False) -> bool:
     """Update a node property if changed, logging the result.
 
     Returns True if the property was actually changed.
@@ -26,7 +26,8 @@ def _update_property(node: Any, prop_name: str, new_value: Any) -> bool:
         setattr(node, prop_name, new_value)
         PYVLXLOG.debug("%s %s changed to: %s", node.name, prop_name, new_value)
         return True
-    PYVLXLOG.debug("%s %s unchanged: %s", node.name, prop_name, new_value)
+    if log_unchanged:
+        PYVLXLOG.debug("%s %s unchanged: %s", node.name, prop_name, new_value)
     return False
 
 
@@ -46,7 +47,7 @@ class NodeUpdater:
             return
         node = self.pyvlx.nodes[frame.node_id]
 
-        changed = _update_property(node, "last_frame_status_reply", frame.status_reply)
+        changed = _update_property(node, "last_frame_status_reply", new_value=frame.status_reply)
 
         if isinstance(node, Blind):
             if (
@@ -88,14 +89,14 @@ class NodeUpdater:
         """Process FrameGetAllNodesInformationNotification and FrameNodeStatePositionChangedNotification."""
         if frame.node_id not in self.pyvlx.nodes:
             if isinstance(frame, FrameGetAllNodesInformationNotification):
-                PYVLXLOG.info("NodeUpdater: Received node infoframe for unknown node_id %s", frame.node_id)
+                PYVLXLOG.info("NodeUpdater: Received node info frame for unknown node_id %s", frame.node_id)
             else:
                 PYVLXLOG.warning("NodeUpdater: Received node state changed notification for unknown node_id %s", frame.node_id)
             return
         node = self.pyvlx.nodes[frame.node_id]
 
         # Set last_frame_state from frame
-        changed = _update_property(node, "last_frame_state", frame.state)
+        changed = _update_property(node, "last_frame_state", new_value=frame.state)
 
         position = Position(frame.current_position)
         target: Any = Position(frame.target)
@@ -109,8 +110,8 @@ class NodeUpdater:
                 (frame.state == OperatingState.EXECUTING)
                 or frame.remaining_time > 0
             ):
-                node.is_opening = True
-                node.is_closing = False
+                changed |= _update_property(node, "is_opening", new_value=True)
+                changed |= _update_property(node, "is_closing", new_value=False)
                 node.state_received_at = datetime.datetime.now()
                 node.estimated_completion = (
                     node.state_received_at
@@ -125,8 +126,8 @@ class NodeUpdater:
                 (frame.state == OperatingState.EXECUTING)
                 or frame.remaining_time > 0
             ):
-                node.is_closing = True
-                node.is_opening = False
+                changed |= _update_property(node, "is_closing", new_value=True)
+                changed |= _update_property(node, "is_opening", new_value=False)
                 node.state_received_at = datetime.datetime.now()
                 node.estimated_completion = (
                     node.state_received_at
@@ -139,12 +140,12 @@ class NodeUpdater:
                 )
             else:
                 if node.is_opening:
-                    node.is_opening = False
+                    changed |= _update_property(node, "is_opening", new_value=False)
                     node.state_received_at = None
                     node.estimated_completion = None
                     PYVLXLOG.debug("%s stopped opening", node.name)
                 if node.is_closing:
-                    node.is_closing = False
+                    changed |= _update_property(node, "is_closing", new_value=False)
                     node.state_received_at = None
                     node.estimated_completion = None
                     PYVLXLOG.debug("%s stopped closing", node.name)
