@@ -16,6 +16,20 @@ if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
+def _update_property(node: Any, prop_name: str, new_value: Any) -> bool:
+    """Update a node property if changed, logging the result.
+
+    Returns True if the property was actually changed.
+    """
+    current_value = getattr(node, prop_name)
+    if current_value != new_value:
+        setattr(node, prop_name, new_value)
+        PYVLXLOG.debug("%s %s changed to: %s", node.name, prop_name, new_value)
+        return True
+    PYVLXLOG.debug("%s %s unchanged: %s", node.name, prop_name, new_value)
+    return False
+
+
 class NodeUpdater:
     """Class for updating nodes via incoming frames,  usually received by house monitor."""
 
@@ -29,18 +43,12 @@ class NodeUpdater:
         """Process FrameStatusRequestNotification."""
         PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
         if frame.node_id not in self.pyvlx.nodes:
+            PYVLXLOG.warning("NodeUpdater: Received status request notification for unknown node_id %s", frame.node_id)
             return
         node = self.pyvlx.nodes[frame.node_id]
         changed = False
 
-        if node.last_frame_status_reply != frame.status_reply:
-            node.last_frame_status_reply = frame.status_reply
-            PYVLXLOG.debug(
-                "%s last_frame_status_reply changed to: %s",
-                node.name,
-                frame.status_reply,
-            )
-            changed = True
+        changed |= _update_property(node, "last_frame_status_reply", frame.status_reply)
 
         if isinstance(node, Blind):
             if (
@@ -50,14 +58,10 @@ class NodeUpdater:
             ):
                 position = Position(frame.parameter_data[NodeParameter(0)])
                 orientation = Position(frame.parameter_data[NodeParameter(3)])
-                if position.position <= Parameter.MAX and node.position != position:
-                    node.position = position
-                    PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-                    changed = True
-                if orientation.position <= Parameter.MAX and node.orientation != orientation:
-                    node.orientation = orientation
-                    PYVLXLOG.debug("%s orientation changed to: %s", node.name, orientation)
-                    changed = True
+                if position.position <= Parameter.MAX:
+                    changed |= _update_property(node, "position", position)
+                if orientation.position <= Parameter.MAX:
+                    changed |= _update_property(node, "orientation", orientation)
 
         elif isinstance(node, DualRollerShutter):
             if (
@@ -69,26 +73,12 @@ class NodeUpdater:
                 position = Position(frame.parameter_data[NodeParameter(0)])
                 position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
                 position_lower_curtain = Position(frame.parameter_data[NodeParameter(2)])
-                if position.position <= Parameter.MAX and node.position != position:
-                    node.position = position
-                    PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-                    changed = True
-                if position_upper_curtain.position <= Parameter.MAX and node.position_upper_curtain != position_upper_curtain:
-                    node.position_upper_curtain = position_upper_curtain
-                    PYVLXLOG.debug(
-                        "%s position upper curtain changed to: %s",
-                        node.name,
-                        position_upper_curtain,
-                    )
-                    changed = True
-                if position_lower_curtain.position <= Parameter.MAX and node.position_lower_curtain != position_lower_curtain:
-                    node.position_lower_curtain = position_lower_curtain
-                    PYVLXLOG.debug(
-                        "%s position lower curtain changed to: %s",
-                        node.name,
-                        position_lower_curtain,
-                    )
-                    changed = True
+                if position.position <= Parameter.MAX:
+                    changed |= _update_property(node, "position", position)
+                if position_upper_curtain.position <= Parameter.MAX:
+                    changed |= _update_property(node, "position_upper_curtain", position_upper_curtain)
+                if position_lower_curtain.position <= Parameter.MAX:
+                    changed |= _update_property(node, "position_lower_curtain", position_lower_curtain)
 
         if changed:
             await node.after_update()
@@ -104,11 +94,13 @@ class NodeUpdater:
         ):
             PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
             if frame.node_id not in self.pyvlx.nodes:
+                PYVLXLOG.warning("NodeUpdater: Received frame for unknown node_id %s", frame.node_id)
                 return
             node = self.pyvlx.nodes[frame.node_id]
+            changed = False
 
             # Set last_frame_state from frame
-            node.last_frame_state = frame.state
+            changed |= _update_property(node, "last_frame_state", frame.state)
 
             position = Position(frame.current_position)
             target: Any = Position(frame.target)
@@ -159,26 +151,20 @@ class NodeUpdater:
             # Set main parameter
             if isinstance(node, OpeningDevice):
                 if position.position <= Parameter.MAX:
-                    node.position = position
-                    node.target = target
-                    PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-                await node.after_update()
+                    changed |= _update_property(node, "position", position)
+                    changed |= _update_property(node, "target", target)
             elif isinstance(node, DimmableDevice):
                 intensity = Intensity(frame.current_position)
                 if intensity.intensity <= Parameter.MAX:
-                    node.intensity = intensity
-                    PYVLXLOG.debug("%s intensity changed to: %s", node.name, intensity)
-                await node.after_update()
+                    changed |= _update_property(node, "intensity", intensity)
             elif isinstance(node, OnOffSwitch):
                 state = SwitchParameter(frame.current_position)
                 target = SwitchParameter(frame.target)
                 if state.state == target.state:
-                    if state.state == Parameter.ON:
-                        node.parameter = state
-                        PYVLXLOG.debug("%s state changed to: %s", node.name, state)
-                    elif state.state == Parameter.OFF:
-                        node.parameter = state
-                        PYVLXLOG.debug("%s state changed to: %s", node.name, state)
-                    await node.after_update()
+                    if state.state in (Parameter.ON, Parameter.OFF):
+                        changed |= _update_property(node, "parameter", state)
+
+            if changed:
+                await node.after_update()
         elif isinstance(frame, FrameStatusRequestNotification):
             await self.process_frame_status_request_notification(frame)
