@@ -8,6 +8,7 @@ from .api.frames import (
 from .const import NodeParameter, OperatingState
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
+from .node import Node
 from .on_off_switch import OnOffSwitch
 from .opening_device import Blind, DualRollerShutter, OpeningDevice
 from .parameter import Intensity, Parameter, Position, SwitchParameter
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-def _update_property(node: Any, prop_name: str, new_value: Any, log_unchanged: bool = False) -> bool:
+def _set_node_property(node: Node, prop_name: str, new_value: Any, log_unchanged: bool = False) -> bool:
     """Update a node property if changed, logging the result.
 
     Returns True if the property was actually changed.
@@ -47,7 +48,7 @@ class NodeUpdater:
             return
         node = self.pyvlx.nodes[frame.node_id]
 
-        changed = _update_property(node, "last_frame_status_reply", new_value=frame.status_reply)
+        changed = _set_node_property(node, "last_frame_status_reply", new_value=frame.status_reply)
 
         if isinstance(node, Blind):
             if (
@@ -58,9 +59,9 @@ class NodeUpdater:
                 position = Position(frame.parameter_data[NodeParameter(0)])
                 orientation = Position(frame.parameter_data[NodeParameter(3)])
                 if position.position <= Parameter.MAX:
-                    changed |= _update_property(node, "position", position)
+                    changed |= _set_node_property(node, "position", position)
                 if orientation.position <= Parameter.MAX:
-                    changed |= _update_property(node, "orientation", orientation)
+                    changed |= _set_node_property(node, "orientation", orientation)
 
         elif isinstance(node, DualRollerShutter):
             if (
@@ -73,11 +74,11 @@ class NodeUpdater:
                 position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
                 position_lower_curtain = Position(frame.parameter_data[NodeParameter(2)])
                 if position.position <= Parameter.MAX:
-                    changed |= _update_property(node, "position", position)
+                    changed |= _set_node_property(node, "position", position)
                 if position_upper_curtain.position <= Parameter.MAX:
-                    changed |= _update_property(node, "position_upper_curtain", position_upper_curtain)
+                    changed |= _set_node_property(node, "position_upper_curtain", position_upper_curtain)
                 if position_lower_curtain.position <= Parameter.MAX:
-                    changed |= _update_property(node, "position_lower_curtain", position_lower_curtain)
+                    changed |= _set_node_property(node, "position_lower_curtain", position_lower_curtain)
 
         if changed:
             await node.after_update()
@@ -96,7 +97,7 @@ class NodeUpdater:
         node = self.pyvlx.nodes[frame.node_id]
 
         # Set last_frame_state from frame
-        changed = _update_property(node, "last_frame_state", new_value=frame.state)
+        changed = _set_node_property(node, "last_frame_state", new_value=frame.state)
 
         position = Position(frame.current_position)
         target: Any = Position(frame.target)
@@ -110,8 +111,8 @@ class NodeUpdater:
                 (frame.state == OperatingState.EXECUTING)
                 or frame.remaining_time > 0
             ):
-                changed |= _update_property(node, "is_opening", new_value=True)
-                changed |= _update_property(node, "is_closing", new_value=False)
+                changed |= _set_node_property(node, "is_opening", new_value=True)
+                changed |= _set_node_property(node, "is_closing", new_value=False)
                 node.state_received_at = datetime.datetime.now()
                 node.estimated_completion = (
                     node.state_received_at
@@ -126,8 +127,8 @@ class NodeUpdater:
                 (frame.state == OperatingState.EXECUTING)
                 or frame.remaining_time > 0
             ):
-                changed |= _update_property(node, "is_closing", new_value=True)
-                changed |= _update_property(node, "is_opening", new_value=False)
+                changed |= _set_node_property(node, "is_closing", new_value=True)
+                changed |= _set_node_property(node, "is_opening", new_value=False)
                 node.state_received_at = datetime.datetime.now()
                 node.estimated_completion = (
                     node.state_received_at
@@ -140,12 +141,12 @@ class NodeUpdater:
                 )
             else:
                 if node.is_opening:
-                    changed |= _update_property(node, "is_opening", new_value=False)
+                    changed |= _set_node_property(node, "is_opening", new_value=False)
                     node.state_received_at = None
                     node.estimated_completion = None
                     PYVLXLOG.debug("%s stopped opening", node.name)
                 if node.is_closing:
-                    changed |= _update_property(node, "is_closing", new_value=False)
+                    changed |= _set_node_property(node, "is_closing", new_value=False)
                     node.state_received_at = None
                     node.estimated_completion = None
                     PYVLXLOG.debug("%s stopped closing", node.name)
@@ -153,20 +154,20 @@ class NodeUpdater:
         # Set main parameter
         if isinstance(node, OpeningDevice):
             if position.position <= Parameter.MAX:
-                changed |= _update_property(node, "position", position)
+                changed |= _set_node_property(node, "position", position)
                 # update target but no need to run callbacks because target
                 #  is only used for internal processing in opening devices
-                _update_property(node, "target", target)
+                _set_node_property(node, "target", target)
         elif isinstance(node, DimmableDevice):
             intensity = Intensity(frame.current_position)
             if intensity.intensity <= Parameter.MAX:
-                changed |= _update_property(node, "intensity", intensity)
+                changed |= _set_node_property(node, "intensity", intensity)
         elif isinstance(node, OnOffSwitch):
             state = SwitchParameter(frame.current_position)
             target = SwitchParameter(frame.target)
             if state.state == target.state:
                 if state.state in (Parameter.ON, Parameter.OFF):
-                    changed |= _update_property(node, "parameter", state)
+                    changed |= _set_node_property(node, "parameter", state)
 
         if changed:
             await node.after_update()
