@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Iterator, List, Optional, Union
 
 from .api import GetAllNodesInformation, GetNodeInformation
 from .exception import PyVLXException
+from .log import PYVLXLOG
 from .node import Node
 from .node_helper import convert_frame_to_node
 
@@ -59,8 +60,10 @@ class Nodes:
         for i, j in enumerate(self.__nodes):
             if j.node_id == node.node_id:
                 self.__nodes[i] = node
+                PYVLXLOG.debug("Replaced node with node_id %s", node.node_id)
                 return
         self.__nodes.append(node)
+        PYVLXLOG.debug("Added node with node_id %s", node.node_id)
 
     def clear(self) -> None:
         """Clear internal node array."""
