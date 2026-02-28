@@ -4,7 +4,8 @@ from typing import TYPE_CHECKING, Any
 
 from .api.frames import (
     FrameBase, FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
+    FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification,
+    FrameCommandRunStatusNotification)
 from .const import NodeParameter, OperatingState
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
@@ -182,3 +183,22 @@ class NodeUpdater:
                     await node.after_update()
         elif isinstance(frame, FrameStatusRequestNotification):
             await self.process_frame_status_request_notification(frame)
+
+        elif isinstance(frame, FrameCommandRunStatusNotification):
+
+            node_id = frame.node_parameter
+
+            if node_id not in self.pyvlx.nodes:
+                return
+
+            node = self.pyvlx.nodes[node_id]
+
+            node.last_frame_run_status = frame.run_status
+
+            PYVLXLOG.info(
+                "%s last_frame_run_status changed to: %s",
+                node.name,
+                frame.run_status,
+            )
+
+            await node.after_update()
