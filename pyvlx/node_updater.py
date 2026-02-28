@@ -31,48 +31,66 @@ class NodeUpdater:
         if frame.node_id not in self.pyvlx.nodes:
             return
         node = self.pyvlx.nodes[frame.node_id]
-        if isinstance(node, Blind):
-            if NodeParameter(0) not in frame.parameter_data:  # MP missing in frame
-                return
-            if NodeParameter(3) not in frame.parameter_data:  # FP3 missing in frame
-                return
-            position = Position(frame.parameter_data[NodeParameter(0)])
-            orientation = Position(frame.parameter_data[NodeParameter(3)])
-            if position.position <= Parameter.MAX:
-                node.position = position
-                PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-            if orientation.position <= Parameter.MAX:
-                node.orientation = orientation
-                PYVLXLOG.debug("%s orientation changed to: %s", node.name, orientation)
-            await node.after_update()
+        changed = False
 
-        if isinstance(node, DualRollerShutter):
-            if NodeParameter(0) not in frame.parameter_data:  # MP missing in frame
-                return
-            if NodeParameter(1) not in frame.parameter_data:  # FP1 missing in frame
-                return
-            if NodeParameter(2) not in frame.parameter_data:  # FP2 missing in frame
-                return
-            position = Position(frame.parameter_data[NodeParameter(0)])
-            position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
-            position_lower_curtain = Position(frame.parameter_data[NodeParameter(2)])
-            if position.position <= Parameter.MAX:
-                node.position = position
-                PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-            if position_upper_curtain.position <= Parameter.MAX:
-                node.position_upper_curtain = position_upper_curtain
-                PYVLXLOG.debug(
-                    "%s position upper curtain changed to: %s",
-                    node.name,
-                    position_upper_curtain,
-                )
-            if position_lower_curtain.position <= Parameter.MAX:
-                node.position_lower_curtain = position_lower_curtain
-                PYVLXLOG.debug(
-                    "%s position lower curtain changed to: %s",
-                    node.name,
-                    position_lower_curtain,
-                )
+        if node.last_frame_status_reply != frame.status_reply:
+            node.last_frame_status_reply = frame.status_reply
+            PYVLXLOG.debug(
+                "%s last_frame_status_reply changed to: %s",
+                node.name,
+                frame.status_reply,
+            )
+            changed = True
+
+        if isinstance(node, Blind):
+            if (
+                # MP and FP3 are needed in frame, so check if they are present before accessing them
+                NodeParameter(0) in frame.parameter_data  # MP
+                and NodeParameter(3) in frame.parameter_data  # FP3
+            ):
+                position = Position(frame.parameter_data[NodeParameter(0)])
+                orientation = Position(frame.parameter_data[NodeParameter(3)])
+                if position.position <= Parameter.MAX and node.position != position:
+                    node.position = position
+                    PYVLXLOG.debug("%s position changed to: %s", node.name, position)
+                    changed = True
+                if orientation.position <= Parameter.MAX and node.orientation != orientation:
+                    node.orientation = orientation
+                    PYVLXLOG.debug("%s orientation changed to: %s", node.name, orientation)
+                    changed = True
+
+        elif isinstance(node, DualRollerShutter):
+            if (
+                # MP, FP1 and FP2 are needed in frame, so check if they are present before accessing them
+                NodeParameter(0) in frame.parameter_data  # MP
+                and NodeParameter(1) in frame.parameter_data  # FP1
+                and NodeParameter(2) in frame.parameter_data  # FP2
+            ):
+                position = Position(frame.parameter_data[NodeParameter(0)])
+                position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
+                position_lower_curtain = Position(frame.parameter_data[NodeParameter(2)])
+                if position.position <= Parameter.MAX and node.position != position:
+                    node.position = position
+                    PYVLXLOG.debug("%s position changed to: %s", node.name, position)
+                    changed = True
+                if position_upper_curtain.position <= Parameter.MAX and node.position_upper_curtain != position_upper_curtain:
+                    node.position_upper_curtain = position_upper_curtain
+                    PYVLXLOG.debug(
+                        "%s position upper curtain changed to: %s",
+                        node.name,
+                        position_upper_curtain,
+                    )
+                    changed = True
+                if position_lower_curtain.position <= Parameter.MAX and node.position_lower_curtain != position_lower_curtain:
+                    node.position_lower_curtain = position_lower_curtain
+                    PYVLXLOG.debug(
+                        "%s position lower curtain changed to: %s",
+                        node.name,
+                        position_lower_curtain,
+                    )
+                    changed = True
+
+        if changed:
             await node.after_update()
 
     async def process_frame(self, frame: FrameBase) -> None:
