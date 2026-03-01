@@ -3,7 +3,8 @@ import datetime
 from typing import TYPE_CHECKING, Any, Union
 
 from .api.frames import (
-    FrameBase, FrameCommandRunStatusNotification,
+    FrameBase,
+    FrameCommandRunStatusNotification,
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification,
     FrameStatusRequestNotification)
