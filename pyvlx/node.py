@@ -8,7 +8,7 @@ and roller shutters.
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, List, Optional
 
 from .api import SetNodeName
-from .const import OperatingState, StatusReply
+from .const import OperatingState, RunStatus, StatusReply
 from .exception import PyVLXException
 
 if TYPE_CHECKING:
