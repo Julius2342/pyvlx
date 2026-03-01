@@ -37,7 +37,8 @@ from .frames import (
     FrameSessionFinishedNotification, FrameSetNodeNameConfirmation,
     FrameSetNodeNameRequest, FrameSetUTCConfirmation, FrameSetUTCRequest,
     FrameStatusRequestConfirmation, FrameStatusRequestNotification,
-    FrameStatusRequestRequest, extract_from_frame)
+    FrameStatusRequestRequest, FrameWinkSendConfirmation,
+    FrameWinkSendNotification, FrameWinkSendRequest, extract_from_frame)
 
 
 def frame_from_raw(raw: bytes) -> Optional[FrameBase]:
@@ -61,6 +62,12 @@ def create_frame(command: Command) -> Optional[FrameBase]:
     # pylint: disable=too-many-branches,too-many-return-statements,too-many-statements
     if command == Command.GW_ERROR_NTF:
         return FrameErrorNotification()
+    if command == Command.GW_WINK_SEND_REQ:
+        return FrameWinkSendRequest()
+    if command == Command.GW_WINK_SEND_CFM:
+        return FrameWinkSendConfirmation()
+    if command == Command.GW_WINK_SEND_NTF:
+        return FrameWinkSendNotification()
     if command == Command.GW_COMMAND_SEND_REQ:
         return FrameCommandSendRequest()
     if command == Command.GW_COMMAND_SEND_CFM:

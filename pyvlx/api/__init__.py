@@ -21,3 +21,4 @@ from .password_enter import PasswordEnter
 from .reboot import Reboot
 from .set_node_name import SetNodeName
 from .set_utc import SetUTC
+from .wink_send import WinkSend
