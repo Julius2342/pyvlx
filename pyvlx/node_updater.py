@@ -259,7 +259,7 @@ class NodeUpdater:
         self,
         frame: FrameCommandRunStatusNotification,
     ) -> None:
-        PYVLXLOG.info(
+        PYVLXLOG.debug(
             "RunStatusNTF raw: index_id=%s node_parameter=%s run_status=%s status_reply=%s session_id=%s",
             frame.index_id,
             frame.node_parameter,
@@ -288,7 +288,7 @@ class NodeUpdater:
             return
 
         node = self.pyvlx.nodes[node_id]
-        PYVLXLOG.info(
+        PYVLXLOG.debug(
             "RunStatusNTF mapped via %s: node_id=%s -> node_name=%s run_status=%s",
             id_source,
             node_id,
