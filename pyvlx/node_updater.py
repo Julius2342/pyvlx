@@ -6,7 +6,7 @@ from .api.frames import (
     FrameBase, FrameCommandRunStatusNotification,
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
-from .const import NodeParameter, OperatingState
+from .const import NodeParameter, OperatingState, RunStatus
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
 from .on_off_switch import OnOffSwitch
