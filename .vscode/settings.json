@@ -3,5 +3,9 @@
         "test"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "flake8.args": [
+        "--ignore=E203,W503,E226,E501",
+        "--max-line-length=1000"
+    ]
 }

@@ -3,9 +3,12 @@ import datetime
 from typing import TYPE_CHECKING, Any, Union
 
 from .api.frames import (
-    FrameBase, FrameCommandRunStatusNotification,
+    FrameBase,
+    FrameCommandRunStatusNotification,
     FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
+    FrameNodeStatePositionChangedNotification,
+    FrameStatusRequestNotification,
+)
 from .const import NodeParameter, OperatingState
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
@@ -30,8 +33,23 @@ class NodeUpdater:
         """Process FrameStatusRequestNotification."""
         PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
         if frame.node_id not in self.pyvlx.nodes:
+            PYVLXLOG.debug(
+                "StatusRequest ignored: unknown node_id=%s session_id=%s run_status=%s status_reply=%s",
+                frame.node_id,
+                frame.session_id,
+                frame.run_status,
+                frame.status_reply,
+            )
             return
         node = self.pyvlx.nodes[frame.node_id]
+        PYVLXLOG.debug(
+            "StatusRequest mapped: node_id=%s node_name=%s session_id=%s run_status=%s status_reply=%s",
+            frame.node_id,
+            node.name,
+            frame.session_id,
+            frame.run_status,
+            frame.status_reply,
+        )
         changed = False
 
         if node.last_frame_status_reply != frame.status_reply:
@@ -40,6 +58,16 @@ class NodeUpdater:
                 "%s last_frame_status_reply changed to: %s",
                 node.name,
                 frame.status_reply,
+            )
+            changed = True
+
+        if node.last_frame_run_status != frame.run_status:
+            node.last_frame_run_status = frame.run_status
+            PYVLXLOG.debug(
+                "%s last_frame_run_status changed to: %s (via status_request, session_id=%s)",
+                node.name,
+                frame.run_status,
+                frame.session_id,
             )
             changed = True
 
@@ -231,21 +259,46 @@ class NodeUpdater:
         self,
         frame: FrameCommandRunStatusNotification,
     ) -> None:
-        node_id = frame.node_parameter
-        if node_id is None:
-            return
+        PYVLXLOG.info(
+            "RunStatusNTF raw: index_id=%s node_parameter=%s run_status=%s status_reply=%s session_id=%s",
+            frame.index_id,
+            frame.node_parameter,
+            frame.run_status,
+            frame.status_reply,
+            frame.session_id,
+        )
 
-        if node_id not in self.pyvlx.nodes:
+        node_id = None
+        id_source = None
+
+        if frame.index_id in self.pyvlx.nodes:
+            node_id = frame.index_id
+            id_source = "index_id"
+        elif frame.node_parameter in self.pyvlx.nodes:
+            node_id = frame.node_parameter
+            id_source = "node_parameter"
+
+        if node_id is None:
+            PYVLXLOG.warning(
+                "RunStatusNTF dropped: index_id=%s node_parameter=%s not in nodes. Available node_ids: %s",
+                frame.index_id,
+                frame.node_parameter,
+                list(self.pyvlx.nodes.keys()),
+            )
             return
 
         node = self.pyvlx.nodes[node_id]
-        node.last_frame_run_status = frame.run_status
         PYVLXLOG.info(
-            "%s last_frame_run_status changed to: %s",
+            "RunStatusNTF mapped via %s: node_id=%s -> node_name=%s run_status=%s",
+            id_source,
+            node_id,
             node.name,
             frame.run_status,
         )
-        await node.after_update()
+
+        if node.last_frame_run_status != frame.run_status:
+            node.last_frame_run_status = frame.run_status
+            await node.after_update()
 
     async def process_frame(self, frame: FrameBase) -> None:
         """Update nodes via frame, usually received by house monitor."""
