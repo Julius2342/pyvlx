@@ -3,12 +3,10 @@ import datetime
 from typing import TYPE_CHECKING, Any, Union
 
 from .api.frames import (
-    FrameBase,
-    FrameCommandRunStatusNotification,
+    FrameBase, FrameCommandRunStatusNotification,
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification,
-    FrameStatusRequestNotification,
-)
+    FrameStatusRequestNotification)
 from .const import NodeParameter, OperatingState
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
@@ -271,10 +269,10 @@ class NodeUpdater:
         node_id = None
         id_source = None
 
-        if frame.index_id in self.pyvlx.nodes:
+        if frame.index_id is not None and frame.index_id in self.pyvlx.nodes:
             node_id = frame.index_id
             id_source = "index_id"
-        elif frame.node_parameter in self.pyvlx.nodes:
+        elif frame.node_parameter is not None and frame.node_parameter in self.pyvlx.nodes:
             node_id = frame.node_parameter
             id_source = "node_parameter"
 
@@ -283,7 +281,7 @@ class NodeUpdater:
                 "RunStatusNTF dropped: index_id=%s node_parameter=%s not in nodes. Available node_ids: %s",
                 frame.index_id,
                 frame.node_parameter,
-                list(self.pyvlx.nodes.keys()),
+                [node.node_id for node in self.pyvlx.nodes],
             )
             return
 
