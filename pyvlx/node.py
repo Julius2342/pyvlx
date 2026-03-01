@@ -9,10 +9,8 @@ from typing import TYPE_CHECKING, Any, Awaitable, Callable, List, Optional
 
 from .api import SetNodeName, WinkSend
 from .const import (
-    OperatingState,
-    RunStatus,
-    StatusReply,
-    WinkTime)
+    OperatingState, RunStatus,
+    StatusReply, WinkTime)
 from .exception import PyVLXException
 
 if TYPE_CHECKING:
