@@ -3,10 +3,8 @@ import datetime
 from typing import TYPE_CHECKING, Any, Union
 
 from .api.frames import (
-    FrameBase,
-    FrameCommandRunStatusNotification,
-    FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification,
+    FrameBase, FrameCommandRunStatusNotification,
+    FrameGetAllNodesInformationNotification, FrameNodeStatePositionChangedNotification,
     FrameStatusRequestNotification)
 from .const import NodeParameter, OperatingState
 from .dimmable_device import DimmableDevice
