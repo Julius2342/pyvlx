@@ -231,6 +231,8 @@ class NodeUpdater:
         frame: FrameCommandRunStatusNotification,
     ) -> None:
         node_id = frame.index_id
+        if node_id is None:
+            return
         if node_id not in self.pyvlx.nodes:
             return
 
