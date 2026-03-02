@@ -707,6 +707,7 @@ class LimitationTime(Enum):
     CLEAR_ALL = 255  # Clear all limitations
 
     def __str__(self) -> str:
+        """Return string representation of object."""
         return self.name
 
     @classmethod
