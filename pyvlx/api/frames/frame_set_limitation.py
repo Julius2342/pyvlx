@@ -3,8 +3,8 @@
 from enum import Enum
 from typing import Optional
 
-from pyvlx.const import Command, Originator, Priority
-from pyvlx.parameter import LimitationTime, Position
+from pyvlx.const import Command, LimitationTime, Originator, Priority
+from pyvlx.parameter import Position
 
 from .frame import FrameBase
 
@@ -48,7 +48,7 @@ class FrameSetLimitationRequest(FrameBase):
         ret += bytes([self.parameter_id])
         ret += bytes(self.limitation_value_min)
         ret += bytes(self.limitation_value_max)
-        ret += bytes(self.limitation_time)
+        ret += bytes([self.limitation_time.value])
         return ret
 
     def __str__(self) -> str:

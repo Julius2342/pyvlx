@@ -6,8 +6,8 @@ from pyvlx import (
     Awning, Blade, Blind, CurrentPosition, OpeningDevice, Parameter, Position,
     PyVLX, RollerShutter, Window)
 from pyvlx.connection import Connection
-from pyvlx.const import LimitationType, Velocity
-from pyvlx.parameter import IgnorePosition, LimitationTimeClearAll
+from pyvlx.const import LimitationTime, LimitationType, Velocity
+from pyvlx.parameter import IgnorePosition
 
 
 # pylint: disable=too-many-public-methods,invalid-name
@@ -125,7 +125,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
         mock_set_limitation.assert_called_once_with(
             pyvlx=self.mocked_pyvlx,
             node_id=23,
-            limitation_time=LimitationTimeClearAll()
+            limitation_time=LimitationTime.CLEAR_ALL
         )
         mock_set_limitation_instance.do_api_call.assert_awaited_once()
         after_update.assert_awaited_once()

@@ -10,12 +10,12 @@ from pyvlx.api.get_limitation import GetLimitation
 
 from .api.command_send import CommandSend
 from .api.set_limitation import SetLimitation
-from .const import LimitationType, Originator, Velocity
+from .const import LimitationTime, LimitationType, Originator, Velocity
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
-    CurrentPosition, DualRollerShutterPosition, IgnorePosition, LimitationTime,
-    LimitationTimeClearAll, Parameter, Position, TargetPosition)
+    CurrentPosition, DualRollerShutterPosition, IgnorePosition, Parameter,
+    Position, TargetPosition)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -50,7 +50,7 @@ class OpeningDevice(Node):
         self.target: Position = Position(parameter=position_parameter)
         self.limitation_min: Position = IgnorePosition()
         self.limitation_max: Position = IgnorePosition()
-        self.limitation_time: LimitationTime = LimitationTimeClearAll()
+        self.limitation_time: LimitationTime = LimitationTime.CLEAR_ALL
         self.limitation_originator: Originator = Originator.USER
 
         self.is_opening: bool = False
@@ -196,7 +196,7 @@ class OpeningDevice(Node):
         command_set_limitation = SetLimitation(
             pyvlx=self.pyvlx,
             node_id=self.node_id,
-            limitation_time=LimitationTimeClearAll(),
+            limitation_time=LimitationTime.CLEAR_ALL,
         )
         await command_set_limitation.do_api_call()
         if not command_set_limitation.success:

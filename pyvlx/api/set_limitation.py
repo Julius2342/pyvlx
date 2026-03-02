@@ -1,10 +1,9 @@
 """Module for setting limitation value."""
 from typing import TYPE_CHECKING, Optional
 
-from pyvlx.const import Originator
+from pyvlx.const import LimitationTime, Originator
 
-from ..parameter import (
-    IgnorePosition, LimitationTime, LimitationTimeUnlimited, Position)
+from ..parameter import IgnorePosition, Position
 from .api_event import ApiEvent
 from .frames import (
     FrameBase, FrameSetLimitationConfirmation, FrameSetLimitationRequest,
@@ -21,7 +20,7 @@ class SetLimitation(ApiEvent):
     # NOTE: Required to always set both limits at the same time.
     # If setting only one limit to a value, the other to Ignore, Default or Current, the gateway will reject the Frame.
     def __init__(self, pyvlx: "PyVLX", node_id: int, limitation_value_min: Position = IgnorePosition(),
-                 limitation_value_max: Position = IgnorePosition(), limitation_time: LimitationTime = LimitationTimeUnlimited()):
+                 limitation_value_max: Position = IgnorePosition(), limitation_time: LimitationTime = LimitationTime.UNLIMITED):
         """Initialize SetLimitation class."""
         super().__init__(pyvlx=pyvlx)
         self.node_id = node_id

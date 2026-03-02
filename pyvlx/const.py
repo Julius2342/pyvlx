@@ -697,3 +697,17 @@ class StatusType(Enum):
     @classmethod
     def _missing_(cls, value: object) -> Any:
         return cls.REQUEST_UNKNOWN
+
+
+class LimitationTime(Enum):
+    """Enum class for Limitation Time special values."""
+
+    UNLIMITED = 253  # No limitation time
+    CLEAR_ALL = 255  # Clear all limitations
+
+    def __str__(self) -> str:
+        return self.name
+
+    @classmethod
+    def _missing_(cls, value: object) -> Any:
+        return cls.UNLIMITED
