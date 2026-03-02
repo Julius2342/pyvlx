@@ -19,14 +19,14 @@ class Heartbeat:
         self, pyvlx: "PyVLX", interval: int = 30, load_all_states: bool = True
     ):
         """Initialize Heartbeat object."""
-        PYVLXLOG.debug("Heartbeat __init__")
+        PYVLXLOG.debug("Heartbeat: initialize")
         self.pyvlx = pyvlx
         self.interval = interval
         self.load_all_states = load_all_states
         self.task: Any = None
 
     async def _run(self) -> None:
-        PYVLXLOG.debug("Heartbeat: task started")
+        PYVLXLOG.debug("Heartbeat: started")
         while True:
             PYVLXLOG.debug("Heartbeat: sleeping")
             await asyncio.sleep(self.interval)
@@ -39,12 +39,12 @@ class Heartbeat:
     async def _start(self) -> None:
         if self.task is not None:
             await self.stop()
-        PYVLXLOG.debug("Heartbeat: creating task")
+        PYVLXLOG.debug("Heartbeat: creating")
         self.task = asyncio.create_task(self._run())
 
     def start(self) -> None:
         """Start heartbeat."""
-        PYVLXLOG.debug("Heartbeat start")
+        PYVLXLOG.debug("Heartbeat: starting")
         asyncio.run_coroutine_threadsafe(self._start(), self.pyvlx.loop)
 
     @property
@@ -57,13 +57,13 @@ class Heartbeat:
         if self.task is not None:
             self.task.cancel()
             self.task = None
-            PYVLXLOG.debug("Heartbeat stopped")
+            PYVLXLOG.debug("Heartbeat: stopped")
         else:
-            PYVLXLOG.debug("Heartbeat was not running")
+            PYVLXLOG.debug("Heartbeat: was not running")
 
     async def pulse(self) -> None:
         """Send get state request to API to keep the connection alive."""
-        PYVLXLOG.debug("Heartbeat pulse")
+        PYVLXLOG.debug("Heartbeat: pulse")
         get_state = GetState(pyvlx=self.pyvlx)
         await get_state.do_api_call()
         if not get_state.success:

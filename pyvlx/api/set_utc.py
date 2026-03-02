@@ -12,10 +12,10 @@ if TYPE_CHECKING:
 class SetUTC(ApiEvent):
     """Class for setting UTC time within gateway."""
 
-    def __init__(self, pyvlx: "PyVLX", timestamp: float = time.time()):
+    def __init__(self, pyvlx: "PyVLX", timestamp: float | None = None):
         """Initialize SetUTC class."""
         super().__init__(pyvlx=pyvlx)
-        self.timestamp = timestamp
+        self.timestamp = timestamp if timestamp is not None else time.time()
         self.success = False
 
     async def handle_frame(self, frame: FrameBase) -> bool:

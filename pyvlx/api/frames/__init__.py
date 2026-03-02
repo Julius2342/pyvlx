@@ -77,3 +77,6 @@ from .frame_set_utc import FrameSetUTCConfirmation, FrameSetUTCRequest
 from .frame_status_request import (
     FrameStatusRequestConfirmation, FrameStatusRequestNotification,
     FrameStatusRequestRequest)
+from .frame_wink_send import (
+    FrameWinkSendConfirmation, FrameWinkSendNotification, FrameWinkSendRequest,
+    WinkSendConfirmationStatus)

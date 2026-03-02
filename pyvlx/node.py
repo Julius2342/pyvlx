@@ -7,7 +7,8 @@ and roller shutters.
 """
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, List, Optional
 
-from .api import SetNodeName
+from .api import SetNodeName, WinkSend
+from .const import OperatingState, StatusReply, WinkTime
 from .exception import PyVLXException
 
 if TYPE_CHECKING:
@@ -25,6 +26,8 @@ class Node:
         self.node_id = node_id
         self.name = name
         self.serial_number = serial_number
+        self.last_frame_state: Optional[OperatingState] = None
+        self.last_frame_status_reply: Optional[StatusReply] = None
         self.device_updated_cbs: List[CallbackType] = []
         self.pyvlx.connection.register_connection_opened_cb(self.after_update)
         self.pyvlx.connection.register_connection_closed_cb(self.after_update)
@@ -51,6 +54,16 @@ class Node:
             raise PyVLXException("Unable to rename node")
         self.name = name
 
+    async def wink(self, wink_time: WinkTime = WinkTime.BY_MANUFACTURER, wait_for_completion: bool = True) -> None:
+        """Identify node by making it wink."""
+        wink_send = WinkSend(
+            pyvlx=self.pyvlx,
+            node_id=self.node_id,
+            wink_time=wink_time,
+            wait_for_completion=wait_for_completion,
+        )
+        await wink_send.wink()
+
     @property
     def is_available(self) -> bool:
         """Return True if node is available."""
@@ -59,11 +72,11 @@ class Node:
     def __str__(self) -> str:
         """Return object as readable string."""
         return (
-            '<{} name="{}" '
-            'node_id="{}" '
-            'serial_number="{}"/>'.format(
-                type(self).__name__, self.name, self.node_id, self.serial_number
-            )
+            f'<{type(self).__name__} name="{self.name}" '
+            f'node_id="{self.node_id}" '
+            f'serial_number="{self.serial_number}" '
+            f'last_frame_state="{self.last_frame_state}" '
+            f'last_frame_status_reply="{self.last_frame_status_reply}"/>'
         )
 
     def __eq__(self, other: Any) -> bool:
