@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 from pyvlx import Node, OpeningDevice, PyVLX
 from pyvlx.api.frames import (
-    FrameGetAllNodesInformationNotification,
+    FrameCommandRunStatusNotification, FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
 from pyvlx.connection import Connection
 from pyvlx.const import NodeParameter, OperatingState, RunStatus, StatusReply
@@ -260,3 +260,62 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         # But status_reply changed
         self.assertEqual(shutter.last_frame_status_reply, StatusReply.BATTERY_LEVEL)
         shutter.after_update.assert_awaited_once()
+
+    async def test_process_command_run_status_notification(self) -> None:
+        """Test process_frame with FrameCommandRunStatusNotification updates node and calls after_update."""
+        mocked_pyvlx = MagicMock(spec=PyVLX)
+        mocked_node = MagicMock(spec=Node)
+        mocked_node.name = "Test node"
+        mocked_node.node_id = 5
+        mocked_node.last_frame_run_status = None
+        mocked_node.last_frame_status_reply = None
+        mocked_node.after_update = AsyncMock()
+        mocked_pyvlx.nodes = {5: mocked_node}
+
+        updater = NodeUpdater(pyvlx=mocked_pyvlx)
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 5
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await updater.process_frame(frame)
+
+        self.assertEqual(mocked_node.last_frame_run_status, RunStatus.EXECUTION_COMPLETED)
+        self.assertEqual(mocked_node.last_frame_status_reply, StatusReply.COMMAND_COMPLETED_OK)
+        mocked_node.after_update.assert_awaited_once()
+
+    async def test_process_command_run_status_notification_none_index_id(self) -> None:
+        """Test process_frame with FrameCommandRunStatusNotification with None index_id returns early."""
+        mocked_pyvlx = MagicMock(spec=PyVLX)
+        mocked_node = MagicMock(spec=Node)
+        mocked_node.after_update = AsyncMock()
+        mocked_pyvlx.nodes = {5: mocked_node}
+
+        updater = NodeUpdater(pyvlx=mocked_pyvlx)
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = None
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await updater.process_frame(frame)
+
+        # after_update should NOT be called
+        mocked_node.after_update.assert_not_awaited()
+
+    async def test_process_command_run_status_notification_unknown_node_id(self) -> None:
+        """Test process_frame with FrameCommandRunStatusNotification with unknown node_id returns early."""
+        mocked_pyvlx = MagicMock(spec=PyVLX)
+        mocked_node = MagicMock(spec=Node)
+        mocked_node.after_update = AsyncMock()
+        mocked_pyvlx.nodes = {5: mocked_node}
+
+        updater = NodeUpdater(pyvlx=mocked_pyvlx)
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 99  # unknown node
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await updater.process_frame(frame)
+
+        # after_update should NOT be called
+        mocked_node.after_update.assert_not_awaited()

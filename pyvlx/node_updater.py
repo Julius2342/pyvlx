@@ -110,11 +110,12 @@ class NodeUpdater:
         position: Position,
         target: Position,
     ) -> None:
-        if (position.position > target.position <= Parameter.MAX) and (
+        if (position.position <= Parameter.MAX and position.position > target.position and target.position <= Parameter.MAX) and (
             (frame.state == OperatingState.EXECUTING)
             or frame.remaining_time > 0
         ):
             node.is_opening = True
+            node.is_closing = False
             PYVLXLOG.debug("%s is opening", node.name)
             node.state_received_at = datetime.datetime.now()
             node.estimated_completion = (
@@ -122,15 +123,16 @@ class NodeUpdater:
                 + datetime.timedelta(0, frame.remaining_time)
             )
             PYVLXLOG.debug(
-                "%s will be opening until", node.estimated_completion
+                "%s will be opening until %s", node.name, node.estimated_completion
             )
             return
 
-        if (position.position < target.position <= Parameter.MAX) and (
+        if (position.position <= Parameter.MAX and position.position < target.position and target.position <= Parameter.MAX) and (
             (frame.state == OperatingState.EXECUTING)
             or frame.remaining_time > 0
         ):
             node.is_closing = True
+            node.is_opening = False
             PYVLXLOG.debug("%s is closing", node.name)
             node.state_received_at = datetime.datetime.now()
             node.estimated_completion = (
@@ -138,7 +140,7 @@ class NodeUpdater:
                 + datetime.timedelta(0, frame.remaining_time)
             )
             PYVLXLOG.debug(
-                "%s will be closing until", node.estimated_completion
+                "%s will be closing until %s", node.name, node.estimated_completion
             )
             return
 
