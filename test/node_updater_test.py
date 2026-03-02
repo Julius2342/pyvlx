@@ -7,7 +7,7 @@ from pyvlx.api.frames import (
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
 from pyvlx.connection import Connection
-from pyvlx.const import NodeParameter, OperatingState, StatusReply
+from pyvlx.const import NodeParameter, OperatingState, RunStatus, StatusReply
 from pyvlx.node_updater import NodeUpdater
 from pyvlx.opening_device import Blind, DualRollerShutter
 from pyvlx.parameter import Parameter, Position
@@ -67,6 +67,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         mocked_node.name = "Test node"
         mocked_node.node_id = 1
         mocked_node.last_frame_status_reply = None
+        mocked_node.last_frame_run_status = None
         mocked_node.after_update = AsyncMock()
         mocked_pyvlx.nodes = {1: mocked_node}
 
@@ -87,6 +88,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         mocked_node.name = "Test node"
         mocked_node.node_id = 1
         mocked_node.last_frame_status_reply = StatusReply.BATTERY_LEVEL
+        mocked_node.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
         mocked_node.after_update = AsyncMock()
         mocked_pyvlx.nodes = {1: mocked_node}
 
@@ -107,6 +109,8 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         )
         blind.position = Position(position_percent=0)
         blind.orientation = Position(position_percent=0)
+        blind.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        blind.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
         blind.after_update = AsyncMock()  # type: ignore[method-assign]
         self.pyvlx.nodes[1] = blind
 
@@ -132,6 +136,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         blind.position = Position(position_percent=50)
         blind.orientation = Position(position_percent=75)
         blind.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        blind.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
         blind.after_update = AsyncMock()  # type: ignore[method-assign]
         self.pyvlx.nodes[1] = blind
 
@@ -155,6 +160,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         blind.position = Position(position_percent=0)
         blind.orientation = Position(position_percent=0)
         blind.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        blind.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
         blind.after_update = AsyncMock()  # type: ignore[method-assign]
         self.pyvlx.nodes[1] = blind
 
@@ -180,6 +186,8 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         shutter.position = Position(position_percent=0)
         shutter.position_upper_curtain = Position(position_percent=0)
         shutter.position_lower_curtain = Position(position_percent=0)
+        shutter.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        shutter.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
         shutter.after_update = AsyncMock()  # type: ignore[method-assign]
         self.pyvlx.nodes[2] = shutter
 
@@ -208,6 +216,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         shutter.position_upper_curtain = Position(position_percent=40)
         shutter.position_lower_curtain = Position(position_percent=60)
         shutter.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        shutter.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
         shutter.after_update = AsyncMock()  # type: ignore[method-assign]
         self.pyvlx.nodes[2] = shutter
 
@@ -233,6 +242,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         shutter.position_upper_curtain = Position(position_percent=0)
         shutter.position_lower_curtain = Position(position_percent=0)
         shutter.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        shutter.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
         shutter.after_update = AsyncMock()  # type: ignore[method-assign]
         self.pyvlx.nodes[2] = shutter
 
