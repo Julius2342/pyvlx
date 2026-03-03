@@ -28,19 +28,27 @@ class NodeUpdater:
         self, frame: FrameStatusRequestNotification
     ) -> None:
         """Process FrameStatusRequestNotification."""
+        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
+
         if frame.node_id not in self.pyvlx.nodes:
             return
         node = self.pyvlx.nodes[frame.node_id]
 
-        status_reply_changed = node.last_frame_status_reply != frame.status_reply
-        run_status_changed = node.last_frame_run_status != frame.run_status
-
-        if status_reply_changed:
+        if (status_reply_changed := node.last_frame_status_reply != frame.status_reply):
             node.last_frame_status_reply = frame.status_reply
-        if run_status_changed:
+            PYVLXLOG.debug(
+                "%s last_frame_status_reply changed to: %s",
+                node.name,
+                frame.status_reply,
+            )
+        if (run_status_changed := node.last_frame_run_status != frame.run_status):
             node.last_frame_run_status = frame.run_status
-
-        something_changed = status_reply_changed or run_status_changed
+            PYVLXLOG.debug(
+                "%s last_frame_run_status changed to: %s",
+                node.name,
+                frame.run_status,
+            )
+        node_changed = status_reply_changed or run_status_changed
 
         if isinstance(node, Blind):
             if (
@@ -53,11 +61,11 @@ class NodeUpdater:
                 if position.position <= Parameter.MAX and node.position != position:
                     node.position = position
                     PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-                    something_changed = True
+                    node_changed = True
                 if orientation.position <= Parameter.MAX and node.orientation != orientation:
                     node.orientation = orientation
                     PYVLXLOG.debug("%s orientation changed to: %s", node.name, orientation)
-                    something_changed = True
+                    node_changed = True
 
         elif isinstance(node, DualRollerShutter):
             if (
@@ -73,7 +81,7 @@ class NodeUpdater:
                 if position.position <= Parameter.MAX and node.position != position:
                     node.position = position
                     PYVLXLOG.debug("%s position changed to: %s", node.name, position)
-                    something_changed = True
+                    node_changed = True
                 if (
                     position_upper_curtain.position <= Parameter.MAX
                     and node.position_upper_curtain != position_upper_curtain
@@ -84,7 +92,7 @@ class NodeUpdater:
                         node.name,
                         position_upper_curtain,
                     )
-                    something_changed = True
+                    node_changed = True
                 if (
                     position_lower_curtain.position <= Parameter.MAX
                     and node.position_lower_curtain != position_lower_curtain
@@ -95,9 +103,9 @@ class NodeUpdater:
                         node.name,
                         position_lower_curtain,
                     )
-                    something_changed = True
+                    node_changed = True
 
-        if something_changed:
+        if node_changed:
             await node.after_update()
 
     def _update_opening_device_status(
@@ -127,7 +135,7 @@ class NodeUpdater:
             )
             return
 
-        if (position.position <= Parameter.MAX and position.position < target.position and target.position <= Parameter.MAX) and (
+        if (position.position < target.position <= Parameter.MAX) and (
             (frame.state == OperatingState.EXECUTING)
             or frame.remaining_time > 0
         ):
@@ -239,8 +247,17 @@ class NodeUpdater:
             return
 
         node = self.pyvlx.nodes[node_id]
-        node.last_frame_run_status = frame.run_status
-        node.last_frame_status_reply = frame.status_reply
+
+        run_status_changed = node.last_frame_run_status != frame.run_status
+        status_reply_changed = node.last_frame_status_reply != frame.status_reply
+        if not (run_status_changed or status_reply_changed):
+            return
+
+        if run_status_changed:
+            node.last_frame_run_status = frame.run_status
+        if status_reply_changed:
+            node.last_frame_status_reply = frame.status_reply
+
         await node.after_update()
 
     async def process_frame(self, frame: FrameBase) -> None:
