@@ -6,7 +6,8 @@ from pyvlx import (
     Awning, Blade, Blind, CurrentPosition, OpeningDevice, Parameter, Position,
     PyVLX, RollerShutter, Window)
 from pyvlx.connection import Connection
-from pyvlx.const import Velocity
+from pyvlx.const import LimitationTime, LimitationType, Velocity
+from pyvlx.parameter import IgnorePosition
 
 
 # pylint: disable=too-many-public-methods,invalid-name
@@ -59,6 +60,119 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
         set_position.assert_awaited_once_with(
             position=CurrentPosition(),
             wait_for_completion=wait_for_completion)
+
+    @patch("pyvlx.opening_device.SetLimitation")
+    @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
+    async def test_set_position_limitations(self, after_update: AsyncMock, mock_set_limitation: MagicMock) -> None:
+        """Test set_position_limitations of OpeningDevice object."""
+        opening_device = OpeningDevice(pyvlx=self.mocked_pyvlx, node_id=23, name="Test device")
+        position_min = Position(position_percent=10)
+        position_max = Position(position_percent=90)
+
+        mock_set_limitation_instance = AsyncMock()
+        mock_set_limitation_instance.success = True
+        mock_set_limitation.return_value = mock_set_limitation_instance
+        await opening_device.set_position_limitations(position_min=position_min, position_max=position_max)
+
+        mock_set_limitation.assert_called_once_with(
+            pyvlx=self.mocked_pyvlx,
+            node_id=23,
+            limitation_value_min=position_min,
+            limitation_value_max=position_max
+        )
+        mock_set_limitation.return_value.do_api_call.assert_awaited_once()
+        after_update.assert_awaited_once()
+        self.assertEqual(opening_device.limitation_min, position_min)
+        self.assertEqual(opening_device.limitation_max, position_max)
+
+    @patch("pyvlx.opening_device.SetLimitation")
+    @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
+    async def test_set_position_limitations_default(self, after_update: AsyncMock, mock_set_limitation: MagicMock) -> None:
+        """Test set_position_limitations of OpeningDevice object with default parameters."""
+        opening_device = OpeningDevice(pyvlx=self.mocked_pyvlx, node_id=23, name="Test device")
+
+        mock_set_limitation_instance = AsyncMock()
+        mock_set_limitation_instance.success = True
+        mock_set_limitation.return_value = mock_set_limitation_instance
+
+        await opening_device.set_position_limitations()
+
+        mock_set_limitation.assert_called_once_with(
+            pyvlx=self.mocked_pyvlx,
+            node_id=23,
+            limitation_value_min=IgnorePosition(),
+            limitation_value_max=IgnorePosition()
+        )
+        mock_set_limitation_instance.do_api_call.assert_awaited_once()
+        after_update.assert_awaited_once()
+        self.assertEqual(opening_device.limitation_min, IgnorePosition())
+        self.assertEqual(opening_device.limitation_max, IgnorePosition())
+
+    @patch("pyvlx.opening_device.SetLimitation")
+    @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
+    async def test_clear_position_limitations(self, after_update: AsyncMock, mock_set_limitation: MagicMock) -> None:
+        """Test clear_position_limitations of OpeningDevice object."""
+        opening_device = OpeningDevice(pyvlx=self.mocked_pyvlx, node_id=23, name="Test device")
+        opening_device.limitation_min = Position(position_percent=10)
+        opening_device.limitation_max = Position(position_percent=90)
+
+        mock_set_limitation_instance = AsyncMock()
+        mock_set_limitation_instance.success = True
+        mock_set_limitation.return_value = mock_set_limitation_instance
+
+        await opening_device.clear_position_limitations()
+
+        mock_set_limitation.assert_called_once_with(
+            pyvlx=self.mocked_pyvlx,
+            node_id=23,
+            limitation_time=LimitationTime.CLEAR_ALL
+        )
+        mock_set_limitation_instance.do_api_call.assert_awaited_once()
+        after_update.assert_awaited_once()
+        self.assertEqual(opening_device.limitation_min, IgnorePosition())
+        self.assertEqual(opening_device.limitation_max, IgnorePosition())
+
+    @patch("pyvlx.opening_device.GetLimitation")
+    async def test_get_limitation_min(self, mock_get_limitation: MagicMock) -> None:
+        """Test get_limitation_min of OpeningDevice object."""
+        opening_device = OpeningDevice(pyvlx=self.mocked_pyvlx, node_id=23, name="Test device")
+
+        mock_get_limitation_instance = AsyncMock()
+        mock_get_limitation_instance.success = True
+        mock_get_limitation_instance.min_value = 10
+        mock_get_limitation.return_value = mock_get_limitation_instance
+
+        result = await opening_device.get_limitation_min()
+
+        mock_get_limitation.assert_called_once_with(
+            pyvlx=self.mocked_pyvlx,
+            node_id=23,
+            limitation_type=LimitationType.MIN_LIMITATION
+        )
+        mock_get_limitation_instance.do_api_call.assert_awaited_once()
+        self.assertEqual(result, Position(position_percent=10))
+        self.assertEqual(opening_device.limitation_min, Position(position_percent=10))
+
+    @patch("pyvlx.opening_device.GetLimitation")
+    async def test_get_limitation_max(self, mock_get_limitation: MagicMock) -> None:
+        """Test get_limitation_max of OpeningDevice object."""
+        opening_device = OpeningDevice(pyvlx=self.mocked_pyvlx, node_id=23, name="Test device")
+
+        mock_get_limitation_instance = AsyncMock()
+        mock_get_limitation_instance.success = True
+        mock_get_limitation_instance.max_value = 90
+        mock_get_limitation.return_value = mock_get_limitation_instance
+
+        result = await opening_device.get_limitation_max()
+
+        mock_get_limitation.assert_called_once_with(
+            pyvlx=self.mocked_pyvlx,
+            node_id=23,
+            limitation_type=LimitationType.MAX_LIMITATION
+        )
+        mock_get_limitation_instance.do_api_call.assert_awaited_once()
+        self.assertEqual(result, Position(position_percent=90))
+        self.assertEqual(opening_device.limitation_max, Position(position_percent=90))
 
     def test_window_str(self) -> None:
         """Test string representation of Window object."""
