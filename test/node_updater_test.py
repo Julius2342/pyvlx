@@ -96,11 +96,119 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         frame = FrameStatusRequestNotification()
         frame.node_id = 1
         frame.status_reply = StatusReply.BATTERY_LEVEL
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
 
         await updater.process_frame_status_request_notification(frame)
 
         self.assertEqual(mocked_node.last_frame_status_reply, StatusReply.BATTERY_LEVEL)
+        self.assertEqual(mocked_node.last_frame_run_status, RunStatus.EXECUTION_COMPLETED)
         mocked_node.after_update.assert_not_awaited()
+
+    async def test_process_frame_status_request_notification_run_status_changed(self) -> None:
+        """Test that run_status change triggers after_update and updates last_frame_run_status."""
+        mocked_pyvlx = MagicMock(spec=PyVLX)
+        mocked_node = MagicMock(spec=Node)
+        mocked_node.name = "Test node"
+        mocked_node.node_id = 1
+        mocked_node.last_frame_status_reply = StatusReply.BATTERY_LEVEL
+        mocked_node.last_frame_run_status = RunStatus.EXECUTION_ACTIVE
+        mocked_node.after_update = AsyncMock()
+        mocked_pyvlx.nodes = {1: mocked_node}
+
+        updater = NodeUpdater(pyvlx=mocked_pyvlx)
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 1
+        frame.status_reply = StatusReply.BATTERY_LEVEL
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+
+        await updater.process_frame_status_request_notification(frame)
+
+        # Verify run_status was updated
+        self.assertEqual(mocked_node.last_frame_run_status, RunStatus.EXECUTION_COMPLETED)
+        self.assertEqual(mocked_node.last_frame_status_reply, StatusReply.BATTERY_LEVEL)
+        # Verify after_update was called
+        mocked_node.after_update.assert_awaited_once()
+
+    async def test_process_frame_status_request_notification_status_reply_changed(self) -> None:
+        """Test that status_reply change triggers after_update and updates last_frame_status_reply."""
+        mocked_pyvlx = MagicMock(spec=PyVLX)
+        mocked_node = MagicMock(spec=Node)
+        mocked_node.name = "Test node"
+        mocked_node.node_id = 1
+        mocked_node.last_frame_status_reply = StatusReply.BATTERY_LEVEL
+        mocked_node.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
+        mocked_node.after_update = AsyncMock()
+        mocked_pyvlx.nodes = {1: mocked_node}
+
+        updater = NodeUpdater(pyvlx=mocked_pyvlx)
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 1
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+
+        await updater.process_frame_status_request_notification(frame)
+
+        # Verify status_reply was updated
+        self.assertEqual(mocked_node.last_frame_status_reply, StatusReply.UNKNOWN_STATUS_REPLY)
+        self.assertEqual(mocked_node.last_frame_run_status, RunStatus.EXECUTION_COMPLETED)
+        # Verify after_update was called
+        mocked_node.after_update.assert_awaited_once()
+
+    async def test_process_frame_status_request_notification_both_changed(self) -> None:
+        """Test that both status_reply and run_status changes trigger after_update once."""
+        mocked_pyvlx = MagicMock(spec=PyVLX)
+        mocked_node = MagicMock(spec=Node)
+        mocked_node.name = "Test node"
+        mocked_node.node_id = 1
+        mocked_node.last_frame_status_reply = StatusReply.BATTERY_LEVEL
+        mocked_node.last_frame_run_status = RunStatus.EXECUTION_ACTIVE
+        mocked_node.after_update = AsyncMock()
+        mocked_pyvlx.nodes = {1: mocked_node}
+
+        updater = NodeUpdater(pyvlx=mocked_pyvlx)
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 1
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+
+        await updater.process_frame_status_request_notification(frame)
+
+        # Verify both were updated
+        self.assertEqual(mocked_node.last_frame_status_reply, StatusReply.UNKNOWN_STATUS_REPLY)
+        self.assertEqual(mocked_node.last_frame_run_status, RunStatus.EXECUTION_COMPLETED)
+        # Verify after_update was called only once despite both changing
+        mocked_node.after_update.assert_awaited_once()
+
+    async def test_blind_run_status_persisted_with_position_change(self) -> None:
+        """Test that last_frame_run_status is persisted when Blind position also changes."""
+        blind = Blind(
+            pyvlx=self.pyvlx, node_id=1, name="Test blind", serial_number=None
+        )
+        blind.position = Position(position_percent=0)
+        blind.orientation = Position(position_percent=0)
+        blind.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        blind.last_frame_run_status = RunStatus.EXECUTION_ACTIVE
+        blind.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[1] = blind
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 1
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=50).raw),
+            NodeParameter(3): Parameter(Position(position_percent=75).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        # Verify position changed
+        self.assertEqual(blind.position, Position(position_percent=50))
+        self.assertEqual(blind.orientation, Position(position_percent=75))
+        # Verify run_status was persisted
+        self.assertEqual(blind.last_frame_run_status, RunStatus.EXECUTION_COMPLETED)
+        # Verify after_update was called
+        blind.after_update.assert_awaited_once()
 
     async def test_blind_position_changed_triggers_after_update(self) -> None:
         """Test that a Blind frame with changed position triggers after_update() once."""
