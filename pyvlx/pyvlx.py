@@ -8,6 +8,7 @@ and roller shutters.
 import asyncio
 from typing import Optional
 
+from ._version import version as v
 from .api import get_limitation
 from .api.frames import FrameBase
 from .config import Config
@@ -20,7 +21,6 @@ from .log import PYVLXLOG
 from .node_updater import NodeUpdater
 from .nodes import Nodes
 from .scenes import Scenes
-from ._version import version as v
 
 
 class PyVLX:
