@@ -67,6 +67,7 @@ pyvlx = ["py.typed"]
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
 local_scheme = "no-local-version"
+version_file = "pyvlx/_version.py"
 
 [tool.mypy]
 show_error_codes = true
