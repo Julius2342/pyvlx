@@ -237,7 +237,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         blind.after_update.assert_awaited_once()
 
     async def test_blind_no_change_skips_after_update(self) -> None:
-        """Test that a Blind frame with unchanged position and status_reply does not trigger after_update()."""
+        """Test that a Blind frame with unchanged position, status_reply and run_status does not trigger after_update()."""
         blind = Blind(
             pyvlx=self.pyvlx, node_id=1, name="Test blind", serial_number=None
         )
@@ -251,6 +251,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         frame = FrameStatusRequestNotification()
         frame.node_id = 1
         frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
         frame.parameter_data = {
             NodeParameter(0): Parameter(Position(position_percent=50).raw),
             NodeParameter(3): Parameter(Position(position_percent=75).raw),
@@ -316,7 +317,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         shutter.after_update.assert_awaited_once()
 
     async def test_dual_roller_shutter_no_change_skips_after_update(self) -> None:
-        """Test that a DualRollerShutter frame with no changes does not trigger after_update()."""
+        """Test that a DualRollerShutter frame with unchanged positions, status_reply and run_status does not trigger after_update()."""
         shutter = DualRollerShutter(
             pyvlx=self.pyvlx, node_id=2, name="Test shutter", serial_number=None
         )
@@ -331,6 +332,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         frame = FrameStatusRequestNotification()
         frame.node_id = 2
         frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
         frame.parameter_data = {
             NodeParameter(0): Parameter(Position(position_percent=30).raw),
             NodeParameter(1): Parameter(Position(position_percent=40).raw),
