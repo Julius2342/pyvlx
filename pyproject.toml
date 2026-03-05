@@ -78,11 +78,12 @@ check_untyped_defs = true
 
 [tool.isort]
 multi_line_output = 4
-skip = ["old_api"]
+skip = ["old_api", "_version.py"]
 
 [tool.pylint.main]
 max-branches = 20
 max-statements = 55
+ignore-paths = ["pyvlx/_version.py"]
 
 [tool.pylint.messages_control]
 disable = [
