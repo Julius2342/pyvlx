@@ -1,9 +1,10 @@
 """Module for updating nodes via frames."""
 import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Union
 
 from .api.frames import (
-    FrameBase, FrameGetAllNodesInformationNotification,
+    FrameBase, FrameCommandRunStatusNotification,
+    FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
 from .const import NodeParameter, OperatingState
 from .dimmable_device import DimmableDevice
@@ -48,7 +49,9 @@ class NodeUpdater:
             return
         node = self.pyvlx.nodes[frame.node_id]
 
-        changed = _set_node_property(node, "last_frame_status_reply", new_value=frame.status_reply)
+        node_changed = False
+        node_changed |= _set_node_property(node, "last_frame_status_reply", new_value=frame.status_reply)
+        node_changed |= _set_node_property(node, "last_frame_run_status", new_value=frame.run_status)
 
         if isinstance(node, Blind):
             if (
@@ -59,13 +62,14 @@ class NodeUpdater:
                 position = Position(frame.parameter_data[NodeParameter(0)])
                 orientation = Position(frame.parameter_data[NodeParameter(3)])
                 if position.position <= Parameter.MAX:
-                    changed |= _set_node_property(node, "position", position)
+                    node_changed |= _set_node_property(node, "position", position)
                 if orientation.position <= Parameter.MAX:
-                    changed |= _set_node_property(node, "orientation", orientation)
+                    node_changed |= _set_node_property(node, "orientation", orientation)
 
         elif isinstance(node, DualRollerShutter):
             if (
-                # MP, FP1 and FP2 are needed in frame, so check if they are present before accessing them
+                # MP, FP1 and FP2 are needed in frame,
+                # so check if they are present before accessing them
                 NodeParameter(0) in frame.parameter_data  # MP
                 and NodeParameter(1) in frame.parameter_data  # FP1
                 and NodeParameter(2) in frame.parameter_data  # FP2
@@ -74,108 +78,167 @@ class NodeUpdater:
                 position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
                 position_lower_curtain = Position(frame.parameter_data[NodeParameter(2)])
                 if position.position <= Parameter.MAX:
-                    changed |= _set_node_property(node, "position", position)
+                    node_changed |= _set_node_property(node, "position", position)
                 if position_upper_curtain.position <= Parameter.MAX:
-                    changed |= _set_node_property(node, "position_upper_curtain", position_upper_curtain)
+                    node_changed |= _set_node_property(node, "position_upper_curtain", position_upper_curtain)
                 if position_lower_curtain.position <= Parameter.MAX:
-                    changed |= _set_node_property(node, "position_lower_curtain", position_lower_curtain)
+                    node_changed |= _set_node_property(node, "position_lower_curtain", position_lower_curtain)
 
-        if changed:
+        if node_changed:
             await node.after_update()
 
-    async def process_frame_node_state_changed(
+    def _update_opening_device_status(
         self,
-        frame: FrameGetAllNodesInformationNotification | FrameNodeStatePositionChangedNotification,
+        node: OpeningDevice,
+        frame: Union[
+            FrameGetAllNodesInformationNotification,
+            FrameNodeStatePositionChangedNotification,
+        ],
+        position: Position,
+        target: Position,
     ) -> None:
-        """Process FrameGetAllNodesInformationNotification and FrameNodeStatePositionChangedNotification."""
-        if frame.node_id not in self.pyvlx.nodes:
-            if isinstance(frame, FrameGetAllNodesInformationNotification):
-                PYVLXLOG.info("NodeUpdater: Received node info frame for unknown node_id %s", frame.node_id)
-            else:
-                PYVLXLOG.warning("NodeUpdater: Received node state changed notification for unknown node_id %s", frame.node_id)
+        if (position.position <= Parameter.MAX and position.position > target.position and target.position <= Parameter.MAX) and (
+            (frame.state == OperatingState.EXECUTING)
+            or frame.remaining_time > 0
+        ):
+            node.is_opening = True
+            node.is_closing = False
+            PYVLXLOG.debug("%s is opening", node.name)
+            node.state_received_at = datetime.datetime.now()
+            node.estimated_completion = (
+                node.state_received_at
+                + datetime.timedelta(0, frame.remaining_time)
+            )
+            PYVLXLOG.debug(
+                "%s will be opening until %s", node.name, node.estimated_completion
+            )
             return
-        node = self.pyvlx.nodes[frame.node_id]
 
-        # Set last_frame_state from frame
-        changed = _set_node_property(node, "last_frame_state", new_value=frame.state)
+        if (position.position < target.position <= Parameter.MAX) and (
+            (frame.state == OperatingState.EXECUTING)
+            or frame.remaining_time > 0
+        ):
+            node.is_closing = True
+            node.is_opening = False
+            PYVLXLOG.debug("%s is closing", node.name)
+            node.state_received_at = datetime.datetime.now()
+            node.estimated_completion = (
+                node.state_received_at
+                + datetime.timedelta(0, frame.remaining_time)
+            )
+            PYVLXLOG.debug(
+                "%s will be closing until %s", node.name, node.estimated_completion
+            )
+            return
 
-        position = Position(frame.current_position)
-        target: Any = Position(frame.target)
-        # For functional parameters the KLF basically always transmits 'No feed-back value known' (0xF7FF).
-        # In home assistant this causes unreasonable values like -23%. Therefore a check is implemented
-        # whether the frame parameter is inside the maximum range.
+        if node.is_opening:
+            node.is_opening = False
+            node.state_received_at = None
+            node.estimated_completion = None
+            PYVLXLOG.debug("%s stops opening", node.name)
+        if node.is_closing:
+            node.is_closing = False
+            PYVLXLOG.debug("%s stops closing", node.name)
 
-        # Set opening device status
-        if isinstance(node, OpeningDevice):
-            if (position.position > target.position <= Parameter.MAX) and (
-                (frame.state == OperatingState.EXECUTING)
-                or frame.remaining_time > 0
-            ):
-                changed |= _set_node_property(node, "is_opening", new_value=True)
-                changed |= _set_node_property(node, "is_closing", new_value=False)
-                node.state_received_at = datetime.datetime.now()
-                node.estimated_completion = (
-                    node.state_received_at
-                    + datetime.timedelta(0, frame.remaining_time)
-                )
-                PYVLXLOG.debug(
-                    "%s is opening (%s->%s), estimated completion in %ss at %s",
-                    node.name, position, target,
-                    frame.remaining_time, node.estimated_completion
-                )
-            elif (position.position < target.position <= Parameter.MAX) and (
-                (frame.state == OperatingState.EXECUTING)
-                or frame.remaining_time > 0
-            ):
-                changed |= _set_node_property(node, "is_closing", new_value=True)
-                changed |= _set_node_property(node, "is_opening", new_value=False)
-                node.state_received_at = datetime.datetime.now()
-                node.estimated_completion = (
-                    node.state_received_at
-                    + datetime.timedelta(0, frame.remaining_time)
-                )
-                PYVLXLOG.debug(
-                    "%s is closing (%s->%s), estimated completion in %ss at %s",
-                    node.name, position, target,
-                    frame.remaining_time, node.estimated_completion
-                )
-            else:
-                if node.is_opening:
-                    changed |= _set_node_property(node, "is_opening", new_value=False)
-                    node.state_received_at = None
-                    node.estimated_completion = None
-                    PYVLXLOG.debug("%s stopped opening", node.name)
-                if node.is_closing:
-                    changed |= _set_node_property(node, "is_closing", new_value=False)
-                    node.state_received_at = None
-                    node.estimated_completion = None
-                    PYVLXLOG.debug("%s stopped closing", node.name)
-
-        # Set main parameter
+    async def _update_node_main_parameter(
+        self,
+        node: Any,
+        frame: Union[
+            FrameGetAllNodesInformationNotification,
+            FrameNodeStatePositionChangedNotification,
+        ],
+        position: Position,
+        target: Position,
+    ) -> None:
         if isinstance(node, OpeningDevice):
             if position.position <= Parameter.MAX:
-                changed |= _set_node_property(node, "position", position)
-                # update target but no need to run callbacks because target
-                #  is only used for internal processing in opening devices
-                _set_node_property(node, "target", target)
-        elif isinstance(node, DimmableDevice):
+                node.position = position
+                node.target = target
+                PYVLXLOG.debug(
+                    "%s position changed to: %s",
+                    node.name,
+                    position,
+                )
+            await node.after_update()
+            return
+
+        if isinstance(node, DimmableDevice):
             intensity = Intensity(frame.current_position)
             if intensity.intensity <= Parameter.MAX:
-                changed |= _set_node_property(node, "intensity", intensity)
-        elif isinstance(node, OnOffSwitch):
-            state = SwitchParameter(frame.current_position)
-            target = SwitchParameter(frame.target)
-            if state.state == target.state:
-                if state.state in (Parameter.ON, Parameter.OFF):
-                    changed |= _set_node_property(node, "parameter", state)
+                node.intensity = intensity
+                PYVLXLOG.debug(
+                    "%s intensity changed to: %s",
+                    node.name,
+                    intensity,
+                )
+            await node.after_update()
+            return
 
-        if changed:
+        if isinstance(node, OnOffSwitch):
+            state = SwitchParameter(frame.current_position)
+            switch_target = SwitchParameter(frame.target)
+            if state.state == switch_target.state:
+                if state.state == Parameter.ON:
+                    node.parameter = state
+                    PYVLXLOG.debug(
+                        "%s state changed to: %s",
+                        node.name,
+                        state,
+                    )
+                elif state.state == Parameter.OFF:
+                    node.parameter = state
+                    PYVLXLOG.debug(
+                        "%s state changed to: %s",
+                        node.name,
+                        state,
+                    )
+                await node.after_update()
+
+    async def _process_node_state_frame(
+        self,
+        frame: Union[
+            FrameGetAllNodesInformationNotification,
+            FrameNodeStatePositionChangedNotification,
+        ],
+    ) -> None:
+        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
+        if frame.node_id not in self.pyvlx.nodes:
+            PYVLXLOG.warning("NodeUpdater: Received state frame for unknown node_id %s", frame.node_id)
+            return
+
+        node = self.pyvlx.nodes[frame.node_id]
+        node.last_frame_state = frame.state
+
+        position = Position(frame.current_position)
+        target = Position(frame.target)
+        if isinstance(node, OpeningDevice):
+            self._update_opening_device_status(node, frame, position, target)
+
+        await self._update_node_main_parameter(node, frame, position, target)
+
+    async def _process_command_run_status_notification(
+        self,
+        frame: FrameCommandRunStatusNotification,
+    ) -> None:
+        if frame.index_id not in self.pyvlx.nodes:
+            PYVLXLOG.warning("NodeUpdater: Received status request notification for unknown node_id %s", frame.index_id)
+            return
+        node = self.pyvlx.nodes[frame.index_id]
+
+        node_changed = False
+        node_changed |= _set_node_property(node, "last_frame_status_reply", new_value=frame.status_reply)
+        node_changed |= _set_node_property(node, "last_frame_run_status", new_value=frame.run_status)
+
+        if node_changed:
             await node.after_update()
 
     async def process_frame(self, frame: FrameBase) -> None:
         """Update nodes via frame, usually received by house monitor."""
         PYVLXLOG.debug("NodeUpdater process frame: %s", frame.__class__.__name__)
+
         if isinstance(frame, (FrameGetAllNodesInformationNotification, FrameNodeStatePositionChangedNotification)):
-            await self.process_frame_node_state_changed(frame)
+            await self._process_node_state_frame(frame)
         elif isinstance(frame, FrameStatusRequestNotification):
             await self.process_frame_status_request_notification(frame)
+        elif isinstance(frame, FrameCommandRunStatusNotification):
+            await self._process_command_run_status_notification(frame)

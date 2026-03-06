@@ -553,7 +553,8 @@ class WinkTime(Enum):
 
     STOP = 0                # Stop wink.
     BY_SECONDS = 1          # 1=Wink in 1 sec., 2= Wink in 2 sec. 253=Wink in 253 sec.
-    BY_MANUFACTUERER = 254  # Manufacturer specific wink time.
+    BY_MANUFACTURER = 254   # Manufacturer specific wink time.
+    BY_MANUFACTUERER = BY_MANUFACTURER  # Backwards compatibility alias (deprecated).
     FOREVER = 255           # Wink forever.
 
 
@@ -697,3 +698,18 @@ class StatusType(Enum):
     @classmethod
     def _missing_(cls, value: object) -> Any:
         return cls.REQUEST_UNKNOWN
+
+
+class LimitationTime(Enum):
+    """Enum class for Limitation Time special values."""
+
+    UNLIMITED = 253  # No limitation time
+    CLEAR_ALL = 255  # Clear all limitations
+
+    def __str__(self) -> str:
+        """Return string representation of object."""
+        return self.name
+
+    @classmethod
+    def _missing_(cls, value: object) -> Any:
+        return cls.UNLIMITED

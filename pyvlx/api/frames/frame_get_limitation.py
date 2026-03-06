@@ -1,5 +1,4 @@
-
-"""Module for get local time classes."""
+"""Module for get limitation status classes."""
 from typing import List, Optional
 
 from pyvlx.const import Command, LimitationType, Originator, Priority

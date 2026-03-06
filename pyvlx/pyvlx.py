@@ -8,10 +8,15 @@ and roller shutters.
 import asyncio
 from typing import Optional
 
+try:
+    from ._version import version as v
+except ImportError:
+    v = "unknown"
 from .api import get_limitation
 from .api.frames import FrameBase
 from .config import Config
 from .connection import Connection
+from .const import LimitationType
 from .exception import PyVLXException
 from .heartbeat import Heartbeat
 from .klf200gateway import Klf200Gateway
@@ -51,6 +56,7 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
+        PYVLXLOG.debug("Loading pyvlx %s", v)
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
@@ -120,5 +126,7 @@ class PyVLX:
 
     async def get_limitation(self, node_id: int) -> None:
         """Return limitation."""
-        limit = get_limitation.GetLimitation(self, node_id)
+        limit = get_limitation.GetLimitation(self, node_id, limitation_type=LimitationType.MIN_LIMITATION)
+        await limit.do_api_call()
+        limit = get_limitation.GetLimitation(self, node_id, limitation_type=LimitationType.MAX_LIMITATION)
         await limit.do_api_call()
