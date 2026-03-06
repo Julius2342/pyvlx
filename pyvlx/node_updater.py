@@ -207,7 +207,7 @@ class NodeUpdater:
         frame: FrameCommandRunStatusNotification,
     ) -> None:
         if frame.index_id is None or frame.index_id not in self.pyvlx.nodes:
-            PYVLXLOG.warning("NodeUpdater: Received status request notification for unknown node_id %s", frame.index_id)
+            PYVLXLOG.warning("NodeUpdater: Received FrameCommandRunStatusNotification for unknown index_id %s", frame.index_id)
             return
         node = self.pyvlx.nodes[frame.index_id]
 
