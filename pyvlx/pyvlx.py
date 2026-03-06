@@ -8,7 +8,10 @@ and roller shutters.
 import asyncio
 from typing import Optional
 
-from ._version import version as v
+try:
+    from ._version import version as v
+except ImportError:
+    v = "unknown"
 from .api import get_limitation
 from .api.frames import FrameBase
 from .config import Config
