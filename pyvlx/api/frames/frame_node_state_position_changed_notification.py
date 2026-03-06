@@ -68,7 +68,7 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
             'state="{}" current_position="{}" '
             'target="{}" current_position_fp1="{}" current_position_fp2="{}" '
             'current_position_fp3="{}" current_position_fp4="{}" '
-            'remaining_time="{}" time="{}"/>'.format(
+            'remaining_time="{}" time="{:02x}"/>'.format(
                 type(self).__name__,
                 self.node_id,
                 self.state.name,
@@ -79,6 +79,8 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
                 self.current_position_fp3,
                 self.current_position_fp4,
                 self.remaining_time,
-                self.timestamp_formatted,
+                # unfortunately the timestamp is only 2 bytes, so we show the value as hex instead
+                # of a human readable time, because the timestamp is not correct and just confusing
+                self.timestamp,
             )
         )

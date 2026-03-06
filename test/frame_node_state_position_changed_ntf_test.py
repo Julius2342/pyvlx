@@ -1,6 +1,5 @@
 """Unit tests for FrameNodeStatePositionChangedNotification."""
 import unittest
-from datetime import datetime
 
 from pyvlx import Position
 from pyvlx.api.frame_creation import frame_from_raw
@@ -51,7 +50,7 @@ class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
     def test_str(self) -> None:
         """Test string representation of FrameNodeStatePositionChangedNotification."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
-        test_ts = datetime.fromtimestamp(1288634368).strftime("%Y-%m-%d %H:%M:%S")
+        test_ts = "{:02x}".format(1288634368)
         self.assertEqual(
             str(frame),
             '<FrameNodeStatePositionChangedNotification node_id="5" state="DONE" '
