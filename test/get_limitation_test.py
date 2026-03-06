@@ -43,13 +43,13 @@ class TestGetLimitation(unittest.TestCase):
     def test_max_value(self) -> None:
         """Test limit.max_value."""
         limit = GetLimitation(self.pyvlx, 1)
-        limit.max_value_raw = b'\xf7'
+        limit.max_value_raw = b'\xf7\xff'
         self.assertEqual(limit.max_value, 124)
 
     def test_min_value(self) -> None:
         """Test limit.min_value."""
         limit = GetLimitation(self.pyvlx, 1)
-        limit.min_value_raw = b'\xba'
+        limit.min_value_raw = b'\xba\x34'
         self.assertEqual(limit.min_value, 93)
 
     def test_handle_frame(self) -> None:
@@ -67,8 +67,8 @@ class TestGetLimitation(unittest.TestCase):
         frame = FrameGetLimitationStatusNotification()
         frame.session_id = 1
         frame.node_id = 1
-        frame.min_value = b'\xf7'
-        frame.max_value = b'\xba'
+        frame.min_value = b'\xf7\xff'
+        frame.max_value = b'\xba\x34'
         frame.limit_originator = Originator.USER
         frame.limit_time = 1
 
