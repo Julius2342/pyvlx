@@ -60,10 +60,10 @@ class Nodes:
         for i, j in enumerate(self.__nodes):
             if j.node_id == node.node_id:
                 self.__nodes[i] = node
-                PYVLXLOG.debug("Replaced node with node_id %s", node.node_id)
+                PYVLXLOG.info("Replaced node with node_id %s", node.node_id)
                 return
         self.__nodes.append(node)
-        PYVLXLOG.debug("Added node with node_id %s", node.node_id)
+        PYVLXLOG.info("Added node with node_id %s", node.node_id)
 
     def clear(self) -> None:
         """Clear internal node array."""
