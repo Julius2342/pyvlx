@@ -8,6 +8,10 @@ and roller shutters.
 import asyncio
 from typing import Optional
 
+try:
+    from ._version import version as v
+except ImportError:
+    v = "unknown"
 from .api import get_limitation
 from .api.frames import FrameBase
 from .config import Config
@@ -52,6 +56,7 @@ class PyVLX:
         self.protocol_version = None
         self.klf200 = Klf200Gateway(pyvlx=self)
         self.api_call_semaphore = asyncio.Semaphore(1)  # Limit parallel commands
+        PYVLXLOG.debug("Loading pyvlx %s", v)
 
     async def connect(self) -> None:
         """Connect to KLF 200."""
