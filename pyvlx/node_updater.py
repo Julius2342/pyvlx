@@ -186,7 +186,6 @@ class NodeUpdater:
             FrameNodeStatePositionChangedNotification,
         ],
     ) -> None:
-        PYVLXLOG.debug("NodeUpdater process frame: %s", frame)
         if frame.node_id not in self.pyvlx.nodes:
             PYVLXLOG.warning("NodeUpdater: Received state frame for unknown node_id %s", frame.node_id)
             return
