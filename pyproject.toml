@@ -119,6 +119,7 @@ branch = true
 relative_files = true
 
 [tool.coverage.report]
+omit = ["pyvlx/_version.py"]
 show_missing = true
 skip_covered = true
 exclude_lines = [
