@@ -583,6 +583,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         self.assertFalse(device.is_closing)
         device.after_update.assert_awaited_once()
+
     async def test_process_command_run_status_notification(self) -> None:
         """Test process_frame with FrameCommandRunStatusNotification updates node and calls after_update."""
         mocked_pyvlx = MagicMock(spec=PyVLX)
