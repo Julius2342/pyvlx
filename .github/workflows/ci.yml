@@ -147,7 +147,58 @@ jobs:
     - name: Install dependencies
       run: pip install -r requirements/testing.txt
     - name: pytest
-      run: pytest --cov --cov-report xml
+      # run the tests, produce a .coverage.$pyversion file
+      run: pytest --cov 
+      env:
+        COVERAGE_FILE: ".coverage.${{ matrix.python-version }}"
+        # The file name prefix must be ".coverage." for "coverage combine"
+        # enabled by "MERGE_COVERAGE_FILES: true" to work. A "subprocess"
+        # error with the message "No data to combine" will be triggered if
+        # this prefix is not used.
+    - name: Store coverage file
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-${{ matrix.python-version }}
+        path: .coverage.${{ matrix.python-version }}
+        # By default hidden files/folders (i.e. starting with .) are ignored.
+        # You may prefer (for security reasons) not setting this and instead
+        # set COVERAGE_FILE above to not start with a `.`, but you cannot
+        # use "MERGE_COVERAGE_FILES: true" later on and need to manually
+        # combine the coverage file using "pipx run coverage combine"
+        include-hidden-files: true
+
+  coverage:
+    name: Generate Coverage comment
+    runs-on: ubuntu-latest
+    needs: pytest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # This is optional since by default it's to true. The git
+          # operations in python-coverage-comment-action utilize the token
+          # stored by actions/checkout.
+          persist-credentials: true
+
+      - uses: actions/download-artifact@v4
+        id: download
+        with:
+          pattern: coverage-*
+          merge-multiple: true
+
+      - name: Coverage comment
+        id: coverage_comment
+        uses: py-cov-action/python-coverage-comment-action@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_COVERAGE_FILES: true
+
+      - name: Store Pull Request comment to be posted
+        uses: actions/upload-artifact@v4
+        if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
+        with:
+          name: python-coverage-comment-action
+          path: python-coverage-comment-action.txt
+
 
   notify-build:
     name: Notify build and publish workflow 
