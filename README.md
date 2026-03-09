@@ -5,7 +5,7 @@
 | Name                                                                    |    Stmts |     Miss |   Branch |   BrPart |   Cover |   Missing |
 |------------------------------------------------------------------------ | -------: | -------: | -------: | -------: | ------: | --------: |
 | pyvlx/api/activate\_scene.py                                            |       26 |       18 |       10 |        0 |     22% |23-27, 31-56, 60-61 |
-| pyvlx/api/api\_event.py                                                 |       39 |       20 |        6 |        0 |     42% |29-41, 45, 49, 53, 57-58, 62, 66, 72-73 |
+| pyvlx/api/api\_event.py                                                 |       35 |       20 |        4 |        0 |     38% |30-53, 62, 66, 70, 74-75 |
 | pyvlx/api/factory\_default.py                                           |       17 |        9 |        2 |        0 |     42% |20-22, 26-30, 34 |
 | pyvlx/api/frame\_creation.py                                            |      143 |        6 |      130 |        5 |     96% |50-55, 67, 69, 71, 215 |
 | pyvlx/api/frames/frame\_node\_state\_position\_changed\_notification.py |       47 |        1 |        0 |        0 |     98% |        62 |
@@ -44,7 +44,7 @@
 | pyvlx/pyvlx.py                                                          |       81 |       41 |       10 |        0 |     44% |13-14, 63-79, 83-87, 91, 95-96, 100-101, 105-117, 121, 125, 129-132 |
 | pyvlx/scene.py                                                          |       17 |        4 |        2 |        0 |     68% |     36-43 |
 | pyvlx/scenes.py                                                         |       38 |        6 |       20 |        0 |     83% |     55-60 |
-| **TOTAL**                                                               | **3994** |  **697** |  **744** |   **55** | **79%** |           |
+| **TOTAL**                                                               | **3990** |  **697** |  **742** |   **55** | **79%** |           |
 
 42 files skipped due to complete coverage.
 
