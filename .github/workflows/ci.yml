@@ -172,7 +172,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: pytest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # This is optional since by default it's to true. The git
           # operations in python-coverage-comment-action utilize the token
