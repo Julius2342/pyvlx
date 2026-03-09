@@ -1,5 +1,5 @@
 """Module for Position class."""
-from typing import Optional
+from typing import Optional, TypedDict
 
 from .exception import PyVLXException
 
@@ -389,3 +389,15 @@ class DualRollerShutterPosition(Position):
     def __init__(self) -> None:
         """Initialize CurrentPosition class."""
         super().__init__(position=Position.DUAL_SHUTTER_CURTAINS)
+
+
+# allow only fp1 to fp3, because fp4 to fp16 are not used in pyvlx currently
+FunctionalParams = TypedDict(
+    "FunctionalParams",
+    {
+        "fp1": Parameter,
+        "fp2": Parameter,
+        "fp3": Parameter,
+    },
+    total=False,
+)
