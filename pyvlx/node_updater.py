@@ -189,7 +189,7 @@ class NodeUpdater:
         ],
     ) -> None:
         if frame.node_id not in self.pyvlx.nodes:
-            PYVLXLOG.info("NodeUpdater: Received state frame for unknown node_id %s", frame.node_id)
+            PYVLXLOG.debug("NodeUpdater: Received state frame for unknown node_id %s", frame.node_id)
             return
 
         node = self.pyvlx.nodes[frame.node_id]
