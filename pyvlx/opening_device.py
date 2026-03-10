@@ -380,7 +380,7 @@ class Blind(OpeningDevice):
         velocity: Velocity | int | None = None,
         orientation: Optional[Position] = None,
     ) -> None:
-        """Set window to desired position.
+        """Set blind to desired position.
 
         Parameters:
             * position: Position object containing the current position.
@@ -434,7 +434,7 @@ class Blind(OpeningDevice):
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
     ) -> None:
-        """Set window to desired position.
+        """Set blind to desired position.
 
         Parameters:
             * position: Position object containing the current position.
@@ -456,7 +456,7 @@ class Blind(OpeningDevice):
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
     ) -> None:
-        """Open window.
+        """Open blind.
 
         Parameters:
             * velocity: Velocity to be used during transition.
@@ -474,7 +474,7 @@ class Blind(OpeningDevice):
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
     ) -> None:
-        """Close window.
+        """Close blind.
 
         Parameters:
             * velocity: Velocity to be used during transition.
@@ -568,7 +568,7 @@ class DualRollerShutter(OpeningDevice):
         serial_number: Optional[str],
         position_parameter: Parameter = Parameter(),
     ):
-        """Initialize Blind class.
+        """Initialize DualRollerShutter class.
 
         Parameters:
             * pyvlx: PyVLX object
@@ -698,7 +698,7 @@ class DualRollerShutter(OpeningDevice):
         velocity: Velocity | int | None = Velocity.DEFAULT,
         curtain: str = "dual",
     ) -> None:
-        """Stop Blind position."""
+        """Stop DualRollerShutter position."""
         await self.set_position(
             position=CurrentPosition(),
             velocity=velocity,

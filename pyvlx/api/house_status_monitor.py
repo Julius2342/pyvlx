@@ -36,7 +36,7 @@ class HouseStatusMonitorDisable(ApiEvent):
     """Class for disabling house status monotor."""
 
     def __init__(self, pyvlx: "PyVLX"):
-        """Initialize HouseStatusMonitorEnable class."""
+        """Initialize HouseStatusMonitorDisable class."""
         super().__init__(pyvlx=pyvlx)
         self.success = False
 

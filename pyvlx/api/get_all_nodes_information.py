@@ -18,7 +18,7 @@ class GetAllNodesInformation(ApiEvent):
     """Class for retrieving node information from API."""
 
     def __init__(self, pyvlx: "PyVLX"):
-        """Initialize SceneList class."""
+        """Initialize GetAllNodesInformation class."""
         super().__init__(pyvlx=pyvlx)
         self.number_of_nodes = 0
         self.success = False

@@ -17,10 +17,10 @@ CallbackType = Callable[["Klf200Gateway"], Awaitable[None]]
 
 
 class Klf200Gateway:
-    """Class for node abstraction."""
+    """Class for gateway abstraction."""
 
     def __init__(self, pyvlx: "PyVLX"):
-        """Initialize Node object."""
+        """Initialize Klf200Gateway object."""
         self.pyvlx = pyvlx
         self.state: Optional[DtoState] = None
         self.network_setup: Optional[DtoNetworkSetup] = None
