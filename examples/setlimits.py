@@ -4,9 +4,9 @@ import asyncio
 from pyvlx import Position, PyVLX
 
 
-async def main(loop):
+async def main() -> None:
     """Demonstrate functionality of setting a limit."""
-    pyvlx = PyVLX('pyvlx.yaml', loop=loop)
+    pyvlx = PyVLX('pyvlx.yaml')
 
     # Runing scenes:
     await pyvlx.load_nodes()
@@ -18,8 +18,4 @@ async def main(loop):
     await pyvlx.disconnect()
 
 if __name__ == '__main__':
-    # pylint: disable=invalid-name
-    LOOP = asyncio.get_event_loop()
-    LOOP.run_until_complete(main(LOOP))
-    # LOOP.run_forever()
-    LOOP.close()
+    asyncio.run(main())

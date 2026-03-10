@@ -1,6 +1,7 @@
 """Module for sending get state requests to API in regular periods."""
 import asyncio
-from typing import TYPE_CHECKING, Any
+from contextlib import suppress
+from typing import TYPE_CHECKING
 
 from .api import GetState
 from .api.status_request import StatusRequest
@@ -23,7 +24,7 @@ class Heartbeat:
         self.pyvlx = pyvlx
         self.interval = interval
         self.load_all_states = load_all_states
-        self.task: Any = None
+        self.heartbeat_task: asyncio.Task[None] | None = None
 
     async def _run(self) -> None:
         PYVLXLOG.debug("Heartbeat: started")
@@ -36,30 +37,30 @@ class Heartbeat:
             except (OSError, PyVLXException) as e:
                 PYVLXLOG.debug("Heartbeat: pulsing failed: %s", e)
 
-    async def _start(self) -> None:
-        if self.task is not None:
-            await self.stop()
-        PYVLXLOG.debug("Heartbeat: creating")
-        self.task = asyncio.create_task(self._run())
-
-    def start(self) -> None:
+    async def start(self) -> None:
         """Start heartbeat."""
+        if self.heartbeat_task is not None:
+            await self.stop()
         PYVLXLOG.debug("Heartbeat: starting")
-        asyncio.run_coroutine_threadsafe(self._start(), self.pyvlx.loop)
+        self.heartbeat_task = asyncio.create_task(self._run())
 
     @property
     def stopped(self) -> bool:
         """Return Heartbeat running state."""
-        return self.task is None
+        return self.heartbeat_task is None
 
     async def stop(self) -> None:
         """Stop heartbeat."""
-        if self.task is not None:
-            self.task.cancel()
-            self.task = None
-            PYVLXLOG.debug("Heartbeat: stopped")
-        else:
+        task = self.heartbeat_task
+        self.heartbeat_task = None
+        if task is None:
             PYVLXLOG.debug("Heartbeat: was not running")
+            return
+
+        task.cancel()
+        with suppress(asyncio.CancelledError):
+            await task
+        PYVLXLOG.debug("Heartbeat: stopped")
 
     async def pulse(self) -> None:
         """Send get state request to API to keep the connection alive."""

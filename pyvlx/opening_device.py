@@ -270,7 +270,7 @@ class OpeningDevice(Node):
                 movement_origin + (movement_target - movement_origin) / 100 * percent
             )
             if not self._update_task:
-                self._update_task = self.pyvlx.loop.create_task(self._update_calls())
+                self._update_task = asyncio.create_task(self._update_calls())
             return Position(position_percent=int(current_position))
         return self.position
 

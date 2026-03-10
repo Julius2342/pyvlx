@@ -1,10 +1,6 @@
 """Unit test for limitation."""
-import asyncio
 import unittest
 from unittest.mock import MagicMock
-
-import pytest
-from pytest import FixtureRequest
 
 from pyvlx import PyVLX
 from pyvlx.api.frames.frame_set_limitation import (
@@ -15,39 +11,30 @@ from pyvlx.const import LimitationTime, Originator
 from pyvlx.parameter import IgnorePosition, Position
 
 
-@pytest.fixture(scope="class")
-def event_loop_instance(request: FixtureRequest) -> None:
-    """Add the event_loop as an attribute to the unittest style test class."""
-    request.cls.event_loop = asyncio.new_event_loop()
-    yield
-    request.cls.event_loop.close()
-
-
 # pylint: disable=too-many-public-methods,invalid-name
-@pytest.mark.usefixtures("event_loop_instance")
-class TestSetLimitation(unittest.TestCase):
+class TestSetLimitation(unittest.IsolatedAsyncioTestCase):
     """Test class for Limitation."""
 
     def setUp(self) -> None:
         """Set up TestSetLimitation."""
         self.pyvlx = MagicMock(spec=PyVLX)
 
-    def test_handle_frames_accepted(self) -> None:
+    async def test_handle_frames_accepted(self) -> None:
         """Test handle frame."""
         limit = SetLimitation(self.pyvlx, 1)
 
         frame = FrameSetLimitationConfirmation()
         frame.status = SetLimitationRequestStatus.ACCEPTED
-        self.assertTrue(self.event_loop.run_until_complete(limit.handle_frame(frame)))
+        self.assertTrue(await limit.handle_frame(frame))
         self.assertTrue(limit.success)
 
-    def test_handle_frame_rejected(self) -> None:
+    async def test_handle_frame_rejected(self) -> None:
         """Test handle frame."""
         limit = SetLimitation(self.pyvlx, 1)
 
         frame = FrameSetLimitationConfirmation()
         frame.status = SetLimitationRequestStatus.REJECTED
-        self.assertTrue(self.event_loop.run_until_complete(limit.handle_frame(frame)))
+        self.assertTrue(await limit.handle_frame(frame))
         self.assertFalse(limit.success)
 
     def test_request_frame(self) -> None:

@@ -34,14 +34,12 @@ class PyVLX:
         path: Optional[str] = None,
         host: Optional[str] = None,
         password: Optional[str] = None,
-        loop: Optional[asyncio.AbstractEventLoop] = None,
         heartbeat_interval: int = 30,
         heartbeat_load_all_states: bool = True,
     ):
         """Initialize PyVLX class."""
-        self.loop = loop or asyncio.get_event_loop()
         self.config = Config(self, path, host, password)
-        self.connection = Connection(loop=self.loop, config=self.config)
+        self.connection = Connection(config=self.config)
         self.heartbeat = Heartbeat(
             pyvlx=self,
             interval=heartbeat_interval,
@@ -76,7 +74,7 @@ class PyVLX:
         await self.klf200.set_utc()
         await self.klf200.get_network_setup()
         await self.klf200.house_status_monitor_enable(pyvlx=self)
-        self.heartbeat.start()
+        await self.heartbeat.start()
 
     async def reboot_gateway(self) -> None:
         """For Compatibility: Reboot the KLF 200."""
