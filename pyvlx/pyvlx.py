@@ -88,14 +88,14 @@ class PyVLX:
         """Return whether the gateway is currently connected."""
         return self.connection.connected
 
-    async def check_connected(self) -> None:
+    async def ensure_connected(self) -> None:
         """Check we're connected, and if not, connect."""
         if not self.connection.connected:
             await self.connect()
 
     async def send_frame(self, frame: FrameBase) -> None:
         """Send frame to API via connection."""
-        await self.check_connected()
+        await self.ensure_connected()
         self.connection.write(frame)
 
     async def disconnect(self) -> None:
