@@ -15,10 +15,10 @@ if TYPE_CHECKING:
 
 
 class GetLimitation(ApiEvent):
-    """Class for retrieving gateway state from API."""
+    """Class for retrieving limitation values from API."""
 
     def __init__(self, pyvlx: "PyVLX", node_id: int, limitation_type: LimitationType = LimitationType.MIN_LIMITATION):
-        """Initialize SceneList class."""
+        """Initialize GetLimitation class."""
         super().__init__(pyvlx=pyvlx)
         self.node_id = node_id
         self.limitation_type = limitation_type

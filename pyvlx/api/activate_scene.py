@@ -1,4 +1,4 @@
-"""Module for retrieving scene list from API."""
+"""Module for activating scenes via API."""
 from typing import TYPE_CHECKING, Optional
 
 from .api_event import ApiEvent
@@ -19,7 +19,7 @@ class ActivateScene(ApiEvent):
     def __init__(
             self, pyvlx: "PyVLX", scene_id: int, wait_for_completion: bool = True, timeout_in_seconds: int = 60
     ):
-        """Initialize SceneList class."""
+        """Initialize ActivateScene class."""
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
         self.success = False
         self.scene_id = scene_id

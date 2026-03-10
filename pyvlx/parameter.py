@@ -268,7 +268,7 @@ class IgnorePosition(Position):
     """The Ignore is used where a parameter in the frame is to be ignored."""
 
     def __init__(self) -> None:
-        """Initialize CurrentPosition class."""
+        """Initialize IgnorePosition class."""
         super().__init__(position=Position.IGNORE)
 
 
@@ -387,7 +387,7 @@ class DualRollerShutterPosition(Position):
     """Position to be provided when addressing the upper or lower curtain of a dual roller shutter by using FP1 or FP2."""
 
     def __init__(self) -> None:
-        """Initialize CurrentPosition class."""
+        """Initialize DualRollerShutterPosition class."""
         super().__init__(position=Position.DUAL_SHUTTER_CURTAINS)
 
 
