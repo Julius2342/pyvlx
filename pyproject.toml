@@ -108,7 +108,7 @@ max-positional-arguments = 7
 
 [tool.flake8]
 ignore = ["E203", "W503", "E226"]
-exclude = [".git", "bin", "lib", "deps", "build"]
+exclude = [".git", "bin", "lib", "deps", "build", "pyvlx/_version.py"]
 max-line-length = 160
 
 [tool.coverage.run]

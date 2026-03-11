@@ -39,4 +39,4 @@ class FrameErrorNotification(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} error_type="{}"/>'.format(type(self).__name__, self.error_type)
+        return f'<{type(self).__name__} error_type="{self.error_type}"/>'

@@ -48,8 +48,9 @@ class FrameActivateSceneRequest(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} scene_id="{}" session_id="{}" originator="{}" velocity="{}"/>'.format(
-            type(self).__name__, self.scene_id, self.session_id, self.originator, self.velocity
+        return (
+            f'<{type(self).__name__} scene_id="{self.scene_id}" session_id="{self.session_id}" '
+            f'originator="{self.originator}" velocity="{self.velocity}"/>'
         )
 
 
@@ -87,6 +88,4 @@ class FrameActivateSceneConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} session_id="{}" status="{}"/>'.format(
-            type(self).__name__, self.session_id, self.status
-        )
+        return f'<{type(self).__name__} session_id="{self.session_id}" status="{self.status}"/>'

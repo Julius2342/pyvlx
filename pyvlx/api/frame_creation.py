@@ -50,7 +50,7 @@ def frame_from_raw(raw: bytes) -> Optional[FrameBase]:
         PYVLXLOG.warning(
             "Command %s not implemented, raw: %s",
             command,
-            ":".join("{:02x}".format(c) for c in raw),
+            ":".join(f"{c:02x}" for c in raw),
         )
         return None
     frame.validate_payload_len(payload)

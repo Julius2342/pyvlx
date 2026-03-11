@@ -15,7 +15,7 @@ class FrameGatewayRebootRequest(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{}/>'.format(type(self).__name__)
+        return f'<{type(self).__name__}/>'
 
 
 class FrameGatewayRebootConfirmation(FrameBase):
@@ -29,4 +29,4 @@ class FrameGatewayRebootConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{}/>'.format(type(self).__name__)
+        return f'<{type(self).__name__}/>'

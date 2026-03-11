@@ -60,5 +60,4 @@ class FrameGetNetworkSetupConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} ipaddress="{}" netmask="{}" gateway="{}" dhcp="{}"/>'.format(
-            type(self).__name__, self.ipaddress, self.netmask, self.gateway, self.dhcp)
+        return f'<{type(self).__name__} ipaddress="{self.ipaddress}" netmask="{self.netmask}" gateway="{self.gateway}" dhcp="{self.dhcp}"/>'

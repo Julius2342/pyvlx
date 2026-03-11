@@ -14,13 +14,11 @@ class PyVLXException(Exception):
     def _format_parameter(self) -> str:
         return " ".join(
             [
-                '%s="%s"' % (key, value)
+                f'{key}="{value}"'
                 for (key, value) in sorted(self.parameter.items())
             ]
         )
 
     def __str__(self) -> str:
         """Return object as readable string."""
-        return '<{} description="{}" {}/>'.format(
-            type(self).__name__, self.description, self._format_parameter()
-        )
+        return f'<{type(self).__name__} description="{self.description}" {self._format_parameter()}/>'

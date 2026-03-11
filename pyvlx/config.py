@@ -41,14 +41,14 @@ class Config:
                 if "port" in doc["config"]:
                     self.port = doc["config"]["port"]
         except FileNotFoundError as not_found:
-            raise PyVLXException("file does not exist: {0}".format(not_found)) from not_found
+            raise PyVLXException(f"file does not exist: {not_found}") from not_found
 
     @staticmethod
     def test_configuration(doc: Any, path: str) -> None:
         """Test if configuration file is sane."""
         if "config" not in doc:
-            raise PyVLXException("no element config found in: {0}".format(path))
+            raise PyVLXException(f"no element config found in: {path}")
         if "host" not in doc["config"]:
-            raise PyVLXException("no element host found in: {0}".format(path))
+            raise PyVLXException(f"no element host found in: {path}")
         if "password" not in doc["config"]:
-            raise PyVLXException("no element password found in: {0}".format(path))
+            raise PyVLXException(f"no element password found in: {path}")

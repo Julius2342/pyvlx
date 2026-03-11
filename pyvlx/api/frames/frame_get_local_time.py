@@ -35,4 +35,4 @@ class FrameGetLocalTimeConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{0}>{1}</{0}>'.format(type(self).__name__, self.time)
+        return f'<{type(self).__name__}>{self.time}</{type(self).__name__}>'

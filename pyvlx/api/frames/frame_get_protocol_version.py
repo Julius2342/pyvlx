@@ -28,7 +28,7 @@ class FrameGetProtocolVersionConfirmation(FrameBase):
     @property
     def version(self) -> str:
         """Return formatted protocol version."""
-        return "{}.{}".format(self.major_version, self.minor_version)
+        return f"{self.major_version}.{self.minor_version}"
 
     def get_payload(self) -> bytes:
         """Return Payload."""
@@ -48,6 +48,4 @@ class FrameGetProtocolVersionConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} version="{}"/>'.format(
-            type(self).__name__, self.version
-        )
+        return f'<{type(self).__name__} version="{self.version}"/>'

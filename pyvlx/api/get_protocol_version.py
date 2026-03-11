@@ -37,4 +37,4 @@ class GetProtocolVersion(ApiEvent):
     @property
     def version(self) -> str:
         """Return Protocol Version as human readable string."""
-        return "{}.{}".format(self.protocolversion.majorversion, self.protocolversion.minorversion)
+        return f"{self.protocolversion.majorversion}.{self.protocolversion.minorversion}"

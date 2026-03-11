@@ -67,9 +67,7 @@ class FrameGetLimitationStatusConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} session_id="{}" status="{}"/>'.format(
-            type(self).__name__, self.session_id, self.data
-        )
+        return f'<{type(self).__name__} session_id="{self.session_id}" status="{self.data}"/>'
 
 
 class FrameGetLimitationStatusNotification(FrameBase):
@@ -117,10 +115,6 @@ class FrameGetLimitationStatusNotification(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} node_id="{}" session_id="{}" min_value="{!r}" '
-            'max_value="{!r}" originator="{}" limit_time="{}"/>'.format(
-                type(self).__name__, self.node_id, self.session_id,
-                self.min_value, self.max_value, self.limit_originator,
-                self.limit_time
-            )
+            f'<{type(self).__name__} node_id="{self.node_id}" session_id="{self.session_id}" min_value="{self.min_value!r}" '
+            f'max_value="{self.max_value!r}" originator="{self.limit_originator}" limit_time="{self.limit_time}"/>'
         )

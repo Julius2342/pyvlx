@@ -64,23 +64,9 @@ class FrameNodeStatePositionChangedNotification(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} node_id="{}" '
-            'state="{}" current_position="{}" '
-            'target="{}" current_position_fp1="{}" current_position_fp2="{}" '
-            'current_position_fp3="{}" current_position_fp4="{}" '
-            'remaining_time="{}" time="0x{:02x}"/>'.format(
-                type(self).__name__,
-                self.node_id,
-                self.state.name,
-                self.current_position,
-                self.target,
-                self.current_position_fp1,
-                self.current_position_fp2,
-                self.current_position_fp3,
-                self.current_position_fp4,
-                self.remaining_time,
-                # unfortunately the timestamp is only 2 bytes, so we show the value as hex instead
-                # of a human readable time, because the timestamp is not correct and just confusing
-                self.timestamp,
-            )
+            f'<{type(self).__name__} node_id="{self.node_id}" '
+            f'state="{self.state.name}" current_position="{self.current_position}" '
+            f'target="{self.target}" current_position_fp1="{self.current_position_fp1}" current_position_fp2="{self.current_position_fp2}" '
+            f'current_position_fp3="{self.current_position_fp3}" current_position_fp4="{self.current_position_fp4}" '
+            f'remaining_time="{self.remaining_time}" time="0x{self.timestamp:02x}"/>'
         )

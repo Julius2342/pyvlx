@@ -38,9 +38,7 @@ class FrameGetSceneListConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} count_scenes="{}"/>'.format(
-            type(self).__name__, self.count_scenes
-        )
+        return f'<{type(self).__name__} count_scenes="{self.count_scenes}"/>'
 
 
 class FrameGetSceneListNotification(FrameBase):
@@ -77,6 +75,4 @@ class FrameGetSceneListNotification(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} scenes="{}" remaining_scenes="{}">'.format(
-            type(self).__name__, self.scenes, self.remaining_scenes
-        )
+        return f'<{type(self).__name__} scenes="{self.scenes}" remaining_scenes="{self.remaining_scenes}">'

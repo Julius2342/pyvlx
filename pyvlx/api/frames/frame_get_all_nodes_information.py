@@ -58,9 +58,7 @@ class FrameGetAllNodesInformationConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} status="{}" number_of_nodes="{}"/>'.format(
-            type(self).__name__, self.status, self.number_of_nodes
-        )
+        return f'<{type(self).__name__} status="{self.status}" number_of_nodes="{self.number_of_nodes}"/>'
 
 
 class FrameGetAllNodesInformationNotification(FrameBase):
@@ -99,7 +97,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         """Property for serial number in a human readable way."""
         if self._serial_number == bytes(8):
             return None
-        return ":".join("{:02x}".format(c) for c in self._serial_number)
+        return ":".join(f"{c:02x}" for c in self._serial_number)
 
     @serial_number.setter
     def serial_number(self, serial_number: str) -> None:
@@ -174,37 +172,16 @@ class FrameGetAllNodesInformationNotification(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} node_id="{}" order="{}" '
-            'placement="{}" name="{}" velocity="{}" node_type="{}" product_group="{}" '
-            'product_type="{}" node_variation="{}" power_mode="{}" build_number="{}" '
-            'serial_number="{}" state="{}" current_position="{}" '
-            'target="{}" current_position_fp1="{}" current_position_fp2="{}" '
-            'current_position_fp3="{}" current_position_fp4="{}" '
-            'remaining_time="{}" time="{}" alias_array="{}"/>'.format(
-                type(self).__name__,
-                self.node_id,
-                self.order,
-                self.placement,
-                self.name,
-                self.velocity,
-                self.node_type,
-                self.product_group,
-                self.product_type,
-                self.node_variation,
-                self.power_mode,
-                self.build_number,
-                self.serial_number,
-                self.state.name,
-                self.current_position,
-                self.target,
-                self.current_position_fp1,
-                self.current_position_fp2,
-                self.current_position_fp3,
-                self.current_position_fp4,
-                self.remaining_time,
-                self.timestamp_formatted,
-                self.alias_array,
-            )
+            f'<{type(self).__name__} node_id="{self.node_id}" order="{self.order}" '
+            f'placement="{self.placement}" name="{self.name}" velocity="{self.velocity}" '
+            f'node_type="{self.node_type}" product_group="{self.product_group}" '
+            f'product_type="{self.product_type}" node_variation="{self.node_variation}" '
+            f'power_mode="{self.power_mode}" build_number="{self.build_number}" '
+            f'serial_number="{self.serial_number}" state="{self.state.name}" '
+            f'current_position="{self.current_position}" target="{self.target}" '
+            f'current_position_fp1="{self.current_position_fp1}" current_position_fp2="{self.current_position_fp2}" '
+            f'current_position_fp3="{self.current_position_fp3}" current_position_fp4="{self.current_position_fp4}" '
+            f'remaining_time="{self.remaining_time}" time="{self.timestamp_formatted}" alias_array="{self.alias_array}"/>'
         )
 
 

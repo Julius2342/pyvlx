@@ -34,9 +34,7 @@ class FrameGetVersionConfirmation(FrameBase):
     @property
     def version(self) -> str:
         """Return formatted version."""
-        return "{}: Software version: {}, hardware version: {}".format(
-            self.product, self.software_version, self.hardware_version
-        )
+        return f"{self.product}: Software version: {self.software_version}, hardware version: {self.hardware_version}"
 
     @property
     def software_version(self) -> str:
@@ -48,7 +46,7 @@ class FrameGetVersionConfirmation(FrameBase):
         """Return product as human readable string."""
         if self.product_group == 14 and self.product_type == 3:
             return "KLF 200"
-        return "Unknown Product: {}:{}".format(self.product_group, self.product_type)
+        return f"Unknown Product: {self.product_group}:{self.product_type}"
 
     def get_payload(self) -> bytes:
         """Return Payload."""
@@ -66,7 +64,6 @@ class FrameGetVersionConfirmation(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} software_version="{}" hardware_version="{}" product="{}"/>'.format(
-                type(self).__name__, self.software_version, self.hardware_version, self.product
-            )
+            f'<{type(self).__name__} software_version="{self.software_version}" '
+            f'hardware_version="{self.hardware_version}" product="{self.product}"/>'
         )

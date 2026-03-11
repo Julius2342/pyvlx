@@ -93,6 +93,4 @@ class FrameSetLimitationConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} session_id="{}" status="{}"/>'.format(
-            type(self).__name__, self.session_id, self.status
-        )
+        return f'<{type(self).__name__} session_id="{self.session_id}" status="{self.status}"/>'
