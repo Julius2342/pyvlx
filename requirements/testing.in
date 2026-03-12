@@ -1,2 +1,0 @@
--r production.txt
--e .[test,lint]

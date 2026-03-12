@@ -2,8 +2,6 @@ version: 2
 updates:
 - package-ecosystem: pip
   directory: "/"
-  exclude-paths:
-  - "requirements/**"
   schedule:
     interval: daily
   open-pull-requests-limit: 10
