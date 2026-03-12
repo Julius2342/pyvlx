@@ -29,7 +29,7 @@ ifaddr==0.2.0
     #   zeroconf
 iniconfig==2.3.0
     # via pytest
-isort==7.0.0
+isort==8.0.1
     # via
     #   flake8-isort
     #   pylint
@@ -62,7 +62,7 @@ pyflakes==3.4.0
     # via flake8
 pygments==2.19.2
     # via pytest
-pylint==4.0.3
+pylint==4.0.5
     # via pyvlx
 pytest==9.0.2
     # via
