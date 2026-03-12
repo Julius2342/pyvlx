@@ -33,7 +33,7 @@ class ApiEvent:
         # We check for connection before entering the semaphore section
         # because otherwise we might try to connect, which calls this, and we get stuck on
         # the semaphore.
-        await self.pyvlx.check_connected()
+        await self.pyvlx.ensure_connected()
 
         if self.pyvlx.get_connected():
             async with self.pyvlx.api_call_semaphore:

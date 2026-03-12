@@ -5,13 +5,13 @@ import logging
 from pyvlx import PyVLX
 
 
-async def main(loop):
+async def main() -> None:
     """Log packets from Bus."""
     # Setting debug
     logging.basicConfig(level=logging.DEBUG)
 
     # Connecting to KLF 200
-    pyvlx = PyVLX('pyvlx.yaml', loop=loop)
+    pyvlx = PyVLX('pyvlx.yaml')
     await pyvlx.load_scenes()
     await pyvlx.load_nodes()
 
@@ -24,6 +24,4 @@ async def main(loop):
 
 
 if __name__ == '__main__':
-    myloop = asyncio.new_event_loop()
-    myloop.run_until_complete(main(myloop))
-    myloop.close()
+    asyncio.run(main())

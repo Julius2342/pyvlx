@@ -2,7 +2,7 @@
 import asyncio
 import ssl
 import sys
-from typing import Callable, Coroutine, List, Optional, Set
+from typing import Any, Callable, Coroutine, List, Optional, Set
 
 from .api.frame_creation import frame_from_raw
 from .api.frames import FrameBase
@@ -72,23 +72,22 @@ class TCPTransport(asyncio.Protocol):
         self.connection_lost_cb()
 
 
-CallbackType = Callable[[FrameBase], Coroutine]
+CallbackType = Callable[[FrameBase], Coroutine[Any, Any, None]]
 
 
 class Connection:
     """Class for handling TCP connection."""
 
-    def __init__(self, loop: asyncio.AbstractEventLoop, config: Config):
+    def __init__(self, config: Config):
         """Init TCP connection."""
-        self.loop = loop
         self.config = config
         self.transport: Optional[asyncio.Transport] = None
         self.frame_received_cbs: List[CallbackType] = []
-        self.connection_closed_cbs: List[Callable[[], Coroutine]] = []
-        self.connection_opened_cbs: List[Callable[[], Coroutine]] = []
+        self.connection_closed_cbs: List[Callable[[], Coroutine[Any, Any, None]]] = []
+        self.connection_opened_cbs: List[Callable[[], Coroutine[Any, Any, None]]] = []
         self.connected = False
         self.connection_counter = 0
-        self.tasks: Set[asyncio.Task] = set()
+        self.tasks: Set[asyncio.Task[None]] = set()
 
     def __del__(self) -> None:
         """Destruct connection."""
@@ -102,16 +101,16 @@ class Connection:
         self.connected = False
         PYVLXLOG.debug("TCP transport closed.")
         for connection_closed_cb in self.connection_closed_cbs:
-            if asyncio.iscoroutine(coroutine := connection_closed_cb()):
-                task = self.loop.create_task(coroutine)
-                self.tasks.add(task)
-                task.add_done_callback(self.tasks.remove)
+            task = asyncio.create_task(connection_closed_cb())
+            self.tasks.add(task)
+            task.add_done_callback(self.tasks.remove)
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
         tcp_client = TCPTransport(self.frame_received_cb, connection_lost_cb=self.on_connection_lost)
+        loop = asyncio.get_running_loop()
         assert self.config.host is not None
-        self.transport, _ = await self.loop.create_connection(
+        self.transport, _ = await loop.create_connection(
             lambda: tcp_client,
             host=self.config.host,
             port=self.config.port,
@@ -123,10 +122,9 @@ class Connection:
             "Number of connections since last HA start: %s", self.connection_counter
         )
         for connection_opened_cb in self.connection_opened_cbs:
-            if asyncio.iscoroutine(coroutine := connection_opened_cb()):
-                task = self.loop.create_task(coroutine)
-                self.tasks.add(task)
-                task.add_done_callback(self.tasks.remove)
+            task = asyncio.create_task(connection_opened_cb())
+            self.tasks.add(task)
+            task.add_done_callback(self.tasks.remove)
 
     def register_frame_received_cb(self, callback: CallbackType) -> None:
         """Register frame received callback."""
@@ -136,19 +134,19 @@ class Connection:
         """Unregister frame received callback."""
         self.frame_received_cbs.remove(callback)
 
-    def register_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
+    def register_connection_closed_cb(self, callback: Callable[[], Coroutine[Any, Any, None]]) -> None:
         """Register connection closed callback."""
         self.connection_closed_cbs.append(callback)
 
-    def unregister_connection_closed_cb(self, callback: Callable[[], Coroutine]) -> None:
+    def unregister_connection_closed_cb(self, callback: Callable[[], Coroutine[Any, Any, None]]) -> None:
         """Unregister connection closed callback."""
         self.connection_closed_cbs.remove(callback)
 
-    def register_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
+    def register_connection_opened_cb(self, callback: Callable[[], Coroutine[Any, Any, None]]) -> None:
         """Register connection opened callback."""
         self.connection_opened_cbs.append(callback)
 
-    def unregister_connection_opened_cb(self, callback: Callable[[], Coroutine]) -> None:
+    def unregister_connection_opened_cb(self, callback: Callable[[], Coroutine[Any, Any, None]]) -> None:
         """Unregister connection opened callback."""
         self.connection_opened_cbs.remove(callback)
 
@@ -173,7 +171,7 @@ class Connection:
         PYVLXLOG.debug("REC: %s", frame)
         for frame_received_cb in self.frame_received_cbs:
             # pylint: disable=not-callable
-            task = self.loop.create_task(frame_received_cb(frame))
+            task = asyncio.create_task(frame_received_cb(frame))
             self.tasks.add(task)
             task.add_done_callback(self.tasks.remove)
 

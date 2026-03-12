@@ -5,11 +5,11 @@ import logging
 from pyvlx import Position, PyVLX
 
 
-async def main(loop):
+async def main() -> None:
     """Demonstrate functionality of PyVLX."""
-    pyvlx = PyVLX('pyvlx.yaml', loop=loop)
+    pyvlx = PyVLX('pyvlx.yaml')
     # Alternative:
-    # pyvlx = PyVLX(host="192.168.2.127", password="velux123", loop=loop)
+    # pyvlx = PyVLX(host="192.168.2.127", password="velux123")
 
     # Runing scenes:
     await pyvlx.load_scenes()
@@ -32,8 +32,4 @@ async def main(loop):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-
-    myloop = asyncio.new_event_loop()
-    myloop.run_until_complete(main(myloop))
-    # loop.run_forever()
-    myloop.close()
+    asyncio.run(main())
