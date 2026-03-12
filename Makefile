@@ -58,9 +58,9 @@ coverage:
 	pytest --cov --cov-report html --verbose
 
 requirements:
-	@python3 -m pip install pip-tools
-	@python3 -m piptools compile --strip-extras requirements/production.in --output-file requirements/production.txt
-	@python3 -m piptools compile --strip-extras requirements/testing.in --output-file requirements/testing.txt
-	@python3 -m piptools compile --strip-extras requirements/release.in --output-file requirements/release.txt
+	@python3 -m pip install uv
+	@python3 -m uv pip compile --strip-extras requirements/production.in --output-file requirements/production.txt
+	@python3 -m uv pip compile --strip-extras requirements/testing.in --output-file requirements/testing.txt
+	@python3 -m uv pip compile --strip-extras requirements/release.in --output-file requirements/release.txt
 
 .PHONY: test build requirements

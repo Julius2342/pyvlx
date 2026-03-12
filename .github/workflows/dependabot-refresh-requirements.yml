@@ -27,14 +27,14 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install pip-tools
-        run: python3 -m pip install pip-tools~=7.4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
 
       - name: Regenerate requirements
         run: |
-          python3 -m piptools compile --strip-extras requirements/production.in --output-file requirements/production.txt
-          python3 -m piptools compile --strip-extras requirements/testing.in --output-file requirements/testing.txt
-          python3 -m piptools compile --strip-extras requirements/release.in --output-file requirements/release.txt
+          uv pip compile --strip-extras requirements/production.in --output-file requirements/production.txt
+          uv pip compile --strip-extras requirements/testing.in --output-file requirements/testing.txt
+          uv pip compile --strip-extras requirements/release.in --output-file requirements/release.txt
 
       - name: Commit and push if changed
         run: |
