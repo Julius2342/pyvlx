@@ -8,8 +8,12 @@ build==1.4.0
     # via pyvlx
 certifi==2026.1.4
     # via requests
+cffi==2.0.0
+    # via cryptography
 charset-normalizer==3.4.4
     # via requests
+cryptography==46.0.5
+    # via secretstorage
 deprecated==1.3.1
     # via
     #   -r requirements/production.txt
@@ -30,6 +34,10 @@ jaraco-context==6.1.0
     # via keyring
 jaraco-functools==4.4.0
     # via keyring
+jeepney==0.9.0
+    # via
+    #   keyring
+    #   secretstorage
 keyring==25.7.0
     # via twine
 markdown-it-py==4.0.0
@@ -46,6 +54,8 @@ packaging==26.0
     # via
     #   build
     #   twine
+pycparser==3.0
+    # via cffi
 pygments==2.19.2
     # via
     #   readme-renderer
@@ -68,6 +78,8 @@ rfc3986==2.0.0
     # via twine
 rich==14.3.3
     # via twine
+secretstorage==3.5.0
+    # via keyring
 twine==6.2.0
     # via pyvlx
 urllib3==2.6.3
