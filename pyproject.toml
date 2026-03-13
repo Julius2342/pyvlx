@@ -27,14 +27,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = [
+dev = [
     "pytest==9.0.2",
     "pytest-cov==7.0.0",
     "mypy==1.19.1",
     "types-PyYAML==6.0.12.20250915",
     "types-Deprecated==1.3.1.20260130",
-]
-lint = [
     "isort==7.0.0",
     "flake8==7.3.0",
     "flake8-isort==7.0.0",

@@ -21,8 +21,6 @@ all:
 	@echo ""
 	@echo "build           -- build python package"
 	@echo ""
-	@echo "requirements    -- generate requirements/*.txt from requirements/*.in"
-	@echo ""
 	@echo "pypi            -- upload package to pypi"
 	@echo ""
 
@@ -57,10 +55,4 @@ pydocstyle:
 coverage:
 	pytest --cov --cov-report html --verbose
 
-requirements:
-	@python3 -m pip install uv
-	@python3 -m uv pip compile --strip-extras requirements/production.in --output-file requirements/production.txt
-	@python3 -m uv pip compile --strip-extras requirements/testing.in --output-file requirements/testing.txt
-	@python3 -m uv pip compile --strip-extras requirements/release.in --output-file requirements/release.txt
-
-.PHONY: test build requirements
+.PHONY: test build

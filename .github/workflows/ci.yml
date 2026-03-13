@@ -20,16 +20,13 @@ jobs:
         python-version: "3.x"        
     - name: Cache pip packages
       uses: actions/cache@v5
-      env:
-        cache-name: cache-pypi-modules
       with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
-          ${{ runner.os }}-pydocstyle-${{ env.cache-name }}-
+          ${{ runner.os }}-pip-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[dev]
     - name: Pydocstyle
       run: pydocstyle pyvlx test/*.py examples/*.py
   flake8:
@@ -42,16 +39,13 @@ jobs:
         python-version: "3.x"
     - name: Cache pip packages
       uses: actions/cache@v5
-      env:
-        cache-name: cache-pypi-modules
       with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-flake8-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
-          ${{ runner.os }}-flake8-${{ env.cache-name }}-
+          ${{ runner.os }}-pip-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[dev]
     - name: Flake8
       run: flake8 
   pylint:
@@ -64,16 +58,13 @@ jobs:
         python-version: "3.x"
     - name: Cache pip packages
       uses: actions/cache@v5
-      env:
-        cache-name: cache-pypi-modules
       with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pylint-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
-          ${{ runner.os }}-pylint-${{ env.cache-name }}-
+          ${{ runner.os }}-pip-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[dev]
     - name: Linter Pylint
       run: pylint pyvlx test/*.py examples/*.py
   isort:
@@ -86,16 +77,13 @@ jobs:
         python-version: "3.x"
     - name: Cache pip packages
       uses: actions/cache@v5
-      env:
-        cache-name: cache-pypi-modules
       with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-isort-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
-          ${{ runner.os }}-isort-${{ env.cache-name }}-
+          ${{ runner.os }}-pip-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[dev]
     - name: Isort
       run: isort --check-only test examples pyvlx
   mypy:
@@ -111,16 +99,13 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
       uses: actions/cache@v5
-      env:
-        cache-name: cache-pypi-modules
       with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-mypy-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
-          ${{ runner.os }}-mypy-${{ env.cache-name }}-
+          ${{ runner.os }}-pip-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[dev]
     - name: Mypy
       run: mypy pyvlx
   pytest:
@@ -136,16 +121,13 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Cache pip packages
       uses: actions/cache@v5
-      env:
-        cache-name: cache-pypi-modules
       with:
-        # pip cache files are stored in `~/.cache/pip` on Linux
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pytest-${{ env.cache-name }}-${{ hashFiles('pyproject.toml', 'requirements/production.in', 'requirements/testing.in', 'requirements/production.txt', 'requirements/testing.txt') }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
         restore-keys: |
-          ${{ runner.os }}-pytest-${{ env.cache-name }}-
+          ${{ runner.os }}-pip-
     - name: Install dependencies
-      run: pip install -r requirements/testing.txt
+      run: pip install -e .[dev]
     - name: pytest
       # run the tests, produce a .coverage.$pyversion file
       run: pytest --cov 
