@@ -286,7 +286,11 @@ class OpeningDevice(Node):
 
     def __str__(self) -> str:
         """Return object as readable string."""
-        return f'<{type(self).__name__} name="{self.name}" node_id="{self.node_id}" serial_number="{self.serial_number}" position="{self.position}"/>'
+        return (
+            f'<{type(self).__name__} name="{self.name}" '
+            f'node_id="{self.node_id}" serial_number="{self.serial_number}" '
+            f'position="{self.position}"/>'
+        )
 
 
 class Window(OpeningDevice):
