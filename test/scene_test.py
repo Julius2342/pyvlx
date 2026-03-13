@@ -1,7 +1,7 @@
 """Unit test for scene."""
 
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from pyvlx import Scene
 
@@ -22,3 +22,37 @@ class TestScene(unittest.TestCase):
         pyvlx = MagicMock()
         scene = Scene(pyvlx, 2, "Scene 1")
         self.assertEqual(str(scene), '<Scene name="Scene 1" id="2"/>')
+
+
+class TestSceneRun(unittest.IsolatedAsyncioTestCase):
+    """Test class for Scene.run()."""
+
+    @patch("pyvlx.scene.ActivateScene")
+    async def test_run_forwards_timeout(self, mock_activate_scene: MagicMock) -> None:
+        """Test run forwards timeout_in_seconds to ActivateScene when provided."""
+        pyvlx = MagicMock()
+        scene = Scene(pyvlx, 2, "Scene 1")
+        activate_scene_instance = MagicMock()
+        activate_scene_instance.do_api_call = AsyncMock()
+        activate_scene_instance.success = True
+        mock_activate_scene.return_value = activate_scene_instance
+
+        await scene.run(wait_for_completion=True, timeout_in_seconds=25)
+
+        self.assertEqual(mock_activate_scene.call_args.kwargs["timeout_in_seconds"], 25)
+        activate_scene_instance.do_api_call.assert_awaited_once()
+
+    @patch("pyvlx.scene.ActivateScene")
+    async def test_run_omits_timeout_when_not_provided(self, mock_activate_scene: MagicMock) -> None:
+        """Test run passes None for timeout_in_seconds when not provided, letting ActivateScene apply default."""
+        pyvlx = MagicMock()
+        scene = Scene(pyvlx, 2, "Scene 1")
+        activate_scene_instance = MagicMock()
+        activate_scene_instance.do_api_call = AsyncMock()
+        activate_scene_instance.success = True
+        mock_activate_scene.return_value = activate_scene_instance
+
+        await scene.run(wait_for_completion=True)
+
+        self.assertEqual(mock_activate_scene.call_args.kwargs["timeout_in_seconds"], None)
+        activate_scene_instance.do_api_call.assert_awaited_once()

@@ -1,6 +1,6 @@
 """Unit test for wink send."""
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from pyvlx import PyVLX
 from pyvlx.api.frames import (
@@ -61,3 +61,25 @@ class TestWinkSend(IsolatedAsyncioTestCase):
 
         frame = FrameWinkSendNotification(session_id=42)
         self.assertTrue(await wink_send.handle_frame(frame))
+
+    @patch("pyvlx.api.ApiEvent.do_api_call", new_callable=AsyncMock)
+    async def test_wink_with_explicit_timeout(self, do_api_call: AsyncMock) -> None:
+        """Test wink preserves explicitly provided timeout_in_seconds."""
+        pyvlx = MagicMock(spec=PyVLX)
+        wink_send = WinkSend(pyvlx=pyvlx, node_id=1, timeout_in_seconds=11)
+        self.assertEqual(wink_send.timeout_in_seconds, 11)
+
+        wink_send.success = True
+        await wink_send.wink()
+        do_api_call.assert_awaited_once()
+
+    @patch("pyvlx.api.ApiEvent.do_api_call", new_callable=AsyncMock)
+    async def test_wink_with_default_timeout_when_not_provided(self, do_api_call: AsyncMock) -> None:
+        """Test wink applies default timeout when timeout_in_seconds is not provided."""
+        pyvlx = MagicMock(spec=PyVLX)
+        wink_send = WinkSend(pyvlx=pyvlx, node_id=1)
+        self.assertEqual(wink_send.timeout_in_seconds, 5)
+
+        wink_send.success = True
+        await wink_send.wink()
+        do_api_call.assert_awaited_once()

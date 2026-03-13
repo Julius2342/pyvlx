@@ -37,7 +37,8 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
         set_position.assert_awaited_once_with(
             position=Position(position_percent=opening_device.open_position_target),
             velocity=velocity,
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+            timeout_in_seconds=None)
 
     @patch("pyvlx.opening_device.OpeningDevice.set_position", new_callable=AsyncMock)
     async def test_close(self, set_position: AsyncMock) -> None:
@@ -49,7 +50,8 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
         set_position.assert_awaited_once_with(
             position=Position(position_percent=opening_device.close_position_target),
             velocity=velocity,
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+            timeout_in_seconds=None)
 
     @patch("pyvlx.opening_device.OpeningDevice.set_position", new_callable=AsyncMock)
     async def test_stop(self, set_position: AsyncMock) -> None:
@@ -59,7 +61,42 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
         await opening_device.stop(wait_for_completion=wait_for_completion)
         set_position.assert_awaited_once_with(
             position=CurrentPosition(),
-            wait_for_completion=wait_for_completion)
+            wait_for_completion=wait_for_completion,
+            timeout_in_seconds=None)
+
+    @patch("pyvlx.opening_device.CommandSend")
+    @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
+    async def test_set_position_forwards_timeout(self, after_update: AsyncMock, mock_command_send: MagicMock) -> None:
+        """Test set_position forwards timeout_in_seconds to CommandSend when provided."""
+        opening_device = OpeningDevice(pyvlx=self.mocked_pyvlx, node_id=23, name="Test device")
+        command_instance = MagicMock()
+        command_instance.send = AsyncMock()
+        mock_command_send.return_value = command_instance
+
+        await opening_device.set_position(
+            position=Position(position_percent=30),
+            wait_for_completion=True,
+            timeout_in_seconds=7,
+        )
+
+        self.assertEqual(mock_command_send.call_args.kwargs["timeout_in_seconds"], 7)
+        command_instance.send.assert_awaited_once()
+        after_update.assert_awaited_once()
+
+    @patch("pyvlx.opening_device.CommandSend")
+    @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
+    async def test_set_position_omits_timeout_when_not_provided(self, after_update: AsyncMock, mock_command_send: MagicMock) -> None:
+        """Test set_position passes None for timeout_in_seconds when not provided, letting CommandSend apply default."""
+        opening_device = OpeningDevice(pyvlx=self.mocked_pyvlx, node_id=23, name="Test device")
+        command_instance = MagicMock()
+        command_instance.send = AsyncMock()
+        mock_command_send.return_value = command_instance
+
+        await opening_device.set_position(position=Position(position_percent=30))
+
+        self.assertEqual(mock_command_send.call_args.kwargs["timeout_in_seconds"], None)
+        command_instance.send.assert_awaited_once()
+        after_update.assert_awaited_once()
 
     @patch("pyvlx.opening_device.SetLimitation")
     @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
