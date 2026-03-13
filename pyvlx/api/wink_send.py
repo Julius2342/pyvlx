@@ -22,9 +22,11 @@ class WinkSend(ApiEvent):
             node_id: int,
             wink_time: WinkTime = WinkTime.BY_MANUFACTURER,
             wait_for_completion: bool = True,
-            timeout_in_seconds: int = 5,
+            timeout_in_seconds: Optional[int] = None,
     ):
         """Initialize WinkSend class."""
+        if timeout_in_seconds is None:
+            timeout_in_seconds = 5
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
         self.success = False
         self.node_id = node_id

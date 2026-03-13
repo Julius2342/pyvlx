@@ -27,9 +27,11 @@ class CommandSend(ApiEvent):
             functional_parameter: Optional[FunctionalParams] = None,
             active_parameter: int = 0,
             wait_for_completion: bool = True,
-            timeout_in_seconds: int = 2,
+            timeout_in_seconds: Optional[int] = None,
     ):
         """Initialize CommandSend class."""
+        if timeout_in_seconds is None:
+            timeout_in_seconds = 2
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
         self.success = False
         self.node_id = node_id
