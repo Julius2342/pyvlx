@@ -325,7 +325,11 @@ class Window(OpeningDevice):
 
     def __str__(self) -> str:
         """Return object as readable string."""
-        return f'<{type(self).__name__} name="{self.name}" node_id="{self.node_id}" rain_sensor={self.rain_sensor} serial_number="{self.serial_number}" position="{self.position}"/>'
+        return (
+            f'<{type(self).__name__} name="{self.name}" '
+            f'node_id="{self.node_id}" rain_sensor={self.rain_sensor} '
+            f'serial_number="{self.serial_number}" position="{self.position}"/>'
+        )
 
     @deprecated("Use 'get_limitation_min' instead.")
     async def get_limitation(self) -> GetLimitation:
