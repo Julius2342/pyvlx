@@ -86,7 +86,7 @@ class OpeningDevice(Node):
             * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
 
         """
         fp: FunctionalParams = {}
@@ -128,7 +128,7 @@ class OpeningDevice(Node):
             * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
 
         """
         await self.set_position(
@@ -150,7 +150,7 @@ class OpeningDevice(Node):
             * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position(
             position=Position(position_percent=self.close_position_target),
@@ -165,6 +165,7 @@ class OpeningDevice(Node):
         Parameters:
             * wait_for_completion: If set, function will return
                 after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
 
         """
         await self.set_position(
@@ -398,7 +399,7 @@ class Blind(OpeningDevice):
                 after device has reached target position.
             * orientation: If set, the orientation of the device will be set in the same request.
                 Note, that, if the position is set to 0, the orientation will be set to 0 too.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
 
         """
         self.target_position = position
@@ -453,7 +454,7 @@ class Blind(OpeningDevice):
                 without stopping the blind (if orientation position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position_and_orientation(
             position=position,
@@ -474,7 +475,7 @@ class Blind(OpeningDevice):
             * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position(
             position=Position(position_percent=self.open_position_target),
@@ -495,7 +496,7 @@ class Blind(OpeningDevice):
             * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position(
             position=Position(position_percent=self.close_position_target),
@@ -505,7 +506,13 @@ class Blind(OpeningDevice):
         )
 
     async def stop(self, wait_for_completion: bool = True, timeout_in_seconds: int | None = None) -> None:
-        """Stop Blind position."""
+        """Stop Blind position.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+        """
         await self.set_position_and_orientation(
             position=CurrentPosition(),
             wait_for_completion=wait_for_completion,
@@ -528,7 +535,7 @@ class Blind(OpeningDevice):
                 without stopping the blind (if the position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
 
         """
         self.target_orientation = orientation
@@ -633,7 +640,7 @@ class DualRollerShutter(OpeningDevice):
                 which allows to adjust the position while the blind is in movement
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         fp: FunctionalParams = {}
 
@@ -697,7 +704,7 @@ class DualRollerShutter(OpeningDevice):
         Parameters:
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position(
             position=Position(position_percent=self.open_position_target),
@@ -720,7 +727,7 @@ class DualRollerShutter(OpeningDevice):
         Parameters:
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position(
             position=Position(position_percent=self.close_position_target),

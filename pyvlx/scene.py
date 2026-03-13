@@ -31,7 +31,7 @@ class Scene:
         Parameters:
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-            * timeout_in_seconds: Time to wait until completion, with default value (optional changeable).
+            * timeout_in_seconds: Optional timeout in seconds; if None, the default timeout used by ActivateScene is applied.
 
         """
         activate_scene = ActivateScene(
