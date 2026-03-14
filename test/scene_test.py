@@ -43,8 +43,8 @@ class TestSceneRun(unittest.IsolatedAsyncioTestCase):
         activate_scene_instance.do_api_call.assert_awaited_once()
 
     @patch("pyvlx.scene.ActivateScene")
-    async def test_run_omits_timeout_when_not_provided(self, mock_activate_scene: MagicMock) -> None:
-        """Test run passes None for timeout_in_seconds when not provided, letting ActivateScene apply default."""
+    async def test_run_uses_default_timeout_when_not_provided(self, mock_activate_scene: MagicMock) -> None:
+        """Test run applies the ActivateScene default timeout when not provided."""
         pyvlx = MagicMock()
         scene = Scene(pyvlx, 2, "Scene 1")
         activate_scene_instance = MagicMock()
@@ -54,5 +54,5 @@ class TestSceneRun(unittest.IsolatedAsyncioTestCase):
 
         await scene.run(wait_for_completion=True)
 
-        self.assertEqual(mock_activate_scene.call_args.kwargs["timeout_in_seconds"], None)
+        self.assertEqual(mock_activate_scene.call_args.kwargs["timeout_in_seconds"], 60)
         activate_scene_instance.do_api_call.assert_awaited_once()

@@ -17,11 +17,9 @@ class ActivateScene(ApiEvent):
     """Class for activating scene via API."""
 
     def __init__(
-            self, pyvlx: "PyVLX", scene_id: int, wait_for_completion: bool = True, timeout_in_seconds: Optional[int] = None
+            self, pyvlx: "PyVLX", scene_id: int, wait_for_completion: bool = True, timeout_in_seconds: int = 60
     ):
         """Initialize ActivateScene class."""
-        if timeout_in_seconds is None:
-            timeout_in_seconds = 60
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
         self.success = False
         self.scene_id = scene_id

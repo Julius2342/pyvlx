@@ -105,6 +105,9 @@ class OpeningDevice(Node):
         elif isinstance(velocity, int):
             fp["fp1"] = Position(position_percent=velocity)
 
+        if timeout_in_seconds is None:
+            timeout_in_seconds = 2
+
         command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
@@ -426,6 +429,9 @@ class Blind(OpeningDevice):
         elif isinstance(velocity, int):
             fp["fp1"] = Position(position_percent=velocity)
 
+        if timeout_in_seconds is None:
+            timeout_in_seconds = 2
+
         command = CommandSend(
             pyvlx=self.pyvlx,
             node_id=self.node_id,
@@ -545,6 +551,9 @@ class Blind(OpeningDevice):
                                 Position(position_percent=0)
                                 if self.target_position == Position(position_percent=0)
                                 else self.target_orientation}
+
+        if timeout_in_seconds is None:
+            timeout_in_seconds = 2
 
         command = CommandSend(
             pyvlx=self.pyvlx,
@@ -671,6 +680,9 @@ class DualRollerShutter(OpeningDevice):
                     fp["fp3"] = Parameter(raw=b"\xC8\x00")
         elif isinstance(velocity, int):
             fp["fp3"] = Position(position_percent=velocity)
+
+        if timeout_in_seconds is None:
+            timeout_in_seconds = 2
 
         command = CommandSend(
             pyvlx=self.pyvlx,

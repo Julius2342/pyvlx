@@ -74,7 +74,7 @@ class TestWinkSend(IsolatedAsyncioTestCase):
         do_api_call.assert_awaited_once()
 
     @patch("pyvlx.api.ApiEvent.do_api_call", new_callable=AsyncMock)
-    async def test_wink_omits_timeout_when_not_provided(self, do_api_call: AsyncMock) -> None:
+    async def test_wink_uses_default_timeout_when_not_provided(self, do_api_call: AsyncMock) -> None:
         """Test wink applies default timeout when timeout_in_seconds is not provided."""
         pyvlx = MagicMock(spec=PyVLX)
         wink_send = WinkSend(pyvlx=pyvlx, node_id=1)

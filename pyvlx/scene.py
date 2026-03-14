@@ -34,6 +34,9 @@ class Scene:
             * timeout_in_seconds: Optional timeout in seconds; if None, the default timeout used by ActivateScene is applied.
 
         """
+        if timeout_in_seconds is None:
+            timeout_in_seconds = 60
+
         activate_scene = ActivateScene(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
