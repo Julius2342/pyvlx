@@ -68,7 +68,6 @@ def convert_frame_to_node(
         )
 
     if frame.node_type in [
-        NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND,
         NodeTypeWithSubtype.VERTICAL_INTERIOR_BLINDS,
         NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND,
     ]:
