@@ -50,7 +50,7 @@ class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
     def test_str(self) -> None:
         """Test string representation of FrameNodeStatePositionChangedNotification."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
-        test_ts = "{:02x}".format(1288634368)
+        test_ts = "0x{:02x}".format(1288634368)
         self.assertEqual(
             str(frame),
             '<FrameNodeStatePositionChangedNotification node_id="5" state="DONE" '
