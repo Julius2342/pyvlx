@@ -290,10 +290,12 @@ class OpeningDevice(Node):
 
     def __str__(self) -> str:
         """Return object as readable string."""
-        return (
-            f'<{type(self).__name__} name="{self.name}" '
-            f'node_id="{self.node_id}" serial_number="{self.serial_number}" '
-            f'position="{self.position}"/>'
+        return '<{} name="{}" node_id="{}" serial_number="{}" position="{}"/>'.format(
+            type(self).__name__,
+            self.name,
+            self.node_id,
+            self.serial_number,
+            self.position,
         )
 
 
@@ -333,10 +335,13 @@ class Window(OpeningDevice):
 
     def __str__(self) -> str:
         """Return object as readable string."""
-        return (
-            f'<{type(self).__name__} name="{self.name}" '
-            f'node_id="{self.node_id}" rain_sensor={self.rain_sensor} '
-            f'serial_number="{self.serial_number}" position="{self.position}"/>'
+        return '<{} name="{}" node_id="{}" rain_sensor={} serial_number="{}" position="{}"/>'.format(
+            type(self).__name__,
+            self.name,
+            self.node_id,
+            self.rain_sensor,
+            self.serial_number,
+            self.position,
         )
 
     @deprecated("Use 'get_limitation_min' instead.")
@@ -536,7 +541,7 @@ class Blind(OpeningDevice):
 
         Parameters:
             * orientation: Position object containing the target orientation.
-            + target_orientation: Position object holding the target orientation
+            * target_orientation: Position object holding the target orientation
                 which allows to adjust the orientation while the blind is in movement
                 without stopping the blind (if the position has been changed.)
             * wait_for_completion: If set, function will return
