@@ -23,7 +23,7 @@ class FrameGetLimitationStatus(FrameBase):
         self.node_ids = node_ids if node_ids is not None else []
 
         self.parameter_id = 0  # Main Parameter
-        self.limitations_type = limitation_type
+        self.limitation_type = limitation_type
 
     def get_payload(self) -> bytes:
         """Return Payload."""
@@ -32,13 +32,13 @@ class FrameGetLimitationStatus(FrameBase):
         ret += bytes([len(self.node_ids)])  # index array count
         ret += bytes(self.node_ids) + bytes(20 - len(self.node_ids))
         ret += bytes([self.parameter_id])
-        ret += bytes([self.limitations_type.value])
+        ret += bytes([self.limitation_type.value])
         return ret
 
     def __str__(self) -> str:
         """Return human readable string."""
         return f'<{type(self).__name__} node_ids="{self.node_ids}" ' \
-               f'session_id="{self.session_id}" originator="{self.originator}" />'
+               f'session_id="{self.session_id}" originator="{self.originator}" limitation_type="{self.limitation_type.name}" />'
 
 
 class FrameGetLimitationStatusConfirmation(FrameBase):
