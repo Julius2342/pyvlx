@@ -2,7 +2,7 @@
 import asyncio
 import datetime
 from asyncio import Task
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, ClassVar, Optional
 
 from deprecated import deprecated
 
@@ -23,6 +23,8 @@ if TYPE_CHECKING:
 
 class OpeningDevice(Node):
     """Meta class for opening device with one main parameter for position."""
+
+    DEFAULT_TIMEOUT: ClassVar[int] = 2
 
     def __init__(
         self,
@@ -77,7 +79,7 @@ class OpeningDevice(Node):
         position: Position,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = DEFAULT_TIMEOUT,
     ) -> None:
         """Set opening device to desired position.
 
@@ -105,9 +107,6 @@ class OpeningDevice(Node):
         elif isinstance(velocity, int):
             fp["fp1"] = Position(position_percent=velocity)
 
-        if timeout_in_seconds is None:
-            timeout_in_seconds = 2
-
         command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
@@ -123,7 +122,7 @@ class OpeningDevice(Node):
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = DEFAULT_TIMEOUT,
     ) -> None:
         """Open opening device.
 
@@ -145,7 +144,7 @@ class OpeningDevice(Node):
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = DEFAULT_TIMEOUT,
     ) -> None:
         """Close opening device.
 
@@ -162,7 +161,7 @@ class OpeningDevice(Node):
             timeout_in_seconds=timeout_in_seconds,
         )
 
-    async def stop(self, wait_for_completion: bool = True, timeout_in_seconds: int | None = None) -> None:
+    async def stop(self, wait_for_completion: bool = True, timeout_in_seconds: int = DEFAULT_TIMEOUT) -> None:
         """Stop opening device.
 
         Parameters:
@@ -393,7 +392,7 @@ class Blind(OpeningDevice):
         wait_for_completion: bool = True,
         velocity: Velocity | int | None = None,
         orientation: Optional[Position] = None,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Set blind to desired position.
 
@@ -434,9 +433,6 @@ class Blind(OpeningDevice):
         elif isinstance(velocity, int):
             fp["fp1"] = Position(position_percent=velocity)
 
-        if timeout_in_seconds is None:
-            timeout_in_seconds = 2
-
         command = CommandSend(
             pyvlx=self.pyvlx,
             node_id=self.node_id,
@@ -453,7 +449,7 @@ class Blind(OpeningDevice):
         position: Position,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Set blind to desired position.
 
@@ -478,7 +474,7 @@ class Blind(OpeningDevice):
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Open blind.
 
@@ -499,7 +495,7 @@ class Blind(OpeningDevice):
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Close blind.
 
@@ -516,7 +512,7 @@ class Blind(OpeningDevice):
             timeout_in_seconds=timeout_in_seconds,
         )
 
-    async def stop(self, wait_for_completion: bool = True, timeout_in_seconds: int | None = None) -> None:
+    async def stop(self, wait_for_completion: bool = True, timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT) -> None:
         """Stop Blind position.
 
         Parameters:
@@ -535,7 +531,7 @@ class Blind(OpeningDevice):
         self,
         orientation: Position,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Set Blind shades to desired orientation.
 
@@ -557,9 +553,6 @@ class Blind(OpeningDevice):
                                 if self.target_position == Position(position_percent=0)
                                 else self.target_orientation}
 
-        if timeout_in_seconds is None:
-            timeout_in_seconds = 2
-
         command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
@@ -573,7 +566,7 @@ class Blind(OpeningDevice):
         # KLF200 always send UNKNOWN position for functional parameter,
         # so orientation is set directly and not via GW_NODE_STATE_POSITION_CHANGED_NTF
 
-    async def open_orientation(self, wait_for_completion: bool = True, timeout_in_seconds: int | None = None) -> None:
+    async def open_orientation(self, wait_for_completion: bool = True, timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT) -> None:
         """Open Blind slats orientation.
 
         Blind slats with ±90° orientation are open at 50%
@@ -584,7 +577,7 @@ class Blind(OpeningDevice):
             timeout_in_seconds=timeout_in_seconds,
         )
 
-    async def close_orientation(self, wait_for_completion: bool = True, timeout_in_seconds: int | None = None) -> None:
+    async def close_orientation(self, wait_for_completion: bool = True, timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT) -> None:
         """Close Blind slats."""
         await self.set_orientation(
             orientation=Position(position_percent=self.close_orientation_target),
@@ -592,7 +585,7 @@ class Blind(OpeningDevice):
             timeout_in_seconds=timeout_in_seconds,
         )
 
-    async def stop_orientation(self, wait_for_completion: bool = True, timeout_in_seconds: int | None = None) -> None:
+    async def stop_orientation(self, wait_for_completion: bool = True, timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT) -> None:
         """Stop Blind slats."""
         await self.set_orientation(
             orientation=CurrentPosition(),
@@ -642,7 +635,7 @@ class DualRollerShutter(OpeningDevice):
         position: Position,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
         *,
         curtain: str = "dual",
     ) -> None:
@@ -686,9 +679,6 @@ class DualRollerShutter(OpeningDevice):
         elif isinstance(velocity, int):
             fp["fp3"] = Position(position_percent=velocity)
 
-        if timeout_in_seconds is None:
-            timeout_in_seconds = 2
-
         command = CommandSend(
             pyvlx=self.pyvlx,
             wait_for_completion=wait_for_completion,
@@ -712,7 +702,7 @@ class DualRollerShutter(OpeningDevice):
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
         *,
         curtain: str = "dual",
     ) -> None:
@@ -735,7 +725,7 @@ class DualRollerShutter(OpeningDevice):
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
         *,
         curtain: str = "dual",
     ) -> None:
@@ -757,7 +747,7 @@ class DualRollerShutter(OpeningDevice):
     async def stop(
         self,
         wait_for_completion: bool = True,
-        timeout_in_seconds: int | None = None,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
         *,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         curtain: str = "dual",

@@ -38,7 +38,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
             position=Position(position_percent=opening_device.open_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
-            timeout_in_seconds=None)
+            timeout_in_seconds=OpeningDevice.DEFAULT_TIMEOUT)
 
     @patch("pyvlx.opening_device.OpeningDevice.set_position", new_callable=AsyncMock)
     async def test_close(self, set_position: AsyncMock) -> None:
@@ -51,7 +51,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
             position=Position(position_percent=opening_device.close_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
-            timeout_in_seconds=None)
+            timeout_in_seconds=OpeningDevice.DEFAULT_TIMEOUT)
 
     @patch("pyvlx.opening_device.OpeningDevice.set_position", new_callable=AsyncMock)
     async def test_stop(self, set_position: AsyncMock) -> None:
@@ -62,7 +62,7 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
         set_position.assert_awaited_once_with(
             position=CurrentPosition(),
             wait_for_completion=wait_for_completion,
-            timeout_in_seconds=None)
+            timeout_in_seconds=OpeningDevice.DEFAULT_TIMEOUT)
 
     @patch("pyvlx.opening_device.CommandSend")
     @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
