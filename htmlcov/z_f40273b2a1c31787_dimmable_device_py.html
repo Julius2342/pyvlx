@@ -67,7 +67,7 @@
             <a id="nextFileLink" class="nav" href="z_f40273b2a1c31787_discovery_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.1">coverage.py v7.13.1</a>,
-            created at 2026-03-16 20:10 +0000
+            created at 2026-03-16 20:24 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -160,24 +160,22 @@
     <p class="run"><span class="n"><a id="t76" href="#t76">76</a></span><span class="t">    <span class="key">def</span> <span class="nam">__str__</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span> <span class="op">-></span> <span class="nam">str</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t77" href="#t77">77</a></span><span class="t">        <span class="str">"""Return object as readable string."""</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t78" href="#t78">78</a></span><span class="t">        <span class="key">return</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t79" href="#t79">79</a></span><span class="t">            <span class="str">'&lt;{} name="{}" '</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t80" href="#t80">80</a></span><span class="t">            <span class="str">'node_id="{}" '</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t81" href="#t81">81</a></span><span class="t">            <span class="str">'serial_number="{}"/>'</span><span class="op">.</span><span class="nam">format</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t82" href="#t82">82</a></span><span class="t">                <span class="nam">type</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">.</span><span class="nam">__name__</span><span class="op">,</span> <span class="nam">self</span><span class="op">.</span><span class="nam">name</span><span class="op">,</span> <span class="nam">self</span><span class="op">.</span><span class="nam">node_id</span><span class="op">,</span> <span class="nam">self</span><span class="op">.</span><span class="nam">serial_number</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t83" href="#t83">83</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t84" href="#t84">84</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t85" href="#t85">85</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t86" href="#t86">86</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t87" href="#t87">87</a></span><span class="t"><span class="key">class</span> <span class="nam">ExteriorHeating</span><span class="op">(</span><span class="nam">DimmableDevice</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t88" href="#t88">88</a></span><span class="t">    <span class="str">"""Exterior heating device that supports setting intensity."""</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t89" href="#t89">89</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t90" href="#t90">90</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t91" href="#t91">91</a></span><span class="t"><span class="key">class</span> <span class="nam">Light</span><span class="op">(</span><span class="nam">DimmableDevice</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t92" href="#t92">92</a></span><span class="t">    <span class="str">"""Lights that support setting brightness."""</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t93" href="#t93">93</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t94" href="#t94">94</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t95" href="#t95">95</a></span><span class="t"><span class="key">class</span> <span class="nam">OnOffLight</span><span class="op">(</span><span class="nam">DimmableDevice</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t96" href="#t96">96</a></span><span class="t">    <span class="str">"""Lights supporting on/off only."""</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t79" href="#t79">79</a></span><span class="t">            <span class="fst">f'</span><span class="fst">&lt;</span><span class="op">{</span><span class="nam">type</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">.</span><span class="nam">__name__</span><span class="op">}</span><span class="fst"> name="</span><span class="op">{</span><span class="nam">self</span><span class="op">.</span><span class="nam">name</span><span class="op">}</span><span class="fst">" </span><span class="fst">'</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t80" href="#t80">80</a></span><span class="t">            <span class="fst">f'</span><span class="fst">node_id="</span><span class="op">{</span><span class="nam">self</span><span class="op">.</span><span class="nam">node_id</span><span class="op">}</span><span class="fst">" </span><span class="fst">'</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t81" href="#t81">81</a></span><span class="t">            <span class="fst">f'</span><span class="fst">serial_number="</span><span class="op">{</span><span class="nam">self</span><span class="op">.</span><span class="nam">serial_number</span><span class="op">}</span><span class="fst">"/></span><span class="fst">'</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t82" href="#t82">82</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t83" href="#t83">83</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t84" href="#t84">84</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t85" href="#t85">85</a></span><span class="t"><span class="key">class</span> <span class="nam">ExteriorHeating</span><span class="op">(</span><span class="nam">DimmableDevice</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t86" href="#t86">86</a></span><span class="t">    <span class="str">"""Exterior heating device that supports setting intensity."""</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t87" href="#t87">87</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t88" href="#t88">88</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t89" href="#t89">89</a></span><span class="t"><span class="key">class</span> <span class="nam">Light</span><span class="op">(</span><span class="nam">DimmableDevice</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t90" href="#t90">90</a></span><span class="t">    <span class="str">"""Lights that support setting brightness."""</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t91" href="#t91">91</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t92" href="#t92">92</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t93" href="#t93">93</a></span><span class="t"><span class="key">class</span> <span class="nam">OnOffLight</span><span class="op">(</span><span class="nam">DimmableDevice</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t94" href="#t94">94</a></span><span class="t">    <span class="str">"""Lights supporting on/off only."""</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -187,7 +185,7 @@
             <a class="nav" href="z_f40273b2a1c31787_discovery_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.1">coverage.py v7.13.1</a>,
-            created at 2026-03-16 20:10 +0000
+            created at 2026-03-16 20:24 +0000
         </p>
     </div>
 </footer>
