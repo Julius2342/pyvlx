@@ -2,7 +2,7 @@
 import asyncio
 import datetime
 from asyncio import Task
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, ClassVar, Optional
 
 from deprecated import deprecated
 
@@ -23,6 +23,8 @@ if TYPE_CHECKING:
 
 class OpeningDevice(Node):
     """Meta class for opening device with one main parameter for position."""
+
+    DEFAULT_TIMEOUT: ClassVar[int] = 2
 
     def __init__(
         self,
@@ -77,6 +79,7 @@ class OpeningDevice(Node):
         position: Position,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
+        timeout_in_seconds: int = DEFAULT_TIMEOUT,
     ) -> None:
         """Set opening device to desired position.
 
@@ -85,6 +88,7 @@ class OpeningDevice(Node):
             * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
 
         """
         fp: FunctionalParams = {}
@@ -109,6 +113,7 @@ class OpeningDevice(Node):
             node_id=self.node_id,
             parameter=position,
             functional_parameter=fp,
+            timeout_in_seconds=timeout_in_seconds,
         )
         await command.send()
         await self.after_update()
@@ -117,6 +122,7 @@ class OpeningDevice(Node):
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
+        timeout_in_seconds: int = DEFAULT_TIMEOUT,
     ) -> None:
         """Open opening device.
 
@@ -124,18 +130,21 @@ class OpeningDevice(Node):
             * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
 
         """
         await self.set_position(
             position=Position(position_percent=self.open_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
     async def close(
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
+        timeout_in_seconds: int = DEFAULT_TIMEOUT,
     ) -> None:
         """Close opening device.
 
@@ -143,24 +152,28 @@ class OpeningDevice(Node):
             * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position(
             position=Position(position_percent=self.close_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
-    async def stop(self, wait_for_completion: bool = True) -> None:
+    async def stop(self, wait_for_completion: bool = True, timeout_in_seconds: int = DEFAULT_TIMEOUT) -> None:
         """Stop opening device.
 
         Parameters:
             * wait_for_completion: If set, function will return
                 after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
 
         """
         await self.set_position(
-            position=CurrentPosition(), wait_for_completion=wait_for_completion
+            position=CurrentPosition(),
+            wait_for_completion=wait_for_completion,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
     async def set_position_limitations(self,
@@ -372,6 +385,7 @@ class Blind(OpeningDevice):
         wait_for_completion: bool = True,
         velocity: Velocity | int | None = None,
         orientation: Optional[Position] = None,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Set blind to desired position.
 
@@ -385,6 +399,7 @@ class Blind(OpeningDevice):
                 after device has reached target position.
             * orientation: If set, the orientation of the device will be set in the same request.
                 Note, that, if the position is set to 0, the orientation will be set to 0 too.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
 
         """
         self.target_position = position
@@ -416,7 +431,8 @@ class Blind(OpeningDevice):
             node_id=self.node_id,
             parameter=position,
             wait_for_completion=wait_for_completion,
-            functional_parameter=fp
+            functional_parameter=fp,
+            timeout_in_seconds=timeout_in_seconds,
         )
         await command.send()
         await self.after_update()
@@ -426,6 +442,7 @@ class Blind(OpeningDevice):
         position: Position,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Set blind to desired position.
 
@@ -437,17 +454,20 @@ class Blind(OpeningDevice):
                 without stopping the blind (if orientation position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position_and_orientation(
             position=position,
             wait_for_completion=wait_for_completion,
             velocity=velocity,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
     async def open(
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Open blind.
 
@@ -455,17 +475,20 @@ class Blind(OpeningDevice):
             * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position(
             position=Position(position_percent=self.open_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
     async def close(
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Close blind.
 
@@ -473,33 +496,46 @@ class Blind(OpeningDevice):
             * velocity: Velocity to be used during transition.
             * wait_for_completion: If set, function will return
                 after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position(
             position=Position(position_percent=self.close_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
-    async def stop(self, wait_for_completion: bool = True) -> None:
-        """Stop Blind position."""
+    async def stop(self, wait_for_completion: bool = True, timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT) -> None:
+        """Stop Blind position.
+
+        Parameters:
+            * wait_for_completion: If set, function will return
+                after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+        """
         await self.set_position_and_orientation(
             position=CurrentPosition(),
             wait_for_completion=wait_for_completion,
             orientation=self.target_orientation,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
     async def set_orientation(
-        self, orientation: Position, wait_for_completion: bool = True
+        self,
+        orientation: Position,
+        wait_for_completion: bool = True,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Set Blind shades to desired orientation.
 
         Parameters:
             * orientation: Position object containing the target orientation.
-            + target_orientation: Position object holding the target orientation
+            * target_orientation: Position object holding the target orientation
                 which allows to adjust the orientation while the blind is in movement
                 without stopping the blind (if the position has been changed.)
             * wait_for_completion: If set, function will return
                 after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
 
         """
         self.target_orientation = orientation
@@ -516,13 +552,14 @@ class Blind(OpeningDevice):
             node_id=self.node_id,
             parameter=self.target_position,
             functional_parameter=fp,
+            timeout_in_seconds=timeout_in_seconds,
         )
         await command.send()
         await self.after_update()
         # KLF200 always send UNKNOWN position for functional parameter,
         # so orientation is set directly and not via GW_NODE_STATE_POSITION_CHANGED_NTF
 
-    async def open_orientation(self, wait_for_completion: bool = True) -> None:
+    async def open_orientation(self, wait_for_completion: bool = True, timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT) -> None:
         """Open Blind slats orientation.
 
         Blind slats with ±90° orientation are open at 50%
@@ -530,19 +567,23 @@ class Blind(OpeningDevice):
         await self.set_orientation(
             orientation=Position(position_percent=self.open_orientation_target),
             wait_for_completion=wait_for_completion,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
-    async def close_orientation(self, wait_for_completion: bool = True) -> None:
+    async def close_orientation(self, wait_for_completion: bool = True, timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT) -> None:
         """Close Blind slats."""
         await self.set_orientation(
             orientation=Position(position_percent=self.close_orientation_target),
             wait_for_completion=wait_for_completion,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
-    async def stop_orientation(self, wait_for_completion: bool = True) -> None:
+    async def stop_orientation(self, wait_for_completion: bool = True, timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT) -> None:
         """Stop Blind slats."""
         await self.set_orientation(
-            orientation=CurrentPosition(), wait_for_completion=wait_for_completion
+            orientation=CurrentPosition(),
+            wait_for_completion=wait_for_completion,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
 
@@ -587,6 +628,8 @@ class DualRollerShutter(OpeningDevice):
         position: Position,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
+        *,
         curtain: str = "dual",
     ) -> None:
         """Set DualRollerShutter to desired position.
@@ -597,6 +640,7 @@ class DualRollerShutter(OpeningDevice):
                 which allows to adjust the position while the blind is in movement
             * wait_for_completion: If set, function will return
                 after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         fp: FunctionalParams = {}
 
@@ -634,7 +678,8 @@ class DualRollerShutter(OpeningDevice):
             node_id=self.node_id,
             parameter=self.target_position,
             active_parameter=self.active_parameter,
-            functional_parameter=fp
+            functional_parameter=fp,
+            timeout_in_seconds=timeout_in_seconds,
         )
         await command.send()
         if position.position <= Position.MAX:
@@ -650,6 +695,8 @@ class DualRollerShutter(OpeningDevice):
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
+        *,
         curtain: str = "dual",
     ) -> None:
         """Open DualRollerShutter.
@@ -657,19 +704,22 @@ class DualRollerShutter(OpeningDevice):
         Parameters:
             * wait_for_completion: If set, function will return
                 after device has reached target position.
-
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position(
             position=Position(position_percent=self.open_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
             curtain=curtain,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
     async def close(
         self,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         wait_for_completion: bool = True,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
+        *,
         curtain: str = "dual",
     ) -> None:
         """Close DualRollerShutter.
@@ -677,17 +727,21 @@ class DualRollerShutter(OpeningDevice):
         Parameters:
             * wait_for_completion: If set, function will return
                 after device has reached target position.
+            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
         """
         await self.set_position(
             position=Position(position_percent=self.close_position_target),
             velocity=velocity,
             wait_for_completion=wait_for_completion,
             curtain=curtain,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
     async def stop(
         self,
         wait_for_completion: bool = True,
+        timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
+        *,
         velocity: Velocity | int | None = Velocity.DEFAULT,
         curtain: str = "dual",
     ) -> None:
@@ -697,6 +751,7 @@ class DualRollerShutter(OpeningDevice):
             velocity=velocity,
             wait_for_completion=wait_for_completion,
             curtain=curtain,
+            timeout_in_seconds=timeout_in_seconds,
         )
 
 

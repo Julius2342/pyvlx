@@ -103,7 +103,7 @@ reports = false
 
 [tool.pylint.format]
 indent-string = "    "
-max-line-length = 150
+max-line-length = 160
 max-positional-arguments = 7
 
 [tool.flake8]
