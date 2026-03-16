@@ -4,6 +4,7 @@
 from .activate_scene import ActivateScene
 from .api_event import ApiEvent
 from .command_send import CommandSend
+from .completable_api_event import CompletableApiEvent
 from .factory_default import FactoryDefault
 from .get_all_nodes_information import GetAllNodesInformation
 from .get_local_time import (

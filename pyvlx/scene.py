@@ -2,7 +2,6 @@
 from typing import TYPE_CHECKING, Any
 
 from .api import ActivateScene
-from .exception import PyVLXException
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -40,9 +39,7 @@ class Scene:
             scene_id=self.scene_id,
             timeout_in_seconds=timeout_in_seconds,
         )
-        await activate_scene.do_api_call()
-        if not activate_scene.success:
-            raise PyVLXException("Unable to activate scene")
+        await activate_scene.send()
 
     def __str__(self) -> str:
         """Return object as readable string."""
