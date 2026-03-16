@@ -1,5 +1,7 @@
 """Unit tests for heartbeat module."""
 import asyncio
+from collections.abc import Coroutine
+from typing import Any
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, call, patch
 
@@ -31,9 +33,14 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         heartbeat = Heartbeat(self.pyvlx)
         heartbeat.heartbeat_task = AsyncMock()
         heartbeat.stop = AsyncMock()  # type: ignore[method-assign]
-        new_task = AsyncMock()
+        new_task = MagicMock(spec=asyncio.Task)
 
-        with patch("pyvlx.heartbeat.asyncio.create_task", return_value=new_task) as create_task:
+        def create_task_side_effect(coro: Coroutine[Any, Any, object]) -> asyncio.Task:
+            # Close coroutine because we intercept create_task and do not schedule it.
+            coro.close()
+            return new_task
+
+        with patch("pyvlx.heartbeat.asyncio.create_task", side_effect=create_task_side_effect) as create_task:
             await heartbeat.start()
 
         heartbeat.stop.assert_awaited_once()
