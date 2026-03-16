@@ -45,7 +45,9 @@ class ApiEvent:
                             await self.response_received_or_timeout.wait()
 
                     except TimeoutError:
-                        self.success = False
+                        # timeout does not change the result of self.success (which at this point can be true or false)
+                        # it just finishes waiting for completion if set to true
+                        pass
 
                 finally:
                     self.pyvlx.connection.unregister_frame_received_cb(self.response_rec_callback)
