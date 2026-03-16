@@ -5,7 +5,7 @@
 | Name                                                                    |    Stmts |     Miss |   Branch |   BrPart |   Cover |   Missing |
 |------------------------------------------------------------------------ | -------: | -------: | -------: | -------: | ------: | --------: |
 | pyvlx/api/activate\_scene.py                                            |       26 |       18 |       10 |        0 |     22% |23-27, 31-56, 60-61 |
-| pyvlx/api/api\_event.py                                                 |       35 |       20 |        4 |        0 |     38% |30-53, 62, 66, 70, 74-75 |
+| pyvlx/api/api\_event.py                                                 |       35 |       20 |        4 |        0 |     38% |30-55, 64, 68, 72, 76-77 |
 | pyvlx/api/factory\_default.py                                           |       17 |        9 |        2 |        0 |     42% |20-22, 26-30, 34 |
 | pyvlx/api/frame\_creation.py                                            |      143 |        6 |      130 |        5 |     96% |50-55, 67, 69, 71, 215 |
 | pyvlx/api/frames/frame\_node\_state\_position\_changed\_notification.py |       47 |        1 |        0 |        0 |     98% |        62 |
