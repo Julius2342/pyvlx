@@ -49,7 +49,9 @@ class Scene:
 
     def __str__(self) -> str:
         """Return object as readable string."""
-        return f'<{type(self).__name__} name="{self.name}" id="{self.scene_id}"/>'
+        return '<{} name="{}" id="{}"/>'.format(
+            type(self).__name__, self.name, self.scene_id
+        )
 
     def __eq__(self, other: Any) -> bool:
         """Equal operator."""
