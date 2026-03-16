@@ -41,7 +41,7 @@ class FrameCommandSendRequest(FrameBase):
         if functional_parameter is None:
             functional_parameter = {}
         for i in range(1, 4):
-            key = "fp%s" % (i)
+            key = f"fp{i}"
             if key in functional_parameter:
                 self.functional_parameter[key] = functional_parameter[key]  # type: ignore[literal-required]
                 self.fpi1 += 2 ** (8 - i)
@@ -106,17 +106,11 @@ class FrameCommandSendRequest(FrameBase):
         """Return human readable string."""
         functional_parameter = ""
         for key, value in self.functional_parameter.items():
-            functional_parameter += "%s: %s, " % (
-                str(key),
-                Position(Parameter(bytes(value))),
-            )
+            functional_parameter += f"{key!s}: {Position(Parameter(bytes(value)))}, "
         return (
-            '<{} node_ids="{}" active_parameter="{}" parameter="{}" fpi1="{}" fpi2="{}" functional_parameter="{}" '
-            'session_id="{}" originator="{}"/>'.format(
-                type(self).__name__, self.node_ids, self.active_parameter, self.parameter,
-                "0x{:02x}".format(self.fpi1), "0x{:02x}".format(self.fpi2), functional_parameter,
-                self.session_id, self.originator,
-            )
+            f'<{type(self).__name__} node_ids="{self.node_ids}" active_parameter="{self.active_parameter}" parameter="{self.parameter}" '
+            f'fpi1="0x{self.fpi1:02x}" fpi2="0x{self.fpi2:02x}" functional_parameter="{functional_parameter}" '
+            f'session_id="{self.session_id}" originator="{self.originator}"/>'
         )
 
 
@@ -153,9 +147,7 @@ class FrameCommandSendConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} session_id="{}" status="{}"/>'.format(
-            type(self).__name__, self.session_id, self.status
-        )
+        return f'<{type(self).__name__} session_id="{self.session_id}" status="{self.status}"/>'
 
 
 class FrameCommandRunStatusNotification(FrameBase):
@@ -218,12 +210,9 @@ class FrameCommandRunStatusNotification(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} session_id="{}" status_id="{}" '
-            'index_id="{}" node_parameter="{}" parameter_value="{}" run_status="{}" status_reply="{}"/>'.format(
-                type(self).__name__, self.session_id,
-                self.status_id, self.index_id,
-                self.node_parameter, self.parameter_value, self.run_status, self.status_reply
-            )
+            f'<{type(self).__name__} session_id="{self.session_id}" status_id="{self.status_id}" '
+            f'index_id="{self.index_id}" node_parameter="{self.node_parameter}" parameter_value="{self.parameter_value}" '
+            f'run_status="{self.run_status}" status_reply="{self.status_reply}"/>'
         )
 
 
@@ -261,11 +250,8 @@ class FrameCommandRemainingTimeNotification(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} session_id="{}" index_id="{}" '
-            'node_parameter="{}" seconds="{}"/>'.format(
-                type(self).__name__, self.session_id,
-                self.index_id, self.node_parameter, self.seconds
-            )
+            f'<{type(self).__name__} session_id="{self.session_id}" index_id="{self.index_id}" '
+            f'node_parameter="{self.node_parameter}" seconds="{self.seconds}"/>'
         )
 
 
@@ -291,6 +277,4 @@ class FrameSessionFinishedNotification(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} session_id="{}"/>'.format(
-            type(self).__name__, self.session_id
-        )
+        return f'<{type(self).__name__} session_id="{self.session_id}"/>'

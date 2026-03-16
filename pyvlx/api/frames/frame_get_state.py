@@ -42,6 +42,4 @@ class FrameGetStateConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} gateway_state="{}" gateway_sub_state="{}"/>'.format(
-            type(self).__name__, self.gateway_state, self.gateway_sub_state
-        )
+        return f'<{type(self).__name__} gateway_state="{self.gateway_state}" gateway_sub_state="{self.gateway_sub_state}"/>'

@@ -76,11 +76,9 @@ class DimmableDevice(Node):
     def __str__(self) -> str:
         """Return object as readable string."""
         return (
-            '<{} name="{}" '
-            'node_id="{}" '
-            'serial_number="{}"/>'.format(
-                type(self).__name__, self.name, self.node_id, self.serial_number
-            )
+            f'<{type(self).__name__} name="{self.name}" '
+            f'node_id="{self.node_id}" '
+            f'serial_number="{self.serial_number}"/>'
         )
 
 

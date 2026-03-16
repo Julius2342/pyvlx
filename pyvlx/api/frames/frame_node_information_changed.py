@@ -49,9 +49,6 @@ class FrameNodeInformationChangedNotification(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} node_id="{}" name="{}" order="{}" '
-            'placement="{}" node_variation="{}"/>'.format(
-                type(self).__name__, self.node_id, self.name,
-                self.order, self.placement, self.node_variation
-            )
+            f'<{type(self).__name__} node_id="{self.node_id}" name="{self.name}" order="{self.order}" '
+            f'placement="{self.placement}" node_variation="{self.node_variation}"/>'
         )

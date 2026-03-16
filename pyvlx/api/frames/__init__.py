@@ -15,7 +15,7 @@ from .frame_discover_nodes import (
     FrameDiscoverNodesConfirmation, FrameDiscoverNodesNotification,
     FrameDiscoverNodesRequest)
 from .frame_error_notification import ErrorType, FrameErrorNotification
-from .frame_facory_default import (
+from .frame_factory_default import (
     FrameGatewayFactoryDefaultConfirmation, FrameGatewayFactoryDefaultRequest)
 from .frame_get_all_nodes_information import (
     FrameGetAllNodesInformationConfirmation,

@@ -43,13 +43,12 @@ class FramePasswordChangeRequest(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         currentpassword_esc = (
-            None if self.currentpassword is None else "{}****".format(self.currentpassword[:2])
+            None if self.currentpassword is None else f"{self.currentpassword[:2]}****"
         )
         newpassword_esc = (
-            None if self.newpassword is None else "{}****".format(self.newpassword[:2])
+            None if self.newpassword is None else f"{self.newpassword[:2]}****"
         )
-        return ('<{} currentpassword="{}" newpassword="{}"/>'
-                .format(type(self).__name__, currentpassword_esc, newpassword_esc))
+        return f'<{type(self).__name__} currentpassword="{currentpassword_esc}" newpassword="{newpassword_esc}"/>'
 
 
 class PasswordChangeConfirmationStatus(Enum):
@@ -79,7 +78,7 @@ class FramePasswordChangeConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} status="{}"/>'.format(type(self).__name__, self.status)
+        return f'<{type(self).__name__} status="{self.status}"/>'
 
 
 class FramePasswordChangeNotification(FrameBase):
@@ -109,6 +108,6 @@ class FramePasswordChangeNotification(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         newpassword_esc = (
-            None if self.newpassword is None else "{}****".format(self.newpassword[:2])
+            None if self.newpassword is None else f"{self.newpassword[:2]}****"
         )
-        return '<{} newpassword="{}"/>'.format(type(self).__name__, newpassword_esc)
+        return f'<{type(self).__name__} newpassword="{newpassword_esc}"/>'

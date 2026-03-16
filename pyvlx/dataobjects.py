@@ -22,10 +22,7 @@ class DtoLocalTime:
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return (
-            '<{} utctime="{}" localtime="{}"/>'.format(
-                type(self).__name__, self.utctime, self.localtime)
-        )
+        return f'<{type(self).__name__} utctime="{self.utctime}" localtime="{self.localtime}"/>'
 
     def from_payload(self, payload: bytes) -> None:
         """Build the Dto From Data."""
@@ -80,9 +77,9 @@ class DtoNetworkSetup:
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} ipaddress="{}" gateway="{}" gateway="{}"  dhcp="{}"/>'.format(
-            type(self).__name__, self.ipaddress, self.gateway,
-            self.gateway, self.dhcp
+        return (
+            f'<{type(self).__name__} ipaddress="{self.ipaddress}" netmask="{self.netmask}" '
+            f'gateway="{self.gateway}"  dhcp="{self.dhcp}"/>'
         )
 
 
@@ -96,11 +93,7 @@ class DtoProtocolVersion:
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return (
-            '<{} majorversion="{}" minorversion="{}"/>'.format(
-                type(self).__name__, self.majorversion, self.minorversion
-            )
-        )
+        return f'<{type(self).__name__} majorversion="{self.majorversion}" minorversion="{self.minorversion}"/>'
 
 
 class DtoState:
@@ -113,11 +106,7 @@ class DtoState:
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return (
-            '<{} gateway_state="{}" gateway_sub_state="{}"/>'.format(
-                type(self).__name__, self.gateway_state, self.gateway_sub_state
-            )
-        )
+        return f'<{type(self).__name__} gateway_state="{self.gateway_state}" gateway_sub_state="{self.gateway_sub_state}"/>'
 
 
 class DtoVersion:
@@ -137,11 +126,8 @@ class DtoVersion:
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} softwareversion="{}" hardwareversion="{}" '
-            'productgroup="{}" producttype="{}"/>'.format(
-                type(self).__name__,
-                self.softwareversion, self.hardwareversion, self.productgroup, self.producttype
-            )
+            f'<{type(self).__name__} softwareversion="{self.softwareversion}" hardwareversion="{self.hardwareversion}" '
+            f'productgroup="{self.productgroup}" producttype="{self.producttype}"/>'
         )
 
 
@@ -155,7 +141,5 @@ class DtoLeaveLearnState:
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} status="{}"/>'.format(
-                type(self).__name__, self.status
-            )
+            f'<{type(self).__name__} status="{self.status}"/>'
         )

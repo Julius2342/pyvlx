@@ -117,7 +117,7 @@ class Parameter:
             return "IGNORE"
         if self.raw == self.from_int(Position.DUAL_SHUTTER_CURTAINS):
             return "DUAL"
-        return "{} %".format(int(self.to_percent(self.raw)))
+        return f"{int(self.to_percent(self.raw))} %"
 
 
 class SwitchParameter(Parameter):
@@ -364,7 +364,7 @@ class Intensity(Parameter):
             return "TARGET"
         if self.raw == self.from_int(Intensity.IGNORE):
             return "IGNORE"
-        return "{} %".format(self.intensity_percent)
+        return f"{self.intensity_percent} %"
 
 
 class UnknownIntensity(Intensity):

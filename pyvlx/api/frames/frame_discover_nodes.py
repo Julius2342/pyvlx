@@ -25,7 +25,7 @@ class FrameDiscoverNodesRequest(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} node_type="{}"/>'.format(type(self).__name__, self.node_type)
+        return f'<{type(self).__name__} node_type="{self.node_type}"/>'
 
 
 class FrameDiscoverNodesConfirmation(FrameBase):
@@ -58,7 +58,4 @@ class FrameDiscoverNodesNotification(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} payload="{}"/>'.format(
-            type(self).__name__,
-            ':'.join('{:02x}'.format(c) for c in self.payload)
-        )
+        return f'<{type(self).__name__} payload="{":".join(f"{c:02x}" for c in self.payload)}"/>'

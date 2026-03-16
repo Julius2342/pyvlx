@@ -63,11 +63,8 @@ class FrameWinkSendRequest(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} node_ids="{}" wink_time="{}" '
-            'session_id="{}" originator="{}"/>'.format(
-                type(self).__name__, self.node_ids, self.wink_time,
-                self.session_id, self.originator,
-            )
+            f'<{type(self).__name__} node_ids="{self.node_ids}" wink_time="{self.wink_time}" '
+            f'session_id="{self.session_id}" originator="{self.originator}"/>'
         )
 
 
@@ -104,9 +101,7 @@ class FrameWinkSendConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} session_id="{}" status="{}"/>'.format(
-            type(self).__name__, self.session_id, self.status
-        )
+        return f'<{type(self).__name__} session_id="{self.session_id}" status="{self.status}"/>'
 
 
 class FrameWinkSendNotification(FrameBase):
@@ -131,6 +126,4 @@ class FrameWinkSendNotification(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} session_id="{}"/>'.format(
-            type(self).__name__, self.session_id
-        )
+        return f'<{type(self).__name__} session_id="{self.session_id}"/>'

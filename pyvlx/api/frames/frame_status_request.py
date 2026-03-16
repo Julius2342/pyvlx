@@ -52,12 +52,8 @@ class FrameStatusRequestRequest(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return (
-            '<{} session_id="{}" node_ids="{}" '
-            'status_type="{}" fpi1="{}" fpi2="{}"/>'.format(
-                type(self).__name__, self.session_id,
-                self.node_ids,
-                self.status_type, self.fpi1, self.fpi2
-            )
+            f'<{type(self).__name__} session_id="{self.session_id}" node_ids="{self.node_ids}" '
+            f'status_type="{self.status_type}" fpi1="{self.fpi1}" fpi2="{self.fpi2}"/>'
         )
 
 
@@ -94,9 +90,7 @@ class FrameStatusRequestConfirmation(FrameBase):
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return '<{} session_id="{}" status="{}"/>'.format(
-            type(self).__name__, self.session_id, self.status
-        )
+        return f'<{type(self).__name__} session_id="{self.session_id}" status="{self.status}"/>'
 
 
 class FrameStatusRequestNotification(FrameBase):
@@ -170,43 +164,19 @@ class FrameStatusRequestNotification(FrameBase):
         """Return human readable string."""
         if self.status_type == StatusType.REQUEST_MAIN_INFO:
             return (
-                '<{} session_id="{}" status_id="{}" '
-                'node_id="{}" run_status="{}" status_reply="{}" status_type="{}" target_position="{}" '
-                'current_position="{}" remaining_time="{}" last_master_execution_address="{!r}" last_command_originator="{}"/>'.format(
-                    type(self).__name__,
-                    self.session_id,
-                    self.status_id,
-                    self.node_id,
-                    self.run_status,
-                    self.status_reply,
-                    self.status_type,
-                    self.target_position,
-                    self.current_position,
-                    self.remaining_time,
-                    self.last_master_execution_address,
-                    self.last_command_originator,
-                )
+                f'<{type(self).__name__} session_id="{self.session_id}" status_id="{self.status_id}" '
+                f'node_id="{self.node_id}" run_status="{self.run_status}" status_reply="{self.status_reply}" status_type="{self.status_type}" '
+                f'target_position="{self.target_position}" current_position="{self.current_position}" remaining_time="{self.remaining_time}" '
+                f'last_master_execution_address="{self.last_master_execution_address!r}" last_command_originator="{self.last_command_originator}"/>'
             )
 
         parameter_data_str = ""
         for key, value in self.parameter_data.items():
-            parameter_data_str += "%s: %s, " % (
-                str(key),
-                str(value),
-            )
+            parameter_data_str += f"{key!s}: {value!s}, "
 
         return (
-            '<{} session_id="{}" status_id="{}" '
-            'node_id="{}" run_status="{}" status_reply="{}" status_type="{}" status_count="{}" '
-            'parameter_data="{}"/>'.format(
-                type(self).__name__,
-                self.session_id,
-                self.status_id,
-                self.node_id,
-                self.run_status,
-                self.status_reply,
-                self.status_type,
-                self.status_count,
-                parameter_data_str
-            )
+            f'<{type(self).__name__} session_id="{self.session_id}" status_id="{self.status_id}" '
+            f'node_id="{self.node_id}" run_status="{self.run_status}" status_reply="{self.status_reply}" '
+            f'status_type="{self.status_type}" status_count="{self.status_count}" '
+            f'parameter_data="{parameter_data_str}"/>'
         )

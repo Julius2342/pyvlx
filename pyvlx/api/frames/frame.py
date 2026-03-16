@@ -43,7 +43,7 @@ class FrameBase:
 
     def __str__(self) -> str:
         """Return human readable string."""
-        return "<{}/>".format(type(self).__name__)
+        return f"<{type(self).__name__}/>"
 
     @staticmethod
     def build_frame(command: Command, payload: bytes) -> bytes:

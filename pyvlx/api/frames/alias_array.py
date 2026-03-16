@@ -16,7 +16,7 @@ class AliasArray:
     def __str__(self) -> str:
         """Return human readable string."""
         return ", ".join(
-            "{:02x}{:02x}={:02x}{:02x}".format(c[0][0], c[0][1], c[1][0], c[1][1])
+            f"{c[0][0]:02x}{c[0][1]:02x}={c[1][0]:02x}{c[1][1]:02x}"
             for c in self.alias_array_
         )
 
