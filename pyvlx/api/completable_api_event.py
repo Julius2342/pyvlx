@@ -19,19 +19,27 @@ class CompletableApiEvent(ApiEvent):
     incoming FrameCommandRunStatusNotification and FrameCommandRemainingTimeNotification
     frames can be received, they are ignored.
 
-    If wait_for_completion is True, the API call is not considered complete until a
-    session finished notification is received, usually indicating the action is completed
-    on the device side. If False, the API call is considered complete right after receiving
-    the confirmation frame. In this case, any frames received after the confirmation frame are ignored.
+    If wait_for_completion is True, the API call normally waits until a
+    session finished notification is received, usually indicating the action
+    is completed on the device side. However, ApiEvent.do_api_call() will
+    also stop waiting when the timeout expires, in which case the call ends
+    without having seen a completion notification.
+
+    If wait_for_completion is False, the API call is considered complete right
+    after receiving the confirmation frame. In this case, any frames received
+    after the confirmation frame are ignored.
 
     The flow is:
     1. Send a request frame with a session ID (handled by the base class)
     2. Receive a confirmation frame (accepted or rejected)
-    3. Optionally wait for a completion frame signaling the end of the session (e.g. FrameSessionFinishedNotification)
+    3. Optionally wait for a completion frame signaling the end of the session
+       (e.g. FrameSessionFinishedNotification) until the timeout is reached.
 
-    Subclasses implement check_confirmation() to identify their specific
-    confirmation frame type. The default check_completion() handles the
-    standard FrameSessionFinishedNotification; override if needed.
+    The ``success`` attribute reflects whether an accepted confirmation was
+    received (and, when wait_for_completion is True, that a completion
+    notification arrived before the timeout). If the command is rejected or
+    times out before completion, ``success`` is False and send() will raise
+    PyVLXException.
     """
 
     def __init__(self, pyvlx: "PyVLX", timeout_in_seconds: int = 10, wait_for_completion: bool = True):
@@ -65,7 +73,7 @@ class CompletableApiEvent(ApiEvent):
         return self.check_completion(frame)
 
     async def send(self) -> None:
-        """Send request and raise on failure."""
+        """Send request, wait for confirmation and (optionally) completion, and raise on rejection or timeout."""
         await self.do_api_call()
         if not self.success:
             raise PyVLXException(f"{type(self).__name__} send with session ID {self.session_id} failed")
