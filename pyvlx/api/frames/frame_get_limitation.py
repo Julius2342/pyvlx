@@ -38,7 +38,7 @@ class FrameGetLimitationStatus(FrameBase):
     def __str__(self) -> str:
         """Return human readable string."""
         return f'<{type(self).__name__} node_ids="{self.node_ids}" ' \
-               f'session_id="{self.session_id}" originator="{self.originator}" />'
+               f'session_id="{self.session_id}" originator="{self.originator}" limit_type="{self.limitations_type.name}" />'
 
 
 class FrameGetLimitationStatusConfirmation(FrameBase):
