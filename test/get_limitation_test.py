@@ -91,11 +91,13 @@ class TestGetLimitation(unittest.TestCase):
         limit = GetLimitation(self.pyvlx, 1)
         req_frame = limit.request_frame()
         self.assertIsInstance(req_frame, FrameGetLimitationStatus)
-        self.assertTrue(req_frame.session_id, 1)
-        self.assertTrue(req_frame.node_ids, [1])
-        self.assertTrue(req_frame.limitation_type, limit.limitation_type)
+        self.assertEqual(req_frame.session_id, 1)
+        self.assertEqual(req_frame.node_ids, [1])
+        self.assertEqual(req_frame.limitation_type, limit.limitation_type)
 
         limit.limitation_type = LimitationType.MAX_LIMITATION
+        req_frame = limit.request_frame()
         self.assertIsInstance(req_frame, FrameGetLimitationStatus)
-        self.assertTrue(req_frame.session_id, 1)
-        self.assertTrue(req_frame.limitation_type, limit.limitation_type)
+        self.assertEqual(req_frame.session_id, 2)
+        self.assertEqual(req_frame.node_ids, [1])
+        self.assertEqual(req_frame.limitation_type, limit.limitation_type)

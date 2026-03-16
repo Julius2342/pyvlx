@@ -32,5 +32,5 @@ class TestFrameGetLimitationStatus(unittest.TestCase):
         frame = FrameGetLimitationStatus(node_ids=[1], session_id=1, limitation_type=LimitationType.MIN_LIMITATION)
         self.assertEqual(
             str(frame),
-            '<FrameGetLimitationStatus node_ids="[1]" session_id="1" originator="Originator.USER" limit_type="MIN_LIMITATION" />',
+            '<FrameGetLimitationStatus node_ids="[1]" session_id="1" originator="Originator.USER" limitation_type="MIN_LIMITATION" />',
         )
