@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameHouseStatusMonitorDisableRequest
 class TestFrameHouseStatusMonitorDisableRequest(unittest.TestCase):
     """Test class FrameHouseStatusMonitorDisableRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x03\x02BC"
 
     def test_bytes(self):

@@ -9,8 +9,6 @@ from pyvlx.const import NodeVariation
 class TestFrameNodeInformationChangedNotification(unittest.TestCase):
     """Test class for FrameNodeInformationChangedNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = (
         b"\x00H\x02\x0c\x17Fnord23\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
         b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"

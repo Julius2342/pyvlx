@@ -170,7 +170,6 @@ class Connection:
         """Received message."""
         PYVLXLOG.debug("REC: %s", frame)
         for frame_received_cb in self.frame_received_cbs:
-            # pylint: disable=not-callable
             task = asyncio.create_task(frame_received_cb(frame))
             self.tasks.add(task)
             task.add_done_callback(self.tasks.remove)

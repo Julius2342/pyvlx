@@ -10,8 +10,6 @@ from pyvlx.parameter import IgnorePosition, Position
 class TestFrameSetLimitation(unittest.TestCase):
     """Test class for FrameSetLimitationRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes_setlimits(self):
         """Test FrameSetLimitationRequest bytes."""
         frame = FrameSetLimitationRequest(

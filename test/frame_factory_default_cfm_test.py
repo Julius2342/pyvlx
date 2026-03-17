@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameGatewayFactoryDefaultConfirmation
 class TestFrameGatewayFactoryDefaultConfirmation(unittest.TestCase):
     """Test class FrameGatewayFactoryDefaultConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x03\x00\x04\x07"
 
     def test_bytes(self):

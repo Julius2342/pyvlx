@@ -11,8 +11,6 @@ from pyvlx.parameter import FunctionalParams
 class TestFrameCommandSendRequest(unittest.TestCase):
     """Test class FrameCommandSendRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = (
         b"\x00E\x03\x00\x03\xe8\x02\x03\x00\x00\x00\x96\x00\x00\x00\x00"
         + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"

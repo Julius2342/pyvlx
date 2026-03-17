@@ -9,8 +9,6 @@ from pyvlx.const import RunStatus, StatusReply
 class TestFrameCommandRunStatusNotification(unittest.TestCase):
     """Test class FrameCommandRunStatusNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAMES = [
         (
             "execution_completed",

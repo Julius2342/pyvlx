@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameGetLocalTimeRequest
 class TestFrameGetLocalTimeRequest(unittest.TestCase):
     """Test class for FrameGetLocalTimeRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameGetLocalTimeRequest with NO_TYPE."""
         frame = FrameGetLocalTimeRequest()

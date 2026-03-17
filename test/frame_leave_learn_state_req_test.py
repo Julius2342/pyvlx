@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameLeaveLearnStateRequest
 class TestFrameLeaveLearnStateRequest(unittest.TestCase):
     """Test class FrameLeaveLearnStateRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x03\x00\x0e\r"
 
     def test_bytes(self):

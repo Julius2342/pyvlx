@@ -9,8 +9,6 @@ from pyvlx.api.frames import FrameGetLocalTimeConfirmation
 class TestFrameGetLocalTimeConfirmation(unittest.TestCase):
     """Test class for FrameGetLocalTimeConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self) -> None:
         """Test FrameGetLocalTimeConfirmation."""
         frame = FrameGetLocalTimeConfirmation()

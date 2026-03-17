@@ -10,7 +10,6 @@ from pyvlx.const import LimitationTime, LimitationType, Velocity
 from pyvlx.parameter import IgnorePosition
 
 
-# pylint: disable=too-many-public-methods,invalid-name
 class TestOpeningDevice(IsolatedAsyncioTestCase):
     """Test class for roller shutter."""
 
@@ -20,12 +19,12 @@ class TestOpeningDevice(IsolatedAsyncioTestCase):
 
     @patch("pyvlx.api.CommandSend.send", new_callable=AsyncMock)
     @patch("pyvlx.Node.after_update", new_callable=AsyncMock)
-    async def test_set_position(self, commandSend: AsyncMock, afterUpdate: AsyncMock) -> None:
+    async def test_set_position(self, command_send: AsyncMock, after_update: AsyncMock) -> None:
         """Test set_position of OpeningDevice object."""
         opening_device = OpeningDevice(pyvlx=self.mocked_pyvlx, node_id=23, name="Test device")
         await opening_device.set_position(position=Position(position_percent=100))
-        assert commandSend.called
-        assert afterUpdate.called
+        assert command_send.called
+        assert after_update.called
 
     @patch("pyvlx.opening_device.OpeningDevice.set_position", new_callable=AsyncMock)
     async def test_open(self, set_position: AsyncMock) -> None:

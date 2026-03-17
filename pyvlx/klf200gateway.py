@@ -42,7 +42,6 @@ class Klf200Gateway:
     async def after_update(self) -> None:
         """Execute callbacks after internal state has been changed."""
         for device_updated_cb in self.device_updated_cbs:
-            # pylint: disable=not-callable
             await device_updated_cb(self)
 
     async def get_state(self) -> bool:

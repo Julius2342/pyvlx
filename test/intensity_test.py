@@ -8,8 +8,6 @@ from pyvlx.exception import PyVLXException
 class TestIntensity(unittest.TestCase):
     """Test class for Intensity class."""
 
-    # pylint: disable=invalid-name
-
     def test_no_intensity(self) -> None:
         """Test empty Intensity object."""
         self.assertEqual(Intensity().raw, b"\xF7\xFF")

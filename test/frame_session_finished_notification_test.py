@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameSessionFinishedNotification
 class TestFrameSessionFinishedNotification(unittest.TestCase):
     """Test class FrameSessionFinishedNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameSessionFinishedNotification."""
         frame = FrameSessionFinishedNotification(session_id=1000)

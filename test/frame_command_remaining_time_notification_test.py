@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameCommandRemainingTimeNotification
 class TestFrameCommandRemainingTimeNotification(unittest.TestCase):
     """Test class FrameCommandRemainingTimeNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameCommandRemainingTimeNotification."""
         frame = FrameCommandRemainingTimeNotification(

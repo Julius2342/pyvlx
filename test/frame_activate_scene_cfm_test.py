@@ -9,8 +9,6 @@ from pyvlx.api.frames import (
 class TestFrameActivateSceneConfirmation(unittest.TestCase):
     """Test class FrameActivateSceneConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameActivateSceneConfirmation."""
         frame = FrameActivateSceneConfirmation(

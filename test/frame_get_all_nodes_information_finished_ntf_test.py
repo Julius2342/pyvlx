@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameGetAllNodesInformationFinishedNotification
 class TestFrameGetAllNodesInformationFinishedNotification(unittest.TestCase):
     """Test class for FrameGetAllNodesInformationFinishedNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameGetAllNodesInformationFinishedNotification."""
         frame = FrameGetAllNodesInformationFinishedNotification()

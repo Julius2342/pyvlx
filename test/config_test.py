@@ -4,7 +4,6 @@ import unittest
 from pyvlx import PyVLX, PyVLXException
 
 
-# pylint: disable=too-many-public-methods,invalid-name
 class TestConfig(unittest.TestCase):
     """Test class for configuration."""
 

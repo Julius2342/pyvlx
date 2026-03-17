@@ -9,8 +9,6 @@ from pyvlx.api.frames import FrameGetSceneListNotification
 class TestFrameGetSceneListNotification(unittest.TestCase):
     """Test class for FrameGetSceneListNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME1 = (
         b"\x00\xc8\x04\x0e\x03\x00All Window"
         + b"s Closed\x00\x00\x00\x00\x00\x00\x00\x00"

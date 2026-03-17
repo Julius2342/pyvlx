@@ -1,7 +1,7 @@
 """Module for generating a unique session_id."""
 
 
-_last_session_id = 0
+_last_session_id = 0  # pylint: disable=invalid-name; ignore this false positive until https://github.com/pylint-dev/pylint/issues/10768 is resolved
 MAX_SESSION_ID = 65535
 
 

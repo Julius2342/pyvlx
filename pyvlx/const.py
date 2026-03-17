@@ -8,8 +8,6 @@ from .log import PYVLXLOG
 class Command(Enum):
     """Enum class for GW Command bytes."""
 
-    # pylint: disable=invalid-name
-
     GW_ERROR_NTF = 0x0000
     GW_REBOOT_REQ = 0x0001
     GW_REBOOT_CFM = 0x0002
@@ -227,8 +225,6 @@ class Command(Enum):
 class Originator(Enum):
     """Enum class for originator."""
 
-    # pylint: disable=line-too-long
-
     USER = 1                            # User Remote control causing action on actuator
     RAIN = 2                            # Rain sensor
     TIMER = 3                           # Timer controlled
@@ -273,8 +269,6 @@ class Velocity(Enum):
 
 class NodeTypeWithSubtype(Enum):
     """Enum class for node type plus sub type combined values."""
-
-    # pylint: disable=invalid-name
 
     NO_TYPE = 0
     INTERIOR_VENETIAN_BLIND = 0x0040
@@ -411,8 +405,6 @@ class ErrorNumber(Enum):
 class ControllerCopyMode(Enum):
     """Enum class for Copy Controller Mode."""
 
-    # pylint: disable=line-too-long
-
     TCM = 0  # Transmitting Configuration Mode (TCM): The gateway gets key and system table from another controller.
     RCM = 1  # Receiving Configuration Mode (RCM): The gateway gives key and system table to another controller.
 
@@ -429,8 +421,6 @@ class ControllerCopyStatus(Enum):
 
 class ChangeKeyStatus(Enum):
     """Enum class for Key Change Status."""
-
-    # pylint: disable=line-too-long
 
     OK_CONTROLLER = 0        # Ok. Key Change in client controller.
     OK_ALL = 2               # Ok. Key change in system table all nodes updated with current key.
@@ -463,8 +453,6 @@ class PgcJobStatus(Enum):
 class PgcJobType(Enum):
     """Enum class for Product Generic Configuration Job Type."""
 
-    # pylint: disable=line-too-long
-
     RECEIVE_ONLY = 0        # Receive system copy or only get key. Short PGC button press.
     RECEIVE_DISTRIBUTE = 1  # Receive key and distribute. Short PGC button press.
     TRANSMIT = 2            # Transmit key (and system). Long PGC button press.
@@ -473,8 +461,6 @@ class PgcJobType(Enum):
 
 class DiscoverStatus(Enum):
     """Enum class for Discovery status."""
-
-    # pylint: disable=line-too-long
 
     OK = 0                 # OK. Discovered nodes. See bit array.
     FAILED_CSNOTREADY = 5  # Failed. CS not ready.
@@ -600,8 +586,6 @@ class OperatingState(Enum):
 class StatusReply(Enum):
     """Enum Class for Node Status Reply."""
 
-    # pylint: disable=line-too-long
-
     UNKNOWN_STATUS_REPLY = 0x00                       # Used to indicate unknown reply.
     COMMAND_COMPLETED_OK = 0x01                       # Indicates no errors detected.
     NO_CONTACT = 0x02                                 # Indicates no communication to node.
@@ -654,8 +638,6 @@ class StatusReply(Enum):
 
 class StatusId(Enum):
     """Enum Class for Status ID Reply."""
-
-    # pylint: disable=line-too-long
 
     STATUS_USER = 0x01             # The status is from a user activation.
     STATUS_RAIN = 0x02             # The status is from a rain sensor activation.

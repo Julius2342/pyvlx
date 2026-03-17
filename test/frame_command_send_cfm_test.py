@@ -9,8 +9,6 @@ from pyvlx.api.frames import (
 class TestFrameCommandSendConfirmation(unittest.TestCase):
     """Test class FrameCommandSendConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameCommandSendConfirmation."""
         frame = FrameCommandSendConfirmation(

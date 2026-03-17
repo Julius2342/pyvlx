@@ -25,7 +25,6 @@ class FrameBase:
         if not hasattr(self, "PAYLOAD_LEN"):
             # No fixed payload len, e.g. within FrameGetSceneListNotification
             return
-        # pylint: disable=no-member
         if len(payload) != self.PAYLOAD_LEN:
             raise PyVLXException(
                 "Invalid payload len",

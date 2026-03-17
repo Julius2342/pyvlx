@@ -10,8 +10,6 @@ from pyvlx.const import OperatingState
 class TestFrameNodeStatePositionChangedNotification(unittest.TestCase):
     """Test class for FrameNodeStatePositionChangedNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = (
         b"\x00\x17\x02\x11\x05\x05\xc8\x00\xc8\x00\xf7\xff\xf7\xff"
         b"\xf7\xff\xf7\xff\x00\x00L\xcf\x00\x00\x87"

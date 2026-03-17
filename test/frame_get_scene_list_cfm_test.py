@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameGetSceneListConfirmation
 class TestFrameGetSceneListConfirmation(unittest.TestCase):
     """Test class for FrameGetSceneListConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameGetSceneListConfirmation."""
         frame = FrameGetSceneListConfirmation(count_scenes=12)

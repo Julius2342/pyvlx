@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameGetNetworkSetupRequest
 class TestFrameGetNetworkSetupRequest(unittest.TestCase):
     """Test class for FrameGetNetworkSetupRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameGetNetworkSetupRequest with NO_TYPE."""
         frame = FrameGetNetworkSetupRequest()

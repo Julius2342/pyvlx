@@ -8,8 +8,6 @@ from pyvlx.exception import PyVLXException
 class TestFrameHelper(unittest.TestCase):
     """Test class for frame_creation module."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_crc(self):
         """Test crc calculation."""
         self.assertEqual(calc_crc(b""), 0)

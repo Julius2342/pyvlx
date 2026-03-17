@@ -4,7 +4,6 @@ import unittest
 from pyvlx.exception import PyVLXException
 
 
-# pylint: disable=too-many-public-methods,invalid-name
 class TestException(unittest.TestCase):
     """Test class for roller shutter."""
 
