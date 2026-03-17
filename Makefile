@@ -33,10 +33,10 @@ flake8:
 	@flake8
 
 isort:
-	@isort --check-only test examples pyvlx
+	@isort --check-only test examples src/pyvlx
 
 mypy:
-	@mypy pyvlx
+	@mypy src/pyvlx
 
 build:
 	@python3 -m build
@@ -47,10 +47,10 @@ pypi:
 	@twine upload dist/*
 
 pylint:
-	@pylint pyvlx test/*.py examples/*.py
+	@pylint src/pyvlx test/*.py examples/*.py
 
 pydocstyle:
-	 @pydocstyle pyvlx test/*.py test/*.py examples/*.py
+	 @pydocstyle src/pyvlx test/*.py test/*.py examples/*.py
 
 coverage:
 	pytest --cov --cov-report html --verbose
