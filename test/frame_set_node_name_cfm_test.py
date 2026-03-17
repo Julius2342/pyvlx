@@ -9,8 +9,6 @@ from pyvlx.api.frames import (
 class TestFrameSetNodeNameConfirmation(unittest.TestCase):
     """Test class for FrameSetNodeNameConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x05\x02\t\x00\x17\x19"
     EXAMPLE_FRAME_ERR = b"\x00\x05\x02\t\x01\x17\x18"
 

@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameGetAllNodesInformationRequest
 class TestFrameGetAllNodesInformationRequest(unittest.TestCase):
     """Test class for FrameGetAllNodesInformationRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameGetAllNodesInformationRequest with NO_TYPE."""
         frame = FrameGetAllNodesInformationRequest()

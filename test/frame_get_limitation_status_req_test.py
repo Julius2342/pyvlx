@@ -9,8 +9,6 @@ from pyvlx.const import LimitationType
 class TestFrameGetLimitationStatus(unittest.TestCase):
     """Test class for FrameGetLimitationStatus."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self) -> None:
         """Test FrameGetLimitationStatus bytes."""
         frame = FrameGetLimitationStatus(node_ids=[1], session_id=1, limitation_type=LimitationType.MIN_LIMITATION)

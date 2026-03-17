@@ -6,7 +6,6 @@ from pyvlx import Light, PyVLX
 from pyvlx.connection import Connection
 
 
-# pylint: disable=too-many-public-methods,invalid-name
 class TestDimmableDevice(unittest.TestCase):
     """Test class for lights."""
 

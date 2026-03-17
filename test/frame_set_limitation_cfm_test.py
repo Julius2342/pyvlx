@@ -12,8 +12,6 @@ class TestFrameSetLimitationConfirmation(unittest.TestCase):
     EXAMPLE_FRAME_ACCEPTED = b'\x00\x06\x03\x11\x00\x01\x01\x14'
     EXAMPLE_FRAME_REJECTED = b'\x00\x06\x03\x11\x00\x02\x00\x16'
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameSetLimitationConfirmation bytes."""
         frame = FrameSetLimitationConfirmation(session_id=1, status=SetLimitationRequestStatus.ACCEPTED)

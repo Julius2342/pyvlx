@@ -7,8 +7,6 @@ from pyvlx.connection import Connection
 from pyvlx.const import OperatingState, StatusReply
 from pyvlx.node import Node
 
-# pylint: disable=too-many-public-methods,invalid-name
-
 
 class TestNodes(unittest.TestCase):
     """Test class for nodes object."""

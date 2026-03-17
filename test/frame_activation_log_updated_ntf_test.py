@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameActivationLogUpdatedNotification
 class TestFrameActivationLogUpdatedNotification(unittest.TestCase):
     """Test class for FrameActivationLogUpdatedNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x03\x05\x06\x00"
 
     def test_bytes(self):

@@ -11,8 +11,6 @@ from pyvlx.api.frames.frame_status_request import (
 class TestFrameStatusRequestRequest(unittest.TestCase):
     """Test class FrameStatusRequestRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x1d\x03\x05\x00\xab\x02\x01\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" \
                     b"\x00\x00\x00\x00\x01\xfe\x00N"
 
@@ -36,8 +34,6 @@ class TestFrameStatusRequestRequest(unittest.TestCase):
 class TestFrameStatusRequestConfirmation(unittest.TestCase):
     """Test class FrameStatusRequestConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x06\x03\x06\x00\xab\x01\xa9"
 
     def test_bytes(self) -> None:
@@ -59,8 +55,6 @@ class TestFrameStatusRequestConfirmation(unittest.TestCase):
 
 class TestFrameStatusRequestNotification(unittest.TestCase):
     """Test class FrameStatusRequestNotification."""
-
-    # pylint: disable=too-many-public-methods,invalid-name
 
     EXAMPLE_FRAME_EMPTY = b"\x00>\x03\x07\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" \
                           b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" \

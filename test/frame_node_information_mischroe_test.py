@@ -15,8 +15,6 @@ from pyvlx.slip import get_next_slip
 class TestFrameGetNodeInformationMiSchroe(unittest.TestCase):
     """Test class data sample obtained from MiSchroe."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME1 = (
         "c0:00:7f:02:04:04:00:04:04:46:65:6e:73:74:65:72:"
         "20:42:c3:bc:72:6f:00:00:00:00:00:00:00:00:00:00:"

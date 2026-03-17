@@ -9,8 +9,6 @@ from pyvlx.const import Originator, Priority, Velocity
 class TestFrameActivateSceneRequest(unittest.TestCase):
     """Test class FrameActivateSceneRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\t\x04\x12\x03\xe8\x02\x03\x04\x01\xf0"
 
     def test_bytes(self):

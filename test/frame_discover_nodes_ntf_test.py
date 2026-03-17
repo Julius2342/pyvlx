@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameDiscoverNodesNotification
 class TestFrameDiscoverNodesNotification(unittest.TestCase):
     """Test class for FrameDiscoverNodesNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameDiscoverNodesNotification."""
         frame = FrameDiscoverNodesNotification()

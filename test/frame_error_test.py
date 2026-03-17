@@ -8,8 +8,6 @@ from pyvlx.api.frames import ErrorType, FrameErrorNotification
 class TestErrorNotification(unittest.TestCase):
     """Test class for FrameErrorNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameErrorNotification with Light."""
         frame = FrameErrorNotification(error_type=ErrorType.ErrorOnFrameStructure)

@@ -10,8 +10,6 @@ from pyvlx.const import Originator
 class TestFrameGetLimitationStatusNotification(unittest.TestCase):
     """Test class for TestFrameGetLimitationStatusNotification."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameGetLimitationStatusNotification bytes."""
         frame = FrameGetLimitationStatusNotification()

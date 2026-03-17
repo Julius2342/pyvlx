@@ -9,8 +9,6 @@ from pyvlx.exception import PyVLXException
 class TestFramePasswordEnter(unittest.TestCase):
     """Test class for FramePasswordEnterRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FramePasswordEnterRequest."""
         frame = FramePasswordEnterRequest(password="fnord")

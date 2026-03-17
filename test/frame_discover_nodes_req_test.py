@@ -9,8 +9,6 @@ from pyvlx.const import NodeType
 class TestFrameNodeDiscover(unittest.TestCase):
     """Test class for FrameDiscoverNodesRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameDiscoverNodesRequest with NO_TYPE."""
         frame = FrameDiscoverNodesRequest()

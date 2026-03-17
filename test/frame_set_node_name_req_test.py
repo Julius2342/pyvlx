@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameSetNodeNameRequest
 class TestFrameSetNodeNameRequest(unittest.TestCase):
     """Test class FrameSetNodeNameRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = (
         b"\x00D\x02\x08\x04Fnord\x00\x00\x00\x00\x00\x00\x00\x00\x00"
         b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"

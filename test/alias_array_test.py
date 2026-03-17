@@ -8,8 +8,6 @@ from pyvlx.exception import PyVLXException
 class TestAliasArray(unittest.TestCase):
     """Test class for AliasArray."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_empty(self) -> None:
         """Test empty alias array."""
         alias_array = AliasArray()

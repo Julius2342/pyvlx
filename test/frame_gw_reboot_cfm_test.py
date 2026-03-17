@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameGatewayRebootConfirmation
 class TestFrameRebootConfirmation(unittest.TestCase):
     """Test class FrameSetUTCConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x03\x00\x02\x01"
 
     def test_bytes(self):

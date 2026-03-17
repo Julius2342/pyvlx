@@ -11,7 +11,6 @@ from pyvlx.const import LimitationTime, Originator
 from pyvlx.parameter import IgnorePosition, Position
 
 
-# pylint: disable=too-many-public-methods,invalid-name
 class TestSetLimitation(unittest.IsolatedAsyncioTestCase):
     """Test class for Limitation."""
 

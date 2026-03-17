@@ -10,8 +10,6 @@ from pyvlx.exception import PyVLXException
 class TestPosition(unittest.TestCase):
     """Test class for Position class."""
 
-    # pylint: disable=invalid-name
-
     def test_no_position(self) -> None:
         """Test empty Position object."""
         self.assertEqual(Position().raw, b"\xF7\xFF")

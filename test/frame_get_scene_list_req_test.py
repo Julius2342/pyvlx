@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameGetSceneListRequest
 class TestFrameGetSceneListRequest(unittest.TestCase):
     """Test class for FrameGetSceneListRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameGetSceneListRequest with NO_TYPE."""
         frame = FrameGetSceneListRequest()

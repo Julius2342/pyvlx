@@ -38,7 +38,7 @@ dev = [
     "flake8-isort==7.0.0",
     "flake8-pyproject==1.2.4",
     "pydocstyle==6.3.0",
-    "pylint==4.0.3",
+    "pylint==4.0.5",
 ]
 release = [
     "build==1.4.0",
@@ -96,6 +96,7 @@ disable = [
     "consider-using-f-string",
 ]
 good-names = ["PAYLOAD_LEN", "i", "j"]
+enable = ["useless-suppression"]
 
 [tool.pylint.reports]
 output-format = "colorized"

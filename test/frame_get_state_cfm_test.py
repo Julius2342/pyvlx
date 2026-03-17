@@ -9,8 +9,6 @@ from pyvlx.api.frames import (
 class TestFrameGetStateConfirmation(unittest.TestCase):
     """Test class FrameGetStateConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\t\x00\r\x03\x80\x00\x00\x00\x00\x87"
 
     def test_bytes(self):

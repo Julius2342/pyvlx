@@ -6,7 +6,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from pyvlx import Scene
 
 
-# pylint: disable=too-many-public-methods,invalid-name
 class TestScene(unittest.TestCase):
     """Test class for scene."""
 

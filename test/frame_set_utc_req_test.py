@@ -9,8 +9,6 @@ from pyvlx.api.frames import FrameSetUTCRequest
 class TestFrameSetUTCRequest(unittest.TestCase):
     """Test class FrameSetUTCRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x07 \x00[\xfd\xaanE"
     EXAMPLE_TS = 1543350894
 

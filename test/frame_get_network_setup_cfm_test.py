@@ -8,7 +8,6 @@ from pyvlx.api.frames import DHCPParameter, FrameGetNetworkSetupConfirmation
 class TestFrameGetNetworkSetupConfirmation(unittest.TestCase):
     """Test class for FrameGetNetworkSetupConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
     TESTFRAME = bytes.fromhex('001000e1c0a80de3ffffff00c0a80d0100ec')
 
     def test_bytes(self):

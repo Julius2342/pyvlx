@@ -8,8 +8,6 @@ from pyvlx.string_helper import bytes_to_string, string_to_bytes
 class TestString(unittest.TestCase):
     """Test class for String encoding/decoding."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_encoding(self) -> None:
         """Test simple encoding."""
         self.assertEqual(string_to_bytes("fnord", 10), b"fnord" + bytes(5))

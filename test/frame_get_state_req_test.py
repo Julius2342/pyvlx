@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameGetStateRequest
 class TestFrameGetStateRequest(unittest.TestCase):
     """Test class FrameGetStateRequest."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x03\x00\x0c\x0f"
 
     def test_bytes(self):

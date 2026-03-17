@@ -9,8 +9,6 @@ from pyvlx.api.frames.frame_get_limitation import (
 class TestFrameGetLimitationStatusConfirmation(unittest.TestCase):
     """Test class for FrameGetLimitationStatusConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameGetLimitationStatusConfirmation bytes."""
         frame = FrameGetLimitationStatusConfirmation(session_id=1, data=1)

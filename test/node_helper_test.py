@@ -15,8 +15,6 @@ from pyvlx.node_helper import convert_frame_to_node
 class TestNodeHelper(unittest.TestCase):
     """Test class for helper functions of node_helper."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def setUp(self) -> None:
         """Set up TestNodeHelper."""
         self.pyvlx = MagicMock(spec=PyVLX)

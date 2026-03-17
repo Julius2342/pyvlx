@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameLeaveLearnStateConfirmation
 class TestFrameLeaveLearnStateConfirmation(unittest.TestCase):
     """Test class FrameLeaveLearnStateConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     EXAMPLE_FRAME = b"\x00\x04\x00\x0f\x00\x0b"
 
     def test_bytes(self) -> None:

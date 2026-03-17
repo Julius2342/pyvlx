@@ -300,7 +300,7 @@ class Intensity(Parameter):
         return self.raw != self.from_int(Intensity.UNKNOWN_VALUE)
 
     @property
-    def on(self) -> bool:  # pylint: disable=invalid-name
+    def on(self) -> bool:
         """Intensity at maximum power (fully on)."""
         return self.raw == self.from_int(Intensity.ON)
 

@@ -10,7 +10,6 @@ from pyvlx.api.get_limitation import GetLimitation
 from pyvlx.const import LimitationType, Originator
 
 
-# pylint: disable=too-many-public-methods,invalid-name
 class TestGetLimitation(unittest.IsolatedAsyncioTestCase):
     """Test class for Limitation."""
 

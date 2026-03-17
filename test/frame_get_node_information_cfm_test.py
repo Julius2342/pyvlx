@@ -8,8 +8,6 @@ from pyvlx.api.frames import FrameGetNodeInformationConfirmation
 class TestFrameGetNodeInformationConfirmation(unittest.TestCase):
     """Test class for FrameGetNodeInformationConfirmation."""
 
-    # pylint: disable=too-many-public-methods,invalid-name
-
     def test_bytes(self):
         """Test FrameGetNodeInformationConfirmation."""
         frame = FrameGetNodeInformationConfirmation(node_id=23)
