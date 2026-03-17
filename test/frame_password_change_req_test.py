@@ -9,7 +9,7 @@ from pyvlx.exception import PyVLXException
 class TestFramePasswordChange(unittest.TestCase):
     """Test class for FramePasswordChangeRequest."""
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FramePasswordChangeRequest."""
         frame = FramePasswordChangeRequest(currentpassword="fnord", newpassword="bfeld")
         self.assertEqual(
@@ -21,7 +21,7 @@ class TestFramePasswordChange(unittest.TestCase):
             + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00i",
         )
 
-    def test_bytes_long_newpw(self):
+    def test_bytes_long_newpw(self) -> None:
         """Test FramePasswordChangeRequest with long new password."""
         frame = FramePasswordChangeRequest(currentpassword="fnord", newpassword="x" * 32)
         self.assertEqual(
@@ -29,7 +29,7 @@ class TestFramePasswordChange(unittest.TestCase):
             + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\x00"
         )
 
-    def test_bytes_long_oldpw(self):
+    def test_bytes_long_oldpw(self) -> None:
         """Test FramePasswordChangeRequest with long old password."""
         frame = FramePasswordChangeRequest(currentpassword="x" * 32, newpassword="bfeld")
         self.assertEqual(
@@ -37,14 +37,14 @@ class TestFramePasswordChange(unittest.TestCase):
             + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x18"
         )
 
-    def test_bytes_long_bothpw(self):
+    def test_bytes_long_bothpw(self) -> None:
         """Test FramePasswordChangeRequest with long passwords."""
         frame = FramePasswordChangeRequest(currentpassword="x" * 32, newpassword="y" * 32)
         self.assertEqual(
             bytes(frame), b"\x00C0\x02xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyq"
         )
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parsing FramePasswordChangeRequest from raw bytes."""
         frame = frame_from_raw(
             b"\x00C0\x02fnord\x00\x00\x00\x00\x00\x00\x00\x00"
@@ -57,7 +57,7 @@ class TestFramePasswordChange(unittest.TestCase):
         self.assertEqual(frame.newpassword, "bfeld")
         self.assertEqual(frame.currentpassword, "fnord")
 
-    def test_errors(self):
+    def test_errors(self) -> None:
         """Test FramePasswordChangeRequest with wrong password."""
         with self.assertRaises(PyVLXException):
             bytes(FramePasswordChangeRequest())
@@ -70,12 +70,12 @@ class TestFramePasswordChange(unittest.TestCase):
         with self.assertRaises(PyVLXException):
             bytes(FramePasswordChangeRequest(newpassword="x" * 33, currentpassword="x" * 33))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FramePasswordChangeRequest."""
         frame = FramePasswordChangeRequest(currentpassword="fnord", newpassword="bfeld")
         self.assertEqual(str(frame), '<FramePasswordChangeRequest currentpassword="fn****" newpassword="bf****"/>')
 
-    def test_str_no_password(self):
+    def test_str_no_password(self) -> None:
         """Test string representation of FramePasswordChangeRequest with no password."""
         frame = FramePasswordChangeRequest()
         self.assertEqual(str(frame), '<FramePasswordChangeRequest currentpassword="None" newpassword="None"/>')

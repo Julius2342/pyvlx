@@ -8,7 +8,7 @@ from pyvlx.exception import PyVLXException
 class TestFrameHelper(unittest.TestCase):
     """Test class for frame_creation module."""
 
-    def test_crc(self):
+    def test_crc(self) -> None:
         """Test crc calculation."""
         self.assertEqual(calc_crc(b""), 0)
         self.assertEqual(calc_crc(b"\x01"), 1)
@@ -16,7 +16,7 @@ class TestFrameHelper(unittest.TestCase):
         self.assertEqual(calc_crc(b"\x01\x02\x03"), 0)
         self.assertEqual(calc_crc(b"\x01\x02\x03\xff"), 255)
 
-    def test_extract_from_frame(self):
+    def test_extract_from_frame(self) -> None:
         """Test extract_from_frame method."""
         with self.assertRaises(PyVLXException):
             extract_from_frame(bytes(4))

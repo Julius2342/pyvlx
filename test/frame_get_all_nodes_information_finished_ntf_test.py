@@ -8,19 +8,19 @@ from pyvlx.api.frames import FrameGetAllNodesInformationFinishedNotification
 class TestFrameGetAllNodesInformationFinishedNotification(unittest.TestCase):
     """Test class for FrameGetAllNodesInformationFinishedNotification."""
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGetAllNodesInformationFinishedNotification."""
         frame = FrameGetAllNodesInformationFinishedNotification()
         self.assertEqual(bytes(frame), b"\x00\x03\x02\x05\x04")
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGetAllNodesInformationFinishedNotification from raw."""
         frame = frame_from_raw(b"\x00\x03\x02\x05\x04")
         self.assertTrue(
             isinstance(frame, FrameGetAllNodesInformationFinishedNotification)
         )
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGetAllNodesInformationFinishedNotification."""
         frame = FrameGetAllNodesInformationFinishedNotification()
         self.assertEqual(

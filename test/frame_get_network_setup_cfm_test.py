@@ -10,7 +10,7 @@ class TestFrameGetNetworkSetupConfirmation(unittest.TestCase):
 
     TESTFRAME = bytes.fromhex('001000e1c0a80de3ffffff00c0a80d0100ec')
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGetNetworkSetupConfirmation."""
         frame = FrameGetNetworkSetupConfirmation(
             ipaddress=b'\xc0\xa8\r\xe3', netmask=b'\xff\xff\xff\x00',
@@ -18,7 +18,7 @@ class TestFrameGetNetworkSetupConfirmation(unittest.TestCase):
         self.assertEqual(bytes(frame),
                          b"\x00\x10\x00\xe1\xc0\xa8\r\xe3\xff\xff\xff\x00\xc0\xa8\r\x01\x00\xec")
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGetNetworkSetupConfirmation from raw."""
         frame = frame_from_raw(self.TESTFRAME)
         self.assertTrue(isinstance(frame, FrameGetNetworkSetupConfirmation))
@@ -27,7 +27,7 @@ class TestFrameGetNetworkSetupConfirmation(unittest.TestCase):
         self.assertEqual(frame.gateway, '192.168.13.1')
         self.assertEqual(frame.dhcp, DHCPParameter.DISABLE)
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGetNetworkSetupConfirmation."""
         frame = FrameGetNetworkSetupConfirmation(
             ipaddress=b'\xc0\xa8\r\xe3', netmask=b'\xff\xff\xff\x00',

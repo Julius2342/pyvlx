@@ -30,7 +30,7 @@ class TestFrameCommandRunStatusNotification(unittest.TestCase):
         ),
     ]
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameCommandRunStatusNotification."""
         for name, raw, run_status, status_reply in self.EXAMPLE_FRAMES:
             with self.subTest(name=name):
@@ -45,7 +45,7 @@ class TestFrameCommandRunStatusNotification(unittest.TestCase):
                 )
                 self.assertEqual(bytes(frame), raw)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameCommandRunStatusNotification from raw."""
         for name, raw, run_status, status_reply in self.EXAMPLE_FRAMES:
             with self.subTest(name=name):
@@ -59,7 +59,7 @@ class TestFrameCommandRunStatusNotification(unittest.TestCase):
                 self.assertEqual(frame.run_status, run_status)
                 self.assertEqual(frame.status_reply, status_reply)
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameCommandRunStatusNotification."""
         frame = FrameCommandRunStatusNotification(
             session_id=1000,

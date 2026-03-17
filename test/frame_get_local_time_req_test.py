@@ -8,17 +8,17 @@ from pyvlx.api.frames import FrameGetLocalTimeRequest
 class TestFrameGetLocalTimeRequest(unittest.TestCase):
     """Test class for FrameGetLocalTimeRequest."""
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGetLocalTimeRequest with NO_TYPE."""
         frame = FrameGetLocalTimeRequest()
         self.assertEqual(bytes(frame), b"\x00\x03\x20\x04\x27")
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGetLocalTimeRequest from raw."""
         frame = frame_from_raw(b"\x00\x03\x20\x04\x27")
         self.assertTrue(isinstance(frame, FrameGetLocalTimeRequest))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGetLocalTimeRequest."""
         frame = FrameGetLocalTimeRequest()
         self.assertEqual(str(frame), "<FrameGetLocalTimeRequest/>")

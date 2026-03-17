@@ -12,18 +12,18 @@ class TestFrameSetUTCRequest(unittest.TestCase):
     EXAMPLE_FRAME = b"\x00\x07 \x00[\xfd\xaanE"
     EXAMPLE_TS = 1543350894
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameSetUTCRequest with NO_TYPE."""
         frame = FrameSetUTCRequest(timestamp=self.EXAMPLE_TS)
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameSetUTCRequest from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameSetUTCRequest))
         self.assertEqual(frame.timestamp, self.EXAMPLE_TS)
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameSetUTCRequest."""
         frame = FrameSetUTCRequest(timestamp=1543350894)
         test_ts = datetime.fromtimestamp(1543350894).strftime("%Y-%m-%d %H:%M:%S")
