@@ -27,4 +27,4 @@ class TestFrameSetUTCRequest(unittest.TestCase):
         """Test string representation of FrameSetUTCRequest."""
         frame = FrameSetUTCRequest(timestamp=1543350894)
         test_ts = datetime.fromtimestamp(1543350894).strftime("%Y-%m-%d %H:%M:%S")
-        self.assertEqual(str(frame), '<FrameSetUTCRequest time="{}"/>'.format(test_ts))
+        self.assertEqual(str(frame), f'<FrameSetUTCRequest time="{test_ts}"/>')
