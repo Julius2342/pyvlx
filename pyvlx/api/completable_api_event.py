@@ -35,10 +35,15 @@ class CompletableApiEvent(ApiEvent):
     3. Optionally wait for a completion frame signaling the end of the session
        (e.g. FrameSessionFinishedNotification) until the timeout is reached.
 
+    Subclasses implement check_confirmation() to identify their specific
+    confirmation frame type. The default check_completion() handles the
+    standard FrameSessionFinishedNotification; override if needed.
+
     The ``success`` attribute reflects whether an accepted confirmation was
-    received (and, when wait_for_completion is True, that a completion
-    notification arrived before the timeout). If the command is rejected or
-    times out before completion, ``success`` is False and send() will raise
+    received within the timeout. If ``wait_for_completion`` is True, then a completion
+    notification is also needed for ``success`` to be set to True. If the command
+    is rejected or times out before confirmation or completion (depending on
+    ``wait_for_completion``), ``success`` is False and send() will raise
     PyVLXException.
     """
 
