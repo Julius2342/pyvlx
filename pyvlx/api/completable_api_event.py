@@ -39,12 +39,14 @@ class CompletableApiEvent(ApiEvent):
     confirmation frame type. The default check_completion() handles the
     standard FrameSessionFinishedNotification; override if needed.
 
-    The ``success`` attribute reflects whether an accepted confirmation was
-    received within the timeout. If ``wait_for_completion`` is True, then a completion
-    notification is also needed for ``success`` to be set to True. If the command
-    is rejected or times out before confirmation or completion (depending on
-    ``wait_for_completion``), ``success`` is False and send() will raise
-    PyVLXException.
+    The ``success`` attribute reflects whether an accepted confirmation frame was
+    received within the timeout. Completion notifications do not change the
+    ``success`` value; they only influence how long the call waits when
+    ``wait_for_completion`` is True. If the command is rejected or no accepted
+    confirmation is received before the timeout, ``success`` is False and
+    send() will raise PyVLXException. If an accepted confirmation is received,
+    ``success`` remains True even if no completion notification is seen before
+    the timeout.
     """
 
     def __init__(self, pyvlx: "PyVLX", timeout_in_seconds: int = 10, wait_for_completion: bool = True):
@@ -78,7 +80,7 @@ class CompletableApiEvent(ApiEvent):
         return self.check_completion(frame)
 
     async def send(self) -> None:
-        """Send request, wait for confirmation and (optionally) completion, and raise on rejection or timeout."""
+        """Send request, wait for confirmation and (optionally) completion, and raise if no accepted confirmation is received."""
         await self.do_api_call()
         if not self.success:
             raise PyVLXException(f"{type(self).__name__} send with session ID {self.session_id} failed")
