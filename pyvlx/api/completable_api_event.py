@@ -30,7 +30,8 @@ class CompletableApiEvent(ApiEvent):
     after the confirmation frame are ignored.
 
     The flow is:
-    1. Send a request frame with a session ID (handled by the base class)
+    1. Send a request frame with a session ID (sending is handled by the base class, 
+       subclasses just need to implement request_frame() including the session ID in the frame)
     2. Receive a confirmation frame (accepted or rejected)
     3. Optionally wait for a completion frame signaling the end of the session
        (e.g. FrameSessionFinishedNotification) until the timeout is reached.
