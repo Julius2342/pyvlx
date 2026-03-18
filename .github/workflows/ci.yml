@@ -26,7 +26,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install dependencies
-      run: pip install -e .[dev]
+      run: pip install .[dev]
     - name: Pydocstyle
       run: pydocstyle pyvlx test/*.py examples/*.py
   flake8:
@@ -45,7 +45,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install dependencies
-      run: pip install -e .[dev]
+      run: pip install .[dev]
     - name: Flake8
       run: flake8 
   pylint:
@@ -64,9 +64,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     - name: Install dependencies
-      run: pip install -e .[dev]
+      run: pip install .[dev]
     - name: Linter Pylint
-      run: pylint pyvlx test/*.py examples/*.py
+      run: pylint src/pyvlx test/*.py examples/*.py
   isort:
     runs-on: ubuntu-latest
     steps:
@@ -85,7 +85,7 @@ jobs:
     - name: Install dependencies
       run: pip install -e .[dev]
     - name: Isort
-      run: isort --check-only test examples pyvlx
+      run: isort --check-only test examples src/pyvlx
   mypy:
     runs-on: ubuntu-latest
     strategy:
@@ -107,7 +107,7 @@ jobs:
     - name: Install dependencies
       run: pip install -e .[dev]
     - name: Mypy
-      run: mypy pyvlx
+      run: mypy src/pyvlx
   pytest:
     runs-on: ubuntu-latest
     strategy:

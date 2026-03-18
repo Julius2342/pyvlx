@@ -57,6 +57,7 @@ requires = ["setuptools>=61.0", "setuptools-scm>=8.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
+where = ["src"]
 exclude = ["test*"]
 
 [tool.setuptools.package-data]
@@ -65,7 +66,7 @@ pyvlx = ["py.typed"]
 [tool.setuptools_scm]
 version_scheme = "guess-next-dev"
 local_scheme = "no-local-version"
-version_file = "pyvlx/_version.py"
+version_file = "src/pyvlx/_version.py"
 
 [tool.mypy]
 show_error_codes = true
@@ -81,7 +82,7 @@ skip = ["old_api", "_version.py"]
 [tool.pylint.main]
 max-branches = 20
 max-statements = 55
-ignore-paths = ["pyvlx/_version.py"]
+ignore-paths = ["src/pyvlx/_version.py"]
 
 [tool.pylint.messages_control]
 disable = [
@@ -109,16 +110,16 @@ max-positional-arguments = 7
 
 [tool.flake8]
 ignore = ["E203", "W503", "E226"]
-exclude = [".git", "bin", "lib", "deps", "build", "pyvlx/_version.py"]
+exclude = [".git", "bin", "lib", "deps", "build", "src/pyvlx/_version.py"]
 max-line-length = 160
 
 [tool.coverage.run]
-source = ["pyvlx"]
+source = ["src/pyvlx"]
 branch = true
 relative_files = true
 
 [tool.coverage.report]
-omit = ["pyvlx/_version.py"]
+omit = ["src/pyvlx/_version.py"]
 show_missing = true
 skip_covered = true
 exclude_lines = [
