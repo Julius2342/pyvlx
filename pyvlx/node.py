@@ -62,7 +62,7 @@ class Node:
             wink_time=wink_time,
             wait_for_completion=wait_for_completion,
         )
-        await wink_send.wink()
+        await wink_send.send()
 
     @property
     def is_available(self) -> bool:

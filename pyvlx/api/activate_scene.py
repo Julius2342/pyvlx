@@ -1,59 +1,31 @@
 """Module for activating scenes via API."""
 from typing import TYPE_CHECKING, Optional
 
-from .api_event import ApiEvent
+from .completable_api_event import CompletableApiEvent
 from .frames import (
     ActivateSceneConfirmationStatus, FrameActivateSceneConfirmation,
-    FrameActivateSceneRequest, FrameBase,
-    FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification,
-    FrameSessionFinishedNotification)
+    FrameActivateSceneRequest, FrameBase)
 from .session_id import get_new_session_id
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-class ActivateScene(ApiEvent):
+class ActivateScene(CompletableApiEvent):
     """Class for activating scene via API."""
 
     def __init__(
             self, pyvlx: "PyVLX", scene_id: int, wait_for_completion: bool = True, timeout_in_seconds: int = 60
     ):
         """Initialize ActivateScene class."""
-        super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
-        self.success = False
+        super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds, wait_for_completion=wait_for_completion)
         self.scene_id = scene_id
-        self.wait_for_completion = wait_for_completion
-        self.session_id: Optional[int] = None
 
-    async def handle_frame(self, frame: FrameBase) -> bool:
-        """Handle incoming API frame, return True if this was the expected frame."""
-        if (
-                isinstance(frame, FrameActivateSceneConfirmation)
-                and frame.session_id == self.session_id
-        ):
-            if frame.status == ActivateSceneConfirmationStatus.ACCEPTED:
-                self.success = True
-            return not self.wait_for_completion
-        if (
-                isinstance(frame, FrameCommandRemainingTimeNotification)
-                and frame.session_id == self.session_id
-        ):
-            # Ignoring FrameCommandRemainingTimeNotification
-            return False
-        if (
-                isinstance(frame, FrameCommandRunStatusNotification)
-                and frame.session_id == self.session_id
-        ):
-            # At the moment I don't reall understand what the FrameCommandRunStatusNotification is good for.
-            # Ignoring these packets for now
-            return False
-        if (
-                isinstance(frame, FrameSessionFinishedNotification)
-                and frame.session_id == self.session_id
-        ):
-            return True
-        return False
+    def check_confirmation(self, frame: FrameBase) -> Optional[bool]:
+        """Check if frame is an ActivateSceneConfirmation for this session."""
+        if isinstance(frame, FrameActivateSceneConfirmation) and frame.session_id == self.session_id:
+            return frame.status == ActivateSceneConfirmationStatus.ACCEPTED
+        return None
 
     def request_frame(self) -> FrameActivateSceneRequest:
         """Construct initiating frame."""

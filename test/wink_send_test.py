@@ -70,7 +70,7 @@ class TestWinkSend(IsolatedAsyncioTestCase):
         self.assertEqual(wink_send.timeout_in_seconds, 11)
 
         wink_send.success = True
-        await wink_send.wink()
+        await wink_send.send()
         do_api_call.assert_awaited_once()
 
     @patch("pyvlx.api.ApiEvent.do_api_call", new_callable=AsyncMock)
@@ -81,5 +81,5 @@ class TestWinkSend(IsolatedAsyncioTestCase):
         self.assertEqual(wink_send.timeout_in_seconds, 5)
 
         wink_send.success = True
-        await wink_send.wink()
+        await wink_send.send()
         do_api_call.assert_awaited_once()

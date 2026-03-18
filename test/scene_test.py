@@ -28,30 +28,38 @@ class TestSceneRun(unittest.IsolatedAsyncioTestCase):
 
     @patch("pyvlx.scene.ActivateScene")
     async def test_run_forwards_timeout(self, mock_activate_scene: MagicMock) -> None:
-        """Test run forwards timeout_in_seconds to ActivateScene when provided."""
+        """Test run creates ActivateScene with the provided timeout."""
         pyvlx = MagicMock()
         scene = Scene(pyvlx, 2, "Scene 1")
         activate_scene_instance = MagicMock()
-        activate_scene_instance.do_api_call = AsyncMock()
-        activate_scene_instance.success = True
+        activate_scene_instance.send = AsyncMock()
         mock_activate_scene.return_value = activate_scene_instance
 
         await scene.run(wait_for_completion=True, timeout_in_seconds=25)
 
-        self.assertEqual(mock_activate_scene.call_args.kwargs["timeout_in_seconds"], 25)
-        activate_scene_instance.do_api_call.assert_awaited_once()
+        mock_activate_scene.assert_called_once_with(
+            pyvlx=pyvlx,
+            wait_for_completion=True,
+            scene_id=2,
+            timeout_in_seconds=25,
+        )
+        activate_scene_instance.send.assert_awaited_once()
 
     @patch("pyvlx.scene.ActivateScene")
     async def test_run_uses_default_timeout_when_not_provided(self, mock_activate_scene: MagicMock) -> None:
-        """Test run applies the ActivateScene default timeout when not provided."""
+        """Test run creates ActivateScene with the default timeout."""
         pyvlx = MagicMock()
         scene = Scene(pyvlx, 2, "Scene 1")
         activate_scene_instance = MagicMock()
-        activate_scene_instance.do_api_call = AsyncMock()
-        activate_scene_instance.success = True
+        activate_scene_instance.send = AsyncMock()
         mock_activate_scene.return_value = activate_scene_instance
 
         await scene.run(wait_for_completion=True)
 
-        self.assertEqual(mock_activate_scene.call_args.kwargs["timeout_in_seconds"], 60)
-        activate_scene_instance.do_api_call.assert_awaited_once()
+        mock_activate_scene.assert_called_once_with(
+            pyvlx=pyvlx,
+            wait_for_completion=True,
+            scene_id=2,
+            timeout_in_seconds=60,
+        )
+        activate_scene_instance.send.assert_awaited_once()

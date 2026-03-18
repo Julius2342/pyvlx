@@ -5,9 +5,10 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from pyvlx import Parameter, PyVLXException
 from pyvlx.api import CommandSend
 from pyvlx.api.frames import (
-    CommandSendConfirmationStatus, FrameCommandRemainingTimeNotification,
-    FrameCommandRunStatusNotification, FrameCommandSendConfirmation,
+    CommandSendConfirmationStatus, FrameCommandSendConfirmation,
     FrameCommandSendRequest, FrameSessionFinishedNotification)
+from pyvlx.api.frames.frame_command_send import (
+    FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification)
 
 
 class TestCommandSend(unittest.IsolatedAsyncioTestCase):
@@ -41,16 +42,31 @@ class TestCommandSend(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(await self.command_send.handle_frame(frame=frame))
         self.assertFalse(self.command_send.success)
 
+        # make sure we set command_send.success to False on rejection even if it was already True
+        self.command_send.success = True
+        self.command_send.wait_for_completion = True
+        frame.status = CommandSendConfirmationStatus.REJECTED
+        self.assertTrue(await self.command_send.handle_frame(frame=frame))
+        self.assertFalse(self.command_send.success)
+
+        self.command_send.success = True
+        self.command_send.wait_for_completion = False
+        frame.status = CommandSendConfirmationStatus.REJECTED
+        self.assertTrue(await self.command_send.handle_frame(frame=frame))
+        self.assertFalse(self.command_send.success)
+
         self.command_send.success = False
         self.command_send.wait_for_completion = True
         frame.status = CommandSendConfirmationStatus.REJECTED
-        self.assertFalse(await self.command_send.handle_frame(frame=frame))
+        self.assertTrue(await self.command_send.handle_frame(frame=frame))
         self.assertFalse(self.command_send.success)
 
+        # test frame type we ignore during completion wait, must return False
         frame = MagicMock(spec=FrameCommandRemainingTimeNotification)
         frame.session_id = session_id
         self.assertFalse(await self.command_send.handle_frame(frame=frame))
 
+        # test another frame type we ignore during completion wait, must return False
         frame = MagicMock(spec=FrameCommandRunStatusNotification)
         frame.session_id = session_id
         self.assertFalse(await self.command_send.handle_frame(frame=frame))
