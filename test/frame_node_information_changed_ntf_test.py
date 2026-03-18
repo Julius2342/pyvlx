@@ -17,7 +17,7 @@ class TestFrameNodeInformationChangedNotification(unittest.TestCase):
         b"\xd2\x02\x01\xd4"
     )
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameNodeInformationChangedNotification."""
         frame = FrameNodeInformationChangedNotification()
         frame.node_id = 23
@@ -27,7 +27,7 @@ class TestFrameNodeInformationChangedNotification(unittest.TestCase):
         frame.node_variation = NodeVariation.TOPHUNG
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameNodeInformationChangedNotification from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameNodeInformationChangedNotification))
@@ -37,7 +37,7 @@ class TestFrameNodeInformationChangedNotification(unittest.TestCase):
         self.assertEqual(frame.node_variation, NodeVariation.TOPHUNG)
         self.assertEqual(frame.name, "Fnord23")
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameNodeInformationChangedNotification."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertEqual(

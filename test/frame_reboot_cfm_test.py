@@ -10,17 +10,17 @@ class TestFrameGatewayRebootConfirmation(unittest.TestCase):
 
     EXAMPLE_FRAME = b"\x00\x03\x00\x02\x01"
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGatewayRebootConfirmation with NO_TYPE."""
         frame = FrameGatewayRebootConfirmation()
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGatewayRebootConfirmation from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameGatewayRebootConfirmation))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGatewayRebootConfirmation."""
         frame = FrameGatewayRebootConfirmation()
         self.assertEqual(str(frame), '<FrameGatewayRebootConfirmation/>')

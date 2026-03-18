@@ -127,16 +127,14 @@ class TestFrameGetNodeInformationNotification(unittest.TestCase):
         test_ts = datetime.fromtimestamp(50528771).strftime("%Y-%m-%d %H:%M:%S")
         self.assertEqual(
             str(frame),
-            '<FrameGetNodeInformationNotification node_id="23" order="1234" placement="2" '
-            'name="Fnord23" velocity="Velocity.SILENT" node_type="NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND" '
-            'product_group="23" product_type="13" node_variation="NodeVariation.TOPHUNG" '
-            'power_mode="1" build_number="7" serial_number="01:02:03:04:05:06:06:08" state="ERROR_EXECUTING" '
-            'current_position="0 %" target="0 %" current_position_fp1="2 %" '
-            'current_position_fp2="5 %" current_position_fp3="7 %" current_position_fp4="9 %" '
-            'remaining_time="1" time="{}" '
-            'alias_array="3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839"/>'.format(
-                test_ts
-            ),
+            f'<FrameGetNodeInformationNotification node_id="23" order="1234" placement="2" '
+            f'name="Fnord23" velocity="Velocity.SILENT" node_type="NodeTypeWithSubtype.INTERIOR_VENETIAN_BLIND" '
+            f'product_group="23" product_type="13" node_variation="NodeVariation.TOPHUNG" '
+            f'power_mode="1" build_number="7" serial_number="01:02:03:04:05:06:06:08" state="ERROR_EXECUTING" '
+            f'current_position="0 %" target="0 %" current_position_fp1="2 %" '
+            f'current_position_fp2="5 %" current_position_fp3="7 %" current_position_fp4="9 %" '
+            f'remaining_time="1" time="{test_ts}" '
+            f'alias_array="3031=3233, 3435=3637, 3839=3031, 3233=3435, 3637=3839"/>',
         )
 
     def test_serial_number(self) -> None:

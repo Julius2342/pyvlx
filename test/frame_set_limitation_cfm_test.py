@@ -12,7 +12,7 @@ class TestFrameSetLimitationConfirmation(unittest.TestCase):
     EXAMPLE_FRAME_ACCEPTED = b'\x00\x06\x03\x11\x00\x01\x01\x14'
     EXAMPLE_FRAME_REJECTED = b'\x00\x06\x03\x11\x00\x02\x00\x16'
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameSetLimitationConfirmation bytes."""
         frame = FrameSetLimitationConfirmation(session_id=1, status=SetLimitationRequestStatus.ACCEPTED)
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME_ACCEPTED)
@@ -20,7 +20,7 @@ class TestFrameSetLimitationConfirmation(unittest.TestCase):
         frame = FrameSetLimitationConfirmation(session_id=2, status=SetLimitationRequestStatus.REJECTED)
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME_REJECTED)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGetLimitationStatusConfirmation from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME_ACCEPTED)
         self.assertTrue(isinstance(frame, FrameSetLimitationConfirmation))
@@ -32,7 +32,7 @@ class TestFrameSetLimitationConfirmation(unittest.TestCase):
         self.assertEqual(frame.session_id, 2)
         self.assertEqual(frame.status, SetLimitationRequestStatus.REJECTED)
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameSetLimitationConfirmation."""
         frame = FrameSetLimitationConfirmation(session_id=1)
         self.assertEqual(str(frame),

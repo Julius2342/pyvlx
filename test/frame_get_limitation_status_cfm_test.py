@@ -9,7 +9,7 @@ from pyvlx.api.frames.frame_get_limitation import (
 class TestFrameGetLimitationStatusConfirmation(unittest.TestCase):
     """Test class for FrameGetLimitationStatusConfirmation."""
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGetLimitationStatusConfirmation bytes."""
         frame = FrameGetLimitationStatusConfirmation(session_id=1, data=1)
         self.assertEqual(bytes(frame), b'\x00\x06\x03\x13\x00\x01\x01\x16')
@@ -17,7 +17,7 @@ class TestFrameGetLimitationStatusConfirmation(unittest.TestCase):
         frame = FrameGetLimitationStatusConfirmation(session_id=2, data=0)
         self.assertEqual(bytes(frame), b'\x00\x06\x03\x13\x00\x02\x00\x14')
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGetLimitationStatusConfirmation from raw."""
         frame = frame_from_raw(b'\x00\x06\x03\x13\x00\x01\x01\x16')
         self.assertTrue(isinstance(frame, FrameGetLimitationStatusConfirmation))
@@ -29,7 +29,7 @@ class TestFrameGetLimitationStatusConfirmation(unittest.TestCase):
         self.assertEqual(frame.session_id, 2)
         self.assertEqual(frame.data, 0)
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGetLimitationStatusConfirmation."""
         frame = FrameGetLimitationStatusConfirmation(session_id=1)
         self.assertEqual(str(frame),

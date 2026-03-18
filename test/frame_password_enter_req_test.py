@@ -9,7 +9,7 @@ from pyvlx.exception import PyVLXException
 class TestFramePasswordEnter(unittest.TestCase):
     """Test class for FramePasswordEnterRequest."""
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FramePasswordEnterRequest."""
         frame = FramePasswordEnterRequest(password="fnord")
         self.assertEqual(
@@ -19,14 +19,14 @@ class TestFramePasswordEnter(unittest.TestCase):
             + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00b",
         )
 
-    def test_bytes_long_pw(self):
+    def test_bytes_long_pw(self) -> None:
         """Test FramePasswordEnterRequest with long password."""
         frame = FramePasswordEnterRequest(password="x" * 32)
         self.assertEqual(
             bytes(frame), b"\x00#0\x00xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\x13"
         )
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parsing FramePasswordEnterRequest from raw bytes."""
         frame = frame_from_raw(
             b"\x00#0\x00fnord\x00\x00\x00\x00\x00"
@@ -36,25 +36,25 @@ class TestFramePasswordEnter(unittest.TestCase):
         self.assertTrue(isinstance(frame, FramePasswordEnterRequest))
         self.assertEqual(frame.password, "fnord")
 
-    def test_frame_from_raw_long(self):
+    def test_frame_from_raw_long(self) -> None:
         """Test parsing FramePasswordEnterRequest from raw bytes with long password."""
         frame = frame_from_raw(b"\x00#0\x00xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\x13")
         self.assertTrue(isinstance(frame, FramePasswordEnterRequest))
         self.assertEqual(frame.password, "x" * 32)
 
-    def test_errors(self):
+    def test_errors(self) -> None:
         """Test FramePasswordEnterRequest with wrong password."""
         with self.assertRaises(PyVLXException):
             bytes(FramePasswordEnterRequest())
         with self.assertRaises(PyVLXException):
             bytes(FramePasswordEnterRequest(password="x" * 33))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FramePasswordEnterRequest."""
         frame = FramePasswordEnterRequest(password="fnord")
         self.assertEqual(str(frame), '<FramePasswordEnterRequest password="fn****"/>')
 
-    def test_str_no_password(self):
+    def test_str_no_password(self) -> None:
         """Test string representation of FramePasswordEnterRequest with no password."""
         frame = FramePasswordEnterRequest()
         self.assertEqual(str(frame), '<FramePasswordEnterRequest password="None"/>')

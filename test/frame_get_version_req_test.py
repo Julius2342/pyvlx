@@ -10,17 +10,17 @@ class TestFrameGetVersionRequest(unittest.TestCase):
 
     EXAMPLE_FRAME = b"\x00\x03\x00\x08\x0b"
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGetVersionRequest with NO_TYPE."""
         frame = FrameGetVersionRequest()
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGetVersionRequest from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameGetVersionRequest))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGetVersionRequest."""
         frame = FrameGetVersionRequest()
         self.assertEqual(str(frame), "<FrameGetVersionRequest/>")

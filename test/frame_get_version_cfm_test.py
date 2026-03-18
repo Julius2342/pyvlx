@@ -10,14 +10,14 @@ class TestFrameGetVersionConfirmation(unittest.TestCase):
 
     EXAMPLE_FRAME = b"\x00\x0c\x00\t\x01\x02\x03\x04\x05\x06\x17\x0e\x03\x18"
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGetVersionConfirmation."""
         frame = FrameGetVersionConfirmation(
             software_version="1.2.3.4.5.6", hardware_version=23
         )
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGetVersionConfirmation from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameGetVersionConfirmation))
@@ -25,7 +25,7 @@ class TestFrameGetVersionConfirmation(unittest.TestCase):
         self.assertEqual(frame.hardware_version, 23)
         self.assertEqual(frame.product, "KLF 200")
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGetVersionConfirmation."""
         frame = FrameGetVersionConfirmation(
             software_version="1.2.3.4.5.6", hardware_version=23
@@ -35,7 +35,7 @@ class TestFrameGetVersionConfirmation(unittest.TestCase):
             '<FrameGetVersionConfirmation software_version="1.2.3.4.5.6" hardware_version="23" product="KLF 200"/>',
         )
 
-    def test_version(self):
+    def test_version(self) -> None:
         """Test version string."""
         frame = FrameGetVersionConfirmation(
             software_version="1.2.3.4.5.6", hardware_version=23
@@ -45,7 +45,7 @@ class TestFrameGetVersionConfirmation(unittest.TestCase):
             "KLF 200: Software version: 1.2.3.4.5.6, hardware version: 23",
         )
 
-    def test_product(self):
+    def test_product(self) -> None:
         """Test formatting of product."""
         frame = FrameGetVersionConfirmation()
         self.assertEqual(frame.product, "KLF 200")

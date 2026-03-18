@@ -9,7 +9,7 @@ from pyvlx.exception import PyVLXException
 class TestFramePasswordChange(unittest.TestCase):
     """Test class for FramePasswordChangeNotification."""
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FramePasswordChangeNotification."""
         frame = FramePasswordChangeNotification(newpassword="fnord")
         self.assertEqual(
@@ -19,14 +19,14 @@ class TestFramePasswordChange(unittest.TestCase):
             + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00f",
         )
 
-    def test_bytes_long_pw(self):
+    def test_bytes_long_pw(self) -> None:
         """Test FramePasswordChangeNotification with long new password."""
         frame = FramePasswordChangeNotification(newpassword="x" * 32)
         self.assertEqual(
             bytes(frame), b"\x00#0\x04xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\x17"
         )
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parsing FramePasswordChangeNotification from raw bytes."""
         frame = frame_from_raw(
             b"\x00#0\x04fnord\x00\x00\x00\x00\x00\x00"
@@ -36,19 +36,19 @@ class TestFramePasswordChange(unittest.TestCase):
         self.assertTrue(isinstance(frame, FramePasswordChangeNotification))
         self.assertEqual(frame.newpassword, "fnord")
 
-    def test_errors(self):
+    def test_errors(self) -> None:
         """Test FramePasswordChangeNotification with wrong password."""
         with self.assertRaises(PyVLXException):
             bytes(FramePasswordChangeNotification())
         with self.assertRaises(PyVLXException):
             bytes(FramePasswordChangeNotification(newpassword="x" * 33))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FramePasswordChangeNotification."""
         frame = FramePasswordChangeNotification(newpassword="fnord")
         self.assertEqual(str(frame), '<FramePasswordChangeNotification newpassword="fn****"/>')
 
-    def test_str_no_password(self):
+    def test_str_no_password(self) -> None:
         """Test string representation of FramePasswordChangeNotification with no password."""
         frame = FramePasswordChangeNotification()
         self.assertEqual(str(frame), '<FramePasswordChangeNotification newpassword="None"/>')

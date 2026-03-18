@@ -10,7 +10,7 @@ from pyvlx.const import Originator
 class TestFrameGetLimitationStatusNotification(unittest.TestCase):
     """Test class for TestFrameGetLimitationStatusNotification."""
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGetLimitationStatusNotification bytes."""
         frame = FrameGetLimitationStatusNotification()
         frame.session_id = 1
@@ -22,7 +22,7 @@ class TestFrameGetLimitationStatusNotification(unittest.TestCase):
         frame.limit_time = 0
         self.assertEqual(bytes(frame), b'\x00\r\x03\x14\x00\x01\x01\x00\xba\x34\xf7\xff\x01\x00\x9d')
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGetLimitationStatusNotification from raw."""
         frame = frame_from_raw(b'\x00\r\x03\x14\x00\x01\x01\x00\xba\x34\xf7\xff\x01\x00\x9d')
         self.assertTrue(isinstance(frame, FrameGetLimitationStatusNotification))
@@ -34,7 +34,7 @@ class TestFrameGetLimitationStatusNotification(unittest.TestCase):
         self.assertEqual(frame.min_value, b'\xba\x34')
         self.assertEqual(frame.limit_time, 0)
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGetLimitationStatusNotification."""
         frame = FrameGetLimitationStatusNotification()
         self.assertEqual(str(frame),

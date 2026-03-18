@@ -10,17 +10,17 @@ class TestFrameGatewayFactoryDefaultConfirmation(unittest.TestCase):
 
     EXAMPLE_FRAME = b"\x00\x03\x00\x04\x07"
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGatewayFactoryDefaultConfirmation."""
         frame = FrameGatewayFactoryDefaultConfirmation()
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGatewayFactoryDefaultConfirmation from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameGatewayFactoryDefaultConfirmation))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGatewayFactoryDefaultConfirmation."""
         frame = FrameGatewayFactoryDefaultConfirmation()
         self.assertEqual(str(frame), "<FrameGatewayFactoryDefaultConfirmation/>")

@@ -8,7 +8,7 @@ from pyvlx.api.frames import FrameDiscoverNodesNotification
 class TestFrameDiscoverNodesNotification(unittest.TestCase):
     """Test class for FrameDiscoverNodesNotification."""
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameDiscoverNodesNotification."""
         frame = FrameDiscoverNodesNotification()
         self.assertEqual(
@@ -24,7 +24,7 @@ class TestFrameDiscoverNodesNotification(unittest.TestCase):
             + b"\x00\x00\x00\x00\x00\x00\x00\x82",
         )
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameDiscoverNodesNotification from raw."""
         frame = frame_from_raw(
             b"\x00\x86\x01\x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
@@ -39,7 +39,7 @@ class TestFrameDiscoverNodesNotification(unittest.TestCase):
         )
         self.assertTrue(isinstance(frame, FrameDiscoverNodesNotification))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameDiscoverNodesNotification."""
         frame = FrameDiscoverNodesNotification()
         self.assertEqual(

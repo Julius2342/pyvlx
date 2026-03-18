@@ -9,14 +9,14 @@ from pyvlx.api.frames import (
 class TestFrameActivateSceneConfirmation(unittest.TestCase):
     """Test class FrameActivateSceneConfirmation."""
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameActivateSceneConfirmation."""
         frame = FrameActivateSceneConfirmation(
             session_id=1000, status=ActivateSceneConfirmationStatus.ACCEPTED
         )
         self.assertEqual(bytes(frame), b"\x00\x06\x04\x13\x00\x03\xe8\xfa")
 
-    def test_bytes_error(self):
+    def test_bytes_error(self) -> None:
         """Test failed FrameActivateSceneConfirmation."""
         frame = FrameActivateSceneConfirmation(
             session_id=1000,
@@ -24,7 +24,7 @@ class TestFrameActivateSceneConfirmation(unittest.TestCase):
         )
         self.assertEqual(bytes(frame), b"\x00\x06\x04\x13\x02\x03\xe8\xf8")
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameActivateSceneConfirmation from raw."""
         frame = frame_from_raw(b"\x00\x06\x04\x13\x02\x03\xe8\xf8")
         self.assertTrue(isinstance(frame, FrameActivateSceneConfirmation))
@@ -33,7 +33,7 @@ class TestFrameActivateSceneConfirmation(unittest.TestCase):
         )
         self.assertEqual(frame.session_id, 1000)
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameActivateSceneConfirmation."""
         frame = FrameActivateSceneConfirmation(
             session_id=1000, status=ActivateSceneConfirmationStatus.ACCEPTED

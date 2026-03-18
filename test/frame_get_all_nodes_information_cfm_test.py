@@ -8,18 +8,18 @@ from pyvlx.api.frames import FrameGetAllNodesInformationConfirmation
 class TestFrameGetAllNodesInformationConfirmation(unittest.TestCase):
     """Test class for FrameGetAllNodesInformationConfirmation."""
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameGetAllNodesInformationConfirmation."""
         frame = FrameGetAllNodesInformationConfirmation(number_of_nodes=23)
         self.assertEqual(bytes(frame), b"\x00\x05\x02\x03\x00\x17\x13")
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameGetAllNodesInformationConfirmation from raw."""
         frame = frame_from_raw(b"\x00\x05\x02\x03\x00\x17\x13")
         self.assertTrue(isinstance(frame, FrameGetAllNodesInformationConfirmation))
         self.assertEqual(frame.number_of_nodes, 23)
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameGetAllNodesInformationConfirmation."""
         frame = FrameGetAllNodesInformationConfirmation(number_of_nodes=23)
         self.assertEqual(

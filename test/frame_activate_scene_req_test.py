@@ -11,7 +11,7 @@ class TestFrameActivateSceneRequest(unittest.TestCase):
 
     EXAMPLE_FRAME = b"\x00\t\x04\x12\x03\xe8\x02\x03\x04\x01\xf0"
 
-    def test_bytes(self):
+    def test_bytes(self) -> None:
         """Test FrameActivateSceneRequest with NO_TYPE."""
         frame = FrameActivateSceneRequest(
             scene_id=4,
@@ -21,7 +21,7 @@ class TestFrameActivateSceneRequest(unittest.TestCase):
         )
         self.assertEqual(bytes(frame), self.EXAMPLE_FRAME)
 
-    def test_frame_from_raw(self):
+    def test_frame_from_raw(self) -> None:
         """Test parse FrameActivateSceneRequest from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameActivateSceneRequest))
@@ -31,7 +31,7 @@ class TestFrameActivateSceneRequest(unittest.TestCase):
         self.assertEqual(frame.priority, Priority.USER_LEVEL_2)
         self.assertEqual(frame.velocity, Velocity.SILENT)
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test string representation of FrameActivateSceneRequest."""
         frame = FrameActivateSceneRequest(
             scene_id=4, session_id=1000, velocity=Velocity.FAST
