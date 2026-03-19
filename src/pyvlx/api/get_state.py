@@ -1,7 +1,6 @@
 """Module for retrieving gateway state from API."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
-from pyvlx.const import GatewayState, GatewaySubState
 from pyvlx.dataobjects import DtoState
 
 from .api_event import ApiEvent
@@ -31,13 +30,3 @@ class GetState(ApiEvent):
     def request_frame(self) -> FrameGetStateRequest:
         """Construct initiating frame."""
         return FrameGetStateRequest()
-
-    @property
-    def gateway_state(self) -> Optional[GatewayState]:
-        """Return Gateway State as human readable string. Deprecated."""
-        return self.state.gateway_state
-
-    @property
-    def gateway_sub_state(self) -> Optional[GatewaySubState]:
-        """Return Gateway Sub State as human readable string. Deprecated."""
-        return self.state.gateway_sub_state

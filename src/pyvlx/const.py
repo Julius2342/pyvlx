@@ -540,7 +540,6 @@ class WinkTime(Enum):
     STOP = 0                # Stop wink.
     BY_SECONDS = 1          # 1=Wink in 1 sec., 2= Wink in 2 sec. 253=Wink in 253 sec.
     BY_MANUFACTURER = 254   # Manufacturer specific wink time.
-    BY_MANUFACTUERER = BY_MANUFACTURER  # Backwards compatibility alias (deprecated).
     FOREVER = 255           # Wink forever.
 
 

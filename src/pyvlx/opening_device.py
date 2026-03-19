@@ -4,8 +4,6 @@ import datetime
 from asyncio import Task
 from typing import TYPE_CHECKING, Any, ClassVar, Optional
 
-from deprecated import deprecated
-
 from pyvlx.api.get_limitation import GetLimitation
 
 from .api.command_send import CommandSend
@@ -335,15 +333,6 @@ class Window(OpeningDevice):
             f'<{type(self).__name__} name="{self.name}" node_id="{self.node_id}" rain_sensor={self.rain_sensor} '
             f'serial_number="{self.serial_number}" position="{self.position}"/>'
         )
-
-    @deprecated("Use 'get_limitation_min' instead.")
-    async def get_limitation(self) -> GetLimitation:
-        """Request minimum limitation and return it as part of the GetLimitation object."""
-        get_limitation = GetLimitation(pyvlx=self.pyvlx, node_id=self.node_id)
-        await get_limitation.do_api_call()
-        if not get_limitation.success:
-            raise PyVLXException("Unable to send command")
-        return get_limitation
 
 
 class Blind(OpeningDevice):
