@@ -59,6 +59,7 @@ class Nodes:
             raise TypeError()
         for i, j in enumerate(self.__nodes):
             if j.node_id == node.node_id:
+                j.dispose()
                 self.__nodes[i] = node
                 PYVLXLOG.debug("Replaced node with node_id %s", node.node_id)
                 return
@@ -67,7 +68,31 @@ class Nodes:
 
     def clear(self) -> None:
         """Clear internal node array."""
+        for node in self.__nodes:
+            node.dispose()
         self.__nodes = []
+
+    @staticmethod
+    def _sync_stable_metadata(existing: Node, loaded: Node) -> None:
+        """Update metadata that should follow the latest gateway snapshot."""
+        existing.node_id = loaded.node_id
+        existing.name = loaded.name
+
+    def _find_matching_existing(
+        self,
+        loaded: Node,
+        used_existing: List[Node],
+    ) -> Optional[Node]:
+        """Find existing node matching loaded node identity.
+
+        Already matched existing nodes are skipped.
+        """
+        for existing in self.__nodes:
+            if existing in used_existing:
+                continue
+            if existing.represents_same_node(loaded):
+                return existing
+        return None
 
     async def load(self, node_id: Optional[int] = None) -> None:
         """Load nodes from KLF 200, if no node_id is specified all nodes are loaded."""
@@ -90,13 +115,39 @@ class Nodes:
             self.add(node)
 
     async def _load_all_nodes(self) -> None:
-        """Load all nodes via API."""
+        """Load and merge a full gateway node snapshot.
+
+        Matching existing nodes are kept and updated with current gateway metadata,
+        newly discovered nodes are added, and previously known nodes missing from
+        the snapshot are disposed and removed.
+        """
         get_all_nodes_information = GetAllNodesInformation(pyvlx=self.pyvlx)
         await get_all_nodes_information.do_api_call()
         if not get_all_nodes_information.success:
             raise PyVLXException("Unable to retrieve node information")
-        self.clear()
+
+        loaded_nodes: List[Node] = []
         for notification_frame in get_all_nodes_information.notification_frames:
             node = convert_frame_to_node(self.pyvlx, notification_frame)
             if node is not None:
-                self.add(node)
+                loaded_nodes.append(node)
+
+        next_nodes: List[Node] = []
+        used_existing: List[Node] = []
+
+        for loaded_node in loaded_nodes:
+            existing = self._find_matching_existing(loaded_node, used_existing)
+            if existing is None:
+                next_nodes.append(loaded_node)
+                continue
+
+            used_existing.append(existing)
+            self._sync_stable_metadata(existing, loaded_node)
+            loaded_node.dispose()
+            next_nodes.append(existing)
+
+        for existing in self.__nodes:
+            if existing not in used_existing:
+                existing.dispose()
+
+        self.__nodes = next_nodes
