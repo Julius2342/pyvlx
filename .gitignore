@@ -11,6 +11,8 @@ pyvlx.egg-info/
 .venv
 venv
 
+uv.lock
+
 src/pyvlx/_version.py
 
 htmlcov
