@@ -201,7 +201,7 @@ class TestNodesReload(unittest.TestCase):
         with patch("pyvlx.nodes.GetAllNodesInformation", return_value=get_all_nodes_information), patch(
             "pyvlx.nodes.convert_frame_to_node", return_value=loaded
         ):
-            asyncio.run(nodes._load_all_nodes())
+            asyncio.run(nodes._load_all_nodes())  # pylint: disable=W0212
 
         self.assertIs(nodes[9], existing)
         self.assertEqual(existing.name, "New name")
@@ -223,7 +223,7 @@ class TestNodesReload(unittest.TestCase):
         with patch("pyvlx.nodes.GetAllNodesInformation", return_value=get_all_nodes_information), patch(
             "pyvlx.nodes.convert_frame_to_node", return_value=loaded
         ):
-            asyncio.run(nodes._load_all_nodes())
+            asyncio.run(nodes._load_all_nodes())  # pylint: disable=W0212
 
         self.assertEqual(len(nodes), 1)
         self.assertIs(nodes[2], loaded)
@@ -242,7 +242,7 @@ class TestNodesReload(unittest.TestCase):
         with patch("pyvlx.nodes.GetAllNodesInformation", return_value=get_all_nodes_information), patch(
             "pyvlx.nodes.convert_frame_to_node", return_value=loaded
         ):
-            asyncio.run(nodes._load_all_nodes())
+            asyncio.run(nodes._load_all_nodes())  # pylint: disable=W0212
 
         self.assertIs(nodes[1], loaded)
         self.assertIsNone(loaded.last_frame_state)
@@ -260,7 +260,7 @@ class TestNodesReload(unittest.TestCase):
         with patch("pyvlx.nodes.GetAllNodesInformation", return_value=get_all_nodes_information), patch(
             "pyvlx.nodes.convert_frame_to_node", return_value=loaded
         ):
-            asyncio.run(nodes._load_all_nodes())
+            asyncio.run(nodes._load_all_nodes())  # pylint: disable=W0212
 
         self.assertIs(nodes[7], loaded)
         self.pyvlx.connection.unregister_connection_opened_cb.assert_any_call(existing.after_update)
