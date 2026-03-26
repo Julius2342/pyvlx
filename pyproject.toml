@@ -41,7 +41,7 @@ dev = [
     "pylint==4.0.5",
 ]
 release = [
-    "build==1.4.0",
+    "build==1.4.2",
     # Twine is only needed for manual/local uploads (Makefile pypi target);
     # GitHub Actions publishing uses pypa/gh-action-pypi-publish instead.
     "twine==6.2.0",
