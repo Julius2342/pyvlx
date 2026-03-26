@@ -207,10 +207,14 @@ class TestNodesReload(unittest.TestCase):
         self.assertEqual(existing.name, "New name")
         self.assertEqual(existing.last_frame_state, OperatingState.EXECUTING)
         self.assertIn(callback, existing.device_updated_cbs)
+        self.assertFalse(existing._disposed)  # pylint: disable=protected-access
+
+        self.pyvlx.connection.unregister_connection_opened_cb.assert_called_once_with(loaded.after_update)
+        self.pyvlx.connection.unregister_connection_closed_cb.assert_called_once_with(loaded.after_update)
 
         # The temporary loaded object is disposed because existing was kept.
-        self.pyvlx.connection.unregister_connection_opened_cb.assert_any_call(loaded.after_update)
-        self.pyvlx.connection.unregister_connection_closed_cb.assert_any_call(loaded.after_update)
+        self.pyvlx.connection.register_connection_opened_cb.assert_any_call(existing.after_update)
+        self.pyvlx.connection.register_connection_closed_cb.assert_any_call(existing.after_update)
 
     def test_load_all_nodes_disposes_removed_nodes(self) -> None:
         """Nodes no longer present in the snapshot should be disposed."""
@@ -265,3 +269,45 @@ class TestNodesReload(unittest.TestCase):
         self.assertIs(nodes[7], loaded)
         self.pyvlx.connection.unregister_connection_opened_cb.assert_any_call(existing.after_update)
         self.pyvlx.connection.unregister_connection_closed_cb.assert_any_call(existing.after_update)
+
+
+class TestNodesLoadNode(unittest.TestCase):
+    """Tests asserting _load_node has the same identity-preserving behaviour as _load_all_nodes."""
+
+    def setUp(self) -> None:
+        """Set up TestNodesLoadNode."""
+        self.pyvlx = MagicMock(spec=PyVLX)
+        connection = MagicMock(spec=Connection)
+        self.pyvlx.attach_mock(mock=connection, attribute="connection")
+
+    def _mock_get_node_information(self, loaded: Node) -> MagicMock:  # pylint: disable=unused-argument
+        event = MagicMock()
+        event.success = True
+        event.notification_frame = object()
+        event.do_api_call = AsyncMock()
+        return event
+
+    def test_load_node_keeps_existing_instance_when_serial_matches(self) -> None:
+        """load(node_id=…) must preserve the existing instance, just like load_all_nodes."""
+        nodes = Nodes(self.pyvlx)
+        existing = Window(self.pyvlx, 1, "Old name", "aa:bb:aa:bb:aa:bb:aa:01")
+        callback = AsyncMock()
+        existing.register_device_updated_cb(callback)
+        nodes.add(existing)
+
+        loaded = Window(self.pyvlx, 1, "New name", "aa:bb:aa:bb:aa:bb:aa:01")
+
+        get_node_information = self._mock_get_node_information(loaded)
+        with patch("pyvlx.nodes.GetNodeInformation", return_value=get_node_information), patch(
+            "pyvlx.nodes.convert_frame_to_node", return_value=loaded
+        ):
+            asyncio.run(nodes._load_node(node_id=1))  # pylint: disable=protected-access
+
+        self.assertIs(nodes[1], existing)
+        self.assertEqual(existing.name, "New name")
+        self.assertIn(callback, existing.device_updated_cbs)
+        self.assertFalse(existing._disposed)  # pylint: disable=protected-access
+
+        # Only the temporary loaded object should be unregistered, not the kept existing one.
+        self.pyvlx.connection.unregister_connection_opened_cb.assert_called_once_with(loaded.after_update)
+        self.pyvlx.connection.unregister_connection_closed_cb.assert_called_once_with(loaded.after_update)

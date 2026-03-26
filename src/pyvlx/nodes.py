@@ -73,8 +73,17 @@ class Nodes:
         self.__nodes = []
 
     @staticmethod
-    def _sync_stable_metadata(existing: Node, loaded: Node) -> None:
-        """Update metadata that should follow the latest gateway snapshot."""
+    def _update_node_metadata(existing: Node, loaded: Node) -> None:
+        """Update metadata that should follow the latest gateway snapshot.
+
+        This should mostly update the name, I don't expect the node_id to change but
+        it doesn't hurt to update it as well (this would happen only for devices
+        with identical serial numbers).
+        We explicitly do not update runtime state because callbacks is something that
+        we want to preserve across reloads, and positions and frame history are
+        expected to be updated by the regular API event handling (heartbeat, house
+        monitoring), so they are either correct already or will be updated soon.
+        """
         existing.node_id = loaded.node_id
         existing.name = loaded.name
 
@@ -110,9 +119,15 @@ class Nodes:
         notification_frame = get_node_information.notification_frame
         if notification_frame is None:
             return
-        node = convert_frame_to_node(self.pyvlx, notification_frame)
-        if node is not None:
-            self.add(node)
+        loaded = convert_frame_to_node(self.pyvlx, notification_frame)
+        if loaded is None:
+            return
+        existing = self._find_matching_existing(loaded, [])
+        if existing is not None:
+            self._update_node_metadata(existing, loaded)
+            loaded.dispose()
+        else:
+            self.add(loaded)
 
     async def _load_all_nodes(self) -> None:
         """Load and merge a full gateway node snapshot.
@@ -142,7 +157,7 @@ class Nodes:
                 continue
 
             used_existing.append(existing)
-            self._sync_stable_metadata(existing, loaded_node)
+            self._update_node_metadata(existing, loaded_node)
             loaded_node.dispose()
             next_nodes.append(existing)
 

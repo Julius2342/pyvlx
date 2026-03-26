@@ -66,8 +66,8 @@ class Node:
 
         This intentionally differs from __eq__, which compares full object state.
         Identity matching is used to decide whether two node instances can be
-        treated as the same gateway device across reloads, even when runtime
-        state (positions, frame history, callbacks) differs.
+        treated as the same device (registered in the gateway) across reloads,
+        even when runtime state (positions, frame history, callbacks) differs.
         """
         if not isinstance(other, Node):
             return False
