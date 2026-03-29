@@ -59,6 +59,12 @@ class Nodes:
             raise TypeError()
         for i, j in enumerate(self.__nodes):
             if j.node_id == node.node_id:
+                if j is node:
+                    PYVLXLOG.debug(
+                        "Node with node_id %s already present; skipping re-add",
+                        node.node_id,
+                    )
+                    return
                 j.dispose()
                 self.__nodes[i] = node
                 PYVLXLOG.debug("Replaced node with node_id %s", node.node_id)
