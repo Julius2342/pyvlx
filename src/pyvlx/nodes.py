@@ -103,7 +103,9 @@ class Nodes:
         Already matched existing nodes are skipped.
         """
         for existing in self.__nodes:
-            if existing in used_existing:
+            # Avoid deep equality checks when determining if an existing node
+            # has already been used; compare by identity instead.
+            if any(existing is used for used in used_existing):
                 continue
             if existing.represents_same_node(loaded):
                 return existing
