@@ -32,6 +32,16 @@ class Node:
         self.device_updated_cbs: List[CallbackType] = []
         self.pyvlx.connection.register_connection_opened_cb(self.after_update)
         self.pyvlx.connection.register_connection_closed_cb(self.after_update)
+        self._disposed = False
+
+    def dispose(self) -> None:
+        """Unregister callbacks and clear local subscriptions."""
+        if self._disposed:
+            return
+        self.pyvlx.connection.unregister_connection_opened_cb(self.after_update)
+        self.pyvlx.connection.unregister_connection_closed_cb(self.after_update)
+        self.device_updated_cbs.clear()
+        self._disposed = True
 
     def register_device_updated_cb(self, device_updated_cb: CallbackType) -> None:
         """Register device updated callback."""
@@ -45,6 +55,29 @@ class Node:
         """Execute callbacks after internal state has been changed."""
         for device_updated_cb in self.device_updated_cbs:
             await device_updated_cb(self)
+
+    def represents_same_node(self, other: Any) -> bool:
+        """Return True if both objects represent the same physical node.
+
+        Matching requires the same concrete node class. Identity is then resolved
+        by serial number when both nodes have one. If exactly one node has a
+        serial number, they are considered different. If both serial numbers are
+        missing, node_id is used as fallback.
+
+        This intentionally differs from __eq__, which compares full object state.
+        Identity matching is used to decide whether two node instances can be
+        treated as the same device (registered in the gateway) across reloads,
+        even when runtime state (positions, frame history, callbacks) differs.
+        """
+        if not isinstance(other, Node):
+            return False
+        if type(self) is not type(other):
+            return False
+        if self.serial_number and other.serial_number:
+            return self.serial_number == other.serial_number
+        if self.serial_number or other.serial_number:
+            return False
+        return self.node_id == other.node_id
 
     async def rename(self, name: str) -> None:
         """Change name of node."""
