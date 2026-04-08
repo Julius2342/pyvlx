@@ -55,6 +55,8 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         heartbeat = Heartbeat(self.pyvlx)
         dead_task = MagicMock(spec=asyncio.Task)
         dead_task.done.return_value = True
+        dead_task.cancelled.return_value = False
+        dead_task.exception.return_value = RuntimeError("boom")
         heartbeat.heartbeat_task = dead_task
         new_task = MagicMock(spec=asyncio.Task)
 
@@ -65,6 +67,7 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         with patch("pyvlx.heartbeat.asyncio.create_task", side_effect=create_task_side_effect) as mock_create_task:
             await heartbeat.start()
 
+        dead_task.exception.assert_called_once()
         mock_create_task.assert_called_once()
         self.assertEqual(heartbeat.heartbeat_task, new_task)
 

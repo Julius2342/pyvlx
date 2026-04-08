@@ -44,6 +44,11 @@ class Heartbeat:
             if self.heartbeat_task is not None and not self.heartbeat_task.done():
                 PYVLXLOG.debug("Heartbeat: already running")
                 return
+            if self.heartbeat_task is not None and self.heartbeat_task.done():
+                if not self.heartbeat_task.cancelled():
+                    exc = self.heartbeat_task.exception()
+                    if exc is not None:
+                        PYVLXLOG.warning("Heartbeat: previous task died: %s", exc)
             PYVLXLOG.debug("Heartbeat: starting")
             self.heartbeat_task = asyncio.create_task(self._run())
 
