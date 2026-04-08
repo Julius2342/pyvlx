@@ -1,7 +1,5 @@
 """Unit tests for heartbeat module."""
 import asyncio
-from collections.abc import Coroutine
-from typing import Any
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, call, patch
 
@@ -28,24 +26,31 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         heartbeat.heartbeat_task = AsyncMock()
         self.assertFalse(heartbeat.stopped)
 
-    async def test_start_restarts_existing_task(self) -> None:
-        """Test start() stops existing task and schedules a new one."""
+    async def test_start_is_idempotent(self) -> None:
+        """Test start() does nothing if heartbeat is already running."""
         heartbeat = Heartbeat(self.pyvlx)
-        heartbeat.heartbeat_task = AsyncMock()
-        heartbeat.stop = AsyncMock()  # type: ignore[method-assign]
-        new_task = MagicMock(spec=asyncio.Task)
+        existing_task = AsyncMock()
+        heartbeat.heartbeat_task = existing_task
 
-        def create_task_side_effect(coro: Coroutine[Any, Any, object]) -> asyncio.Task:
-            # Close coroutine because we intercept create_task and do not schedule it.
-            coro.close()
-            return new_task
-
-        with patch("pyvlx.heartbeat.asyncio.create_task", side_effect=create_task_side_effect) as create_task:
+        with patch("pyvlx.heartbeat.asyncio.create_task") as create_task:
             await heartbeat.start()
 
-        heartbeat.stop.assert_awaited_once()
+        create_task.assert_not_called()
+        self.assertEqual(heartbeat.heartbeat_task, existing_task)
+
+    async def test_start_serializes_concurrent_calls(self) -> None:
+        """Test concurrent start() calls only create one heartbeat task."""
+        heartbeat = Heartbeat(self.pyvlx)
+        created_task = AsyncMock()
+
+        with patch("pyvlx.heartbeat.asyncio.create_task", return_value=created_task) as create_task:
+            start_task_1 = asyncio.create_task(heartbeat.start())
+            start_task_2 = asyncio.create_task(heartbeat.start())
+
+            await asyncio.gather(start_task_1, start_task_2)
+
         create_task.assert_called_once()
-        self.assertEqual(heartbeat.heartbeat_task, new_task)
+        self.assertEqual(heartbeat.heartbeat_task, created_task)
 
     async def test_stop_without_running_task(self) -> None:
         """Test stop() returns cleanly when no task is active."""
