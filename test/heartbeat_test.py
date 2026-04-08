@@ -1,5 +1,6 @@
 """Unit tests for heartbeat module."""
 import asyncio
+from collections.abc import Coroutine
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, call, patch
 
@@ -41,15 +42,16 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
     async def test_start_serializes_concurrent_calls(self) -> None:
         """Test concurrent start() calls only create one heartbeat task."""
         heartbeat = Heartbeat(self.pyvlx)
-        created_task = AsyncMock()
+        created_task = MagicMock(spec=asyncio.Task)
 
-        with patch("pyvlx.heartbeat.asyncio.create_task", return_value=created_task) as create_task:
-            start_task_1 = asyncio.create_task(heartbeat.start())
-            start_task_2 = asyncio.create_task(heartbeat.start())
+        def create_task_side_effect(coro: Coroutine) -> MagicMock:
+            coro.close()
+            return created_task
 
-            await asyncio.gather(start_task_1, start_task_2)
+        with patch("pyvlx.heartbeat.asyncio.create_task", side_effect=create_task_side_effect) as mock_create_task:
+            await asyncio.gather(heartbeat.start(), heartbeat.start())
 
-        create_task.assert_called_once()
+        mock_create_task.assert_called_once()
         self.assertEqual(heartbeat.heartbeat_task, created_task)
 
     async def test_stop_without_running_task(self) -> None:
