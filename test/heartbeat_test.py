@@ -24,13 +24,24 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         heartbeat = Heartbeat(self.pyvlx)
 
         self.assertTrue(heartbeat.stopped)
-        heartbeat.heartbeat_task = AsyncMock()
+        running_task = MagicMock(spec=asyncio.Task)
+        running_task.done.return_value = False
+        heartbeat.heartbeat_task = running_task
         self.assertFalse(heartbeat.stopped)
+
+    def test_stopped_property_when_task_died(self) -> None:
+        """Test stopped returns True when task finished unexpectedly."""
+        heartbeat = Heartbeat(self.pyvlx)
+        dead_task = MagicMock(spec=asyncio.Task)
+        dead_task.done.return_value = True
+        heartbeat.heartbeat_task = dead_task
+        self.assertTrue(heartbeat.stopped)
 
     async def test_start_is_idempotent(self) -> None:
         """Test start() does nothing if heartbeat is already running."""
         heartbeat = Heartbeat(self.pyvlx)
-        existing_task = AsyncMock()
+        existing_task = MagicMock(spec=asyncio.Task)
+        existing_task.done.return_value = False
         heartbeat.heartbeat_task = existing_task
 
         with patch("pyvlx.heartbeat.asyncio.create_task") as create_task:
@@ -39,10 +50,29 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         create_task.assert_not_called()
         self.assertEqual(heartbeat.heartbeat_task, existing_task)
 
+    async def test_start_restarts_dead_task(self) -> None:
+        """Test start() creates a new task when the existing one has died."""
+        heartbeat = Heartbeat(self.pyvlx)
+        dead_task = MagicMock(spec=asyncio.Task)
+        dead_task.done.return_value = True
+        heartbeat.heartbeat_task = dead_task
+        new_task = MagicMock(spec=asyncio.Task)
+
+        def create_task_side_effect(coro: Coroutine) -> MagicMock:
+            coro.close()
+            return new_task
+
+        with patch("pyvlx.heartbeat.asyncio.create_task", side_effect=create_task_side_effect) as mock_create_task:
+            await heartbeat.start()
+
+        mock_create_task.assert_called_once()
+        self.assertEqual(heartbeat.heartbeat_task, new_task)
+
     async def test_start_serializes_concurrent_calls(self) -> None:
         """Test concurrent start() calls only create one heartbeat task."""
         heartbeat = Heartbeat(self.pyvlx)
         created_task = MagicMock(spec=asyncio.Task)
+        created_task.done.return_value = False
 
         def create_task_side_effect(coro: Coroutine) -> MagicMock:
             coro.close()

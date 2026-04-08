@@ -41,7 +41,7 @@ class Heartbeat:
     async def start(self) -> None:
         """Start heartbeat. Does nothing if already running."""
         async with self._lock:
-            if self.heartbeat_task is not None:
+            if self.heartbeat_task is not None and not self.heartbeat_task.done():
                 PYVLXLOG.debug("Heartbeat: already running")
                 return
             PYVLXLOG.debug("Heartbeat: starting")
@@ -50,7 +50,7 @@ class Heartbeat:
     @property
     def stopped(self) -> bool:
         """Return Heartbeat running state."""
-        return self.heartbeat_task is None
+        return self.heartbeat_task is None or self.heartbeat_task.done()
 
     async def stop(self) -> None:
         """Stop heartbeat."""
