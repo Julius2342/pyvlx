@@ -25,6 +25,7 @@ class Heartbeat:
         self.interval = interval
         self.load_all_states = load_all_states
         self.heartbeat_task: asyncio.Task[None] | None = None
+        self._lock = asyncio.Lock()
 
     async def _run(self) -> None:
         PYVLXLOG.debug("Heartbeat: started")
@@ -38,21 +39,29 @@ class Heartbeat:
                 PYVLXLOG.debug("Heartbeat: pulsing failed: %s", e)
 
     async def start(self) -> None:
-        """Start heartbeat."""
-        if self.heartbeat_task is not None:
-            await self.stop()
-        PYVLXLOG.debug("Heartbeat: starting")
-        self.heartbeat_task = asyncio.create_task(self._run())
+        """Start heartbeat. Does nothing if already running."""
+        async with self._lock:
+            if self.heartbeat_task is not None and not self.heartbeat_task.done():
+                PYVLXLOG.debug("Heartbeat: already running")
+                return
+            if self.heartbeat_task is not None and self.heartbeat_task.done():
+                if not self.heartbeat_task.cancelled():
+                    exc = self.heartbeat_task.exception()
+                    if exc is not None:
+                        PYVLXLOG.warning("Heartbeat: previous task died: %s", exc)
+            PYVLXLOG.debug("Heartbeat: starting")
+            self.heartbeat_task = asyncio.create_task(self._run())
 
     @property
     def stopped(self) -> bool:
         """Return Heartbeat running state."""
-        return self.heartbeat_task is None
+        return self.heartbeat_task is None or self.heartbeat_task.done()
 
     async def stop(self) -> None:
         """Stop heartbeat."""
-        task = self.heartbeat_task
-        self.heartbeat_task = None
+        async with self._lock:
+            task = self.heartbeat_task
+            self.heartbeat_task = None
         if task is None:
             PYVLXLOG.debug("Heartbeat: was not running")
             return
