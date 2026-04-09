@@ -78,6 +78,8 @@ CallbackType = Callable[[FrameBase], Coroutine[Any, Any, None]]
 class Connection:
     """Class for handling TCP connection."""
 
+    CONNECT_TIMEOUT = 10.0
+
     def __init__(self, config: Config):
         """Init TCP connection."""
         self.config = config
@@ -110,12 +112,24 @@ class Connection:
         tcp_client = TCPTransport(self.frame_received_cb, connection_lost_cb=self.on_connection_lost)
         loop = asyncio.get_running_loop()
         assert self.config.host is not None
-        self.transport, _ = await loop.create_connection(
-            lambda: tcp_client,
-            host=self.config.host,
-            port=self.config.port,
-            ssl=self.create_ssl_context(),
-        )
+        try:
+            async with asyncio.timeout(self.CONNECT_TIMEOUT):
+                self.transport, _ = await loop.create_connection(
+                    lambda: tcp_client,
+                    host=self.config.host,
+                    port=self.config.port,
+                    ssl=self.create_ssl_context(),
+                )
+        except asyncio.TimeoutError as error:
+            self.transport = None
+            self.connected = False
+            raise PyVLXException(
+                f"Socket connection to KLF 200 timed out after {self.CONNECT_TIMEOUT} seconds"
+            ) from error
+        except (OSError, ssl.SSLError) as error:
+            self.transport = None
+            self.connected = False
+            raise PyVLXException(f"Failed to open socket connection to KLF 200: {error}") from error
         self.connected = True
         self.connection_counter += 1
         PYVLXLOG.debug(
