@@ -2,7 +2,8 @@
 from enum import Enum
 from typing import List, Optional
 
-from pyvlx.const import Command, Originator, Priority, RunStatus, StatusReply
+from pyvlx.const import (
+    Command, NodeParameter, Originator, Priority, RunStatus, StatusReply)
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import FunctionalParams, Parameter, Position
 
@@ -30,21 +31,20 @@ class FrameCommandSendRequest(FrameBase):
         self.active_parameter = active_parameter
         self.fpi1 = 0
         self.fpi2 = 0
-        self.functional_parameter = {}
+        self.functional_parameter: FunctionalParams = {}
         self.session_id = session_id
         self.originator = originator
         self.priority = Priority.USER_LEVEL_2
         """Set the functional parameter indicator bytes in order to show which functional
         parameters are included in the frame. Functional parameter dictionary will be checked
-        for keys 'fp1' to 'fp3' to set the appropriate indicator and the corresponding
-        self.functional_parameter. Other functional parameters (fp4 to fp16) are ignored for now."""
+        for NodeParameter.FP1 to FP3 to set the appropriate indicator and the corresponding
+        self.functional_parameter. Other functional parameters (FP4 to FP16) are ignored for now."""
         if functional_parameter is None:
             functional_parameter = {}
-        for i in range(1, 4):
-            key = f"fp{i}"
-            if key in functional_parameter:
-                self.functional_parameter[key] = functional_parameter[key]  # type: ignore[literal-required]
-                self.fpi1 += 2 ** (8 - i)
+        for fp in (NodeParameter.FP1, NodeParameter.FP2, NodeParameter.FP3):
+            if fp in functional_parameter:
+                self.functional_parameter[fp] = functional_parameter[fp]
+                self.fpi1 += 2 ** (8 - fp.value)
 
                 # this distinction is only needed when fp9..fp16 are actually used, so commented out for now
                 # if i < 9:
@@ -52,7 +52,7 @@ class FrameCommandSendRequest(FrameBase):
                 # if i >= 9:
                 #     self.fpi2 += 2 ** (16 - i)
             else:
-                self.functional_parameter[key] = Parameter(raw=bytes(2))
+                self.functional_parameter[fp] = Parameter(raw=bytes(2))
 
     def get_payload(self) -> bytes:
         """Return Payload."""
@@ -67,12 +67,12 @@ class FrameCommandSendRequest(FrameBase):
         # FPI 1+2
         ret += bytes([self.fpi1])
         ret += bytes([self.fpi2])
-        # Main parameter + functional parameter fp1 to fp3
+        # Main parameter + functional parameter FP1 to FP3
         ret += bytes(self.parameter)
-        ret += bytes(self.functional_parameter["fp1"])
-        ret += bytes(self.functional_parameter["fp2"])
-        ret += bytes(self.functional_parameter["fp3"])
-        # Functional parameter fp4 to fp16 are ignored for now
+        ret += bytes(self.functional_parameter[NodeParameter.FP1])
+        ret += bytes(self.functional_parameter[NodeParameter.FP2])
+        ret += bytes(self.functional_parameter[NodeParameter.FP3])
+        # Functional parameter FP4 to FP16 are ignored for now
         ret += bytes(26)
 
         # Nodes array: Number of nodes + node array + padding
@@ -106,7 +106,7 @@ class FrameCommandSendRequest(FrameBase):
         """Return human readable string."""
         functional_parameter = ""
         for key, value in self.functional_parameter.items():
-            functional_parameter += f"{key!s}: {Position(Parameter(bytes(value)))}, "
+            functional_parameter += f"{key.name}: {Position(Parameter(bytes(value)))}, "
         return (
             f'<{type(self).__name__} node_ids="{self.node_ids}" active_parameter="{self.active_parameter}" parameter="{self.parameter}" '
             f'fpi1="0x{self.fpi1:02x}" fpi2="0x{self.fpi2:02x}" functional_parameter="{functional_parameter}" '
