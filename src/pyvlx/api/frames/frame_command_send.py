@@ -35,10 +35,11 @@ class FrameCommandSendRequest(FrameBase):
         self.session_id = session_id
         self.originator = originator
         self.priority = Priority.USER_LEVEL_2
-        """Set the functional parameter indicator bytes in order to show which functional
-        parameters are included in the frame. Functional parameter dictionary will be checked
-        for NodeParameter.FP1 to FP3 to set the appropriate indicator and the corresponding
-        self.functional_parameter. Other functional parameters (FP4 to FP16) are ignored for now."""
+        # Set the functional parameter indicator bytes to show which functional
+        # parameters are included in the frame. The functional parameter dictionary
+        # is checked for NodeParameter.FP1..NodeParameter.FP3 to set the appropriate
+        # indicator values and the corresponding self.functional_parameter entries.
+        # Other functional parameters (FP4..FP16) are ignored for now.
         if functional_parameter is None:
             functional_parameter = {}
         for fp in (NodeParameter.FP1, NodeParameter.FP2, NodeParameter.FP3):
