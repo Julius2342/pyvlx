@@ -551,6 +551,60 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertIsNotNone(device.estimated_completion)
         device.after_update.assert_not_awaited()
 
+    async def test_closing_state_preserved_when_cached_and_frame_positions_are_both_unavailable(self) -> None:
+        """If neither cached nor frame position is concrete, an active closing state is preserved too."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=76, name="Test gate"
+        )
+        device.position = Position(position=Parameter.UNKNOWN_VALUE)
+        device.target = Position(position_percent=50)
+        device.is_closing = True
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[76] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 76
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
+        frame.target = Position(position_percent=50)
+        frame.remaining_time = 4
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(device.is_closing)
+        self.assertFalse(device.is_opening)
+        self.assertIsNotNone(device.state_received_at)
+        self.assertIsNotNone(device.estimated_completion)
+        device.after_update.assert_not_awaited()
+
+    async def test_closing_state_preserved_when_current_position_equals_target_while_executing(self) -> None:
+        """Executing frames where current_position == target must not clear an active closing state either."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=77, name="Test gate"
+        )
+        device.position = Position(position_percent=50)
+        device.target = Position(position_percent=50)
+        device.is_closing = True
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[77] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 77
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position_percent=50)
+        frame.target = Position(position_percent=50)
+        frame.remaining_time = 2
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(device.is_closing)
+        self.assertFalse(device.is_opening)
+        self.assertIsNotNone(device.state_received_at)
+        self.assertIsNotNone(device.estimated_completion)
+        device.after_update.assert_not_awaited()
+
     async def test_motion_direction_derived_from_cached_position_when_frame_position_unknown(self) -> None:
         """Frames with IGNORE/UNKNOWN current_position should derive direction from the cached node position."""
         device = OpeningDevice(
