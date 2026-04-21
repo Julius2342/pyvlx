@@ -520,6 +520,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         self.assertTrue(device.is_opening)
         self.assertFalse(device.is_closing)
+        self.assertEqual(device.position, Position(position=Parameter.UNKNOWN_VALUE))
         self.assertIsNotNone(device.state_received_at)
         self.assertIsNotNone(device.estimated_completion)
         device.after_update.assert_not_awaited()
@@ -547,6 +548,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         self.assertTrue(device.is_closing)
         self.assertFalse(device.is_opening)
+        self.assertEqual(device.position, Position(position=Parameter.UNKNOWN_VALUE))
         self.assertIsNotNone(device.state_received_at)
         self.assertIsNotNone(device.estimated_completion)
         device.after_update.assert_not_awaited()
