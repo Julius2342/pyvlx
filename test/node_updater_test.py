@@ -498,7 +498,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         device.after_update.assert_not_awaited()
 
     async def test_motion_state_preserved_when_cached_and_frame_positions_are_both_unavailable(self) -> None:
-        """If neither the cached nor the frame position is concrete, an active motion state is preserved."""
+        """If neither the cached nor the frame position is concrete, an active opening state is preserved."""
         device = OpeningDevice(
             pyvlx=self.pyvlx, node_id=74, name="Test gate"
         )
@@ -515,33 +515,6 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
         frame.target = Position(position_percent=50)
         frame.remaining_time = 4
-
-        await self.node_updater.process_frame(frame)
-
-        self.assertTrue(device.is_opening)
-        self.assertFalse(device.is_closing)
-        self.assertIsNotNone(device.state_received_at)
-        self.assertIsNotNone(device.estimated_completion)
-        device.after_update.assert_not_awaited()
-
-    async def test_motion_state_preserved_when_current_position_equals_target_while_executing(self) -> None:
-        """Executing frames where current_position == target must not clear an active motion state."""
-        device = OpeningDevice(
-            pyvlx=self.pyvlx, node_id=75, name="Test gate"
-        )
-        device.position = Position(position_percent=50)
-        device.target = Position(position_percent=50)
-        device.is_opening = True
-        device.last_frame_state = OperatingState.EXECUTING
-        device.after_update = AsyncMock()  # type: ignore[method-assign]
-        self.pyvlx.nodes[75] = device
-
-        frame = FrameNodeStatePositionChangedNotification()
-        frame.node_id = 75
-        frame.state = OperatingState.EXECUTING
-        frame.current_position = Position(position_percent=50)
-        frame.target = Position(position_percent=50)
-        frame.remaining_time = 2
 
         await self.node_updater.process_frame(frame)
 
@@ -578,6 +551,34 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertIsNotNone(device.estimated_completion)
         device.after_update.assert_not_awaited()
 
+    async def test_motion_state_preserved_when_current_position_equals_target_while_executing(self) -> None:
+        """Executing frames where current_position == target must not clear an active opening state."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=75, name="Test gate"
+        )
+        device.position = Position(position_percent=50)
+        device.target = Position(position_percent=50)
+        device.is_opening = True
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[75] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 75
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position_percent=50)
+        frame.target = Position(position_percent=50)
+        frame.remaining_time = 2
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(device.is_opening)
+        self.assertFalse(device.is_closing)
+        self.assertEqual(device.position, Position(position_percent=50))
+        self.assertIsNotNone(device.state_received_at)
+        self.assertIsNotNone(device.estimated_completion)
+        device.after_update.assert_not_awaited()
+
     async def test_closing_state_preserved_when_current_position_equals_target_while_executing(self) -> None:
         """Executing frames where current_position == target must not clear an active closing state either."""
         device = OpeningDevice(
@@ -601,6 +602,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         self.assertTrue(device.is_closing)
         self.assertFalse(device.is_opening)
+        self.assertEqual(device.position, Position(position_percent=50))
         self.assertIsNotNone(device.state_received_at)
         self.assertIsNotNone(device.estimated_completion)
         device.after_update.assert_not_awaited()
