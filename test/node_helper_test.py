@@ -193,6 +193,15 @@ class TestNodeHelper(unittest.TestCase):
         frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
         self.assertEqual(convert_frame_to_node(self.pyvlx, frame), None)
 
+    def test_unknown_node_type(self) -> None:
+        """Test convert_frame_to_node with an unknown node type value."""
+        frame = FrameGetNodeInformationNotification()
+        frame.node_id = 23
+        frame.name = "Fnord23"
+        frame.node_type = 99999  # unknown node type value (not in NodeTypeWithSubtype)
+        frame.serial_number = "aa:bb:aa:bb:aa:bb:aa:23"
+        self.assertEqual(convert_frame_to_node(self.pyvlx, frame), None)
+
     def test_light(self) -> None:
         """Test convert_frame_to_node with light."""
         frame = FrameGetNodeInformationNotification()
