@@ -85,9 +85,15 @@ class OpeningDevice(Node):
         Parameters:
             * position: Position object containing the target position.
             * velocity: Velocity to be used during transition.
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, most real devices will not
+                be awaited to completion; pass a larger value (e.g. 60 or
+                120) to actually wait for the motion to finish.
 
         """
         fp: FunctionalParams = {}
@@ -127,9 +133,15 @@ class OpeningDevice(Node):
 
         Parameters:
             * velocity: Velocity to be used during transition.
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, most real devices will not
+                be awaited to completion; pass a larger value to actually
+                wait for the motion to finish.
 
         """
         await self.set_position(
@@ -149,9 +161,15 @@ class OpeningDevice(Node):
 
         Parameters:
             * velocity: Velocity to be used during transition.
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, most real devices will not
+                be awaited to completion; pass a larger value to actually
+                wait for the motion to finish.
         """
         await self.set_position(
             position=Position(position_percent=self.close_position_target),
@@ -164,9 +182,14 @@ class OpeningDevice(Node):
         """Stop opening device.
 
         Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, the wait will usually end
+                on the timeout rather than on the actual stop.
 
         """
         await self.set_position(
@@ -198,13 +221,7 @@ class OpeningDevice(Node):
         await self.after_update()
 
     async def clear_position_limitations(self) -> None:
-        """Clear position limits.
-
-        Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-
-        """
+        """Clear position limits."""
         command_set_limitation = SetLimitation(
             pyvlx=self.pyvlx,
             node_id=self.node_id,
@@ -385,11 +402,17 @@ class Blind(OpeningDevice):
             * target_position: Position object holding the target position
                 which allows to adjust the position while the blind is in movement
                 without stopping the blind (if orientation position has been changed.)
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
             * orientation: If set, the orientation of the device will be set in the same request.
                 Note, that, if the position is set to 0, the orientation will be set to 0 too.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, most real devices will not
+                be awaited to completion; pass a larger value to actually
+                wait for the motion to finish.
 
         """
         self.target_position = position
@@ -442,9 +465,15 @@ class Blind(OpeningDevice):
             * target_position: Position object holding the target position
                 which allows to adjust the position while the blind is in movement
                 without stopping the blind (if orientation position has been changed.)
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, most real devices will not
+                be awaited to completion; pass a larger value to actually
+                wait for the motion to finish.
         """
         await self.set_position_and_orientation(
             position=position,
@@ -463,9 +492,15 @@ class Blind(OpeningDevice):
 
         Parameters:
             * velocity: Velocity to be used during transition.
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, most real devices will not
+                be awaited to completion; pass a larger value to actually
+                wait for the motion to finish.
         """
         await self.set_position(
             position=Position(position_percent=self.open_position_target),
@@ -484,9 +519,15 @@ class Blind(OpeningDevice):
 
         Parameters:
             * velocity: Velocity to be used during transition.
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, most real devices will not
+                be awaited to completion; pass a larger value to actually
+                wait for the motion to finish.
         """
         await self.set_position(
             position=Position(position_percent=self.close_position_target),
@@ -499,9 +540,14 @@ class Blind(OpeningDevice):
         """Stop Blind position.
 
         Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, the wait will usually end
+                on the timeout rather than on the actual stop.
         """
         await self.set_position_and_orientation(
             position=CurrentPosition(),
@@ -523,9 +569,14 @@ class Blind(OpeningDevice):
             * target_orientation: Position object holding the target orientation
                 which allows to adjust the orientation while the blind is in movement
                 without stopping the blind (if the position has been changed.)
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, the wait will usually end
+                on the timeout rather than on the actual orientation change.
 
         """
         self.target_orientation = orientation
@@ -628,9 +679,15 @@ class DualRollerShutter(OpeningDevice):
             * position: Position object containing the current position.
             * target_position: Position object holding the target position
                 which allows to adjust the position while the blind is in movement
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, most real devices will not
+                be awaited to completion; pass a larger value to actually
+                wait for the motion to finish.
         """
         fp: FunctionalParams = {}
 
@@ -692,9 +749,15 @@ class DualRollerShutter(OpeningDevice):
         """Open DualRollerShutter.
 
         Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, most real devices will not
+                be awaited to completion; pass a larger value to actually
+                wait for the motion to finish.
         """
         await self.set_position(
             position=Position(position_percent=self.open_position_target),
@@ -715,9 +778,15 @@ class DualRollerShutter(OpeningDevice):
         """Close DualRollerShutter.
 
         Parameters:
-            * wait_for_completion: If set, function will return
-                after device has reached target position.
-            * timeout_in_seconds: Optional timeout in seconds to wait for completion.
+            * wait_for_completion: If True, also wait for the gateway's
+                session-finished notification after the command is
+                accepted; bounded by ``timeout_in_seconds``. The timeout
+                ends the wait only, it does not interrupt the motion.
+            * timeout_in_seconds: Maximum wait time in seconds. Note: the
+                default is short enough that, with
+                ``wait_for_completion=True``, most real devices will not
+                be awaited to completion; pass a larger value to actually
+                wait for the motion to finish.
         """
         await self.set_position(
             position=Position(position_percent=self.close_position_target),
