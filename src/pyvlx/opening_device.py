@@ -8,7 +8,8 @@ from pyvlx.api.get_limitation import GetLimitation
 
 from .api.command_send import CommandSend
 from .api.set_limitation import SetLimitation
-from .const import LimitationTime, LimitationType, Originator, Velocity
+from .const import (
+    LimitationTime, LimitationType, NodeParameter, Originator, Velocity)
 from .exception import PyVLXException
 from .node import Node
 from .parameter import (
@@ -99,11 +100,11 @@ class OpeningDevice(Node):
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
                 if velocity is Velocity.SILENT:
-                    fp["fp1"] = Parameter(raw=b"\x00\x00")
+                    fp[NodeParameter.FP1] = Parameter(raw=b"\x00\x00")
                 else:
-                    fp["fp1"] = Parameter(raw=b"\xC8\x00")
+                    fp[NodeParameter.FP1] = Parameter(raw=b"\xC8\x00")
         elif isinstance(velocity, int):
-            fp["fp1"] = Position(position_percent=velocity)
+            fp[NodeParameter.FP1] = Position(position_percent=velocity)
 
         command = CommandSend(
             pyvlx=self.pyvlx,
@@ -395,11 +396,11 @@ class Blind(OpeningDevice):
         fp: FunctionalParams = {}
 
         if orientation is not None:
-            fp["fp3"] = orientation
+            fp[NodeParameter.FP3] = orientation
         elif self.target_position == Position(position_percent=0):
-            fp["fp3"] = Position(position_percent=0)
+            fp[NodeParameter.FP3] = Position(position_percent=0)
         else:
-            fp["fp3"] = IgnorePosition()
+            fp[NodeParameter.FP3] = IgnorePosition()
 
         if (
             velocity is None or velocity is Velocity.DEFAULT
@@ -409,11 +410,11 @@ class Blind(OpeningDevice):
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
                 if velocity is Velocity.SILENT:
-                    fp["fp1"] = Parameter(raw=b"\x00\x00")
+                    fp[NodeParameter.FP1] = Parameter(raw=b"\x00\x00")
                 else:
-                    fp["fp1"] = Parameter(raw=b"\xC8\x00")
+                    fp[NodeParameter.FP1] = Parameter(raw=b"\xC8\x00")
         elif isinstance(velocity, int):
-            fp["fp1"] = Position(position_percent=velocity)
+            fp[NodeParameter.FP1] = Position(position_percent=velocity)
 
         command = CommandSend(
             pyvlx=self.pyvlx,
@@ -530,7 +531,7 @@ class Blind(OpeningDevice):
         self.target_orientation = orientation
         self.orientation = orientation
 
-        fp: FunctionalParams = {"fp3":
+        fp: FunctionalParams = {NodeParameter.FP3:
                                 Position(position_percent=0)
                                 if self.target_position == Position(position_percent=0)
                                 else self.target_orientation}
@@ -636,13 +637,13 @@ class DualRollerShutter(OpeningDevice):
         if curtain == "upper":
             self.target_position = DualRollerShutterPosition()
             self.active_parameter = 1
-            fp["fp1"] = position
-            fp["fp2"] = TargetPosition()
+            fp[NodeParameter.FP1] = position
+            fp[NodeParameter.FP2] = TargetPosition()
         elif curtain == "lower":
             self.target_position = DualRollerShutterPosition()
             self.active_parameter = 2
-            fp["fp1"] = TargetPosition()
-            fp["fp2"] = position
+            fp[NodeParameter.FP1] = TargetPosition()
+            fp[NodeParameter.FP2] = position
         else:
             self.target_position = position
             self.active_parameter = 0
@@ -655,11 +656,11 @@ class DualRollerShutter(OpeningDevice):
         if isinstance(velocity, Velocity):
             if velocity is not Velocity.DEFAULT:
                 if velocity is Velocity.SILENT:
-                    fp["fp3"] = Parameter(raw=b"\x00\x00")
+                    fp[NodeParameter.FP3] = Parameter(raw=b"\x00\x00")
                 else:
-                    fp["fp3"] = Parameter(raw=b"\xC8\x00")
+                    fp[NodeParameter.FP3] = Parameter(raw=b"\xC8\x00")
         elif isinstance(velocity, int):
-            fp["fp3"] = Position(position_percent=velocity)
+            fp[NodeParameter.FP3] = Position(position_percent=velocity)
 
         command = CommandSend(
             pyvlx=self.pyvlx,

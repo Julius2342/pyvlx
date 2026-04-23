@@ -4,7 +4,7 @@ import unittest
 from pyvlx import Position, PyVLXException
 from pyvlx.api.frame_creation import frame_from_raw
 from pyvlx.api.frames import FrameCommandSendRequest
-from pyvlx.const import Originator
+from pyvlx.const import NodeParameter, Originator
 from pyvlx.parameter import FunctionalParams
 
 
@@ -40,7 +40,7 @@ class TestFrameCommandSendRequest(unittest.TestCase):
 
     def test_str(self) -> None:
         """Test string representation of FrameCommandSendRequest."""
-        functional_parameter: FunctionalParams = {"fp3": Position(position=12345)}
+        functional_parameter: FunctionalParams = {NodeParameter.FP3: Position(position=12345)}
         frame = FrameCommandSendRequest(
             node_ids=[1, 2, 3],
             parameter=Position(position=12345),
@@ -52,7 +52,7 @@ class TestFrameCommandSendRequest(unittest.TestCase):
             str(frame),
             '<FrameCommandSendRequest node_ids="[1, 2, 3]" active_parameter="0" parameter="24 %" '
             'fpi1="0x20" fpi2="0x00" '
-            'functional_parameter="fp1: 0 %, fp2: 0 %, fp3: 24 %, " '
+            'functional_parameter="FP1: 0 %, FP2: 0 %, FP3: 24 %, " '
             'session_id="1000" originator="Originator.RAIN"/>',
         )
 
