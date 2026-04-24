@@ -29,7 +29,7 @@ dependencies = [
 dev = [
     "pytest==9.0.3",
     "pytest-cov==7.1.0",
-    "mypy==1.20.0",
+    "mypy==1.20.2",
     "types-PyYAML==6.0.12.20260408",
     "isort==8.0.1",
     "flake8==7.3.0",
