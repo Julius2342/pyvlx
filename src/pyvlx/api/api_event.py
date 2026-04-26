@@ -50,7 +50,7 @@ class ApiEvent:
                         # it just finishes waiting for completion if set to true
                         PYVLXLOG.debug(
                             "ApiEvent %s: wait ended on timeout after %ss (success=%s); "
-                            "the device motion is not aborted by this",
+                            "the operation is not aborted by this",
                             type(self).__name__, self.timeout_in_seconds, self.success,
                         )
 
