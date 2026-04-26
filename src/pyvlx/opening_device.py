@@ -121,7 +121,6 @@ class OpeningDevice(Node):
             timeout_in_seconds=timeout_in_seconds,
         )
         await command.send()
-        await self.after_update()
 
     async def open(
         self,
