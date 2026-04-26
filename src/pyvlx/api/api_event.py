@@ -2,6 +2,7 @@
 import asyncio
 from typing import TYPE_CHECKING
 
+from ..log import PYVLXLOG
 from .frames import FrameBase
 
 if TYPE_CHECKING:
@@ -47,7 +48,11 @@ class ApiEvent:
                     except TimeoutError:
                         # timeout does not change the result of self.success (which at this point can be true or false)
                         # it just finishes waiting for completion if set to true
-                        pass
+                        PYVLXLOG.debug(
+                            "ApiEvent %s: wait ended on timeout after %ss (success=%s); "
+                            "the operation is not aborted by this",
+                            type(self).__name__, self.timeout_in_seconds, self.success,
+                        )
 
                 finally:
                     self.pyvlx.connection.unregister_frame_received_cb(self.response_rec_callback)
