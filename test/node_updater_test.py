@@ -447,6 +447,219 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertTrue(device.is_closing)
         device.after_update.assert_awaited_once()
 
+    async def test_is_opening_kept_via_cached_position_when_frame_current_position_is_ignore(self) -> None:
+        """IGNORE current_position should fall back to the cached node position and keep is_opening set."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=70, name="Test gate"
+        )
+        device.position = Position(position_percent=100)
+        device.target = Position(position_percent=0)
+        device.is_opening = True
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[70] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 70
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.IGNORE)
+        frame.target = Position(position_percent=0)
+        frame.remaining_time = 3
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(device.is_opening)
+        self.assertFalse(device.is_closing)
+        device.after_update.assert_not_awaited()
+
+    async def test_is_closing_kept_via_cached_position_when_frame_current_position_is_unknown(self) -> None:
+        """UNKNOWN current_position should fall back to the cached node position and keep is_closing set."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=71, name="Test gate"
+        )
+        device.position = Position(position_percent=0)
+        device.target = Position(position_percent=100)
+        device.is_closing = True
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[71] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 71
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
+        frame.target = Position(position_percent=100)
+        frame.remaining_time = 3
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(device.is_closing)
+        self.assertFalse(device.is_opening)
+        device.after_update.assert_not_awaited()
+
+    async def test_motion_state_preserved_when_cached_and_frame_positions_are_both_unavailable(self) -> None:
+        """If neither the cached nor the frame position is concrete, an active opening state is preserved."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=74, name="Test gate"
+        )
+        device.position = Position(position=Parameter.UNKNOWN_VALUE)
+        device.target = Position(position_percent=50)
+        device.is_opening = True
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[74] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 74
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
+        frame.target = Position(position_percent=50)
+        frame.remaining_time = 4
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(device.is_opening)
+        self.assertFalse(device.is_closing)
+        self.assertEqual(device.position, Position(position=Parameter.UNKNOWN_VALUE))
+        self.assertIsNotNone(device.state_received_at)
+        self.assertIsNotNone(device.estimated_completion)
+        device.after_update.assert_not_awaited()
+
+    async def test_closing_state_preserved_when_cached_and_frame_positions_are_both_unavailable(self) -> None:
+        """If neither cached nor frame position is concrete, an active closing state is preserved too."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=76, name="Test gate"
+        )
+        device.position = Position(position=Parameter.UNKNOWN_VALUE)
+        device.target = Position(position_percent=50)
+        device.is_closing = True
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[76] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 76
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
+        frame.target = Position(position_percent=50)
+        frame.remaining_time = 4
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(device.is_closing)
+        self.assertFalse(device.is_opening)
+        self.assertEqual(device.position, Position(position=Parameter.UNKNOWN_VALUE))
+        self.assertIsNotNone(device.state_received_at)
+        self.assertIsNotNone(device.estimated_completion)
+        device.after_update.assert_not_awaited()
+
+    async def test_motion_state_preserved_when_current_position_equals_target_while_executing(self) -> None:
+        """Executing frames where current_position == target must not clear an active opening state."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=75, name="Test gate"
+        )
+        device.position = Position(position_percent=50)
+        device.target = Position(position_percent=50)
+        device.is_opening = True
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[75] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 75
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position_percent=50)
+        frame.target = Position(position_percent=50)
+        frame.remaining_time = 2
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(device.is_opening)
+        self.assertFalse(device.is_closing)
+        self.assertEqual(device.position, Position(position_percent=50))
+        self.assertIsNotNone(device.state_received_at)
+        self.assertIsNotNone(device.estimated_completion)
+        device.after_update.assert_not_awaited()
+
+    async def test_closing_state_preserved_when_current_position_equals_target_while_executing(self) -> None:
+        """Executing frames where current_position == target must not clear an active closing state either."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=77, name="Test gate"
+        )
+        device.position = Position(position_percent=50)
+        device.target = Position(position_percent=50)
+        device.is_closing = True
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[77] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 77
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position_percent=50)
+        frame.target = Position(position_percent=50)
+        frame.remaining_time = 2
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(device.is_closing)
+        self.assertFalse(device.is_opening)
+        self.assertEqual(device.position, Position(position_percent=50))
+        self.assertIsNotNone(device.state_received_at)
+        self.assertIsNotNone(device.estimated_completion)
+        device.after_update.assert_not_awaited()
+
+    async def test_motion_direction_derived_from_cached_position_when_frame_position_unknown(self) -> None:
+        """Frames with IGNORE/UNKNOWN current_position should derive direction from the cached node position."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=72, name="Test gate"
+        )
+        device.position = Position(position_percent=100)
+        device.target = Position(position_percent=0)
+        device.is_opening = False
+        device.is_closing = False
+        device.last_frame_state = OperatingState.NON_EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[72] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 72
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
+        frame.target = Position(position_percent=0)
+        frame.remaining_time = 5
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(device.is_opening)
+        self.assertFalse(device.is_closing)
+        device.after_update.assert_awaited_once()
+
+    async def test_idle_device_stays_idle_when_frame_position_unknown(self) -> None:
+        """An idle device must not be marked as moving when the frame position is unavailable."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=73, name="Test gate"
+        )
+        device.position = Position(position=Parameter.UNKNOWN_VALUE)
+        device.target = Position(position_percent=50)
+        device.is_opening = False
+        device.is_closing = False
+        device.last_frame_state = OperatingState.NON_EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[73] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 73
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
+        frame.target = Position(position_percent=50)
+        frame.remaining_time = 5
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(device.is_opening)
+        self.assertFalse(device.is_closing)
+
     async def test_after_update_called_when_last_frame_state_changes(self) -> None:
         """Test that after_update() is called when last_frame_state changes."""
         device = OpeningDevice(
