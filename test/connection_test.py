@@ -59,3 +59,49 @@ class TestConnection(IsolatedAsyncioTestCase):
 
         self.assertTrue(self.connection.connected)
         self.assertEqual(self.connection.transport, fake_transport)
+
+    async def test_disconnect_schedules_connection_closed_callback(self) -> None:
+        """Test disconnect schedules connection closed callbacks when an event loop is running."""
+        fake_transport = MagicMock(spec=asyncio.Transport)
+        callback = AsyncMock()
+        self.connection.transport = fake_transport
+        self.connection.connected = True
+        self.connection.register_connection_closed_cb(callback)
+
+        self.connection.disconnect()
+
+        fake_transport.close.assert_called_once()
+        self.assertFalse(self.connection.connected)
+        tasks = list(self.connection.tasks)
+        self.assertEqual(len(tasks), 1)
+        await asyncio.gather(*tasks)
+        callback.assert_awaited_once()
+
+    def test_disconnect_without_running_loop_skips_connection_closed_callbacks(self) -> None:
+        """Test disconnect does not create callback coroutines without a running event loop."""
+        fake_transport = MagicMock(spec=asyncio.Transport)
+        callback = MagicMock()
+        self.connection.transport = fake_transport
+        self.connection.connected = True
+        self.connection.register_connection_closed_cb(callback)
+
+        with patch("pyvlx.connection.asyncio.get_running_loop", side_effect=RuntimeError):
+            self.connection.disconnect()
+
+        fake_transport.close.assert_called_once()
+        self.assertFalse(self.connection.connected)
+        callback.assert_not_called()
+
+    def test_destructor_closes_transport_without_connection_closed_callbacks(self) -> None:
+        """Test __del__ closes the transport without scheduling async callbacks."""
+        fake_transport = MagicMock(spec=asyncio.Transport)
+        callback = MagicMock()
+        self.connection.transport = fake_transport
+        self.connection.connected = True
+        self.connection.register_connection_closed_cb(callback)
+
+        self.connection.__del__()
+
+        fake_transport.close.assert_called_once()
+        self.assertFalse(self.connection.connected)
+        callback.assert_not_called()
