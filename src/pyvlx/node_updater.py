@@ -103,7 +103,8 @@ class NodeUpdater:
 
         position = Position(frame.current_position)
         target = Position(frame.target)
-        position_is_concrete = self._has_concrete_position(position)
+        frame_position_is_concrete = self._has_concrete_position(position)
+        position_is_concrete = frame_position_is_concrete
         target_is_concrete = self._has_concrete_position(target)
         frame_indicates_motion = (
             frame.state == OperatingState.EXECUTING
@@ -157,6 +158,34 @@ class NodeUpdater:
                 node.estimated_completion.strftime("%Y-%m-%d %H:%M:%S")
             )
 
+        elif (
+            not frame_position_is_concrete
+            and target_is_concrete
+            and self._has_concrete_position(node.target)
+            and node.target != target
+            and frame_indicates_motion
+        ):
+            if node.target.position > target.position:
+                node_changed |= _set_node_property(node, "is_opening", True)
+                node_changed |= _set_node_property(node, "is_closing", False)
+            else:
+                node_changed |= _set_node_property(node, "is_closing", True)
+                node_changed |= _set_node_property(node, "is_opening", False)
+            node.state_received_at = datetime.datetime.now()
+            node.estimated_completion = (
+                node.state_received_at
+                + datetime.timedelta(0, frame.remaining_time)
+            )
+            PYVLXLOG.debug(
+                "%s changed motion target while current position is unavailable (%s->%s),"
+                " estimated completion in %ss at %s",
+                node.name,
+                node.target,
+                target,
+                frame.remaining_time,
+                node.estimated_completion.strftime("%Y-%m-%d %H:%M:%S"),
+            )
+
         elif frame_indicates_motion and target_is_concrete and (node.is_opening or node.is_closing):
             node.state_received_at = datetime.datetime.now()
             node.estimated_completion = (
@@ -199,8 +228,14 @@ class NodeUpdater:
         if isinstance(node, OpeningDevice):
             position = Position(frame.current_position)
             target = Position(frame.target)
+            frame_indicates_motion = (
+                frame.state == OperatingState.EXECUTING
+                or frame.remaining_time > 0
+            )
             if position.position <= Parameter.MAX:
                 node_changed |= _set_node_property(node, "position", position)
+                node_changed |= _set_node_property(node, "target", target)
+            elif target.position <= Parameter.MAX and frame_indicates_motion:
                 node_changed |= _set_node_property(node, "target", target)
 
         if isinstance(node, DimmableDevice):
