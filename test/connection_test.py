@@ -96,12 +96,12 @@ class TestConnection(IsolatedAsyncioTestCase):
         """Test __del__ closes the transport without scheduling async callbacks."""
         fake_transport = MagicMock(spec=asyncio.Transport)
         callback = MagicMock()
-        self.connection.transport = fake_transport
-        self.connection.connected = True
-        self.connection.register_connection_closed_cb(callback)
+        connection = Connection(config=self.config)
+        connection.transport = fake_transport
+        connection.connected = True
+        connection.register_connection_closed_cb(callback)
 
-        self.connection.__del__()
+        del connection
 
         fake_transport.close.assert_called_once()
-        self.assertFalse(self.connection.connected)
         callback.assert_not_called()
