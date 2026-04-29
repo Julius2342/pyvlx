@@ -1,5 +1,5 @@
 """Module for storing and accessing scene list."""
-from typing import TYPE_CHECKING, Iterator, List, Union
+from typing import TYPE_CHECKING, Iterator, List
 
 from .api import GetSceneList
 from .exception import PyVLXException
@@ -21,7 +21,7 @@ class Scenes:
         """Iterate."""
         yield from self.__scenes
 
-    def __getitem__(self, key: Union[str, int]) -> Scene:
+    def __getitem__(self, key: str | int) -> Scene:
         """Return scene by name or by index."""
         if isinstance(key, int):
             for scene in self.__scenes:

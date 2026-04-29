@@ -1,5 +1,5 @@
 """Module for configuration."""
-from typing import TYPE_CHECKING, Any, Optional, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import yaml
 
@@ -17,10 +17,10 @@ class Config:
 
     def __init__(self,
                  pyvlx: "PyVLX",
-                 path: Optional[str] = None,
-                 host: Optional[str] = None,
-                 password: Optional[str] = None,
-                 port: Optional[int] = None):
+                 path: str | None = None,
+                 host: str | None = None,
+                 password: str | None = None,
+                 port: int | None = None):
         """Initialize Config class."""
         self.pyvlx = pyvlx
         self.host = host

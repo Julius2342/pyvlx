@@ -1,6 +1,6 @@
 """Module for enum and consts."""
 from enum import Enum
-from typing import Any, Optional, Self, cast
+from typing import Any, Self, cast
 
 from .log import PYVLXLOG
 
@@ -306,7 +306,7 @@ class NodeTypeWithSubtype(Enum):
     BLADE_OPENER = 0x0740
 
     @classmethod
-    def _missing_(cls, value: Any) -> Optional[Self]:
+    def _missing_(cls, value: Any) -> Self | None:
         if isinstance(value, int):
             PYVLXLOG.warning("Unknown node type 0x%x", value)
             return cast(Self, cls.NO_TYPE)

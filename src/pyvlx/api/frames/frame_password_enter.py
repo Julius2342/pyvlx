@@ -1,6 +1,5 @@
 """Module for password enter frame classes."""
 from enum import Enum
-from typing import Optional
 
 from pyvlx.const import Command
 from pyvlx.exception import PyVLXException
@@ -15,7 +14,7 @@ class FramePasswordEnterRequest(FrameBase):
     MAX_SIZE = 32
     PAYLOAD_LEN = 32
 
-    def __init__(self, password: Optional[str] = None):
+    def __init__(self, password: str | None = None):
         """Init Frame."""
         super().__init__(Command.GW_PASSWORD_ENTER_REQ)
         self.password = password

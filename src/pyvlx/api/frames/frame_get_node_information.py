@@ -2,7 +2,6 @@
 import struct
 from datetime import datetime
 from enum import Enum
-from typing import Optional
 
 from pyvlx.const import (
     Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity)
@@ -19,7 +18,7 @@ class FrameGetNodeInformationRequest(FrameBase):
 
     PAYLOAD_LEN = 1
 
-    def __init__(self, node_id: Optional[int] = None):
+    def __init__(self, node_id: int | None = None):
         """Init Frame."""
         super().__init__(Command.GW_GET_NODE_INFORMATION_REQ)
         self.node_id = node_id
@@ -52,7 +51,7 @@ class FrameGetNodeInformationConfirmation(FrameBase):
 
     PAYLOAD_LEN = 2
 
-    def __init__(self, status: NodeInformationStatus = NodeInformationStatus.OK, node_id: Optional[int] = None):
+    def __init__(self, status: NodeInformationStatus = NodeInformationStatus.OK, node_id: int | None = None):
         """Init Frame."""
         super().__init__(Command.GW_GET_NODE_INFORMATION_CFM)
         self.status = status
@@ -105,14 +104,14 @@ class FrameGetNodeInformationNotification(FrameBase):
         self.alias_array = AliasArray()
 
     @property
-    def serial_number(self) -> Optional[str]:
+    def serial_number(self) -> str | None:
         """Property for serial number in a human readable way."""
         if self._serial_number == bytes(8):
             return None
         return ":".join(f"{c:02x}" for c in self._serial_number)
 
     @serial_number.setter
-    def serial_number(self, serial_number: Optional[str]) -> None:
+    def serial_number(self, serial_number: str | None) -> None:
         """Set serial number."""
         if serial_number is None:
             self._serial_number = bytes(8)

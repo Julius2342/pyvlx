@@ -1,6 +1,6 @@
 """Module for sending command to gw."""
 from enum import Enum
-from typing import List, Optional
+from typing import List
 
 from pyvlx.const import (
     Command, NodeParameter, Originator, Priority, RunStatus, StatusReply)
@@ -17,11 +17,11 @@ class FrameCommandSendRequest(FrameBase):
 
     def __init__(
             self,
-            functional_parameter: Optional[FunctionalParams] = None,
-            node_ids: Optional[List[int]] = None,
+            functional_parameter: FunctionalParams | None = None,
+            node_ids: List[int] | None = None,
             parameter: Parameter = Parameter(),
             active_parameter: int = 0,
-            session_id: Optional[int] = None,
+            session_id: int | None = None,
             originator: Originator = Originator.USER,
     ):
         """Init Frame."""
@@ -127,7 +127,7 @@ class FrameCommandSendConfirmation(FrameBase):
 
     PAYLOAD_LEN = 3
 
-    def __init__(self, session_id: Optional[int] = None, status: Optional[CommandSendConfirmationStatus] = None):
+    def __init__(self, session_id: int | None = None, status: CommandSendConfirmationStatus | None = None):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_SEND_CFM)
         self.session_id = session_id
@@ -159,13 +159,13 @@ class FrameCommandRunStatusNotification(FrameBase):
     def __init__(
             self,
             *,
-            session_id: Optional[int] = None,
-            status_id: Optional[int] = None,
-            index_id: Optional[int] = None,
-            node_parameter: Optional[int] = None,
-            parameter_value: Optional[int] = None,
-            run_status: Optional[RunStatus] = None,
-            status_reply: Optional[StatusReply] = None,
+            session_id: int | None = None,
+            status_id: int | None = None,
+            index_id: int | None = None,
+            node_parameter: int | None = None,
+            parameter_value: int | None = None,
+            run_status: RunStatus | None = None,
+            status_reply: StatusReply | None = None,
     ):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_RUN_STATUS_NTF)
@@ -222,7 +222,7 @@ class FrameCommandRemainingTimeNotification(FrameBase):
 
     PAYLOAD_LEN = 6
 
-    def __init__(self, session_id: Optional[int] = None, index_id: Optional[int] = None, node_parameter: Optional[int] = None, seconds: int = 0):
+    def __init__(self, session_id: int | None = None, index_id: int | None = None, node_parameter: int | None = None, seconds: int = 0):
         """Init Frame."""
         super().__init__(Command.GW_COMMAND_REMAINING_TIME_NTF)
         self.session_id = session_id
@@ -261,7 +261,7 @@ class FrameSessionFinishedNotification(FrameBase):
 
     PAYLOAD_LEN = 2
 
-    def __init__(self, session_id: Optional[int] = None):
+    def __init__(self, session_id: int | None = None):
         """Init Frame."""
         super().__init__(Command.GW_SESSION_FINISHED_NTF)
         self.session_id = session_id

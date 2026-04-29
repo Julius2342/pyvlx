@@ -1,6 +1,5 @@
 """Module for requesting change of node name."""
 from enum import Enum
-from typing import Optional
 
 from pyvlx.const import Command
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
@@ -13,7 +12,7 @@ class FrameSetNodeNameRequest(FrameBase):
 
     PAYLOAD_LEN = 65
 
-    def __init__(self, node_id: int = 0, name: Optional[str] = None):
+    def __init__(self, node_id: int = 0, name: str | None = None):
         """Init Frame."""
         super().__init__(Command.GW_SET_NODE_NAME_REQ)
         self.node_id = node_id

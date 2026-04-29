@@ -1,6 +1,5 @@
 """Module for sending command to gw."""
 from enum import Enum
-from typing import Optional
 
 from pyvlx.const import Command, Originator, Priority, Velocity
 
@@ -14,8 +13,8 @@ class FrameActivateSceneRequest(FrameBase):
 
     def __init__(
             self,
-            scene_id: Optional[int] = None,
-            session_id: Optional[int] = None,
+            scene_id: int | None = None,
+            session_id: int | None = None,
             originator: Originator = Originator.USER,
             velocity: Velocity = Velocity.DEFAULT,
     ):
@@ -67,7 +66,7 @@ class FrameActivateSceneConfirmation(FrameBase):
 
     PAYLOAD_LEN = 3
 
-    def __init__(self, session_id: Optional[int] = None, status: Optional[ActivateSceneConfirmationStatus] = None):
+    def __init__(self, session_id: int | None = None, status: ActivateSceneConfirmationStatus | None = None):
         """Init Frame."""
         super().__init__(Command.GW_ACTIVATE_SCENE_CFM)
         self.session_id = session_id

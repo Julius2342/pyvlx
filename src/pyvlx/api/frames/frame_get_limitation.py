@@ -1,5 +1,5 @@
 """Module for get limitation status classes."""
-from typing import List, Optional
+from typing import List
 
 from pyvlx.const import Command, LimitationType, Originator, Priority
 
@@ -12,8 +12,8 @@ class FrameGetLimitationStatus(FrameBase):
     PAYLOAD_LEN = 25
 
     def __init__(self,
-                 node_ids: Optional[List[int]] = None,
-                 session_id: Optional[int] = None,
+                 node_ids: List[int] | None = None,
+                 session_id: int | None = None,
                  limitation_type: LimitationType = LimitationType.MIN_LIMITATION):
         """Init Frame."""
         super().__init__(Command.GW_GET_LIMITATION_STATUS_REQ)
@@ -46,7 +46,7 @@ class FrameGetLimitationStatusConfirmation(FrameBase):
 
     PAYLOAD_LEN = 3
 
-    def __init__(self, session_id: Optional[int] = None, data: Optional[int] = None):
+    def __init__(self, session_id: int | None = None, data: int | None = None):
         """Init Frame."""
         super().__init__(Command.GW_GET_LIMITATION_STATUS_CFM)
         self.session_id = session_id
@@ -78,13 +78,13 @@ class FrameGetLimitationStatusNotification(FrameBase):
     def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_LIMITATION_STATUS_NTF)
-        self.session_id: Optional[int] = None
+        self.session_id: int | None = None
         self.node_id = 0
         self.parameter_id = 0
-        self.min_value: Optional[bytes] = None
-        self.max_value: Optional[bytes] = None
-        self.limit_originator: Optional[Originator] = None
-        self.limit_time: Optional[int] = None
+        self.min_value: bytes | None = None
+        self.max_value: bytes | None = None
+        self.limit_originator: Originator | None = None
+        self.limit_time: int | None = None
 
     def get_payload(self) -> bytes:
         """Return Payload."""

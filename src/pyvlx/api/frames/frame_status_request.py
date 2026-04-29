@@ -1,6 +1,6 @@
 """Module for get node information from gateway."""
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from pyvlx.const import (
     Command, NodeParameter, RunStatus, StatusReply, StatusType)
@@ -15,7 +15,7 @@ class FrameStatusRequestRequest(FrameBase):
 
     PAYLOAD_LEN = 26
 
-    def __init__(self, session_id: Optional[int] = None, node_ids: Optional[List[int]] = None):
+    def __init__(self, session_id: int | None = None, node_ids: List[int] | None = None):
         """Init Frame."""
         super().__init__(Command.GW_STATUS_REQUEST_REQ)
         self.session_id = session_id
@@ -69,7 +69,7 @@ class FrameStatusRequestConfirmation(FrameBase):
 
     PAYLOAD_LEN = 3
 
-    def __init__(self, session_id: Optional[int] = None, status: Optional[StatusRequestStatus] = None):
+    def __init__(self, session_id: int | None = None, status: StatusRequestStatus | None = None):
         """Init Frame."""
         super().__init__(Command.GW_STATUS_REQUEST_CFM)
         self.session_id = session_id

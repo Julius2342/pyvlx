@@ -2,7 +2,6 @@
 import struct
 from datetime import datetime
 from enum import Enum
-from typing import Optional
 
 from pyvlx.const import (
     Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity)
@@ -93,7 +92,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self.alias_array = AliasArray()
 
     @property
-    def serial_number(self) -> Optional[str]:
+    def serial_number(self) -> str | None:
         """Property for serial number in a human readable way."""
         if self._serial_number == bytes(8):
             return None

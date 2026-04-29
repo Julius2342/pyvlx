@@ -6,7 +6,6 @@ a VELUX KLF 200 device for controlling window openers
 and roller shutters.
 """
 import asyncio
-from typing import Optional
 
 try:
     from ._version import version as v
@@ -31,9 +30,9 @@ class PyVLX:
 
     def __init__(
         self,
-        path: Optional[str] = None,
-        host: Optional[str] = None,
-        password: Optional[str] = None,
+        path: str | None = None,
+        host: str | None = None,
+        password: str | None = None,
         heartbeat_interval: int = 30,
         heartbeat_load_all_states: bool = True,
     ):
@@ -114,7 +113,7 @@ class PyVLX:
             if self.connection.tasks:
                 await asyncio.gather(*self.connection.tasks)  # Wait for all tasks to finish
 
-    async def load_nodes(self, node_id: Optional[int] = None) -> None:
+    async def load_nodes(self, node_id: int | None = None) -> None:
         """Load devices from KLF 200, if no node_id is specified all nodes are loaded."""
         await self.nodes.load(node_id)
 

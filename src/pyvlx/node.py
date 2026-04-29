@@ -5,7 +5,7 @@ Node object is an interface class and should
 be derived by other objects like window openers
 and roller shutters.
 """
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, List, Optional
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, List
 
 from .api import SetNodeName, WinkSend
 from .const import OperatingState, RunStatus, StatusReply, WinkTime
@@ -20,15 +20,15 @@ CallbackType = Callable[["Node"], Awaitable[None]]
 class Node:
     """Class for node abstraction."""
 
-    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
+    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str | None):
         """Initialize Node object."""
         self.pyvlx = pyvlx
         self.node_id = node_id
         self.name = name
         self.serial_number = serial_number
-        self.last_frame_state: Optional[OperatingState] = None
-        self.last_frame_status_reply: Optional[StatusReply] = None
-        self.last_frame_run_status: Optional[RunStatus] = None
+        self.last_frame_state: OperatingState | None = None
+        self.last_frame_status_reply: StatusReply | None = None
+        self.last_frame_run_status: RunStatus | None = None
         self.device_updated_cbs: List[CallbackType] = []
         self.pyvlx.connection.register_connection_opened_cb(self.after_update)
         self.pyvlx.connection.register_connection_closed_cb(self.after_update)

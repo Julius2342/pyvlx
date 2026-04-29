@@ -1,5 +1,5 @@
 """Module for Position class."""
-from typing import Dict, Optional
+from typing import Dict
 
 from .const import NodeParameter
 from .exception import PyVLXException
@@ -18,7 +18,7 @@ class Parameter:
     IGNORE = 0xD400  # D4 00
     DUAL_SHUTTER_CURTAINS = 0xD808  # D8 08
 
-    def __init__(self, raw: Optional[bytes] = None):
+    def __init__(self, raw: bytes | None = None):
         """Initialize Parameter class."""
         self.raw = self.from_int(Position.UNKNOWN_VALUE)
         if raw is not None:
@@ -125,7 +125,7 @@ class SwitchParameter(Parameter):
     """Class for storing On or Off values."""
 
     def __init__(
-        self, parameter: Optional[Parameter] = None, state: Optional[int] = None
+        self, parameter: Parameter | None = None, state: int | None = None
     ):
         """Initialize Parameter class."""
         super().__init__()
@@ -190,9 +190,9 @@ class Position(Parameter):
 
     def __init__(
         self,
-        parameter: Optional[Parameter] = None,
-        position: Optional[int] = None,
-        position_percent: Optional[int] = None,
+        parameter: Parameter | None = None,
+        position: int | None = None,
+        position_percent: int | None = None,
     ):
         """Initialize Position class."""
         super().__init__()
@@ -282,9 +282,9 @@ class Intensity(Parameter):
 
     def __init__(
         self,
-        parameter: Optional[Parameter] = None,
-        intensity: Optional[int] = None,
-        intensity_percent: Optional[int] = None,
+        parameter: Parameter | None = None,
+        intensity: int | None = None,
+        intensity_percent: int | None = None,
     ):
         """Initialize Intensity class."""
         super().__init__()

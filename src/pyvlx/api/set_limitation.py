@@ -1,5 +1,5 @@
 """Module for setting limitation value."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from pyvlx.const import LimitationTime, Originator
 
@@ -27,9 +27,9 @@ class SetLimitation(ApiEvent):
         self.limitation_value_min = limitation_value_min
         self.limitation_value_max = limitation_value_max
         self.success = False
-        self.notification_frame: Optional[FrameSetLimitationConfirmation] = None
-        self.session_id: Optional[int] = None
-        self.originator: Optional[Originator] = None
+        self.notification_frame: FrameSetLimitationConfirmation | None = None
+        self.session_id: int | None = None
+        self.originator: Originator | None = None
         self.limitation_time = limitation_time
 
     async def handle_frame(self, frame: FrameBase) -> bool:

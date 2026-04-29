@@ -1,6 +1,6 @@
 """Module for sending wink request."""
 from enum import Enum
-from typing import List, Optional
+from typing import List
 
 from pyvlx.const import Command, Originator, Priority, WinkTime
 from pyvlx.exception import PyVLXException
@@ -15,9 +15,9 @@ class FrameWinkSendRequest(FrameBase):
 
     def __init__(
             self,
-            node_ids: Optional[List[int]] = None,
+            node_ids: List[int] | None = None,
             wink_time: WinkTime = WinkTime.BY_MANUFACTURER,
-            session_id: Optional[int] = None,
+            session_id: int | None = None,
             originator: Originator = Originator.USER,
             priority: Priority = Priority.USER_LEVEL_2,
     ):
@@ -80,7 +80,7 @@ class FrameWinkSendConfirmation(FrameBase):
 
     PAYLOAD_LEN = 3
 
-    def __init__(self, session_id: Optional[int] = None, status: Optional[WinkSendConfirmationStatus] = None):
+    def __init__(self, session_id: int | None = None, status: WinkSendConfirmationStatus | None = None):
         """Init Frame."""
         super().__init__(Command.GW_WINK_SEND_CFM)
         self.session_id = session_id
@@ -109,7 +109,7 @@ class FrameWinkSendNotification(FrameBase):
 
     PAYLOAD_LEN = 2
 
-    def __init__(self, session_id: Optional[int] = None):
+    def __init__(self, session_id: int | None = None):
         """Init Frame."""
         super().__init__(Command.GW_WINK_SEND_NTF)
         self.session_id = session_id

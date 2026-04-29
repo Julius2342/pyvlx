@@ -1,6 +1,6 @@
 """Module for basic klf200 gateway functions."""
 
-from typing import TYPE_CHECKING, Awaitable, Callable, List, Optional
+from typing import TYPE_CHECKING, Awaitable, Callable, List
 
 from .api import (
     FactoryDefault, GetLocalTime, GetNetworkSetup, GetProtocolVersion,
@@ -22,12 +22,12 @@ class Klf200Gateway:
     def __init__(self, pyvlx: "PyVLX"):
         """Initialize Klf200Gateway object."""
         self.pyvlx = pyvlx
-        self.state: Optional[DtoState] = None
-        self.network_setup: Optional[DtoNetworkSetup] = None
-        self.password: Optional[str] = None
-        self.time: Optional[DtoLocalTime] = None
-        self.protocol_version: Optional[DtoProtocolVersion] = None
-        self.version: Optional[DtoVersion] = None
+        self.state: DtoState | None = None
+        self.network_setup: DtoNetworkSetup | None = None
+        self.password: str | None = None
+        self.time: DtoLocalTime | None = None
+        self.protocol_version: DtoProtocolVersion | None = None
+        self.version: DtoVersion | None = None
         self.device_updated_cbs: List[CallbackType] = []
         self.house_status_monitor_enabled = False
 
@@ -144,7 +144,7 @@ class Klf200Gateway:
             raise PyVLXException("Unable enable house status monitor.")
         self.house_status_monitor_enabled = True
 
-    async def house_status_monitor_disable(self, pyvlx: "PyVLX", timeout: Optional[int] = None) -> None:
+    async def house_status_monitor_disable(self, pyvlx: "PyVLX", timeout: int | None = None) -> None:
         """Disable house status monitor."""
         status_monitor_disable = HouseStatusMonitorDisable(pyvlx=pyvlx)
         if timeout is not None:

@@ -1,5 +1,5 @@
 """Module for storing nodes."""
-from typing import TYPE_CHECKING, Iterator, List, Optional, Union
+from typing import TYPE_CHECKING, Iterator, List
 
 from .api import GetAllNodesInformation, GetNodeInformation
 from .exception import PyVLXException
@@ -23,7 +23,7 @@ class Nodes:
         """Iterate."""
         yield from self.__nodes
 
-    def __getitem__(self, key: Union[str, int]) -> Node:
+    def __getitem__(self, key: str | int) -> Node:
         """Return node by name or by index."""
         if isinstance(key, int):
             for node in self.__nodes:
@@ -34,7 +34,7 @@ class Nodes:
                 return node
         raise KeyError
 
-    def __contains__(self, key: Union[str, int, Node]) -> bool:
+    def __contains__(self, key: str | int | Node) -> bool:
         """Check if key is in index."""
         if isinstance(key, int):
             for node in self.__nodes:
@@ -97,7 +97,7 @@ class Nodes:
         self,
         loaded: Node,
         used_existing: List[Node],
-    ) -> Optional[Node]:
+    ) -> Node | None:
         """Find existing node matching loaded node identity.
 
         Already matched existing nodes are skipped.
@@ -111,7 +111,7 @@ class Nodes:
                 return existing
         return None
 
-    async def load(self, node_id: Optional[int] = None) -> None:
+    async def load(self, node_id: int | None = None) -> None:
         """Load nodes from KLF 200, if no node_id is specified all nodes are loaded."""
         if node_id is not None:
             await self._load_node(node_id=node_id)

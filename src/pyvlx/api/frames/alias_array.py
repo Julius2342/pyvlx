@@ -1,5 +1,5 @@
 """Module for storing alias array."""
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 from pyvlx.exception import PyVLXException
 
@@ -7,7 +7,7 @@ from pyvlx.exception import PyVLXException
 class AliasArray:
     """Object for storing alias array."""
 
-    def __init__(self, raw: Optional[bytes] = None):
+    def __init__(self, raw: bytes | None = None):
         """Initialize alias array."""
         self.alias_array_: List[Tuple[bytes, bytes]] = []
         if raw is not None:
