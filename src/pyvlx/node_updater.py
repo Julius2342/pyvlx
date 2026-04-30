@@ -104,7 +104,7 @@ class NodeUpdater:
         position = Position(frame.current_position)
         target = Position(frame.target)
         frame_position_is_concrete = self._has_concrete_position(position)
-        position_is_concrete = frame_position_is_concrete
+        comparison_position_is_concrete = frame_position_is_concrete
         target_is_concrete = self._has_concrete_position(target)
         frame_indicates_motion = (
             frame.state == OperatingState.EXECUTING
@@ -112,14 +112,14 @@ class NodeUpdater:
         )
 
         comparison_position = position
-        if not position_is_concrete and self._has_concrete_position(node.position):
+        if not comparison_position_is_concrete and self._has_concrete_position(node.position):
             comparison_position = node.position
-            position_is_concrete = True
+            comparison_position_is_concrete = True
 
         node_changed = False
 
         if (
-            position_is_concrete
+            comparison_position_is_concrete
             and target_is_concrete
             and comparison_position.position > target.position
             and frame_indicates_motion
@@ -139,7 +139,7 @@ class NodeUpdater:
             )
 
         elif (
-            position_is_concrete
+            comparison_position_is_concrete
             and target_is_concrete
             and comparison_position.position < target.position
             and frame_indicates_motion
@@ -165,6 +165,7 @@ class NodeUpdater:
             and node.target != target
             and frame_indicates_motion
         ):
+            # node.target is updated in _update_node_main_parameter after this method returns.
             if node.target.position > target.position:
                 node_changed |= _set_node_property(node, "is_opening", True)
                 node_changed |= _set_node_property(node, "is_closing", False)
@@ -232,10 +233,10 @@ class NodeUpdater:
                 frame.state == OperatingState.EXECUTING
                 or frame.remaining_time > 0
             )
-            if position.position <= Parameter.MAX:
+            if self._has_concrete_position(position):
                 node_changed |= _set_node_property(node, "position", position)
                 node_changed |= _set_node_property(node, "target", target)
-            elif target.position <= Parameter.MAX and frame_indicates_motion:
+            elif self._has_concrete_position(target) and frame_indicates_motion:
                 node_changed |= _set_node_property(node, "target", target)
 
         if isinstance(node, DimmableDevice):
