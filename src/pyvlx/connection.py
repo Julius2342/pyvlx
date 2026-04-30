@@ -96,7 +96,12 @@ class Connection:
         self.disconnect(notify_callbacks=False)
 
     def disconnect(self, notify_callbacks: bool = True) -> None:
-        """Disconnect connection."""
+        """Disconnect connection and notify callbacks if specified.
+
+        Running callbacks only makes sense if loop is still running,
+        so it it can be skipped, mostly for the case of destructor
+        being called during shutdown when loop is already closed.
+        """
         if self.transport is not None:
             self.transport.close()
             self.transport = None
