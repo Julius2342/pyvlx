@@ -1,5 +1,5 @@
 """Module for sending wink request to API."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from ..const import WinkTime
 from .completable_api_event import CompletableApiEvent
@@ -28,7 +28,7 @@ class WinkSend(CompletableApiEvent):
         self.node_id = node_id
         self.wink_time = wink_time
 
-    def check_confirmation(self, frame: FrameBase) -> Optional[bool]:
+    def check_confirmation(self, frame: FrameBase) -> bool | None:
         """Check if frame is a WinkSendConfirmation for this session."""
         if isinstance(frame, FrameWinkSendConfirmation) and frame.session_id == self.session_id:
             return frame.status == WinkSendConfirmationStatus.ACCEPTED

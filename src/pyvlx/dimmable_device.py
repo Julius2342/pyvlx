@@ -1,5 +1,5 @@
 """Module for lights."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from .api import CommandSend
 from .node import Node
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class DimmableDevice(Node):
     """Meta class for turning on device with one main parameter for intensity."""
 
-    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: Optional[str]):
+    def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str | None):
         """Initialize turning on device.
 
         Parameters:

@@ -2,7 +2,7 @@
 import asyncio
 import datetime
 from asyncio import Task
-from typing import TYPE_CHECKING, Any, ClassVar, Optional
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from pyvlx.api.get_limitation import GetLimitation
 
@@ -30,7 +30,7 @@ class OpeningDevice(Node):
         pyvlx: "PyVLX",
         node_id: int,
         name: str,
-        serial_number: Optional[str] = None,
+        serial_number: str | None = None,
         position_parameter: Parameter = Parameter(),
     ):
         """Initialize opening device.
@@ -56,8 +56,8 @@ class OpeningDevice(Node):
 
         self.is_opening: bool = False
         self.is_closing: bool = False
-        self.state_received_at: Optional[datetime.datetime] = None
-        self.estimated_completion: Optional[datetime.datetime] = None
+        self.state_received_at: datetime.datetime | None = None
+        self.estimated_completion: datetime.datetime | None = None
         self.use_default_velocity: bool = False
         self.default_velocity: Velocity = Velocity.DEFAULT
         self.open_position_target: int = 0
@@ -318,7 +318,7 @@ class Window(OpeningDevice):
         pyvlx: "PyVLX",
         node_id: int,
         name: str,
-        serial_number: Optional[str],
+        serial_number: str | None,
         position_parameter: Parameter = Parameter(),
         rain_sensor: bool = False,
     ):
@@ -360,7 +360,7 @@ class Blind(OpeningDevice):
         pyvlx: "PyVLX",
         node_id: int,
         name: str,
-        serial_number: Optional[str],
+        serial_number: str | None,
         position_parameter: Parameter = Parameter(),
     ):
         """Initialize Blind class.
@@ -390,7 +390,7 @@ class Blind(OpeningDevice):
         position: Position,
         wait_for_completion: bool = True,
         velocity: Velocity | int | None = None,
-        orientation: Optional[Position] = None,
+        orientation: Position | None = None,
         timeout_in_seconds: int = OpeningDevice.DEFAULT_TIMEOUT,
     ) -> None:
         """Set blind to desired position.
@@ -639,7 +639,7 @@ class DualRollerShutter(OpeningDevice):
         pyvlx: "PyVLX",
         node_id: int,
         name: str,
-        serial_number: Optional[str],
+        serial_number: str | None,
         position_parameter: Parameter = Parameter(),
     ):
         """Initialize DualRollerShutter class.

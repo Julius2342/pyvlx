@@ -1,6 +1,6 @@
 """Module for retrieving limitation value from API."""
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from ..const import LimitationType, Originator
 from ..parameter import Position
@@ -23,12 +23,12 @@ class GetLimitation(ApiEvent):
         self.node_id = node_id
         self.limitation_type = limitation_type
         self.success = False
-        self.notification_frame: Optional[FrameGetLimitationStatusNotification] = None
-        self.session_id: Optional[int] = None
-        self.min_value_raw: Optional[bytes] = None
-        self.max_value_raw: Optional[bytes] = None
-        self.originator: Optional[Originator] = None
-        self.limit_time: Optional[int] = None
+        self.notification_frame: FrameGetLimitationStatusNotification | None = None
+        self.session_id: int | None = None
+        self.min_value_raw: bytes | None = None
+        self.max_value_raw: bytes | None = None
+        self.originator: Originator | None = None
+        self.limit_time: int | None = None
 
     @property
     def max_value(self) -> int:

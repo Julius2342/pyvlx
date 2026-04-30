@@ -2,7 +2,7 @@
 import asyncio
 from asyncio import Event, Future, Task
 from dataclasses import dataclass
-from typing import Any, Optional, Set
+from typing import Any, Set
 
 from zeroconf import IPVersion
 from zeroconf.asyncio import (
@@ -81,7 +81,7 @@ class VeluxDiscovery():
         self,
         timeout: float = 10,
         min_wait_time: float = 3,
-        expected_hosts: Optional[int] = None
+        expected_hosts: int | None = None
     ) -> bool:
         """Return true if Velux KLF200 devices found on the network.
 

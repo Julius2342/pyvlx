@@ -1,5 +1,5 @@
 """Module for activating scenes via API."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from .completable_api_event import CompletableApiEvent
 from .frames import (
@@ -21,7 +21,7 @@ class ActivateScene(CompletableApiEvent):
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds, wait_for_completion=wait_for_completion)
         self.scene_id = scene_id
 
-    def check_confirmation(self, frame: FrameBase) -> Optional[bool]:
+    def check_confirmation(self, frame: FrameBase) -> bool | None:
         """Check if frame is an ActivateSceneConfirmation for this session."""
         if isinstance(frame, FrameActivateSceneConfirmation) and frame.session_id == self.session_id:
             return frame.status == ActivateSceneConfirmationStatus.ACCEPTED

@@ -1,6 +1,6 @@
 """Module for Serial Line Internet Protocol (SLIP)."""
 
-from typing import Optional, Tuple
+from typing import Tuple
 
 SLIP_END = 0xC0
 SLIP_ESC = 0xDB
@@ -29,7 +29,7 @@ def encode(raw: bytes) -> bytes:
     )
 
 
-def get_next_slip(raw: bytes) -> Tuple[Optional[bytes], bytes]:
+def get_next_slip(raw: bytes) -> Tuple[bytes | None, bytes]:
     """
     Get the next slip packet from raw data.
 

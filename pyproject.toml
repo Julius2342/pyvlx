@@ -75,7 +75,7 @@ check_untyped_defs = true
 
 [tool.isort]
 multi_line_output = 4
-skip = ["old_api", "_version.py"]
+skip = ["_version.py"]
 
 [tool.pylint.main]
 max-branches = 20

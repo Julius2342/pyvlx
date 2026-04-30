@@ -1,5 +1,5 @@
 """Module for retrieving node information from API."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from .api_event import ApiEvent
 from .frames import (
@@ -18,7 +18,7 @@ class GetNodeInformation(ApiEvent):
         super().__init__(pyvlx=pyvlx)
         self.node_id = node_id
         self.success = False
-        self.notification_frame: Optional[FrameGetNodeInformationNotification] = None
+        self.notification_frame: FrameGetNodeInformationNotification | None = None
 
     async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""

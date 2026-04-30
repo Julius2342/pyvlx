@@ -1,6 +1,6 @@
 """Module for updating nodes via frames."""
 import datetime
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any
 
 from .api.frames import (
     FrameBase, FrameCommandRunStatusNotification,
@@ -95,10 +95,10 @@ class NodeUpdater:
     async def _update_opening_device_status(
         self,
         node: OpeningDevice,
-        frame: Union[
-            FrameGetAllNodesInformationNotification,
-            FrameNodeStatePositionChangedNotification,
-        ]
+        frame: (
+            FrameGetAllNodesInformationNotification
+            | FrameNodeStatePositionChangedNotification
+        ),
     ) -> bool:
 
         position = Position(frame.current_position)
@@ -189,10 +189,10 @@ class NodeUpdater:
     async def _update_node_main_parameter(
         self,
         node: Any,
-        frame: Union[
-            FrameGetAllNodesInformationNotification,
-            FrameNodeStatePositionChangedNotification,
-        ]
+        frame: (
+            FrameGetAllNodesInformationNotification
+            | FrameNodeStatePositionChangedNotification
+        ),
     ) -> bool:
 
         node_changed = False
@@ -219,10 +219,10 @@ class NodeUpdater:
 
     async def _process_node_state_frame(
         self,
-        frame: Union[
-            FrameGetAllNodesInformationNotification,
-            FrameNodeStatePositionChangedNotification,
-        ],
+        frame: (
+            FrameGetAllNodesInformationNotification
+            | FrameNodeStatePositionChangedNotification
+        ),
     ) -> None:
         if frame.node_id not in self.pyvlx.nodes:
             PYVLXLOG.debug("NodeUpdater: Received state frame for unknown node_id %s", frame.node_id)

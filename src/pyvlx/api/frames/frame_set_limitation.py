@@ -1,7 +1,6 @@
 
 """Module for set limitation classes."""
 from enum import Enum
-from typing import Optional
 
 from pyvlx.const import Command, LimitationTime, Originator, Priority
 from pyvlx.parameter import Position
@@ -15,11 +14,11 @@ class FrameSetLimitationRequest(FrameBase):
     PAYLOAD_LEN = 31
 
     def __init__(self,
-                 node_ids: Optional[list] = None,
-                 session_id: Optional[int] = None,
-                 limitation_value_min: Optional[Position] = None,
-                 limitation_value_max: Optional[Position] = None,
-                 limitation_time: Optional[LimitationTime] = None):
+                 node_ids: list | None = None,
+                 session_id: int | None = None,
+                 limitation_value_min: Position | None = None,
+                 limitation_value_max: Position | None = None,
+                 limitation_time: LimitationTime | None = None):
         """Init Frame."""
         super().__init__(Command.GW_SET_LIMITATION_REQ)
         self.session_id = session_id
@@ -72,7 +71,7 @@ class FrameSetLimitationConfirmation(FrameBase):
 
     PAYLOAD_LEN = 3
 
-    def __init__(self, session_id: Optional[int] = None, status: Optional[SetLimitationRequestStatus] = None):
+    def __init__(self, session_id: int | None = None, status: SetLimitationRequestStatus | None = None):
         """Init Frame."""
         super().__init__(Command.GW_SET_LIMITATION_CFM)
         self.session_id = session_id

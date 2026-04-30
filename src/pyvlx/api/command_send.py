@@ -1,5 +1,5 @@
 """Module for sending commands to API."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from ..parameter import FunctionalParams, Parameter
 from .completable_api_event import CompletableApiEvent
@@ -21,7 +21,7 @@ class CommandSend(CompletableApiEvent):
             pyvlx: "PyVLX",
             node_id: int,
             parameter: Parameter,
-            functional_parameter: Optional[FunctionalParams] = None,
+            functional_parameter: FunctionalParams | None = None,
             active_parameter: int = 0,
             wait_for_completion: bool = True,
             timeout_in_seconds: int = 2,
@@ -33,7 +33,7 @@ class CommandSend(CompletableApiEvent):
         self.active_parameter = active_parameter
         self.functional_parameter = functional_parameter
 
-    def check_confirmation(self, frame: FrameBase) -> Optional[bool]:
+    def check_confirmation(self, frame: FrameBase) -> bool | None:
         """Check if frame is a CommandSendConfirmation for this session."""
         if isinstance(frame, FrameCommandSendConfirmation) and frame.session_id == self.session_id:
             return frame.status == CommandSendConfirmationStatus.ACCEPTED

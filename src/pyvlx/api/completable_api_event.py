@@ -1,5 +1,5 @@
 """Base class for completable API calls with confirmation + completion pattern."""
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from ..exception import PyVLXException
 from .api_event import ApiEvent
@@ -54,9 +54,9 @@ class CompletableApiEvent(ApiEvent):
         """Initialize CompletableApiEvent."""
         super().__init__(pyvlx=pyvlx, timeout_in_seconds=timeout_in_seconds)
         self.wait_for_completion = wait_for_completion
-        self.session_id: Optional[int] = None
+        self.session_id: int | None = None
 
-    def check_confirmation(self, frame: FrameBase) -> Optional[bool]:
+    def check_confirmation(self, frame: FrameBase) -> bool | None:
         """Check if frame is a confirmation for this session.
 
         Returns True if accepted, False if rejected, None if not a matching confirmation frame.

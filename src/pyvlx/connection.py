@@ -2,7 +2,7 @@
 import asyncio
 import ssl
 import sys
-from typing import Any, Callable, Coroutine, List, Optional, Set
+from typing import Any, Callable, Coroutine, List, Set
 
 from .api.frame_creation import frame_from_raw
 from .api.frames import FrameBase
@@ -29,7 +29,7 @@ class SlipTokenizer:
         """Return True if Tokenizer has tokens."""
         return is_slip(self.data)
 
-    def get_next_token(self) -> Optional[bytes]:
+    def get_next_token(self) -> bytes | None:
         """Get next token from Tokenizer."""
         slip, self.data = get_next_slip(self.data)
         return slip
@@ -83,7 +83,7 @@ class Connection:
     def __init__(self, config: Config):
         """Init TCP connection."""
         self.config = config
-        self.transport: Optional[asyncio.Transport] = None
+        self.transport: asyncio.Transport | None = None
         self.frame_received_cbs: List[CallbackType] = []
         self.connection_closed_cbs: List[Callable[[], Coroutine[Any, Any, None]]] = []
         self.connection_opened_cbs: List[Callable[[], Coroutine[Any, Any, None]]] = []

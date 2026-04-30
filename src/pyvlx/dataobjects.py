@@ -1,7 +1,6 @@
 """Module for Dataobjects."""
 import time
 from datetime import datetime
-from typing import Optional
 
 from .const import (
     DHCPParameter, GatewayState, GatewaySubState,
@@ -11,7 +10,7 @@ from .const import (
 class DtoLocalTime:
     """Dataobject to hold KLF200 Time Data."""
 
-    def __init__(self, utctime: Optional[datetime] = None, localtime: Optional[datetime] = None):
+    def __init__(self, utctime: datetime | None = None, localtime: datetime | None = None):
         """Initialize DtoLocalTime class."""
         if utctime is None:
             utctime = datetime.fromtimestamp(0)
@@ -65,10 +64,10 @@ class DtoNetworkSetup:
     """Dataobject to hold KLF200 Network Setup."""
 
     def __init__(self,
-                 ipaddress: Optional[str] = None,
-                 gateway: Optional[str] = None,
-                 netmask: Optional[str] = None,
-                 dhcp: Optional[DHCPParameter] = None):
+                 ipaddress: str | None = None,
+                 gateway: str | None = None,
+                 netmask: str | None = None,
+                 dhcp: DHCPParameter | None = None):
         """Initialize DtoNetworkSetup class."""
         self.ipaddress = ipaddress
         self.gateway = gateway
@@ -86,7 +85,7 @@ class DtoNetworkSetup:
 class DtoProtocolVersion:
     """KLF 200 Dataobject for Protocol version."""
 
-    def __init__(self, majorversion: Optional[int] = None, minorversion: Optional[int] = None):
+    def __init__(self, majorversion: int | None = None, minorversion: int | None = None):
         """Initialize DtoProtocolVersion class."""
         self.majorversion = majorversion
         self.minorversion = minorversion
@@ -99,7 +98,7 @@ class DtoProtocolVersion:
 class DtoState:
     """Data Object for Gateway State."""
 
-    def __init__(self, gateway_state: Optional[GatewayState] = None, gateway_sub_state: Optional[GatewaySubState] = None):
+    def __init__(self, gateway_state: GatewayState | None = None, gateway_sub_state: GatewaySubState | None = None):
         """Initialize DtoState class."""
         self.gateway_state = gateway_state
         self.gateway_sub_state = gateway_sub_state
@@ -113,10 +112,10 @@ class DtoVersion:
     """Object for KLF200 Version Information."""
 
     def __init__(self,
-                 softwareversion: Optional[str] = None,
-                 hardwareversion: Optional[int] = None,
-                 productgroup: Optional[int] = None,
-                 producttype: Optional[int] = None):
+                 softwareversion: str | None = None,
+                 hardwareversion: int | None = None,
+                 productgroup: int | None = None,
+                 producttype: int | None = None):
         """Initialize DtoVersion class."""
         self.softwareversion = softwareversion
         self.hardwareversion = hardwareversion
@@ -134,7 +133,7 @@ class DtoVersion:
 class DtoLeaveLearnState:
     """Dataobject to hold KLF200 Data."""
 
-    def __init__(self, status: Optional[LeaveLearnStateConfirmationStatus] = None):
+    def __init__(self, status: LeaveLearnStateConfirmationStatus | None = None):
         """Initialize DtoLeaveLearnState class."""
         self.status = status
 

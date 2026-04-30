@@ -1,5 +1,5 @@
 """Helper module for Node objects."""
-from typing import TYPE_CHECKING, Any, Callable, Union
+from typing import TYPE_CHECKING, Any, Callable
 
 from .api.frames import (
     FrameGetAllNodesInformationNotification,
@@ -17,9 +17,9 @@ if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-FrameNodeInformation = Union[
-    FrameGetNodeInformationNotification, FrameGetAllNodesInformationNotification
-]
+FrameNodeInformation = (
+    FrameGetNodeInformationNotification | FrameGetAllNodesInformationNotification
+)
 NodeFactory = Callable[["PyVLX", FrameNodeInformation], Node]
 
 
