@@ -93,19 +93,31 @@ class Connection:
 
     def __del__(self) -> None:
         """Destruct connection."""
-        self.disconnect()
+        self.disconnect(notify_callbacks=False)
 
-    def disconnect(self) -> None:
-        """Disconnect connection."""
+    def disconnect(self, notify_callbacks: bool = True) -> None:
+        """Disconnect connection and notify callbacks if specified.
+
+        Running callbacks only makes sense if loop is still running,
+        so it it can be skipped, mostly for the case of destructor
+        being called during shutdown when loop is already closed.
+        """
         if self.transport is not None:
             self.transport.close()
             self.transport = None
         self.connected = False
         PYVLXLOG.debug("TCP transport closed.")
+        if not notify_callbacks:
+            return
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            PYVLXLOG.debug("Skipping connection closed callbacks because no event loop is running.")
+            return
         for connection_closed_cb in self.connection_closed_cbs:
-            task = asyncio.create_task(connection_closed_cb())
+            task = loop.create_task(connection_closed_cb())
             self.tasks.add(task)
-            task.add_done_callback(self.tasks.remove)
+            task.add_done_callback(self.tasks.discard)
 
     async def connect(self) -> None:
         """Connect to gateway via SSL."""
