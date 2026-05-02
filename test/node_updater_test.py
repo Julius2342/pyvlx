@@ -720,6 +720,138 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertFalse(device.is_opening)
         self.assertFalse(device.is_closing)
 
+    async def test_gate_opening_live_sequence_keeps_direction_until_done(self) -> None:
+        """Live gate sequence should keep opening through IGNORE frames and stop on DONE."""
+        device = OpeningDevice(pyvlx=self.pyvlx, node_id=80, name="Test gate")
+        device.position = Position(position_percent=100)
+        device.target = Position(position_percent=100)
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[80] = device
+
+        start_frame = FrameNodeStatePositionChangedNotification()
+        start_frame.node_id = 80
+        start_frame.state = OperatingState.EXECUTING
+        start_frame.current_position = Position(position_percent=100)
+        start_frame.target = Position(position_percent=0)
+        start_frame.remaining_time = 1
+
+        await self.node_updater.process_frame(start_frame)
+
+        self.assertTrue(device.is_opening)
+        self.assertFalse(device.is_closing)
+        self.assertEqual(device.position, Position(position_percent=100))
+        self.assertEqual(device.target, Position(position_percent=0))
+
+        for _ in range(2):
+            ignore_frame = FrameNodeStatePositionChangedNotification()
+            ignore_frame.node_id = 80
+            ignore_frame.state = OperatingState.EXECUTING
+            ignore_frame.current_position = Position(position=Parameter.IGNORE)
+            ignore_frame.target = Position(position_percent=0)
+            ignore_frame.remaining_time = 3
+
+            await self.node_updater.process_frame(ignore_frame)
+
+            self.assertTrue(device.is_opening)
+            self.assertFalse(device.is_closing)
+            self.assertEqual(device.position, Position(position_percent=100))
+            self.assertEqual(device.target, Position(position_percent=0))
+
+        command_status = FrameCommandRunStatusNotification(
+            session_id=2,
+            status_id=1,
+            index_id=80,
+            node_parameter=0,
+            parameter_value=Parameter.UNKNOWN_VALUE,
+            run_status=RunStatus.EXECUTION_COMPLETED,
+            status_reply=StatusReply.COMMAND_OVERRULED,
+        )
+
+        await self.node_updater.process_frame(command_status)
+
+        self.assertTrue(device.is_opening)
+        self.assertFalse(device.is_closing)
+
+        done_frame = FrameNodeStatePositionChangedNotification()
+        done_frame.node_id = 80
+        done_frame.state = OperatingState.DONE
+        done_frame.current_position = Position(position_percent=0)
+        done_frame.target = Position(position_percent=0)
+        done_frame.remaining_time = 0
+
+        await self.node_updater.process_frame(done_frame)
+
+        self.assertFalse(device.is_opening)
+        self.assertFalse(device.is_closing)
+        self.assertEqual(device.position, Position(position_percent=0))
+        self.assertEqual(device.target, Position(position_percent=0))
+
+    async def test_gate_closing_live_sequence_keeps_direction_until_done(self) -> None:
+        """Live gate sequence should keep closing through IGNORE frames and stop on DONE."""
+        device = OpeningDevice(pyvlx=self.pyvlx, node_id=81, name="Test gate")
+        device.position = Position(position_percent=0)
+        device.target = Position(position_percent=0)
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[81] = device
+
+        start_frame = FrameNodeStatePositionChangedNotification()
+        start_frame.node_id = 81
+        start_frame.state = OperatingState.EXECUTING
+        start_frame.current_position = Position(position_percent=0)
+        start_frame.target = Position(position_percent=100)
+        start_frame.remaining_time = 1
+
+        await self.node_updater.process_frame(start_frame)
+
+        self.assertTrue(device.is_closing)
+        self.assertFalse(device.is_opening)
+        self.assertEqual(device.position, Position(position_percent=0))
+        self.assertEqual(device.target, Position(position_percent=100))
+
+        for _ in range(2):
+            ignore_frame = FrameNodeStatePositionChangedNotification()
+            ignore_frame.node_id = 81
+            ignore_frame.state = OperatingState.EXECUTING
+            ignore_frame.current_position = Position(position=Parameter.IGNORE)
+            ignore_frame.target = Position(position_percent=100)
+            ignore_frame.remaining_time = 3
+
+            await self.node_updater.process_frame(ignore_frame)
+
+            self.assertTrue(device.is_closing)
+            self.assertFalse(device.is_opening)
+            self.assertEqual(device.position, Position(position_percent=0))
+            self.assertEqual(device.target, Position(position_percent=100))
+
+        command_status = FrameCommandRunStatusNotification(
+            session_id=2,
+            status_id=1,
+            index_id=81,
+            node_parameter=0,
+            parameter_value=Parameter.UNKNOWN_VALUE,
+            run_status=RunStatus.EXECUTION_COMPLETED,
+            status_reply=StatusReply.COMMAND_OVERRULED,
+        )
+
+        await self.node_updater.process_frame(command_status)
+
+        self.assertTrue(device.is_closing)
+        self.assertFalse(device.is_opening)
+
+        done_frame = FrameNodeStatePositionChangedNotification()
+        done_frame.node_id = 81
+        done_frame.state = OperatingState.DONE
+        done_frame.current_position = Position(position_percent=100)
+        done_frame.target = Position(position_percent=100)
+        done_frame.remaining_time = 0
+
+        await self.node_updater.process_frame(done_frame)
+
+        self.assertFalse(device.is_closing)
+        self.assertFalse(device.is_opening)
+        self.assertEqual(device.position, Position(position_percent=100))
+        self.assertEqual(device.target, Position(position_percent=100))
+
     async def test_after_update_called_when_last_frame_state_changes(self) -> None:
         """Test that after_update() is called when last_frame_state changes."""
         device = OpeningDevice(
