@@ -41,7 +41,7 @@ class NodeUpdater:
         self.pyvlx = pyvlx
 
     @staticmethod
-    def _has_concrete_position(position: Position) -> bool:
+    def _is_concrete_position(position: Position) -> bool:
         """Return True when a position can be used for movement comparisons."""
         return position.position <= Parameter.MAX
 
@@ -103,22 +103,23 @@ class NodeUpdater:
 
         position = Position(frame.current_position)
         target = Position(frame.target)
-        position_is_concrete = self._has_concrete_position(position)
-        target_is_concrete = self._has_concrete_position(target)
+        frame_position_is_concrete = self._is_concrete_position(position)
+        comparison_position_is_concrete = frame_position_is_concrete
+        target_is_concrete = self._is_concrete_position(target)
         frame_indicates_motion = (
             frame.state == OperatingState.EXECUTING
             or frame.remaining_time > 0
         )
 
         comparison_position = position
-        if not position_is_concrete and self._has_concrete_position(node.position):
+        if not comparison_position_is_concrete and self._is_concrete_position(node.position):
             comparison_position = node.position
-            position_is_concrete = True
+            comparison_position_is_concrete = True
 
         node_changed = False
 
         if (
-            position_is_concrete
+            comparison_position_is_concrete
             and target_is_concrete
             and comparison_position.position > target.position
             and frame_indicates_motion
@@ -138,7 +139,7 @@ class NodeUpdater:
             )
 
         elif (
-            position_is_concrete
+            comparison_position_is_concrete
             and target_is_concrete
             and comparison_position.position < target.position
             and frame_indicates_motion
@@ -155,6 +156,35 @@ class NodeUpdater:
                 node.name, comparison_position, target,
                 frame.remaining_time,
                 node.estimated_completion.strftime("%Y-%m-%d %H:%M:%S")
+            )
+
+        elif (
+            not frame_position_is_concrete
+            and target_is_concrete
+            and self._is_concrete_position(node.target)
+            and node.target != target
+            and frame_indicates_motion
+        ):
+            # node.target is updated in _update_node_main_parameter after this method returns.
+            if node.target.position > target.position:
+                node_changed |= _set_node_property(node, "is_opening", True)
+                node_changed |= _set_node_property(node, "is_closing", False)
+            else:
+                node_changed |= _set_node_property(node, "is_closing", True)
+                node_changed |= _set_node_property(node, "is_opening", False)
+            node.state_received_at = datetime.datetime.now()
+            node.estimated_completion = (
+                node.state_received_at
+                + datetime.timedelta(0, frame.remaining_time)
+            )
+            PYVLXLOG.debug(
+                "%s changed motion target while current position is unavailable (%s->%s),"
+                " estimated completion in %ss at %s",
+                node.name,
+                node.target,
+                target,
+                frame.remaining_time,
+                node.estimated_completion.strftime("%Y-%m-%d %H:%M:%S"),
             )
 
         elif frame_indicates_motion and target_is_concrete and (node.is_opening or node.is_closing):
@@ -199,8 +229,14 @@ class NodeUpdater:
         if isinstance(node, OpeningDevice):
             position = Position(frame.current_position)
             target = Position(frame.target)
-            if position.position <= Parameter.MAX:
+            frame_indicates_motion = (
+                frame.state == OperatingState.EXECUTING
+                or frame.remaining_time > 0
+            )
+            if self._is_concrete_position(position):
                 node_changed |= _set_node_property(node, "position", position)
+                node_changed |= _set_node_property(node, "target", target)
+            elif self._is_concrete_position(target) and frame_indicates_motion:
                 node_changed |= _set_node_property(node, "target", target)
 
         if isinstance(node, DimmableDevice):
