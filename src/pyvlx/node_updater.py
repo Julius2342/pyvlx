@@ -41,7 +41,7 @@ class NodeUpdater:
         self.pyvlx = pyvlx
 
     @staticmethod
-    def _has_concrete_position(position: Position) -> bool:
+    def _is_concrete_position(position: Position) -> bool:
         """Return True when a position can be used for movement comparisons."""
         return position.position <= Parameter.MAX
 
@@ -103,16 +103,16 @@ class NodeUpdater:
 
         position = Position(frame.current_position)
         target = Position(frame.target)
-        frame_position_is_concrete = self._has_concrete_position(position)
+        frame_position_is_concrete = self._is_concrete_position(position)
         comparison_position_is_concrete = frame_position_is_concrete
-        target_is_concrete = self._has_concrete_position(target)
+        target_is_concrete = self._is_concrete_position(target)
         frame_indicates_motion = (
             frame.state == OperatingState.EXECUTING
             or frame.remaining_time > 0
         )
 
         comparison_position = position
-        if not comparison_position_is_concrete and self._has_concrete_position(node.position):
+        if not comparison_position_is_concrete and self._is_concrete_position(node.position):
             comparison_position = node.position
             comparison_position_is_concrete = True
 
@@ -161,7 +161,7 @@ class NodeUpdater:
         elif (
             not frame_position_is_concrete
             and target_is_concrete
-            and self._has_concrete_position(node.target)
+            and self._is_concrete_position(node.target)
             and node.target != target
             and frame_indicates_motion
         ):
@@ -233,10 +233,10 @@ class NodeUpdater:
                 frame.state == OperatingState.EXECUTING
                 or frame.remaining_time > 0
             )
-            if self._has_concrete_position(position):
+            if self._is_concrete_position(position):
                 node_changed |= _set_node_property(node, "position", position)
                 node_changed |= _set_node_property(node, "target", target)
-            elif self._has_concrete_position(target) and frame_indicates_motion:
+            elif self._is_concrete_position(target) and frame_indicates_motion:
                 node_changed |= _set_node_property(node, "target", target)
 
         if isinstance(node, DimmableDevice):
