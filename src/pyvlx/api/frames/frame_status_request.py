@@ -150,10 +150,10 @@ class FrameStatusRequestNotification(FrameBase):
         self.status_reply = StatusReply(payload[5])
         self.status_type = StatusType(payload[6])
         if self.status_type == StatusType.REQUEST_MAIN_INFO:
-            self.target_position = Parameter(payload[7:8])
-            self.current_position = Parameter(payload[9:10])
+            self.target_position = Parameter(payload[7:9])
+            self.current_position = Parameter(payload[9:11])
             self.remaining_time = payload[11] * 256 + payload[12]
-            self.last_master_execution_address = payload[13:16]
+            self.last_master_execution_address = payload[13:17]
             self.last_command_originator = payload[17]
         else:
             self.status_count = payload[7]

@@ -6,6 +6,8 @@ from pyvlx.api.frames import (
     FrameStatusRequestConfirmation, FrameStatusRequestRequest)
 from pyvlx.api.frames.frame_status_request import (
     FrameStatusRequestNotification, StatusRequestStatus)
+from pyvlx.const import RunStatus, StatusReply, StatusType
+from pyvlx.parameter import Parameter
 
 
 class TestFrameStatusRequestRequest(unittest.TestCase):
@@ -72,6 +74,59 @@ class TestFrameStatusRequestNotification(unittest.TestCase):
         """Test parse FrameStatusRequestNotification from raw."""
         frame = frame_from_raw(self.EXAMPLE_FRAME_EMPTY)
         self.assertTrue(isinstance(frame, FrameStatusRequestNotification))
+
+    def test_request_main_info_from_raw(self) -> None:
+        """Test parse REQUEST_MAIN_INFO with 2-byte position fields."""
+        frame = FrameStatusRequestNotification()
+        frame.from_payload(bytes([
+            0x47, 0x11,  # session_id
+            0x02,  # status_id
+            0x07,  # node_id
+            RunStatus.EXECUTION_ACTIVE.value,
+            StatusReply.COMMAND_COMPLETED_OK.value,
+            StatusType.REQUEST_MAIN_INFO.value,
+            0xC4, 0x00,  # target_position
+            0xC3, 0xFF,  # current_position
+            0x12, 0x34,  # remaining_time
+            0x00, 0x65, 0x43, 0x21,  # last_master_execution_address
+            0x02,  # last_command_originator
+        ]))
+
+        self.assertEqual(frame.session_id, 0x4711)
+        self.assertEqual(frame.status_id, 0x02)
+        self.assertEqual(frame.node_id, 0x07)
+        self.assertEqual(frame.run_status, RunStatus.EXECUTION_ACTIVE)
+        self.assertEqual(frame.status_reply, StatusReply.COMMAND_COMPLETED_OK)
+        self.assertEqual(frame.status_type, StatusType.REQUEST_MAIN_INFO)
+        self.assertEqual(frame.target_position, Parameter(bytes([0xC4, 0x00])))
+        self.assertEqual(frame.current_position, Parameter(bytes([0xC3, 0xFF])))
+        self.assertEqual(frame.remaining_time, 0x1234)
+        self.assertEqual(frame.last_master_execution_address, bytes([0x00, 0x65, 0x43, 0x21]))
+        self.assertEqual(frame.last_command_originator, 0x02)
+
+    def test_request_main_info_roundtrip(self) -> None:
+        """Test REQUEST_MAIN_INFO can be serialized and parsed again."""
+        frame = FrameStatusRequestNotification()
+        frame.session_id = 0x4711
+        frame.status_id = 0x02
+        frame.node_id = 0x07
+        frame.run_status = RunStatus.EXECUTION_ACTIVE
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+        frame.status_type = StatusType.REQUEST_MAIN_INFO
+        frame.target_position = Parameter(bytes([0xC4, 0x00]))
+        frame.current_position = Parameter(bytes([0xC3, 0xFF]))
+        frame.remaining_time = 0x1234
+        frame.last_master_execution_address = bytes([0x00, 0x65, 0x43, 0x21])
+        frame.last_command_originator = 0x02
+
+        restored = FrameStatusRequestNotification()
+        restored.from_payload(frame.get_payload())
+
+        self.assertEqual(restored.target_position, frame.target_position)
+        self.assertEqual(restored.current_position, frame.current_position)
+        self.assertEqual(restored.remaining_time, frame.remaining_time)
+        self.assertEqual(restored.last_master_execution_address, frame.last_master_execution_address)
+        self.assertEqual(restored.last_command_originator, frame.last_command_originator)
 
     def test_str(self) -> None:
         """Test string representation of FrameStatusRequestNotification."""
