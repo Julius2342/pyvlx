@@ -10,7 +10,7 @@
 | src/pyvlx/api/factory\_default.py                                           |       17 |        9 |        2 |        0 |     42% |20-22, 26-30, 34 |
 | src/pyvlx/api/frame\_creation.py                                            |      142 |        6 |      130 |        5 |     96% |49-54, 66, 68, 70, 214 |
 | src/pyvlx/api/frames/frame\_node\_state\_position\_changed\_notification.py |       47 |        1 |        0 |        0 |     98% |        62 |
-| src/pyvlx/api/frames/frame\_status\_request.py                              |      117 |       16 |       16 |        7 |     83% |43, 129-133, 138-139, 153-157, 161, 166, 175 |
+| src/pyvlx/api/frames/frame\_status\_request.py                              |      117 |        6 |       16 |        5 |     92% |43, 138-139, 161, 166, 175 |
 | src/pyvlx/api/frames/frame\_wink\_send.py                                   |       72 |        2 |        6 |        2 |     95% |    35, 58 |
 | src/pyvlx/api/get\_all\_nodes\_information.py                               |       24 |       16 |        8 |        0 |     25% |22-25, 29-42, 46 |
 | src/pyvlx/api/get\_local\_time.py                                           |       17 |        9 |        2 |        0 |     42% |19-21, 25-30, 34 |
@@ -43,7 +43,7 @@
 | src/pyvlx/parameter.py                                                      |      215 |       13 |       70 |        7 |     92% |114, 116, 118, 120, 165-169, 363, 365, 367, 392 |
 | src/pyvlx/pyvlx.py                                                          |       79 |       41 |       10 |        0 |     43% |12-13, 60-76, 80-84, 88, 92-93, 97-98, 102-114, 118, 122, 126-129 |
 | src/pyvlx/scenes.py                                                         |       38 |        6 |       20 |        0 |     83% |     55-60 |
-| **TOTAL**                                                                   | **4040** |  **614** |  **738** |   **60** | **82%** |           |
+| **TOTAL**                                                                   | **4040** |  **604** |  **738** |   **58** | **82%** |           |
 
 44 files skipped due to complete coverage.
 
