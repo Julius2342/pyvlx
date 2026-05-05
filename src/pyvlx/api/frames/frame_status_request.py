@@ -43,7 +43,7 @@ class FrameStatusRequestRequest(FrameBase):
             raise PyVLXException("command_send_request_wrong_node_length")
         self.node_ids = []
         for i in range(len_node_ids):
-            self.node_ids.append(payload[3] + i)
+            self.node_ids.append(payload[3 + i])
 
         self.status_type = StatusType(payload[23])
         self.fpi1 = payload[24]

@@ -26,6 +26,29 @@ class TestFrameStatusRequestRequest(unittest.TestCase):
         frame = frame_from_raw(self.EXAMPLE_FRAME)
         self.assertTrue(isinstance(frame, FrameStatusRequestRequest))
 
+    def test_from_raw_with_non_consecutive_node_ids(self) -> None:
+        """Test parse FrameStatusRequestRequest preserves encoded node IDs."""
+        raw = b"\x00\x1d\x03\x05\x00\xab\x02\x2a\x57" + bytes(18) + b"\x01\xfe\x000"
+
+        frame = frame_from_raw(raw)
+
+        self.assertTrue(isinstance(frame, FrameStatusRequestRequest))
+        assert isinstance(frame, FrameStatusRequestRequest)
+        self.assertEqual(frame.node_ids, [42, 87])
+
+    def test_request_with_non_consecutive_node_ids_roundtrip(self) -> None:
+        """Test FrameStatusRequestRequest survives a payload roundtrip with non-consecutive IDs."""
+        frame = FrameStatusRequestRequest(node_ids=[42, 87, 7], session_id=0x00ab)
+        restored = FrameStatusRequestRequest()
+
+        restored.from_payload(frame.get_payload())
+
+        self.assertEqual(restored.session_id, frame.session_id)
+        self.assertEqual(restored.node_ids, frame.node_ids)
+        self.assertEqual(restored.status_type, frame.status_type)
+        self.assertEqual(restored.fpi1, frame.fpi1)
+        self.assertEqual(restored.fpi2, frame.fpi2)
+
     def test_str(self) -> None:
         """Test string representation of FrameStatusRequestRequest."""
         frame = FrameStatusRequestRequest(node_ids=[1, 2], session_id=0xAB)
