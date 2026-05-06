@@ -12,7 +12,7 @@ from pyvlx.const import NodeParameter, OperatingState, RunStatus, StatusReply
 from pyvlx.dimmable_device import DimmableDevice
 from pyvlx.node_updater import NodeUpdater
 from pyvlx.on_off_switch import OnOffSwitch
-from pyvlx.opening_device import Blind, DualRollerShutter
+from pyvlx.opening_device import Blind, DualRollerShutter, GarageDoor, Gate
 from pyvlx.parameter import Intensity, Parameter, Position, SwitchParameter
 
 
@@ -373,6 +373,78 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         # But status_reply changed
         self.assertEqual(shutter.last_frame_status_reply, StatusReply.BATTERY_LEVEL)
         shutter.after_update.assert_awaited_once()
+
+    async def test_gate_position_recovers_from_status_request_notification(self) -> None:
+        """Test that a Gate updates its position from status request MP data."""
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=3, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position=Parameter.UNKNOWN_VALUE)
+        gate.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        gate.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[3] = gate
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 3
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=100).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(gate.position, Position(position_percent=100))
+        gate.after_update.assert_awaited_once()
+
+    async def test_garage_door_position_recovers_from_status_request_notification(self) -> None:
+        """Test that a GarageDoor updates its position from status request MP data."""
+        garage_door = GarageDoor(
+            pyvlx=self.pyvlx, node_id=4, name="Test garage door", serial_number=None
+        )
+        garage_door.position = Position(position=Parameter.UNKNOWN_VALUE)
+        garage_door.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        garage_door.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
+        garage_door.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[4] = garage_door
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 4
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=0).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(garage_door.position, Position(position_percent=0))
+        garage_door.after_update.assert_awaited_once()
+
+    async def test_opening_device_ignores_unavailable_status_request_position(self) -> None:
+        """Test that unavailable status request MP data does not replace a concrete position."""
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=5, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=50)
+        gate.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        gate.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[5] = gate
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 5
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position=Parameter.UNKNOWN_VALUE).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(gate.position, Position(position_percent=50))
+        gate.after_update.assert_not_awaited()
 
     # ── process_frame: after_update called when individual properties change ──
 
