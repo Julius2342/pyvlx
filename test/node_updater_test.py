@@ -12,7 +12,8 @@ from pyvlx.const import NodeParameter, OperatingState, RunStatus, StatusReply
 from pyvlx.dimmable_device import DimmableDevice
 from pyvlx.node_updater import NodeUpdater
 from pyvlx.on_off_switch import OnOffSwitch
-from pyvlx.opening_device import Blind, DualRollerShutter, GarageDoor, Gate
+from pyvlx.opening_device import (
+    Blind, DualRollerShutter, GarageDoor, Gate, RollerShutter)
 from pyvlx.parameter import Intensity, Parameter, Position, SwitchParameter
 
 
@@ -421,6 +422,30 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         self.assertEqual(garage_door.position, Position(position_percent=0))
         garage_door.after_update.assert_awaited_once()
+
+    async def test_roller_shutter_position_recovers_from_status_request_notification(self) -> None:
+        """Test that a RollerShutter updates its position from status request MP data."""
+        roller_shutter = RollerShutter(
+            pyvlx=self.pyvlx, node_id=6, name="Test roller shutter", serial_number=None
+        )
+        roller_shutter.position = Position(position=Parameter.UNKNOWN_VALUE)
+        roller_shutter.last_frame_status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        roller_shutter.last_frame_run_status = RunStatus.EXECUTION_COMPLETED
+        roller_shutter.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[6] = roller_shutter
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 6
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=75).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(roller_shutter.position, Position(position_percent=75))
+        roller_shutter.after_update.assert_awaited_once()
 
     async def test_opening_device_ignores_unavailable_status_request_position(self) -> None:
         """Test that unavailable status request MP data does not replace a concrete position."""
