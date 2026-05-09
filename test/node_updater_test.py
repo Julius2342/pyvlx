@@ -1,5 +1,6 @@
 """Unit test for NodeUpdater."""
 # pylint: disable=too-many-lines,too-many-public-methods
+import datetime
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock
 
@@ -543,6 +544,108 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         await self.node_updater.process_frame_status_request_notification(frame)
 
         self.assertEqual(roller_shutter.position, Position(position_percent=75))
+        roller_shutter.after_update.assert_awaited_once()
+
+    async def test_roller_shutter_motion_stops_from_completed_status_request(self) -> None:
+        """Test that a completed status request clears a stale RollerShutter motion state."""
+        roller_shutter = RollerShutter(
+            pyvlx=self.pyvlx, node_id=6, name="Test roller shutter", serial_number=None
+        )
+        roller_shutter.position = Position(position_percent=100)
+        roller_shutter.target = Position(position_percent=0)
+        roller_shutter.is_opening = True
+        roller_shutter.state_received_at = datetime.datetime.now()
+        roller_shutter.estimated_completion = (
+            roller_shutter.state_received_at + datetime.timedelta(seconds=17)
+        )
+        roller_shutter.last_frame_status_reply = StatusReply.COMMAND_COMPLETED_OK
+        roller_shutter.last_frame_run_status = RunStatus.EXECUTION_ACTIVE
+        roller_shutter.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[6] = roller_shutter
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 6
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=0).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(roller_shutter.position, Position(position_percent=0))
+        self.assertFalse(roller_shutter.is_opening)
+        self.assertFalse(roller_shutter.is_closing)
+        self.assertIsNone(roller_shutter.state_received_at)
+        self.assertIsNone(roller_shutter.estimated_completion)
+        roller_shutter.after_update.assert_awaited_once()
+
+    async def test_roller_shutter_closing_stops_from_completed_status_request(self) -> None:
+        """Test that a completed status request clears a stale RollerShutter closing state."""
+        roller_shutter = RollerShutter(
+            pyvlx=self.pyvlx, node_id=6, name="Test roller shutter", serial_number=None
+        )
+        roller_shutter.position = Position(position_percent=0)
+        roller_shutter.target = Position(position_percent=100)
+        roller_shutter.is_closing = True
+        roller_shutter.state_received_at = datetime.datetime.now()
+        roller_shutter.estimated_completion = (
+            roller_shutter.state_received_at + datetime.timedelta(seconds=17)
+        )
+        roller_shutter.last_frame_status_reply = StatusReply.COMMAND_COMPLETED_OK
+        roller_shutter.last_frame_run_status = RunStatus.EXECUTION_ACTIVE
+        roller_shutter.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[6] = roller_shutter
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 6
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=100).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(roller_shutter.position, Position(position_percent=100))
+        self.assertFalse(roller_shutter.is_opening)
+        self.assertFalse(roller_shutter.is_closing)
+        self.assertIsNone(roller_shutter.state_received_at)
+        self.assertIsNone(roller_shutter.estimated_completion)
+        roller_shutter.after_update.assert_awaited_once()
+
+    async def test_roller_shutter_active_status_request_keeps_motion_state(self) -> None:
+        """Test that an active status request does not clear RollerShutter motion state."""
+        roller_shutter = RollerShutter(
+            pyvlx=self.pyvlx, node_id=6, name="Test roller shutter", serial_number=None
+        )
+        roller_shutter.position = Position(position_percent=100)
+        roller_shutter.target = Position(position_percent=0)
+        roller_shutter.is_opening = True
+        roller_shutter.state_received_at = datetime.datetime.now()
+        roller_shutter.estimated_completion = (
+            roller_shutter.state_received_at + datetime.timedelta(seconds=17)
+        )
+        roller_shutter.last_frame_status_reply = StatusReply.COMMAND_COMPLETED_OK
+        roller_shutter.last_frame_run_status = RunStatus.EXECUTION_ACTIVE
+        roller_shutter.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[6] = roller_shutter
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 6
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+        frame.run_status = RunStatus.EXECUTION_ACTIVE
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=50).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(roller_shutter.position, Position(position_percent=50))
+        self.assertTrue(roller_shutter.is_opening)
+        self.assertFalse(roller_shutter.is_closing)
+        self.assertIsNotNone(roller_shutter.state_received_at)
+        self.assertIsNotNone(roller_shutter.estimated_completion)
         roller_shutter.after_update.assert_awaited_once()
 
     async def test_opening_device_ignores_unavailable_status_request_position(self) -> None:

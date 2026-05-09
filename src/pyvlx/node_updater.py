@@ -6,7 +6,7 @@ from .api.frames import (
     FrameBase, FrameCommandRunStatusNotification,
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
-from .const import NodeParameter, OperatingState
+from .const import NodeParameter, OperatingState, RunStatus
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
 from .node import Node
@@ -94,6 +94,13 @@ class NodeUpdater:
                 position = Position(frame.parameter_data[NodeParameter(0)])
                 if self._is_concrete_position(position):
                     node_changed |= _set_node_property(node, "position", position)
+                    if frame.run_status == RunStatus.EXECUTION_COMPLETED:
+                        if node.is_opening:
+                            node_changed |= _set_node_property(node, "is_opening", False)
+                        if node.is_closing:
+                            node_changed |= _set_node_property(node, "is_closing", False)
+                        node.state_received_at = None
+                        node.estimated_completion = None
 
         if node_changed:
             await node.after_update()
