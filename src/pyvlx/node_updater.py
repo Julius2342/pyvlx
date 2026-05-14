@@ -95,10 +95,8 @@ class NodeUpdater:
                 if self._is_concrete_position(position):
                     node_changed |= _set_node_property(node, "position", position)
                     if frame.run_status == RunStatus.EXECUTION_COMPLETED:
-                        if node.is_opening:
-                            node_changed |= _set_node_property(node, "is_opening", False)
-                        if node.is_closing:
-                            node_changed |= _set_node_property(node, "is_closing", False)
+                        node_changed |= _set_node_property(node, "is_opening", False)
+                        node_changed |= _set_node_property(node, "is_closing", False)
                         node.state_received_at = None
                         node.estimated_completion = None
 
