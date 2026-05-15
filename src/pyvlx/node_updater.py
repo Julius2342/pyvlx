@@ -89,6 +89,12 @@ class NodeUpdater:
                 if position_lower_curtain.position <= Parameter.MAX:
                     node_changed |= _set_node_property(node, "position_lower_curtain", position_lower_curtain)
 
+        elif isinstance(node, OpeningDevice):
+            if NodeParameter(0) in frame.parameter_data:  # MP
+                position = Position(frame.parameter_data[NodeParameter(0)])
+                if self._is_concrete_position(position):
+                    node_changed |= _set_node_property(node, "position", position)
+
         if node_changed:
             await node.after_update()
 
