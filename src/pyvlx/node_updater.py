@@ -45,6 +45,16 @@ class NodeUpdater:
         """Return True when a position can be used for movement comparisons."""
         return position.position <= Parameter.MAX
 
+    @staticmethod
+    def _clear_opening_device_motion(node: OpeningDevice) -> bool:
+        """Clear stale motion state for a completed opening device movement."""
+        node_changed = False
+        node_changed |= _set_node_property(node, "is_opening", False)
+        node_changed |= _set_node_property(node, "is_closing", False)
+        node.state_received_at = None
+        node.estimated_completion = None
+        return node_changed
+
     async def process_frame_status_request_notification(
         self, frame: FrameStatusRequestNotification
     ) -> None:
@@ -58,16 +68,21 @@ class NodeUpdater:
         node_changed |= _set_node_property(node, "last_frame_status_reply", new_value=frame.status_reply)
         node_changed |= _set_node_property(node, "last_frame_run_status", new_value=frame.run_status)
 
+        status_position: Position | None = None
+        status_position_is_concrete = False
+        if NodeParameter(0) in frame.parameter_data:  # MP
+            status_position = Position(frame.parameter_data[NodeParameter(0)])
+            status_position_is_concrete = self._is_concrete_position(status_position)
+
         if isinstance(node, Blind):
             if (
                 # MP and FP3 are needed in frame, so check if they are present before accessing them
-                NodeParameter(0) in frame.parameter_data  # MP
+                status_position is not None
                 and NodeParameter(3) in frame.parameter_data  # FP3
             ):
-                position = Position(frame.parameter_data[NodeParameter(0)])
                 orientation = Position(frame.parameter_data[NodeParameter(3)])
-                if position.position <= Parameter.MAX:
-                    node_changed |= _set_node_property(node, "position", position)
+                if status_position_is_concrete:
+                    node_changed |= _set_node_property(node, "position", status_position)
                 if orientation.position <= Parameter.MAX:
                     node_changed |= _set_node_property(node, "orientation", orientation)
 
@@ -75,30 +90,29 @@ class NodeUpdater:
             if (
                 # MP, FP1 and FP2 are needed in frame,
                 # so check if they are present before accessing them
-                NodeParameter(0) in frame.parameter_data  # MP
+                status_position is not None
                 and NodeParameter(1) in frame.parameter_data  # FP1
                 and NodeParameter(2) in frame.parameter_data  # FP2
             ):
-                position = Position(frame.parameter_data[NodeParameter(0)])
                 position_upper_curtain = Position(frame.parameter_data[NodeParameter(1)])
                 position_lower_curtain = Position(frame.parameter_data[NodeParameter(2)])
-                if position.position <= Parameter.MAX:
-                    node_changed |= _set_node_property(node, "position", position)
+                if status_position_is_concrete:
+                    node_changed |= _set_node_property(node, "position", status_position)
                 if position_upper_curtain.position <= Parameter.MAX:
                     node_changed |= _set_node_property(node, "position_upper_curtain", position_upper_curtain)
                 if position_lower_curtain.position <= Parameter.MAX:
                     node_changed |= _set_node_property(node, "position_lower_curtain", position_lower_curtain)
 
         elif isinstance(node, OpeningDevice):
-            if NodeParameter(0) in frame.parameter_data:  # MP
-                position = Position(frame.parameter_data[NodeParameter(0)])
-                if self._is_concrete_position(position):
-                    node_changed |= _set_node_property(node, "position", position)
-                    if frame.run_status == RunStatus.EXECUTION_COMPLETED:
-                        node_changed |= _set_node_property(node, "is_opening", False)
-                        node_changed |= _set_node_property(node, "is_closing", False)
-                        node.state_received_at = None
-                        node.estimated_completion = None
+            if status_position_is_concrete:
+                node_changed |= _set_node_property(node, "position", status_position)
+
+        if (
+            isinstance(node, OpeningDevice)
+            and status_position_is_concrete
+            and frame.run_status == RunStatus.EXECUTION_COMPLETED
+        ):
+            node_changed |= self._clear_opening_device_motion(node)
 
         if node_changed:
             await node.after_update()

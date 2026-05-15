@@ -360,6 +360,42 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertEqual(blind.orientation, Position(position_percent=30))
         blind.after_update.assert_awaited_once()
 
+    async def test_blind_motion_stops_from_completed_status_request(self) -> None:
+        """Test that a completed status request clears a stale Blind motion state."""
+        blind = Blind(
+            pyvlx=self.pyvlx, node_id=1, name="Test blind", serial_number=None
+        )
+        blind.position = Position(position_percent=100)
+        blind.orientation = Position(position_percent=50)
+        blind.target = Position(position_percent=0)
+        blind.is_opening = True
+        blind.state_received_at = datetime.datetime.now()
+        blind.estimated_completion = (
+            blind.state_received_at + datetime.timedelta(seconds=17)
+        )
+        blind.last_frame_status_reply = StatusReply.COMMAND_COMPLETED_OK
+        blind.last_frame_run_status = RunStatus.EXECUTION_ACTIVE
+        blind.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[1] = blind
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 1
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=0).raw),
+            NodeParameter(3): Parameter(Position(position_percent=50).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(blind.position, Position(position_percent=0))
+        self.assertFalse(blind.is_opening)
+        self.assertFalse(blind.is_closing)
+        self.assertIsNone(blind.state_received_at)
+        self.assertIsNone(blind.estimated_completion)
+        blind.after_update.assert_awaited_once()
+
     async def test_dual_roller_shutter_position_changed_triggers_after_update(self) -> None:
         """Test that a DualRollerShutter frame with changed positions triggers after_update() once."""
         shutter = DualRollerShutter(
@@ -387,6 +423,46 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertEqual(shutter.position, Position(position_percent=30))
         self.assertEqual(shutter.position_upper_curtain, Position(position_percent=40))
         self.assertEqual(shutter.position_lower_curtain, Position(position_percent=60))
+        shutter.after_update.assert_awaited_once()
+
+    async def test_dual_roller_shutter_motion_stops_from_completed_status_request(self) -> None:
+        """Test that a completed status request clears a stale DualRollerShutter motion state."""
+        shutter = DualRollerShutter(
+            pyvlx=self.pyvlx, node_id=2, name="Test shutter", serial_number=None
+        )
+        shutter.position = Position(position_percent=100)
+        shutter.position_upper_curtain = Position(position_percent=100)
+        shutter.position_lower_curtain = Position(position_percent=100)
+        shutter.target = Position(position_percent=0)
+        shutter.is_opening = True
+        shutter.state_received_at = datetime.datetime.now()
+        shutter.estimated_completion = (
+            shutter.state_received_at + datetime.timedelta(seconds=17)
+        )
+        shutter.last_frame_status_reply = StatusReply.COMMAND_COMPLETED_OK
+        shutter.last_frame_run_status = RunStatus.EXECUTION_ACTIVE
+        shutter.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[2] = shutter
+
+        frame = FrameStatusRequestNotification()
+        frame.node_id = 2
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.parameter_data = {
+            NodeParameter(0): Parameter(Position(position_percent=0).raw),
+            NodeParameter(1): Parameter(Position(position_percent=25).raw),
+            NodeParameter(2): Parameter(Position(position_percent=75).raw),
+        }
+
+        await self.node_updater.process_frame_status_request_notification(frame)
+
+        self.assertEqual(shutter.position, Position(position_percent=0))
+        self.assertEqual(shutter.position_upper_curtain, Position(position_percent=25))
+        self.assertEqual(shutter.position_lower_curtain, Position(position_percent=75))
+        self.assertFalse(shutter.is_opening)
+        self.assertFalse(shutter.is_closing)
+        self.assertIsNone(shutter.state_received_at)
+        self.assertIsNone(shutter.estimated_completion)
         shutter.after_update.assert_awaited_once()
 
     async def test_dual_roller_shutter_no_change_skips_after_update(self) -> None:
