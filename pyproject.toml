@@ -4,7 +4,7 @@ dynamic = ["version"]
 description = "PyVLX is a wrapper for the Velux KLF 200 API. PyVLX enables you to run scenes and or open and close velux windows."
 readme = "README.md"
 requires-python = ">=3.11"
-license = {text = "LGPL-3.0-or-later"}
+license = "LGPL-3.0-or-later"
 keywords = ["velux", "KLF", "200", "home", "automation"]
 authors = [
     {name = "Julius Mittenzwei", email = "julius@mittenzwei.com"}
@@ -14,7 +14,6 @@ classifiers = [
     "Intended Audience :: End Users/Desktop",
     "Intended Audience :: Developers",
     "Topic :: System :: Hardware :: Hardware Drivers",
-    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
