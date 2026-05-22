@@ -1012,6 +1012,69 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertIsNotNone(device.estimated_completion)
         device.after_update.assert_not_awaited()
 
+    async def test_closing_state_cleared_when_cached_position_reaches_closed_extreme_while_executing(self) -> None:
+        """A lingering EXECUTING frame after the device reached the closed extreme must clear is_closing.
+
+        Reproduces the garage-door symptom where the gateway emits a final EXECUTING
+        frame with stale remaining_time > 0 after the limit switch trips; without
+        this escape the preserve branch would trap is_closing = True forever.
+        """
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=81, name="Test garage"
+        )
+        device.position = Position(position_percent=100)
+        device.target = Position(position_percent=100)
+        device.is_closing = True
+        device.state_received_at = datetime.datetime.now()
+        device.estimated_completion = datetime.datetime.now()
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[81] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 81
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
+        frame.target = Position(position_percent=100)
+        frame.remaining_time = 2
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(device.is_closing)
+        self.assertFalse(device.is_opening)
+        self.assertIsNone(device.state_received_at)
+        self.assertIsNone(device.estimated_completion)
+        device.after_update.assert_awaited_once()
+
+    async def test_opening_state_cleared_when_cached_position_reaches_open_extreme_while_executing(self) -> None:
+        """Mirror of the closed-extreme case: lingering EXECUTING frames at the open extreme clear is_opening."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=82, name="Test garage"
+        )
+        device.position = Position(position_percent=0)
+        device.target = Position(position_percent=0)
+        device.is_opening = True
+        device.state_received_at = datetime.datetime.now()
+        device.estimated_completion = datetime.datetime.now()
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[82] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 82
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
+        frame.target = Position(position_percent=0)
+        frame.remaining_time = 2
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(device.is_opening)
+        self.assertFalse(device.is_closing)
+        self.assertIsNone(device.state_received_at)
+        self.assertIsNone(device.estimated_completion)
+        device.after_update.assert_awaited_once()
+
     async def test_motion_direction_derived_from_cached_position_when_frame_position_unknown(self) -> None:
         """Frames with IGNORE/UNKNOWN current_position should derive direction from the cached node position."""
         device = OpeningDevice(

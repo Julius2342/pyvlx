@@ -212,7 +212,21 @@ class NodeUpdater:
                 node.estimated_completion.strftime("%Y-%m-%d %H:%M:%S"),
             )
 
-        elif frame_indicates_motion and target_is_concrete and (node.is_opening or node.is_closing):
+        elif (
+            frame_indicates_motion
+            and target_is_concrete
+            and (node.is_opening or node.is_closing)
+            and not (
+                # Cached position already reached an open/closed extreme that matches the
+                # target: treat the motion as complete even when the gateway still flags
+                # the device as executing (observed on garage doors after the limit
+                # switch trips: a final EXECUTING frame can arrive with stale
+                # remaining_time > 0, which would otherwise trap is_closing/is_opening).
+                self._is_concrete_position(node.position)
+                and node.position.position == target.position
+                and (target.closed or target.open)
+            )
+        ):
             node.state_received_at = datetime.datetime.now()
             node.estimated_completion = (
                 node.state_received_at
