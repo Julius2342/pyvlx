@@ -1237,9 +1237,12 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         # EXECUTION_COMPLETED is the reliable end-of-command marker for gates
         # whose position frames stay at IGNORE: motion must clear here, not
-        # wait for a (possibly never-arriving) DONE frame.
+        # wait for a (possibly never-arriving) DONE frame. The cached position
+        # must also follow the target so HA does not briefly report the wrong
+        # cover state from the stale pre-move position.
         self.assertFalse(device.is_opening)
         self.assertFalse(device.is_closing)
+        self.assertEqual(device.position, Position(position_percent=0))
 
         done_frame = FrameNodeStatePositionChangedNotification()
         done_frame.node_id = 80
@@ -1306,9 +1309,12 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         # EXECUTION_COMPLETED is the reliable end-of-command marker for gates
         # whose position frames stay at IGNORE: motion must clear here, not
-        # wait for a (possibly never-arriving) DONE frame.
+        # wait for a (possibly never-arriving) DONE frame. The cached position
+        # must also follow the target so HA does not briefly report the wrong
+        # cover state from the stale pre-move position.
         self.assertFalse(device.is_closing)
         self.assertFalse(device.is_opening)
+        self.assertEqual(device.position, Position(position_percent=100))
 
         done_frame = FrameNodeStatePositionChangedNotification()
         done_frame.node_id = 81
@@ -1681,11 +1687,13 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         mocked_node.after_update.assert_not_awaited()
 
     async def test_command_run_status_completed_clears_opening_device_motion(self) -> None:
-        """EXECUTION_COMPLETED on a moving OpeningDevice must clear is_opening/is_closing.
+        """Clear motion and sync cached position to target on EXECUTION_COMPLETED.
 
         Reproduces the gate symptom where current_position stays IGNORE for the
         whole travel and the command-run-status frame is the only reliable end
-        marker.
+        marker. Without the position sync, HA briefly sees the stale pre-move
+        position (e.g. 0%) and reports the cover at the wrong end before the
+        next heartbeat sweep corrects it.
         """
         gate = Gate(
             pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
@@ -1707,16 +1715,18 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         self.assertFalse(gate.is_closing)
         self.assertFalse(gate.is_opening)
+        self.assertEqual(gate.position, Position(position_percent=100))
         self.assertIsNone(gate.state_received_at)
         self.assertIsNone(gate.estimated_completion)
         gate.after_update.assert_awaited_once()
 
     async def test_command_run_status_overruled_still_clears_motion(self) -> None:
-        """COMMAND_OVERRULED with EXECUTION_COMPLETED also clears motion.
+        """COMMAND_OVERRULED with EXECUTION_COMPLETED clears motion and syncs position.
 
         The KLF200 reports COMMAND_OVERRULED when a gate hits its limit switch
         and the gateway considers the close command 'overruled' by the physical
-        stop. From our point of view the command is over, so motion must clear.
+        stop. From our point of view the command is over, so motion must clear
+        and the cached position must follow the target.
         """
         gate = Gate(
             pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
@@ -1736,10 +1746,16 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         self.assertFalse(gate.is_closing)
         self.assertFalse(gate.is_opening)
+        self.assertEqual(gate.position, Position(position_percent=100))
         gate.after_update.assert_awaited_once()
 
-    async def test_command_run_status_failed_clears_motion(self) -> None:
-        """EXECUTION_FAILED also ends the command, so motion must clear."""
+    async def test_command_run_status_failed_clears_motion_without_position_sync(self) -> None:
+        """Clear motion on EXECUTION_FAILED but keep the cached position untouched.
+
+        On failure we cannot assume the device reached its target, so the
+        cached position must stay as it was. The next status sweep will
+        provide the real position.
+        """
         garage = GarageDoor(
             pyvlx=self.pyvlx, node_id=17, name="Test garage", serial_number=None
         )
@@ -1758,6 +1774,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         self.assertFalse(garage.is_closing)
         self.assertFalse(garage.is_opening)
+        self.assertEqual(garage.position, Position(position_percent=0))
         garage.after_update.assert_awaited_once()
 
     async def test_command_run_status_active_keeps_motion(self) -> None:

@@ -339,6 +339,18 @@ class NodeUpdater:
             and frame.run_status in (RunStatus.EXECUTION_COMPLETED, RunStatus.EXECUTION_FAILED)
             and (node.is_opening or node.is_closing)
         ):
+            # On EXECUTION_COMPLETED we can assume the device reached its target
+            # (the KLF200 ends gate/garage runs with COMMAND_OVERRULED at the
+            # limit switch, which is a physical completion proof). Sync the
+            # cached position to the target so consumers don't briefly see a
+            # stale pre-move position when the IGNORE-mode position frames
+            # never updated it. EXECUTION_FAILED leaves the position untouched
+            # because the device did not reach its target.
+            if (
+                frame.run_status == RunStatus.EXECUTION_COMPLETED
+                and self._is_concrete_position(node.target)
+            ):
+                node_changed |= _set_node_property(node, "position", node.target)
             node_changed |= self._clear_opening_device_motion(node)
             PYVLXLOG.debug(
                 "%s motion cleared after command run finished (%s)",
