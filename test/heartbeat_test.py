@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, MagicMock, call, patch
 from pyvlx import PyVLX
 from pyvlx.exception import PyVLXException
 from pyvlx.heartbeat import Heartbeat
-from pyvlx.opening_device import Blind
+from pyvlx.opening_device import Blind, Gate
 
 
 class TestHeartbeat(IsolatedAsyncioTestCase):
@@ -186,3 +186,42 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         status_request_1.do_api_call.assert_awaited_once()
         status_request_2.do_api_call.assert_awaited_once()
         self.assertEqual(sleep_mock.await_count, 2)
+
+    @patch("pyvlx.heartbeat.asyncio.sleep", new_callable=AsyncMock)
+    @patch("pyvlx.heartbeat.StatusRequest")
+    @patch("pyvlx.heartbeat.GetState")
+    async def test_pulse_skips_opening_devices_in_motion(
+        self,
+        get_state_cls: MagicMock,
+        status_request_cls: MagicMock,
+        sleep_mock: AsyncMock,
+    ) -> None:
+        """Skip status polling for any OpeningDevice currently in motion.
+
+        Polling a node mid-travel makes the KLF200 overrule the active
+        command and can halt the device on some actuators, so the
+        heartbeat must skip any OpeningDevice with is_opening or
+        is_closing set.
+        """
+        moving_gate = Gate(self.pyvlx, node_id=16, name="Gate", serial_number=None)
+        moving_gate.is_closing = True
+        idle_node = MagicMock()
+        idle_node.node_id = 17
+        self.pyvlx.nodes = [moving_gate, idle_node]
+
+        get_state = MagicMock()
+        get_state.do_api_call = AsyncMock()
+        get_state.success = True
+        get_state_cls.return_value = get_state
+
+        status_request = MagicMock()
+        status_request.do_api_call = AsyncMock()
+        status_request_cls.return_value = status_request
+
+        heartbeat = Heartbeat(self.pyvlx, load_all_states=True)
+        await heartbeat.pulse()
+
+        # Only the idle node was polled; the moving gate was skipped.
+        status_request_cls.assert_called_once_with(self.pyvlx, 17)
+        status_request.do_api_call.assert_awaited_once()
+        sleep_mock.assert_awaited_once_with(0.5)
