@@ -1235,7 +1235,10 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         await self.node_updater.process_frame(command_status)
 
-        self.assertTrue(device.is_opening)
+        # EXECUTION_COMPLETED is the reliable end-of-command marker for gates
+        # whose position frames stay at IGNORE: motion must clear here, not
+        # wait for a (possibly never-arriving) DONE frame.
+        self.assertFalse(device.is_opening)
         self.assertFalse(device.is_closing)
 
         done_frame = FrameNodeStatePositionChangedNotification()
@@ -1253,7 +1256,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertEqual(device.target, Position(position_percent=0))
 
     async def test_gate_closing_live_sequence_keeps_direction_until_done(self) -> None:
-        """Live gate sequence should keep closing through IGNORE frames and stop on DONE."""
+        """Live gate sequence should keep closing through IGNORE frames and stop on COMPLETED/DONE."""
         device = OpeningDevice(pyvlx=self.pyvlx, node_id=81, name="Test gate")
         device.position = Position(position_percent=0)
         device.target = Position(position_percent=0)
@@ -1301,7 +1304,10 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         await self.node_updater.process_frame(command_status)
 
-        self.assertTrue(device.is_closing)
+        # EXECUTION_COMPLETED is the reliable end-of-command marker for gates
+        # whose position frames stay at IGNORE: motion must clear here, not
+        # wait for a (possibly never-arriving) DONE frame.
+        self.assertFalse(device.is_closing)
         self.assertFalse(device.is_opening)
 
         done_frame = FrameNodeStatePositionChangedNotification()
@@ -1673,3 +1679,128 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertEqual(mocked_node.last_frame_status_reply, StatusReply.COMMAND_COMPLETED_OK)
         # Verify after_update was NOT called when nothing changed
         mocked_node.after_update.assert_not_awaited()
+
+    async def test_command_run_status_completed_clears_opening_device_motion(self) -> None:
+        """EXECUTION_COMPLETED on a moving OpeningDevice must clear is_opening/is_closing.
+
+        Reproduces the gate symptom where current_position stays IGNORE for the
+        whole travel and the command-run-status frame is the only reliable end
+        marker.
+        """
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=0)
+        gate.target = Position(position_percent=100)
+        gate.is_closing = True
+        gate.state_received_at = datetime.datetime.now()
+        gate.estimated_completion = datetime.datetime.now()
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(gate.is_closing)
+        self.assertFalse(gate.is_opening)
+        self.assertIsNone(gate.state_received_at)
+        self.assertIsNone(gate.estimated_completion)
+        gate.after_update.assert_awaited_once()
+
+    async def test_command_run_status_overruled_still_clears_motion(self) -> None:
+        """COMMAND_OVERRULED with EXECUTION_COMPLETED also clears motion.
+
+        The KLF200 reports COMMAND_OVERRULED when a gate hits its limit switch
+        and the gateway considers the close command 'overruled' by the physical
+        stop. From our point of view the command is over, so motion must clear.
+        """
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=0)
+        gate.target = Position(position_percent=100)
+        gate.is_closing = True
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_OVERRULED
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(gate.is_closing)
+        self.assertFalse(gate.is_opening)
+        gate.after_update.assert_awaited_once()
+
+    async def test_command_run_status_failed_clears_motion(self) -> None:
+        """EXECUTION_FAILED also ends the command, so motion must clear."""
+        garage = GarageDoor(
+            pyvlx=self.pyvlx, node_id=17, name="Test garage", serial_number=None
+        )
+        garage.position = Position(position_percent=0)
+        garage.target = Position(position_percent=100)
+        garage.is_closing = True
+        garage.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[17] = garage
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 17
+        frame.run_status = RunStatus.EXECUTION_FAILED
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(garage.is_closing)
+        self.assertFalse(garage.is_opening)
+        garage.after_update.assert_awaited_once()
+
+    async def test_command_run_status_active_keeps_motion(self) -> None:
+        """EXECUTION_ACTIVE indicates the command is still running — motion must stay."""
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=0)
+        gate.target = Position(position_percent=100)
+        gate.is_closing = True
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.run_status = RunStatus.EXECUTION_ACTIVE
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(gate.is_closing)
+        self.assertFalse(gate.is_opening)
+        gate.after_update.assert_awaited_once()
+
+    async def test_command_run_status_completed_idle_device_keeps_idle(self) -> None:
+        """An OpeningDevice without active motion stays idle on EXECUTION_COMPLETED."""
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=100)
+        gate.is_opening = False
+        gate.is_closing = False
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(gate.is_closing)
+        self.assertFalse(gate.is_opening)
+        # last_frame_run_status / status_reply still changed → after_update is called.
+        gate.after_update.assert_awaited_once()

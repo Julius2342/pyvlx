@@ -328,6 +328,24 @@ class NodeUpdater:
         node_changed |= _set_node_property(node, "last_frame_status_reply", new_value=frame.status_reply)
         node_changed |= _set_node_property(node, "last_frame_run_status", new_value=frame.run_status)
 
+        # Gates and garage doors frequently keep current_position = IGNORE for the
+        # entire travel and only signal completion via this command-run-status
+        # frame (run_status = COMPLETED/FAILED). Without clearing motion here,
+        # is_opening/is_closing would only fall back to False on the next polled
+        # status sweep, leaving the entity stuck in opening/closing for up to a
+        # full heartbeat period.
+        if (
+            isinstance(node, OpeningDevice)
+            and frame.run_status in (RunStatus.EXECUTION_COMPLETED, RunStatus.EXECUTION_FAILED)
+            and (node.is_opening or node.is_closing)
+        ):
+            node_changed |= self._clear_opening_device_motion(node)
+            PYVLXLOG.debug(
+                "%s motion cleared after command run finished (%s)",
+                node.name,
+                frame.run_status.name,
+            )
+
         if node_changed:
             await node.after_update()
 
