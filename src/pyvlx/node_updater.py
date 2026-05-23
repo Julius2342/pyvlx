@@ -6,7 +6,7 @@ from .api.frames import (
     FrameBase, FrameCommandRunStatusNotification,
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
-from .const import NodeParameter, OperatingState, RunStatus
+from .const import NodeParameter, OperatingState, RunStatus, StatusReply
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
 from .node import Node
@@ -340,18 +340,43 @@ class NodeUpdater:
             and (node.is_opening or node.is_closing)
         ):
             # EXECUTION_COMPLETED is the gateway's signal that the active
-            # command run has finished for this node. Treat it as
-            # authoritative for our motion tracking and sync the cached
-            # position to the target so consumers don't briefly see a stale
-            # pre-move position when the IGNORE-mode position frames never
-            # updated it during travel. EXECUTION_FAILED leaves the position
-            # untouched because the device did not necessarily reach its
-            # target.
+            # command run has finished for this node and is therefore
+            # authoritative for our motion tracking.
+            #
+            # Only on a clean completion (COMMAND_COMPLETED_OK) can we
+            # additionally assume the device actually reached its target;
+            # in that case we sync the cached position so consumers don't
+            # briefly see a stale pre-move value when the IGNORE-mode
+            # position frames never updated it during travel. Other
+            # status_reply values mean the run was pre-empted before
+            # reaching the target (e.g. COMMAND_OVERRULED by a new
+            # command), so the position must stay at whatever the latest
+            # state frame established. EXECUTION_FAILED is similar — the
+            # device did not reach the target.
+            #
+            # Sync source preference: the CRSN payload itself carries the
+            # final main-parameter value, which is more up-to-date than
+            # the cached node.target if the matching state frame has not
+            # arrived yet. Fall back to node.target only when the payload
+            # is not a concrete MP value.
             if (
                 frame.run_status == RunStatus.EXECUTION_COMPLETED
-                and self._is_concrete_position(node.target)
+                and frame.status_reply == StatusReply.COMMAND_COMPLETED_OK
             ):
-                node_changed |= _set_node_property(node, "position", node.target)
+                synced_position: Position | None = None
+                if (
+                    frame.node_parameter == NodeParameter.MP.value
+                    and frame.parameter_value is not None
+                ):
+                    candidate = Position(position=frame.parameter_value)
+                    if self._is_concrete_position(candidate):
+                        synced_position = candidate
+                if synced_position is None and self._is_concrete_position(node.target):
+                    synced_position = node.target
+                if synced_position is not None:
+                    node_changed |= _set_node_property(
+                        node, "position", synced_position
+                    )
             node_changed |= self._clear_opening_device_motion(node)
             PYVLXLOG.debug(
                 "%s motion cleared after command run finished (%s)",

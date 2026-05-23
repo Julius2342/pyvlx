@@ -1229,19 +1229,20 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
             session_id=2,
             status_id=1,
             index_id=80,
-            node_parameter=0,
-            parameter_value=Parameter.UNKNOWN_VALUE,
+            node_parameter=NodeParameter.MP.value,
+            parameter_value=Position(position_percent=0).position,
             run_status=RunStatus.EXECUTION_COMPLETED,
-            status_reply=StatusReply.COMMAND_OVERRULED,
+            status_reply=StatusReply.COMMAND_COMPLETED_OK,
         )
 
         await self.node_updater.process_frame(command_status)
 
-        # EXECUTION_COMPLETED is the reliable end-of-command marker for gates
-        # whose position frames stay at IGNORE: motion must clear here, not
-        # wait for a (possibly never-arriving) DONE frame. The cached position
-        # must also follow the target so HA does not briefly report the wrong
-        # cover state from the stale pre-move position.
+        # COMMAND_COMPLETED_OK is the reliable clean-completion marker for
+        # gates whose position frames stayed at IGNORE: motion must clear
+        # here, not wait for a (possibly never-arriving) DONE frame. The
+        # cached position is synced from the CRSN payload's MP value so HA
+        # does not briefly report the wrong cover state from the stale
+        # pre-move position.
         self.assertFalse(device.is_opening)
         self.assertFalse(device.is_closing)
         self.assertEqual(device.position, Position(position_percent=0))
@@ -1301,19 +1302,20 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
             session_id=2,
             status_id=1,
             index_id=81,
-            node_parameter=0,
-            parameter_value=Parameter.UNKNOWN_VALUE,
+            node_parameter=NodeParameter.MP.value,
+            parameter_value=Position(position_percent=100).position,
             run_status=RunStatus.EXECUTION_COMPLETED,
-            status_reply=StatusReply.COMMAND_OVERRULED,
+            status_reply=StatusReply.COMMAND_COMPLETED_OK,
         )
 
         await self.node_updater.process_frame(command_status)
 
-        # EXECUTION_COMPLETED is the reliable end-of-command marker for gates
-        # whose position frames stay at IGNORE: motion must clear here, not
-        # wait for a (possibly never-arriving) DONE frame. The cached position
-        # must also follow the target so HA does not briefly report the wrong
-        # cover state from the stale pre-move position.
+        # COMMAND_COMPLETED_OK is the reliable clean-completion marker for
+        # gates whose position frames stayed at IGNORE: motion must clear
+        # here, not wait for a (possibly never-arriving) DONE frame. The
+        # cached position is synced from the CRSN payload's MP value so HA
+        # does not briefly report the wrong cover state from the stale
+        # pre-move position.
         self.assertFalse(device.is_closing)
         self.assertFalse(device.is_opening)
         self.assertEqual(device.position, Position(position_percent=100))
@@ -1688,14 +1690,13 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         # Verify after_update was NOT called when nothing changed
         mocked_node.after_update.assert_not_awaited()
 
-    async def test_command_run_status_completed_clears_opening_device_motion(self) -> None:
-        """Clear motion and sync cached position to target on EXECUTION_COMPLETED.
+    async def test_command_run_status_completed_clears_motion_and_syncs_position_from_payload(self) -> None:
+        """Clear motion and sync position from the CRSN payload's MP value.
 
         Reproduces the gate symptom where current_position stays IGNORE for the
         whole travel and the command-run-status frame is the only reliable end
-        marker. Without the position sync, HA briefly sees the stale pre-move
-        position (e.g. 0%) and reports the cover at the wrong end before the
-        next heartbeat sweep corrects it.
+        marker. The CRSN payload carries the final main-parameter value, which
+        is the most up-to-date source for the synced position.
         """
         gate = Gate(
             pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
@@ -1710,6 +1711,8 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         frame = FrameCommandRunStatusNotification()
         frame.index_id = 16
+        frame.node_parameter = NodeParameter.MP.value
+        frame.parameter_value = Position(position_percent=100).position
         frame.run_status = RunStatus.EXECUTION_COMPLETED
         frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
 
@@ -1722,14 +1725,12 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertIsNone(gate.estimated_completion)
         gate.after_update.assert_awaited_once()
 
-    async def test_command_run_status_overruled_still_clears_motion(self) -> None:
-        """COMMAND_OVERRULED with EXECUTION_COMPLETED clears motion and syncs position.
+    async def test_command_run_status_completed_falls_back_to_target_when_payload_unusable(self) -> None:
+        """Sync from node.target when the CRSN payload does not carry a concrete MP value.
 
-        EXECUTION_COMPLETED is treated as the authoritative end-of-command
-        marker regardless of the accompanying status_reply: any reply value
-        (including COMMAND_OVERRULED) ends the active command from our
-        motion-tracking perspective. Motion must clear and the cached
-        position must follow the target.
+        Some gateways send the COMPLETED notification with parameter_value =
+        UNKNOWN; in that case the cached node.target is the next-best source
+        for the post-move position.
         """
         gate = Gate(
             pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
@@ -1742,6 +1743,38 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         frame = FrameCommandRunStatusNotification()
         frame.index_id = 16
+        frame.node_parameter = NodeParameter.MP.value
+        frame.parameter_value = Parameter.UNKNOWN_VALUE
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(gate.is_closing)
+        self.assertEqual(gate.position, Position(position_percent=100))
+        gate.after_update.assert_awaited_once()
+
+    async def test_command_run_status_overruled_clears_motion_without_position_sync(self) -> None:
+        """COMMAND_OVERRULED clears motion but leaves the cached position untouched.
+
+        COMMAND_OVERRULED means the active run was pre-empted (e.g. by a new
+        command or a stop), so the device did not necessarily reach the
+        target. We must therefore only clear the motion flags and leave the
+        position for whatever follow-up state frame establishes.
+        """
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=0)
+        gate.target = Position(position_percent=100)
+        gate.is_closing = True
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.node_parameter = NodeParameter.MP.value
+        frame.parameter_value = Position(position_percent=100).position
         frame.run_status = RunStatus.EXECUTION_COMPLETED
         frame.status_reply = StatusReply.COMMAND_OVERRULED
 
@@ -1749,7 +1782,9 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
 
         self.assertFalse(gate.is_closing)
         self.assertFalse(gate.is_opening)
-        self.assertEqual(gate.position, Position(position_percent=100))
+        # Position stays at the pre-CRSN cached value because OVERRULED does
+        # not guarantee that the device reached node.target.
+        self.assertEqual(gate.position, Position(position_percent=0))
         gate.after_update.assert_awaited_once()
 
     async def test_command_run_status_failed_clears_motion_without_position_sync(self) -> None:
