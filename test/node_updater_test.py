@@ -1754,6 +1754,39 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertEqual(gate.position, Position(position_percent=100))
         gate.after_update.assert_awaited_once()
 
+    async def test_command_run_status_completed_tolerates_invalid_parameter_value(self) -> None:
+        """An out-of-range CRSN parameter_value must not crash the handler.
+
+        Defensive guard: unexpected raw values from the gateway are rejected
+        via Parameter.is_valid_int before constructing a Position. The
+        handler then falls back to node.target as the sync source.
+        """
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=0)
+        gate.target = Position(position_percent=100)
+        gate.is_closing = True
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.node_parameter = NodeParameter.MP.value
+        # Out of range for Parameter.is_valid_int: above MAX (51200) but
+        # not one of the recognised special markers (UNKNOWN_VALUE,
+        # IGNORE, CURRENT, TARGET, DUAL_SHUTTER_CURTAINS).
+        frame.parameter_value = 60000
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(gate.is_closing)
+        # Fell back to node.target since the payload value was invalid.
+        self.assertEqual(gate.position, Position(position_percent=100))
+        gate.after_update.assert_awaited_once()
+
     async def test_command_run_status_overruled_clears_motion_without_position_sync(self) -> None:
         """COMMAND_OVERRULED clears motion but leaves the cached position untouched.
 
