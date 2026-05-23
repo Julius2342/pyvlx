@@ -1820,6 +1820,63 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertEqual(gate.position, Position(position_percent=0))
         gate.after_update.assert_awaited_once()
 
+    async def test_stop_mid_travel_does_not_sync_position_via_followup_crsn(self) -> None:
+        """A stop mid-travel must not retroactively sync position to target.
+
+        Reproduces the live KLF200 STOP sequence on IGNORE-position
+        actuators: the original OPEN/CLOSE command is reported as
+        EXECUTION_COMPLETED + COMMAND_OVERRULED (motion cleared, no sync),
+        and the follow-up STOP command finishes as EXECUTION_COMPLETED +
+        COMMAND_COMPLETED_OK. The follow-up's COMMAND_COMPLETED_OK must not
+        cause a position sync, because the motion flags have already been
+        cleared by the OVERRULED handler — the gate is now stopped at an
+        intermediate physical position, not at node.target.
+        """
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        # Pre-move state: device closed, opening command in flight.
+        gate.position = Position(position_percent=100)
+        gate.target = Position(position_percent=0)
+        gate.is_opening = True
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        # First CRSN: original OPEN command is overruled by the STOP.
+        overrule_frame = FrameCommandRunStatusNotification()
+        overrule_frame.index_id = 16
+        overrule_frame.node_parameter = NodeParameter.MP.value
+        overrule_frame.parameter_value = Parameter.UNKNOWN_VALUE
+        overrule_frame.run_status = RunStatus.EXECUTION_COMPLETED
+        overrule_frame.status_reply = StatusReply.COMMAND_OVERRULED
+
+        await self.node_updater.process_frame(overrule_frame)
+
+        self.assertFalse(gate.is_opening)
+        self.assertFalse(gate.is_closing)
+        # Position stays at the stale pre-move cached value.
+        self.assertEqual(gate.position, Position(position_percent=100))
+
+        # Second CRSN: STOP command itself reports clean completion. The
+        # payload value is IGNORE because pyvlx issued the stop via
+        # CurrentPosition, and the gate does not report its concrete stopped
+        # position via this frame.
+        stop_frame = FrameCommandRunStatusNotification()
+        stop_frame.index_id = 16
+        stop_frame.node_parameter = NodeParameter.MP.value
+        stop_frame.parameter_value = Parameter.IGNORE
+        stop_frame.run_status = RunStatus.EXECUTION_COMPLETED
+        stop_frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(stop_frame)
+
+        # Motion stays cleared and position remains stale: the STOP's
+        # COMMAND_COMPLETED_OK must NOT trigger the sync path, because the
+        # motion flags were already False before this frame arrived.
+        self.assertFalse(gate.is_opening)
+        self.assertFalse(gate.is_closing)
+        self.assertEqual(gate.position, Position(position_percent=100))
+
     async def test_command_run_status_failed_clears_motion_without_position_sync(self) -> None:
         """Clear motion on EXECUTION_FAILED but keep the cached position untouched.
 
