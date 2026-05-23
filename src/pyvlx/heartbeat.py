@@ -82,14 +82,15 @@ class Heartbeat:
         # If nodes contain Blind or DualRollerShutter device, refresh orientation or upper/lower curtain positions because House Monitoring
         # delivers wrong values for FP1, FP2 and FP3 parameter
         for node in self.pyvlx.nodes:
-            # A StatusRequest issued to a node mid-travel makes the KLF200
-            # report the active ActivateScene/SetPosition command as
-            # COMMAND_OVERRULED with run_status = EXECUTION_COMPLETED, which
-            # downstream consumers cannot distinguish from a genuine limit-
-            # switch completion. Worse, on some actuators (gates, garage
-            # doors) the gateway actually halts the motion. Skip polling
-            # nodes that are currently moving; House Monitoring delivers the
-            # in-flight position updates anyway.
+            # A StatusRequest issued to a node mid-travel can make the
+            # KLF200 emit a run_status = EXECUTION_COMPLETED notification
+            # for the currently active command — sometimes with
+            # status_reply = COMMAND_OVERRULED. Downstream consumers
+            # cannot distinguish that from a genuine end-of-travel
+            # completion, and on some actuators (gates, garage doors) the
+            # gateway can additionally interrupt the motion. Skip polling
+            # nodes that are currently moving; House Monitoring delivers
+            # the in-flight position updates anyway.
             if isinstance(node, OpeningDevice) and (
                 node.is_opening or node.is_closing
             ):

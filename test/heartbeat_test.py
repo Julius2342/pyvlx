@@ -198,10 +198,10 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
     ) -> None:
         """Skip status polling for any OpeningDevice currently in motion.
 
-        Polling a node mid-travel makes the KLF200 overrule the active
-        command and can halt the device on some actuators, so the
-        heartbeat must skip any OpeningDevice with is_opening or
-        is_closing set.
+        Polling a node mid-travel can cause the KLF200 to report the
+        active command as completed prematurely and, on some actuators,
+        interrupt the motion. The heartbeat must therefore skip any
+        OpeningDevice with is_opening or is_closing set.
         """
         moving_gate = Gate(self.pyvlx, node_id=16, name="Gate", serial_number=None)
         moving_gate.is_closing = True

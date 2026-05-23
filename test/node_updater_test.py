@@ -1015,9 +1015,11 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
     async def test_closing_state_cleared_when_cached_position_reaches_closed_extreme_while_executing(self) -> None:
         """A lingering EXECUTING frame after the device reached the closed extreme must clear is_closing.
 
-        Reproduces the garage-door symptom where the gateway emits a final EXECUTING
-        frame with stale remaining_time > 0 after the limit switch trips; without
-        this escape the preserve branch would trap is_closing = True forever.
+        Defensive escape from the preserve branch: when the cached position
+        already matches the target at the closed extreme, an EXECUTING frame
+        with stale remaining_time > 0 must not keep is_closing = True. Without
+        this escape the preserve branch could otherwise trap is_closing forever
+        on such repeated frames.
         """
         device = OpeningDevice(
             pyvlx=self.pyvlx, node_id=81, name="Test garage"
@@ -1723,10 +1725,11 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
     async def test_command_run_status_overruled_still_clears_motion(self) -> None:
         """COMMAND_OVERRULED with EXECUTION_COMPLETED clears motion and syncs position.
 
-        The KLF200 reports COMMAND_OVERRULED when a gate hits its limit switch
-        and the gateway considers the close command 'overruled' by the physical
-        stop. From our point of view the command is over, so motion must clear
-        and the cached position must follow the target.
+        EXECUTION_COMPLETED is treated as the authoritative end-of-command
+        marker regardless of the accompanying status_reply: any reply value
+        (including COMMAND_OVERRULED) ends the active command from our
+        motion-tracking perspective. Motion must clear and the cached
+        position must follow the target.
         """
         gate = Gate(
             pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None

@@ -339,13 +339,14 @@ class NodeUpdater:
             and frame.run_status in (RunStatus.EXECUTION_COMPLETED, RunStatus.EXECUTION_FAILED)
             and (node.is_opening or node.is_closing)
         ):
-            # On EXECUTION_COMPLETED we can assume the device reached its target
-            # (the KLF200 ends gate/garage runs with COMMAND_OVERRULED at the
-            # limit switch, which is a physical completion proof). Sync the
-            # cached position to the target so consumers don't briefly see a
-            # stale pre-move position when the IGNORE-mode position frames
-            # never updated it. EXECUTION_FAILED leaves the position untouched
-            # because the device did not reach its target.
+            # EXECUTION_COMPLETED is the gateway's signal that the active
+            # command run has finished for this node. Treat it as
+            # authoritative for our motion tracking and sync the cached
+            # position to the target so consumers don't briefly see a stale
+            # pre-move position when the IGNORE-mode position frames never
+            # updated it during travel. EXECUTION_FAILED leaves the position
+            # untouched because the device did not necessarily reach its
+            # target.
             if (
                 frame.run_status == RunStatus.EXECUTION_COMPLETED
                 and self._is_concrete_position(node.target)
