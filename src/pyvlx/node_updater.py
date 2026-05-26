@@ -222,9 +222,14 @@ class NodeUpdater:
                 # the device as executing (observed on garage doors after the limit
                 # switch trips: a final EXECUTING frame can arrive with stale
                 # remaining_time > 0, which would otherwise trap is_closing/is_opening).
+                # Use the semantic Position.closed/open accessors so devices that report
+                # closed-with-tolerance (e.g. Velux SML, which does not necessarily hit
+                # exactly Parameter.MAX) still match the escape.
                 self._is_concrete_position(node.position)
-                and node.position.position == target.position
-                and (target.closed or target.open)
+                and (
+                    (target.closed and node.position.closed)
+                    or (target.open and node.position.open)
+                )
             )
         ):
             node.state_received_at = datetime.datetime.now()
@@ -364,17 +369,9 @@ class NodeUpdater:
                 and frame.status_reply == StatusReply.COMMAND_COMPLETED_OK
             ):
                 synced_position: Position | None = None
-                # Validate parameter_value via Parameter.is_valid_int before
-                # constructing a Position; otherwise an unexpected raw value
-                # from the gateway would raise PyVLXException out of the
-                # frame handler. Known special values (UNKNOWN_VALUE, IGNORE,
-                # CURRENT, TARGET, DUAL_SHUTTER_CURTAINS) pass validation but
-                # are filtered out by _is_concrete_position below and fall
-                # through to the node.target fallback.
                 if (
                     frame.node_parameter == NodeParameter.MP.value
                     and frame.parameter_value is not None
-                    and Parameter.is_valid_int(frame.parameter_value)
                 ):
                     candidate = Position(position=frame.parameter_value)
                     if self._is_concrete_position(candidate):
