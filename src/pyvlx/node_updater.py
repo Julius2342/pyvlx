@@ -6,7 +6,7 @@ from .api.frames import (
     FrameBase, FrameCommandRunStatusNotification,
     FrameGetAllNodesInformationNotification,
     FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
-from .const import NodeParameter, OperatingState, RunStatus
+from .const import NodeParameter, OperatingState, RunStatus, StatusReply
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG
 from .node import Node
@@ -212,7 +212,26 @@ class NodeUpdater:
                 node.estimated_completion.strftime("%Y-%m-%d %H:%M:%S"),
             )
 
-        elif frame_indicates_motion and target_is_concrete and (node.is_opening or node.is_closing):
+        elif (
+            frame_indicates_motion
+            and target_is_concrete
+            and (node.is_opening or node.is_closing)
+            and not (
+                # Cached position already reached an open/closed extreme that matches the
+                # target: treat the motion as complete even when the gateway still flags
+                # the device as executing (observed on garage doors after the limit
+                # switch trips: a final EXECUTING frame can arrive with stale
+                # remaining_time > 0, which would otherwise trap is_closing/is_opening).
+                # Use the semantic Position.closed/open accessors so devices that report
+                # closed-with-tolerance (e.g. Velux SML, which does not necessarily hit
+                # exactly Parameter.MAX) still match the escape.
+                self._is_concrete_position(node.position)
+                and (
+                    (target.closed and node.position.closed)
+                    or (target.open and node.position.open)
+                )
+            )
+        ):
             node.state_received_at = datetime.datetime.now()
             node.estimated_completion = (
                 node.state_received_at
@@ -313,6 +332,62 @@ class NodeUpdater:
         node_changed = False
         node_changed |= _set_node_property(node, "last_frame_status_reply", new_value=frame.status_reply)
         node_changed |= _set_node_property(node, "last_frame_run_status", new_value=frame.run_status)
+
+        # Gates and garage doors frequently keep current_position = IGNORE for the
+        # entire travel and only signal completion via this command-run-status
+        # frame (run_status = COMPLETED/FAILED). Without clearing motion here,
+        # is_opening/is_closing would only fall back to False on the next polled
+        # status sweep, leaving the entity stuck in opening/closing for up to a
+        # full heartbeat period.
+        if (
+            isinstance(node, OpeningDevice)
+            and frame.run_status in (RunStatus.EXECUTION_COMPLETED, RunStatus.EXECUTION_FAILED)
+            and (node.is_opening or node.is_closing)
+        ):
+            # EXECUTION_COMPLETED is the gateway's signal that the active
+            # command run has finished for this node and is therefore
+            # authoritative for our motion tracking.
+            #
+            # Only on a clean completion (COMMAND_COMPLETED_OK) can we
+            # additionally assume the device actually reached its target;
+            # in that case we sync the cached position so consumers don't
+            # briefly see a stale pre-move value when the IGNORE-mode
+            # position frames never updated it during travel. Other
+            # status_reply values mean the run was pre-empted before
+            # reaching the target (e.g. COMMAND_OVERRULED by a new
+            # command), so the position must stay at whatever the latest
+            # state frame established. EXECUTION_FAILED is similar — the
+            # device did not reach the target.
+            #
+            # Sync source preference: the CRSN payload itself carries the
+            # final main-parameter value, which is more up-to-date than
+            # the cached node.target if the matching state frame has not
+            # arrived yet. Fall back to node.target only when the payload
+            # is not a concrete MP value.
+            if (
+                frame.run_status == RunStatus.EXECUTION_COMPLETED
+                and frame.status_reply == StatusReply.COMMAND_COMPLETED_OK
+            ):
+                synced_position: Position | None = None
+                if (
+                    frame.node_parameter == NodeParameter.MP.value
+                    and frame.parameter_value is not None
+                ):
+                    candidate = Position(position=frame.parameter_value)
+                    if self._is_concrete_position(candidate):
+                        synced_position = candidate
+                if synced_position is None and self._is_concrete_position(node.target):
+                    synced_position = node.target
+                if synced_position is not None:
+                    node_changed |= _set_node_property(
+                        node, "position", synced_position
+                    )
+            node_changed |= self._clear_opening_device_motion(node)
+            PYVLXLOG.debug(
+                "%s motion cleared after command run finished (%s)",
+                node.name,
+                frame.run_status.name,
+            )
 
         if node_changed:
             await node.after_update()

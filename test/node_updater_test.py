@@ -1012,6 +1012,71 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertIsNotNone(device.estimated_completion)
         device.after_update.assert_not_awaited()
 
+    async def test_closing_state_cleared_when_cached_position_reaches_closed_extreme_while_executing(self) -> None:
+        """A lingering EXECUTING frame after the device reached the closed extreme must clear is_closing.
+
+        Defensive escape from the preserve branch: when the cached position
+        already matches the target at the closed extreme, an EXECUTING frame
+        with stale remaining_time > 0 must not keep is_closing = True. Without
+        this escape the preserve branch could otherwise trap is_closing forever
+        on such repeated frames.
+        """
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=81, name="Test garage"
+        )
+        device.position = Position(position_percent=100)
+        device.target = Position(position_percent=100)
+        device.is_closing = True
+        device.state_received_at = datetime.datetime.now()
+        device.estimated_completion = datetime.datetime.now()
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[81] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 81
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
+        frame.target = Position(position_percent=100)
+        frame.remaining_time = 2
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(device.is_closing)
+        self.assertFalse(device.is_opening)
+        self.assertIsNone(device.state_received_at)
+        self.assertIsNone(device.estimated_completion)
+        device.after_update.assert_awaited_once()
+
+    async def test_opening_state_cleared_when_cached_position_reaches_open_extreme_while_executing(self) -> None:
+        """Mirror of the closed-extreme case: lingering EXECUTING frames at the open extreme clear is_opening."""
+        device = OpeningDevice(
+            pyvlx=self.pyvlx, node_id=82, name="Test garage"
+        )
+        device.position = Position(position_percent=0)
+        device.target = Position(position_percent=0)
+        device.is_opening = True
+        device.state_received_at = datetime.datetime.now()
+        device.estimated_completion = datetime.datetime.now()
+        device.last_frame_state = OperatingState.EXECUTING
+        device.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[82] = device
+
+        frame = FrameNodeStatePositionChangedNotification()
+        frame.node_id = 82
+        frame.state = OperatingState.EXECUTING
+        frame.current_position = Position(position=Parameter.UNKNOWN_VALUE)
+        frame.target = Position(position_percent=0)
+        frame.remaining_time = 2
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(device.is_opening)
+        self.assertFalse(device.is_closing)
+        self.assertIsNone(device.state_received_at)
+        self.assertIsNone(device.estimated_completion)
+        device.after_update.assert_awaited_once()
+
     async def test_motion_direction_derived_from_cached_position_when_frame_position_unknown(self) -> None:
         """Frames with IGNORE/UNKNOWN current_position should derive direction from the cached node position."""
         device = OpeningDevice(
@@ -1164,16 +1229,23 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
             session_id=2,
             status_id=1,
             index_id=80,
-            node_parameter=0,
-            parameter_value=Parameter.UNKNOWN_VALUE,
+            node_parameter=NodeParameter.MP.value,
+            parameter_value=Position(position_percent=0).position,
             run_status=RunStatus.EXECUTION_COMPLETED,
-            status_reply=StatusReply.COMMAND_OVERRULED,
+            status_reply=StatusReply.COMMAND_COMPLETED_OK,
         )
 
         await self.node_updater.process_frame(command_status)
 
-        self.assertTrue(device.is_opening)
+        # COMMAND_COMPLETED_OK is the reliable clean-completion marker for
+        # gates whose position frames stayed at IGNORE: motion must clear
+        # here, not wait for a (possibly never-arriving) DONE frame. The
+        # cached position is synced from the CRSN payload's MP value so HA
+        # does not briefly report the wrong cover state from the stale
+        # pre-move position.
+        self.assertFalse(device.is_opening)
         self.assertFalse(device.is_closing)
+        self.assertEqual(device.position, Position(position_percent=0))
 
         done_frame = FrameNodeStatePositionChangedNotification()
         done_frame.node_id = 80
@@ -1190,7 +1262,7 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertEqual(device.target, Position(position_percent=0))
 
     async def test_gate_closing_live_sequence_keeps_direction_until_done(self) -> None:
-        """Live gate sequence should keep closing through IGNORE frames and stop on DONE."""
+        """Live gate sequence should keep closing through IGNORE frames and stop on COMPLETED/DONE."""
         device = OpeningDevice(pyvlx=self.pyvlx, node_id=81, name="Test gate")
         device.position = Position(position_percent=0)
         device.target = Position(position_percent=0)
@@ -1230,16 +1302,23 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
             session_id=2,
             status_id=1,
             index_id=81,
-            node_parameter=0,
-            parameter_value=Parameter.UNKNOWN_VALUE,
+            node_parameter=NodeParameter.MP.value,
+            parameter_value=Position(position_percent=100).position,
             run_status=RunStatus.EXECUTION_COMPLETED,
-            status_reply=StatusReply.COMMAND_OVERRULED,
+            status_reply=StatusReply.COMMAND_COMPLETED_OK,
         )
 
         await self.node_updater.process_frame(command_status)
 
-        self.assertTrue(device.is_closing)
+        # COMMAND_COMPLETED_OK is the reliable clean-completion marker for
+        # gates whose position frames stayed at IGNORE: motion must clear
+        # here, not wait for a (possibly never-arriving) DONE frame. The
+        # cached position is synced from the CRSN payload's MP value so HA
+        # does not briefly report the wrong cover state from the stale
+        # pre-move position.
+        self.assertFalse(device.is_closing)
         self.assertFalse(device.is_opening)
+        self.assertEqual(device.position, Position(position_percent=100))
 
         done_frame = FrameNodeStatePositionChangedNotification()
         done_frame.node_id = 81
@@ -1610,3 +1689,230 @@ class TestNodeUpdater(IsolatedAsyncioTestCase):
         self.assertEqual(mocked_node.last_frame_status_reply, StatusReply.COMMAND_COMPLETED_OK)
         # Verify after_update was NOT called when nothing changed
         mocked_node.after_update.assert_not_awaited()
+
+    async def test_command_run_status_completed_clears_motion_and_syncs_position_from_payload(self) -> None:
+        """Clear motion and sync position from the CRSN payload's MP value.
+
+        Reproduces the gate symptom where current_position stays IGNORE for the
+        whole travel and the command-run-status frame is the only reliable end
+        marker. The CRSN payload carries the final main-parameter value, which
+        is the most up-to-date source for the synced position.
+        """
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=0)
+        gate.target = Position(position_percent=100)
+        gate.is_closing = True
+        gate.state_received_at = datetime.datetime.now()
+        gate.estimated_completion = datetime.datetime.now()
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.node_parameter = NodeParameter.MP.value
+        frame.parameter_value = Position(position_percent=100).position
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(gate.is_closing)
+        self.assertFalse(gate.is_opening)
+        self.assertEqual(gate.position, Position(position_percent=100))
+        self.assertIsNone(gate.state_received_at)
+        self.assertIsNone(gate.estimated_completion)
+        gate.after_update.assert_awaited_once()
+
+    async def test_command_run_status_completed_falls_back_to_target_when_payload_unusable(self) -> None:
+        """Sync from node.target when the CRSN payload does not carry a concrete MP value.
+
+        Some gateways send the COMPLETED notification with parameter_value =
+        UNKNOWN; in that case the cached node.target is the next-best source
+        for the post-move position.
+        """
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=0)
+        gate.target = Position(position_percent=100)
+        gate.is_closing = True
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.node_parameter = NodeParameter.MP.value
+        frame.parameter_value = Parameter.UNKNOWN_VALUE
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(gate.is_closing)
+        self.assertEqual(gate.position, Position(position_percent=100))
+        gate.after_update.assert_awaited_once()
+
+    async def test_command_run_status_overruled_clears_motion_without_position_sync(self) -> None:
+        """COMMAND_OVERRULED clears motion but leaves the cached position untouched.
+
+        COMMAND_OVERRULED means the active run was pre-empted (e.g. by a new
+        command or a stop), so the device did not necessarily reach the
+        target. We must therefore only clear the motion flags and leave the
+        position for whatever follow-up state frame establishes.
+        """
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=0)
+        gate.target = Position(position_percent=100)
+        gate.is_closing = True
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.node_parameter = NodeParameter.MP.value
+        frame.parameter_value = Position(position_percent=100).position
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_OVERRULED
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(gate.is_closing)
+        self.assertFalse(gate.is_opening)
+        # Position stays at the pre-CRSN cached value because OVERRULED does
+        # not guarantee that the device reached node.target.
+        self.assertEqual(gate.position, Position(position_percent=0))
+        gate.after_update.assert_awaited_once()
+
+    async def test_stop_mid_travel_does_not_sync_position_via_followup_crsn(self) -> None:
+        """A stop mid-travel must not retroactively sync position to target.
+
+        Reproduces the live KLF200 STOP sequence on IGNORE-position
+        actuators: the original OPEN/CLOSE command is reported as
+        EXECUTION_COMPLETED + COMMAND_OVERRULED (motion cleared, no sync),
+        and the follow-up STOP command finishes as EXECUTION_COMPLETED +
+        COMMAND_COMPLETED_OK. The follow-up's COMMAND_COMPLETED_OK must not
+        cause a position sync, because the motion flags have already been
+        cleared by the OVERRULED handler — the gate is now stopped at an
+        intermediate physical position, not at node.target.
+        """
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        # Pre-move state: device closed, opening command in flight.
+        gate.position = Position(position_percent=100)
+        gate.target = Position(position_percent=0)
+        gate.is_opening = True
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        # First CRSN: original OPEN command is overruled by the STOP.
+        overrule_frame = FrameCommandRunStatusNotification()
+        overrule_frame.index_id = 16
+        overrule_frame.node_parameter = NodeParameter.MP.value
+        overrule_frame.parameter_value = Parameter.UNKNOWN_VALUE
+        overrule_frame.run_status = RunStatus.EXECUTION_COMPLETED
+        overrule_frame.status_reply = StatusReply.COMMAND_OVERRULED
+
+        await self.node_updater.process_frame(overrule_frame)
+
+        self.assertFalse(gate.is_opening)
+        self.assertFalse(gate.is_closing)
+        # Position stays at the stale pre-move cached value.
+        self.assertEqual(gate.position, Position(position_percent=100))
+
+        # Second CRSN: STOP command itself reports clean completion. The
+        # payload value is IGNORE because pyvlx issued the stop via
+        # CurrentPosition, and the gate does not report its concrete stopped
+        # position via this frame.
+        stop_frame = FrameCommandRunStatusNotification()
+        stop_frame.index_id = 16
+        stop_frame.node_parameter = NodeParameter.MP.value
+        stop_frame.parameter_value = Parameter.IGNORE
+        stop_frame.run_status = RunStatus.EXECUTION_COMPLETED
+        stop_frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(stop_frame)
+
+        # Motion stays cleared and position remains stale: the STOP's
+        # COMMAND_COMPLETED_OK must NOT trigger the sync path, because the
+        # motion flags were already False before this frame arrived.
+        self.assertFalse(gate.is_opening)
+        self.assertFalse(gate.is_closing)
+        self.assertEqual(gate.position, Position(position_percent=100))
+
+    async def test_command_run_status_failed_clears_motion_without_position_sync(self) -> None:
+        """Clear motion on EXECUTION_FAILED but keep the cached position untouched.
+
+        On failure we cannot assume the device reached its target, so the
+        cached position must stay as it was. The next status sweep will
+        provide the real position.
+        """
+        garage = GarageDoor(
+            pyvlx=self.pyvlx, node_id=17, name="Test garage", serial_number=None
+        )
+        garage.position = Position(position_percent=0)
+        garage.target = Position(position_percent=100)
+        garage.is_closing = True
+        garage.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[17] = garage
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 17
+        frame.run_status = RunStatus.EXECUTION_FAILED
+        frame.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(garage.is_closing)
+        self.assertFalse(garage.is_opening)
+        self.assertEqual(garage.position, Position(position_percent=0))
+        garage.after_update.assert_awaited_once()
+
+    async def test_command_run_status_active_keeps_motion(self) -> None:
+        """EXECUTION_ACTIVE indicates the command is still running — motion must stay."""
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=0)
+        gate.target = Position(position_percent=100)
+        gate.is_closing = True
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.run_status = RunStatus.EXECUTION_ACTIVE
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertTrue(gate.is_closing)
+        self.assertFalse(gate.is_opening)
+        gate.after_update.assert_awaited_once()
+
+    async def test_command_run_status_completed_idle_device_keeps_idle(self) -> None:
+        """An OpeningDevice without active motion stays idle on EXECUTION_COMPLETED."""
+        gate = Gate(
+            pyvlx=self.pyvlx, node_id=16, name="Test gate", serial_number=None
+        )
+        gate.position = Position(position_percent=100)
+        gate.is_opening = False
+        gate.is_closing = False
+        gate.after_update = AsyncMock()  # type: ignore[method-assign]
+        self.pyvlx.nodes[16] = gate
+
+        frame = FrameCommandRunStatusNotification()
+        frame.index_id = 16
+        frame.run_status = RunStatus.EXECUTION_COMPLETED
+        frame.status_reply = StatusReply.COMMAND_COMPLETED_OK
+
+        await self.node_updater.process_frame(frame)
+
+        self.assertFalse(gate.is_closing)
+        self.assertFalse(gate.is_opening)
+        # last_frame_run_status / status_reply still changed → after_update is called.
+        gate.after_update.assert_awaited_once()

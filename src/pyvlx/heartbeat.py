@@ -7,7 +7,7 @@ from .api import GetState
 from .api.status_request import StatusRequest
 from .exception import PyVLXException
 from .log import PYVLXLOG
-from .opening_device import Blind, DualRollerShutter
+from .opening_device import Blind, DualRollerShutter, OpeningDevice
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -82,6 +82,23 @@ class Heartbeat:
         # If nodes contain Blind or DualRollerShutter device, refresh orientation or upper/lower curtain positions because House Monitoring
         # delivers wrong values for FP1, FP2 and FP3 parameter
         for node in self.pyvlx.nodes:
+            # A StatusRequest issued to a node mid-travel can make the
+            # KLF200 emit a run_status = EXECUTION_COMPLETED notification
+            # for the currently active command — sometimes with
+            # status_reply = COMMAND_OVERRULED. Downstream consumers
+            # cannot distinguish that from a genuine end-of-travel
+            # completion, and on some actuators (gates, garage doors) the
+            # gateway can additionally interrupt the motion. Skip polling
+            # nodes that are currently moving; House Monitoring delivers
+            # the in-flight position updates anyway.
+            if isinstance(node, OpeningDevice) and (
+                node.is_opening or node.is_closing
+            ):
+                PYVLXLOG.debug(
+                    "Heartbeat: skipping node %s while it is in motion",
+                    node.name,
+                )
+                continue
             if isinstance(node, (Blind, DualRollerShutter)) or self.load_all_states:
                 status_request = StatusRequest(self.pyvlx, node.node_id)
                 await status_request.do_api_call()
