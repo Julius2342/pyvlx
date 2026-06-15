@@ -26,7 +26,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest==9.0.3",
+    "pytest==9.1.0",
     "pytest-cov==7.1.0",
     "mypy==2.1.0",
     "types-PyYAML==6.0.12.20260518",
@@ -35,7 +35,7 @@ dev = [
     "flake8-isort==7.0.0",
     "flake8-pyproject==1.2.4",
     "pydocstyle==6.3.0",
-    "pylint==4.0.5",
+    "pylint==4.0.6",
 ]
 release = [
     "build==1.5.0",
