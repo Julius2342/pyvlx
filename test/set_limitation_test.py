@@ -82,8 +82,10 @@ class TestSetLimitation(unittest.IsolatedAsyncioTestCase):
     async def test_handle_session_finished_frame(self) -> None:
         """Test handle frame."""
         limit = SetLimitation(self.pyvlx, 1)
+        limit.session_id = 123
 
         frame = FrameSessionFinishedNotification()
+        frame.session_id = 123
         self.assertTrue(await limit.handle_frame(frame))
         self.assertFalse(limit.success)
 
