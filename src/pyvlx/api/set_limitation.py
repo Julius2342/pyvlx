@@ -2,13 +2,12 @@
 from typing import TYPE_CHECKING
 
 from ..const import LimitationTime
-
 from ..parameter import IgnorePosition, Position
 from .api_event import ApiEvent
 from .frames import (
-    FrameBase, FrameGetLimitationStatusNotification, FrameSessionFinishedNotification,
-    FrameSetLimitationConfirmation, FrameSetLimitationRequest,
-    SetLimitationRequestStatus)
+    FrameBase, FrameGetLimitationStatusNotification,
+    FrameSessionFinishedNotification, FrameSetLimitationConfirmation,
+    FrameSetLimitationRequest, SetLimitationRequestStatus)
 from .session_id import get_new_session_id
 
 if TYPE_CHECKING:
@@ -48,7 +47,7 @@ class SetLimitation(ApiEvent):
         if isinstance(frame, FrameSessionFinishedNotification) and frame.session_id == self.session_id:
             # The session finished without us having seen a notification frame with the new limitation values, so
             # we consider the API call complete at this point.
-            # Success remains False, since we never received the notification frame with the new values. 
+            # Success remains False, since we never received the notification frame with the new values.
             # We've most likely seen a FrameCommandRunStatusNotification in between the confirmation and
             # the session finished notification, which indicates that the command was not accepted by the device.
             return True
