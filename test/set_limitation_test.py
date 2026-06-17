@@ -3,6 +3,8 @@ import unittest
 from unittest.mock import MagicMock
 
 from pyvlx import PyVLX
+from pyvlx.api.frames.frame_command_send import FrameSessionFinishedNotification
+from pyvlx.api.frames.frame_get_limitation import FrameGetLimitationStatusNotification
 from pyvlx.api.frames.frame_set_limitation import (
     FrameSetLimitationConfirmation, FrameSetLimitationRequest,
     SetLimitationRequestStatus)
@@ -20,20 +22,78 @@ class TestSetLimitation(unittest.IsolatedAsyncioTestCase):
 
     async def test_handle_frames_accepted(self) -> None:
         """Test handle frame."""
+        # command accepted does not mean it was successful, neither was the API call completed.
         limit = SetLimitation(self.pyvlx, 1)
+        limit.session_id = 123
 
         frame = FrameSetLimitationConfirmation()
+        frame.session_id = 123
         frame.status = SetLimitationRequestStatus.ACCEPTED
+        self.assertFalse(await limit.handle_frame(frame))
+        self.assertFalse(limit.success)
+
+    async def test_handle_request_status_frame_rejected(self) -> None:
+        """Test handle frame."""
+        limit = SetLimitation(self.pyvlx, 1)
+        limit.session_id = 123
+
+        frame = FrameSetLimitationConfirmation()
+        frame.session_id = 123
+        frame.status = SetLimitationRequestStatus.REJECTED
+        self.assertTrue(await limit.handle_frame(frame))
+        self.assertFalse(limit.success)
+
+    async def test_handle_request_status_frame_rejected_wrong_session_id(self) -> None:
+        """Test handle frame."""
+        # frames with wrong session id should be ignored, so the API call is not completed and success remains False.
+        limit = SetLimitation(self.pyvlx, 1)
+        limit.session_id = 123
+
+        frame = FrameSetLimitationConfirmation()
+        frame.session_id = 456
+        frame.status = SetLimitationRequestStatus.REJECTED
+
+        self.assertFalse(await limit.handle_frame(frame))
+        self.assertFalse(limit.success)
+
+    async def test_handle_limits_received_frame(self) -> None:
+        """Test handle frame."""
+        limit = SetLimitation(self.pyvlx, 1)
+        limit.session_id = 123
+
+        frame = FrameGetLimitationStatusNotification()
+        frame.session_id = 123
         self.assertTrue(await limit.handle_frame(frame))
         self.assertTrue(limit.success)
 
-    async def test_handle_frame_rejected(self) -> None:
+    async def test_handle_limits_received_frame_wrong_session_id(self) -> None:
+        """Test handle frame."""
+        # frames with wrong session id should be ignored, so the API call is not completed and success remains False.
+        limit = SetLimitation(self.pyvlx, 1)
+        limit.session_id = 123
+
+        frame = FrameGetLimitationStatusNotification()
+        frame.session_id = 456
+        self.assertFalse(await limit.handle_frame(frame))
+        self.assertFalse(limit.success)
+
+    async def test_handle_session_finished_frame(self) -> None:
         """Test handle frame."""
         limit = SetLimitation(self.pyvlx, 1)
 
-        frame = FrameSetLimitationConfirmation()
-        frame.status = SetLimitationRequestStatus.REJECTED
+        frame = FrameSessionFinishedNotification()
         self.assertTrue(await limit.handle_frame(frame))
+        self.assertFalse(limit.success)
+
+    async def test_handle_session_finished_frame_wrong_session_id(self) -> None:
+        """Test handle frame."""
+        # frames with wrong session id should be ignored, so the API call is not completed and success remains False.
+        limit = SetLimitation(self.pyvlx, 1)
+        limit.session_id = 123
+
+        frame = FrameSessionFinishedNotification()
+        frame.session_id = 456
+        self.assertFalse(await limit.handle_frame(frame))
         self.assertFalse(limit.success)
 
     def test_request_frame(self) -> None:

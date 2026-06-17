@@ -214,7 +214,7 @@ class OpeningDevice(Node):
         )
         await command_set_limitation.do_api_call()
         if not command_set_limitation.success:
-            raise PyVLXException("Unable to set limitations")
+            raise PyVLXException(f"Unable to set limitations for node_id {self.node_id}")
         self.limitation_min = position_min
         self.limitation_max = position_max
         await self.after_update()
@@ -228,7 +228,7 @@ class OpeningDevice(Node):
         )
         await command_set_limitation.do_api_call()
         if not command_set_limitation.success:
-            raise PyVLXException("Unable to clear limitations")
+            raise PyVLXException(f"Unable to clear limitations for node_id {self.node_id}")
         self.limitation_min = IgnorePosition()
         self.limitation_max = IgnorePosition()
         await self.after_update()
@@ -242,7 +242,7 @@ class OpeningDevice(Node):
         )
         await command_get_limitation.do_api_call()
         if not command_get_limitation.success:
-            raise PyVLXException("Unable to get minimum limitation")
+            raise PyVLXException(f"Unable to get minimum limitation for node_id {self.node_id}")
 
         self.limitation_min = Position(position_percent=command_get_limitation.min_value)
 
@@ -257,7 +257,7 @@ class OpeningDevice(Node):
         )
         await command_get_limitation.do_api_call()
         if not command_get_limitation.success:
-            raise PyVLXException("Unable to get maximum limitation")
+            raise PyVLXException(f"Unable to get maximum limitation for node_id {self.node_id}")
 
         self.limitation_max = Position(position_percent=command_get_limitation.max_value)
 

@@ -1,12 +1,13 @@
 """Module for setting limitation value."""
 from typing import TYPE_CHECKING
 
-from pyvlx.const import LimitationTime, Originator
+from ..const import LimitationTime
 
 from ..parameter import IgnorePosition, Position
 from .api_event import ApiEvent
 from .frames import (
-    FrameBase, FrameSetLimitationConfirmation, FrameSetLimitationRequest,
+    FrameBase, FrameGetLimitationStatusNotification, FrameSessionFinishedNotification,
+    FrameSetLimitationConfirmation, FrameSetLimitationRequest,
     SetLimitationRequestStatus)
 from .session_id import get_new_session_id
 
@@ -27,18 +28,29 @@ class SetLimitation(ApiEvent):
         self.limitation_value_min = limitation_value_min
         self.limitation_value_max = limitation_value_max
         self.success = False
-        self.notification_frame: FrameSetLimitationConfirmation | None = None
         self.session_id: int | None = None
-        self.originator: Originator | None = None
         self.limitation_time = limitation_time
 
     async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""
-        if isinstance(frame, FrameSetLimitationConfirmation):
+        if isinstance(frame, FrameSetLimitationConfirmation) and frame.session_id == self.session_id:
             if frame.status == SetLimitationRequestStatus.REJECTED:
+                # The request was rejected, so success is False. There is also no point in waiting
+                # for a completion notification, since the command was not accepted, so we can consider
+                # the API call complete at this point and return True to stop waiting for further frames.
                 self.success = False
-            else:
-                self.success = True
+                return True
+        if isinstance(frame, FrameGetLimitationStatusNotification) and frame.session_id == self.session_id:
+            # received a notification frame with the new limitation values, so we can consider
+            # the API call successful and complete at this point. (see Spec section 10.5.4)
+            self.success = True
+            return True
+        if isinstance(frame, FrameSessionFinishedNotification) and frame.session_id == self.session_id:
+            # The session finished without us having seen a notification frame with the new limitation values, so
+            # we consider the API call complete at this point.
+            # Success remains False, since we never received the notification frame with the new values. 
+            # We've most likely seen a FrameCommandRunStatusNotification in between the confirmation and
+            # the session finished notification, which indicates that the command was not accepted by the device.
             return True
         return False
 
