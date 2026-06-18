@@ -32,19 +32,21 @@ class SetLimitation(ApiEvent):
 
     async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""
-        if isinstance(frame, FrameSetLimitationConfirmation) and frame.session_id == self.session_id:
-            if frame.status == SetLimitationRequestStatus.REJECTED:
-                # The request was rejected, so success is False. There is also no point in waiting
-                # for a completion notification, since the command was not accepted, so we can consider
-                # the API call complete at this point and return True to stop waiting for further frames.
-                self.success = False
-                return True
-        if isinstance(frame, FrameGetLimitationStatusNotification) and frame.session_id == self.session_id:
+        if hasattr(frame, "session_id") and frame.session_id != self.session_id:
+            # This frame has a session id, but it doesn't match the one of this API call, so ignore it.
+            return False
+        if isinstance(frame, FrameSetLimitationConfirmation) and frame.status == SetLimitationRequestStatus.REJECTED:
+            # The request was rejected, so success is False. There is also no point in waiting
+            # for a completion notification, since the command was not accepted, so we can consider
+            # the API call complete at this point and return True to stop waiting for further frames.
+            self.success = False
+            return True
+        if isinstance(frame, FrameGetLimitationStatusNotification):
             # received a notification frame with the new limitation values, so we can consider
             # the API call successful and complete at this point. (see Spec section 10.5.4)
             self.success = True
             return True
-        if isinstance(frame, FrameSessionFinishedNotification) and frame.session_id == self.session_id:
+        if isinstance(frame, FrameSessionFinishedNotification):
             # The session finished without us having seen a notification frame with the new limitation values, so
             # we consider the API call complete at this point.
             # Success remains False, since we never received the notification frame with the new values.
