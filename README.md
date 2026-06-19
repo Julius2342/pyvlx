@@ -24,7 +24,6 @@
 | src/pyvlx/api/leave\_learn\_state.py                                        |       17 |        9 |        2 |        0 |     42% |19-21, 25-29, 33 |
 | src/pyvlx/api/password\_enter.py                                            |       20 |       12 |        6 |        0 |     31% |20-22, 26-35, 39 |
 | src/pyvlx/api/reboot.py                                                     |       17 |        9 |        2 |        0 |     42% |19-21, 25-29, 33 |
-| src/pyvlx/api/set\_limitation.py                                            |       27 |        1 |        4 |        1 |     94% |        43 |
 | src/pyvlx/api/set\_node\_name.py                                            |       16 |        9 |        2 |        0 |     39% |18-21, 25-28, 32 |
 | src/pyvlx/api/status\_request.py                                            |       22 |       14 |        4 |        0 |     31% |19-23, 27-40, 44-45 |
 | src/pyvlx/api/wink\_send.py                                                 |       19 |        2 |        2 |        0 |     90% |     46-47 |
@@ -43,9 +42,9 @@
 | src/pyvlx/parameter.py                                                      |      215 |       13 |       70 |        7 |     92% |114, 116, 118, 120, 165-169, 363, 365, 367, 392 |
 | src/pyvlx/pyvlx.py                                                          |       79 |       41 |       10 |        0 |     43% |12-13, 60-76, 80-84, 88, 92-93, 97-98, 102-114, 118, 122, 126-129 |
 | src/pyvlx/scenes.py                                                         |       38 |        6 |       20 |        0 |     83% |     55-60 |
-| **TOTAL**                                                                   | **4072** |  **598** |  **760** |   **48** | **83%** |           |
+| **TOTAL**                                                                   | **4075** |  **597** |  **764** |   **47** | **83%** |           |
 
-44 files skipped due to complete coverage.
+45 files skipped due to complete coverage.
 
 
 ## Setup coverage badge
