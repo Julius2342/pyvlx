@@ -4,7 +4,6 @@ from contextlib import suppress
 from typing import TYPE_CHECKING
 
 from .api import GetState
-from .api.status_request import StatusRequest
 from .exception import PyVLXException
 from .log import PYVLXLOG
 from .opening_device import Blind, DualRollerShutter, OpeningDevice
@@ -100,7 +99,6 @@ class Heartbeat:
                 )
                 continue
             if isinstance(node, (Blind, DualRollerShutter)) or self.load_all_states:
-                status_request = StatusRequest(self.pyvlx, node.node_id)
-                await status_request.do_api_call()
+                await node.update_status()
                 # give user requests a chance
                 await asyncio.sleep(0.5)

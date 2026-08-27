@@ -7,6 +7,8 @@ and roller shutters.
 """
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, List
 
+from pyvlx.api.status_request import StatusRequest
+
 from .api import SetNodeName, WinkSend
 from .const import OperatingState, RunStatus, StatusReply, WinkTime
 from .exception import PyVLXException
@@ -86,6 +88,11 @@ class Node:
         if not set_node_name.success:
             raise PyVLXException("Unable to rename node")
         self.name = name
+
+    async def update_status(self) -> None:
+        """Update node status from gateway."""
+        status_request = StatusRequest(self.pyvlx, self.node_id)
+        await status_request.do_api_call()
 
     async def wink(self, wink_time: WinkTime = WinkTime.BY_MANUFACTURER, wait_for_completion: bool = True) -> None:
         """Identify node by making it wink."""

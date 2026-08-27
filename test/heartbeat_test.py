@@ -2,7 +2,7 @@
 import asyncio
 from collections.abc import Coroutine
 from unittest import IsolatedAsyncioTestCase
-from unittest.mock import AsyncMock, MagicMock, call, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from pyvlx import PyVLX
 from pyvlx.exception import PyVLXException
@@ -119,16 +119,16 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
             await heartbeat.pulse()
 
     @patch("pyvlx.heartbeat.asyncio.sleep", new_callable=AsyncMock)
-    @patch("pyvlx.heartbeat.StatusRequest")
     @patch("pyvlx.heartbeat.GetState")
     async def test_pulse_loads_only_blind_nodes_when_configured(
         self,
         get_state_cls: MagicMock,
-        status_request_cls: MagicMock,
         sleep_mock: AsyncMock,
     ) -> None:
         """Test pulse() requests status only for blind-type nodes when load_all_states is disabled."""
-        blind = Blind(self.pyvlx, node_id=1, name="Blind", serial_number=None)
+        blind = MagicMock(spec=Blind)
+        blind.is_opening = False
+        blind.is_closing = False
         non_blind = MagicMock()
         non_blind.node_id = 2
         self.pyvlx.nodes = [blind, non_blind]
@@ -138,31 +138,27 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         get_state.success = True
         get_state_cls.return_value = get_state
 
-        status_request = MagicMock()
-        status_request.do_api_call = AsyncMock()
-        status_request_cls.return_value = status_request
-
         heartbeat = Heartbeat(self.pyvlx, load_all_states=False)
         await heartbeat.pulse()
 
-        status_request_cls.assert_called_once_with(self.pyvlx, 1)
-        status_request.do_api_call.assert_awaited_once()
+        blind.update_status.assert_awaited_once()
+        non_blind.update_status.assert_not_called()
         sleep_mock.assert_awaited_once_with(0.5)
 
     @patch("pyvlx.heartbeat.asyncio.sleep", new_callable=AsyncMock)
-    @patch("pyvlx.heartbeat.StatusRequest")
     @patch("pyvlx.heartbeat.GetState")
     async def test_pulse_loads_all_nodes_when_enabled(
         self,
         get_state_cls: MagicMock,
-        status_request_cls: MagicMock,
         sleep_mock: AsyncMock,
     ) -> None:
         """Test pulse() requests status for every node when load_all_states is enabled."""
-        node_1 = MagicMock()
-        node_1.node_id = 11
-        node_2 = MagicMock()
-        node_2.node_id = 12
+        node_1 = AsyncMock()
+        node_1.is_closing = False
+        node_1.is_opening = False
+        node_2 = AsyncMock()
+        node_2.is_closing = False
+        node_2.is_opening = False
         self.pyvlx.nodes = [node_1, node_2]
 
         get_state = MagicMock()
@@ -170,30 +166,18 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         get_state.success = True
         get_state_cls.return_value = get_state
 
-        status_request_1 = MagicMock()
-        status_request_1.do_api_call = AsyncMock()
-        status_request_2 = MagicMock()
-        status_request_2.do_api_call = AsyncMock()
-        status_request_cls.side_effect = [status_request_1, status_request_2]
-
         heartbeat = Heartbeat(self.pyvlx, load_all_states=True)
         await heartbeat.pulse()
 
-        self.assertEqual(
-            status_request_cls.call_args_list,
-            [call(self.pyvlx, 11), call(self.pyvlx, 12)],
-        )
-        status_request_1.do_api_call.assert_awaited_once()
-        status_request_2.do_api_call.assert_awaited_once()
+        assert node_1.update_status.await_count == 1
+        assert node_2.update_status.await_count == 1
         self.assertEqual(sleep_mock.await_count, 2)
 
     @patch("pyvlx.heartbeat.asyncio.sleep", new_callable=AsyncMock)
-    @patch("pyvlx.heartbeat.StatusRequest")
     @patch("pyvlx.heartbeat.GetState")
     async def test_pulse_skips_opening_devices_in_motion(
         self,
         get_state_cls: MagicMock,
-        status_request_cls: MagicMock,
         sleep_mock: AsyncMock,
     ) -> None:
         """Skip status polling for any OpeningDevice currently in motion.
@@ -203,10 +187,11 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         interrupt the motion. The heartbeat must therefore skip any
         OpeningDevice with is_opening or is_closing set.
         """
-        moving_gate = Gate(self.pyvlx, node_id=16, name="Gate", serial_number=None)
+        moving_gate = MagicMock(spec=Gate)
         moving_gate.is_closing = True
-        idle_node = MagicMock()
-        idle_node.node_id = 17
+        moving_gate.is_opening = False
+        moving_gate.name = "Moving Gate"
+        idle_node = AsyncMock()
         self.pyvlx.nodes = [moving_gate, idle_node]
 
         get_state = MagicMock()
@@ -214,14 +199,11 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         get_state.success = True
         get_state_cls.return_value = get_state
 
-        status_request = MagicMock()
-        status_request.do_api_call = AsyncMock()
-        status_request_cls.return_value = status_request
-
         heartbeat = Heartbeat(self.pyvlx, load_all_states=True)
         await heartbeat.pulse()
 
         # Only the idle node was polled; the moving gate was skipped.
-        status_request_cls.assert_called_once_with(self.pyvlx, 17)
-        status_request.do_api_call.assert_awaited_once()
+        idle_node.update_status.assert_awaited_once()
+        moving_gate.update_status.assert_not_called()
+
         sleep_mock.assert_awaited_once_with(0.5)
