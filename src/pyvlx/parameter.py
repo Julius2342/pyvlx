@@ -1,5 +1,4 @@
 """Module for Position class."""
-from typing import Dict
 
 from .const import NodeParameter
 from .exception import PyVLXException
@@ -393,4 +392,4 @@ class DualRollerShutterPosition(Position):
 
 
 # Dict mapping NodeParameter enum values to Parameter values.
-FunctionalParams = Dict[NodeParameter, Parameter]
+FunctionalParams = dict[NodeParameter, Parameter]

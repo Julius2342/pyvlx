@@ -1,5 +1,6 @@
 """Module for storing nodes."""
-from typing import TYPE_CHECKING, Iterator, List
+from collections.abc import Iterator
+from typing import TYPE_CHECKING
 
 from .api import GetAllNodesInformation, GetNodeInformation
 from .exception import PyVLXException
@@ -17,7 +18,7 @@ class Nodes:
     def __init__(self, pyvlx: "PyVLX"):
         """Initialize Nodes object."""
         self.pyvlx = pyvlx
-        self.__nodes: List[Node] = []
+        self.__nodes: list[Node] = []
 
     def __iter__(self) -> Iterator[Node]:
         """Iterate."""
@@ -96,7 +97,7 @@ class Nodes:
     def _find_matching_existing(
         self,
         loaded: Node,
-        used_existing: List[Node],
+        used_existing: list[Node],
     ) -> Node | None:
         """Find existing node matching loaded node identity.
 
@@ -149,14 +150,14 @@ class Nodes:
         if not get_all_nodes_information.success:
             raise PyVLXException("Unable to retrieve node information")
 
-        loaded_nodes: List[Node] = []
+        loaded_nodes: list[Node] = []
         for notification_frame in get_all_nodes_information.notification_frames:
             node = convert_frame_to_node(self.pyvlx, notification_frame)
             if node is not None:
                 loaded_nodes.append(node)
 
-        next_nodes: List[Node] = []
-        used_existing: List[Node] = []
+        next_nodes: list[Node] = []
+        used_existing: list[Node] = []
 
         for loaded_node in loaded_nodes:
             existing = self._find_matching_existing(loaded_node, used_existing)

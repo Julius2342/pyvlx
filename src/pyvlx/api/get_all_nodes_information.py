@@ -1,5 +1,5 @@
 """Module for retrieving node information from API."""
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from pyvlx.log import PYVLXLOG
 
@@ -22,7 +22,7 @@ class GetAllNodesInformation(ApiEvent):
         super().__init__(pyvlx=pyvlx)
         self.number_of_nodes = 0
         self.success = False
-        self.notification_frames: List[FrameGetAllNodesInformationNotification] = []
+        self.notification_frames: list[FrameGetAllNodesInformationNotification] = []
 
     async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""
