@@ -5,8 +5,8 @@ Node object is an interface class and should
 be derived by other objects like window openers
 and roller shutters.
 """
-from typing import TYPE_CHECKING, Any
 from collections.abc import Awaitable, Callable
+from typing import TYPE_CHECKING, Any
 
 from .api import SetNodeName, WinkSend
 from .const import OperatingState, RunStatus, StatusReply, WinkTime
