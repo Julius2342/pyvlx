@@ -30,7 +30,7 @@ dev = [
     "pytest-cov==7.1.0",
     "mypy==2.3.1",
     "types-PyYAML==6.0.12.20260815",
-    "isort==8.0.1",
+    "isort==9.0.1",
     "flake8==7.3.0",
     "flake8-isort==7.0.0",
     "flake8-pyproject==1.2.4",
