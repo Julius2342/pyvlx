@@ -7,8 +7,6 @@ all:
 	@echo ""
 	@echo "test            -- execute test suite"
 	@echo ""
-	@echo "flake8          -- run flake8 checks"
-	@echo ""
 	@echo "mypy            -- run mypy checks"
 	@echo ""
 	@echo "pylint          -- run pylint tests"
@@ -25,10 +23,7 @@ all:
 test:
 	pytest
 
-ci: ruff flake8 pylint mypy test
-
-flake8:
-	@flake8
+ci: ruff pylint mypy test
 
 mypy:
 	@mypy src/pyvlx

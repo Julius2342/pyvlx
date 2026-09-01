@@ -30,8 +30,6 @@ dev = [
     "pytest-cov==7.1.0",
     "mypy==2.3.1",
     "types-PyYAML==6.0.12.20260815",
-    "flake8==7.3.0",
-    "flake8-pyproject==1.2.4",
     "pylint==4.0.7",
     "ruff>=0.16.5",
 ]
@@ -72,10 +70,11 @@ check_untyped_defs = true
 
 [tool.ruff]
 line-length = 160
-exclude = ["_version.py"]
+extend-exclude = ["_version.py"]
 
 [tool.ruff.lint]
-select = ["D", "I"]
+select = ["D", "I", "E", "W", "F"]
+ignore = ["E203", "E226"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "pep257"
@@ -111,11 +110,6 @@ reports = false
 indent-string = "    "
 max-line-length = 160
 max-positional-arguments = 7
-
-[tool.flake8]
-ignore = ["E203", "W503", "E226"]
-exclude = [".git", "bin", "lib", "deps", "build", "src/pyvlx/_version.py"]
-max-line-length = 160
 
 [tool.coverage.run]
 source = ["src/pyvlx"]
