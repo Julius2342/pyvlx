@@ -14,7 +14,7 @@ class FrameCommandSendRequest(FrameBase):
 
     PAYLOAD_LEN = 66
 
-    def __init__(
+    def __init__(  # noqa: PLR0917
             self,
             functional_parameter: FunctionalParams | None = None,
             node_ids: List[int] | None = None,
@@ -94,7 +94,7 @@ class FrameCommandSendRequest(FrameBase):
         self.priority = Priority(payload[3])
 
         len_node_ids = payload[41]
-        if len_node_ids > 20:
+        if len_node_ids > 20:  # noqa: PLR2004
             raise PyVLXException("command_send_request_wrong_node_length")
         self.node_ids = []
         for i in range(len_node_ids):

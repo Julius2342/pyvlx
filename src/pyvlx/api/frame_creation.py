@@ -91,7 +91,7 @@ def frame_from_raw(raw: bytes) -> FrameBase | None:
 
 def create_frame(command: Command) -> FrameBase | None:
     """Create and return empty Frame from Command."""
-    # pylint: disable=too-many-branches,too-many-return-statements,too-many-statements
+    # ruff: noqa: PLR0911, PLR0915
     if command == Command.GW_ERROR_NTF:
         return FrameErrorNotification()
     if command == Command.GW_WINK_SEND_REQ:

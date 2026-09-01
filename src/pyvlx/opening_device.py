@@ -310,7 +310,7 @@ class OpeningDevice(Node):
 class Window(OpeningDevice):
     """Window object."""
 
-    def __init__(
+    def __init__( # noqa: PLR0917
         self,
         pyvlx: "PyVLX",
         node_id: int,

@@ -56,7 +56,7 @@ class VeluxDiscovery():
             self.hosts.append(host)
             got_host.set()
 
-        def handler(name: str, **kwargs: Any) -> None:  # pylint: disable=W0613:unused-argument
+        def handler(name: str, **kwargs: Any) -> None:  # noqa: ARG001
             if name.startswith(SERVICE_STARTS_WITH):
                 if name not in service_names:
                     service_names.append(name)

@@ -48,7 +48,7 @@ class TCPTransport(asyncio.Protocol):
         self.connection_lost_cb = connection_lost_cb
         self.tokenizer = SlipTokenizer()
 
-    def connection_made(self, transport: object) -> None:
+    def connection_made(self, transport: object) -> None:  # noqa: ARG002
         """Handle sucessful connection."""
         PYVLXLOG.debug("Socket connection to KLF 200 opened")
 
@@ -66,7 +66,7 @@ class TCPTransport(asyncio.Protocol):
             except PyVLXException:
                 PYVLXLOG.error("Error in data_received", exc_info=sys.exc_info())
 
-    def connection_lost(self, exc: object) -> None:
+    def connection_lost(self, exc: object) -> None:  # noqa: ARG002
         """Handle lost connection."""
         PYVLXLOG.debug("Socket connection to KLF 200 has been lost")
         self.connection_lost_cb()

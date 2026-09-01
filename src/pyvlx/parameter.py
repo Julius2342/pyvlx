@@ -4,7 +4,7 @@ from .const import NodeParameter
 from .exception import PyVLXException
 
 
-class Parameter:
+class Parameter: # noqa: PLW1641
     """General object for storing parameters."""
 
     UNKNOWN_VALUE = 0xF7FF  # F7 FF
@@ -68,7 +68,7 @@ class Parameter:
         """Test if raw packets are valid for initialization of Position."""
         if not isinstance(raw, bytes):
             raise PyVLXException("Position::raw_must_be_bytes")
-        if len(raw) != 2:
+        if len(raw) != 2:  # noqa: PLR2004
             raise PyVLXException("Position::raw_must_be_two_bytes")
         if (
             raw != Position.from_int(Position.CURRENT)
@@ -87,7 +87,7 @@ class Parameter:
             raise PyVLXException("Position::percent_has_to_be_int")
         if percent < 0:
             raise PyVLXException("Position::percent_has_to_be_positive")
-        if percent > 100:
+        if percent > 100:  # noqa: PLR2004
             raise PyVLXException("Position::percent_out_of_range")
         return bytes([percent * 2, 0])
 
@@ -330,7 +330,7 @@ class Intensity(Parameter):
             raise PyVLXException("Intensity::percent_has_to_be_int")
         if percent < 0:
             raise PyVLXException("Intensity::percent_has_to_be_positive")
-        if percent > 100:
+        if percent > 100:  # noqa: PLR2004
             raise PyVLXException("Intensity::percent_out_of_range")
         # Invert: 0% = off (200), 100% = on (0)
         return bytes([(100 - percent) * 2, 0])

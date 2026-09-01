@@ -37,7 +37,6 @@ class FrameGetNodeInformationRequest(FrameBase):
 
 
 class NodeInformationStatus(Enum):
-    # pylint: disable=invalid-name
     """Enum for node information status."""
 
     OK = 0
@@ -118,7 +117,7 @@ class FrameGetNodeInformationNotification(FrameBase):
         self._serial_number = b""
         for elem in serial_number.split(":"):
             self._serial_number += bytes.fromhex(elem)
-        if len(self._serial_number) != 8:
+        if len(self._serial_number) != 8:  # noqa: PLR2004
             raise PyVLXException("could_not_parse_serial_number")
 
     def get_payload(self) -> bytes:

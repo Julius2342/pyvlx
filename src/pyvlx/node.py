@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 CallbackType = Callable[["Node"], Awaitable[None]]
 
 
-class Node:
+class Node: # noqa: PLW1641
     """Class for node abstraction."""
 
     def __init__(self, pyvlx: "PyVLX", node_id: int, name: str, serial_number: str | None):

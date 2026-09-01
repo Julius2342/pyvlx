@@ -578,7 +578,7 @@ class OperatingState(Enum):
     UNKNOWN = 255
 
     @classmethod
-    def _missing_(cls, value: object) -> Any:
+    def _missing_(cls, value: object) -> Any:  # noqa: ARG003
         return cls.UNKNOWN
 
 
@@ -631,7 +631,7 @@ class StatusReply(Enum):
     LIMITATION_BY_EMERGENCY = 0xEE                    # Indicates the parameter was limited by an emergency.
 
     @classmethod
-    def _missing_(cls, value: object) -> Any:
+    def _missing_(cls, value: object) -> Any:  # noqa: ARG003
         return cls.UNKNOWN_STATUS_REPLY
 
 
@@ -650,7 +650,7 @@ class StatusId(Enum):
     STATUS_UNKNOWN = 0xFF          # The status is from from an unknown command originator action.
 
     @classmethod
-    def _missing_(cls, value: object) -> Any:
+    def _missing_(cls, value: object) -> Any:  # noqa: ARG003
         return cls.STATUS_UNKNOWN
 
 
@@ -663,7 +663,7 @@ class RunStatus(Enum):
     UNKNOWN_RUN_STATUS = 255  # Unknown run status.
 
     @classmethod
-    def _missing_(cls, value: object) -> Any:
+    def _missing_(cls, value: object) -> Any:  # noqa: ARG003
         return cls.UNKNOWN_RUN_STATUS
 
 
@@ -677,7 +677,7 @@ class StatusType(Enum):
     REQUEST_UNKNOWN = 255  # Request Unknown
 
     @classmethod
-    def _missing_(cls, value: object) -> Any:
+    def _missing_(cls, value: object) -> Any:  # noqa: ARG003
         return cls.REQUEST_UNKNOWN
 
 
@@ -692,5 +692,5 @@ class LimitationTime(Enum):
         return self.name
 
     @classmethod
-    def _missing_(cls, value: object) -> Any:
+    def _missing_(cls, value: object) -> Any:  # noqa: ARG003
         return cls.UNLIMITED

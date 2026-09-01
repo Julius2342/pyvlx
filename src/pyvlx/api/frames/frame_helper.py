@@ -15,7 +15,7 @@ def calc_crc(raw: bytes) -> int:
 
 def extract_from_frame(data: bytes) -> Tuple[Command, bytes]:
     """Extract payload and command from frame."""
-    if len(data) <= 4:
+    if len(data) <= 4:  # noqa: PLR2004
         raise PyVLXException("could_not_extract_from_frame_too_short", data=data)
     length = data[0] * 256 + data[1] - 1
     if len(data) != length + 3:

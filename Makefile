@@ -9,8 +9,6 @@ all:
 	@echo ""
 	@echo "mypy            -- run mypy checks"
 	@echo ""
-	@echo "pylint          -- run pylint tests"
-	@echo ""
 	@echo "ruff            -- run ruff checks"
 	@echo ""
 	@echo "coverage        -- create coverage report"
@@ -23,7 +21,7 @@ all:
 test:
 	pytest
 
-ci: ruff pylint mypy test
+ci: ruff mypy test
 
 mypy:
 	@mypy src/pyvlx
@@ -35,9 +33,6 @@ pypi:
 	@rm -f dist/*
 	@python3 -m build
 	@twine upload dist/*
-
-pylint:
-	@pylint src/pyvlx test/*.py examples/*.py
 
 ruff:
 	 @ruff check
