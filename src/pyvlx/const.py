@@ -350,7 +350,7 @@ class NodeVariation(Enum):
     TOPHUNG = 1
     KIP = 2
     FLAT_ROOT = 3
-    SKY_LIGHT = 3
+    SKY_LIGHT = 4
 
 
 class DHCPParameter(Enum):
