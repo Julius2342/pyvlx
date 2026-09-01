@@ -5,9 +5,7 @@ from typing import TYPE_CHECKING
 from pyvlx.dataobjects import DtoProtocolVersion
 
 from .api_event import ApiEvent
-from .frames import (
-    FrameBase, FrameGetProtocolVersionConfirmation,
-    FrameGetProtocolVersionRequest)
+from .frames import FrameBase, FrameGetProtocolVersionConfirmation, FrameGetProtocolVersionRequest
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX

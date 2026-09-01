@@ -1,9 +1,7 @@
 """Test for Position class."""
 import unittest
 
-from pyvlx import (
-    CurrentPosition, Parameter, Position, SwitchParameter, SwitchParameterOff,
-    SwitchParameterOn, UnknownPosition)
+from pyvlx import CurrentPosition, Parameter, Position, SwitchParameter, SwitchParameterOff, SwitchParameterOn, UnknownPosition
 from pyvlx.exception import PyVLXException
 
 

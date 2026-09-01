@@ -30,9 +30,7 @@ dev = [
     "pytest-cov==7.1.0",
     "mypy==2.3.1",
     "types-PyYAML==6.0.12.20260815",
-    "isort==8.0.1",
     "flake8==7.3.0",
-    "flake8-isort==7.0.0",
     "flake8-pyproject==1.2.4",
     "pylint==4.0.7",
     "ruff>=0.16.5",
@@ -72,18 +70,18 @@ disallow_untyped_defs = true
 disallow_untyped_calls = true
 check_untyped_defs = true
 
+[tool.ruff]
+line-length = 160
+exclude = ["_version.py"]
+
 [tool.ruff.lint]
-select = ["D"]
+select = ["D", "I"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "pep257"
 
 [tool.ruff.lint.isort]
 split-on-trailing-comma = true
-
-[tool.isort]
-multi_line_output = 4
-skip = ["_version.py"]
 
 [tool.pylint.main]
 max-branches = 20

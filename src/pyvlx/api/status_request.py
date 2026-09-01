@@ -2,9 +2,7 @@
 from typing import TYPE_CHECKING
 
 from .api_event import ApiEvent
-from .frames import (
-    FrameBase, FrameStatusRequestConfirmation, FrameStatusRequestNotification,
-    FrameStatusRequestRequest)
+from .frames import FrameBase, FrameStatusRequestConfirmation, FrameStatusRequestNotification, FrameStatusRequestRequest
 from .session_id import get_new_session_id
 
 if TYPE_CHECKING:

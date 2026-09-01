@@ -4,11 +4,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from pyvlx import Parameter, PyVLXException
 from pyvlx.api import CommandSend
-from pyvlx.api.frames import (
-    CommandSendConfirmationStatus, FrameCommandSendConfirmation,
-    FrameCommandSendRequest, FrameSessionFinishedNotification)
-from pyvlx.api.frames.frame_command_send import (
-    FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification)
+from pyvlx.api.frames import CommandSendConfirmationStatus, FrameCommandSendConfirmation, FrameCommandSendRequest, FrameSessionFinishedNotification
+from pyvlx.api.frames.frame_command_send import FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification
 
 
 class TestCommandSend(unittest.IsolatedAsyncioTestCase):

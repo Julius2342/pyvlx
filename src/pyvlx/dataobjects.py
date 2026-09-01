@@ -2,9 +2,7 @@
 import time
 from datetime import datetime
 
-from .const import (
-    DHCPParameter, GatewayState, GatewaySubState,
-    LeaveLearnStateConfirmationStatus)
+from .const import DHCPParameter, GatewayState, GatewaySubState, LeaveLearnStateConfirmationStatus
 
 
 class DtoLocalTime:

@@ -2,8 +2,7 @@
 from enum import Enum
 from typing import List
 
-from pyvlx.const import (
-    Command, NodeParameter, Originator, Priority, RunStatus, StatusReply)
+from pyvlx.const import Command, NodeParameter, Originator, Priority, RunStatus, StatusReply
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import FunctionalParams, Parameter, Position
 

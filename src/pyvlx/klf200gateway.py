@@ -3,11 +3,20 @@
 from typing import TYPE_CHECKING, Awaitable, Callable, List
 
 from .api import (
-    FactoryDefault, GetLocalTime, GetNetworkSetup, GetProtocolVersion,
-    GetState, GetVersion, HouseStatusMonitorDisable, HouseStatusMonitorEnable,
-    LeaveLearnState, PasswordEnter, Reboot, SetUTC)
-from .dataobjects import (
-    DtoLocalTime, DtoNetworkSetup, DtoProtocolVersion, DtoState, DtoVersion)
+    FactoryDefault,
+    GetLocalTime,
+    GetNetworkSetup,
+    GetProtocolVersion,
+    GetState,
+    GetVersion,
+    HouseStatusMonitorDisable,
+    HouseStatusMonitorEnable,
+    LeaveLearnState,
+    PasswordEnter,
+    Reboot,
+    SetUTC,
+)
+from .dataobjects import DtoLocalTime, DtoNetworkSetup, DtoProtocolVersion, DtoState, DtoVersion
 from .exception import PyVLXException
 
 if TYPE_CHECKING:

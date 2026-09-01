@@ -2,8 +2,7 @@
 import unittest
 
 from pyvlx.api.frame_creation import frame_from_raw
-from pyvlx.api.frames import (
-    FrameGetStateConfirmation, GatewayState, GatewaySubState)
+from pyvlx.api.frames import FrameGetStateConfirmation, GatewayState, GatewaySubState
 
 
 class TestFrameGetStateConfirmation(unittest.TestCase):

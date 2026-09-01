@@ -3,9 +3,12 @@ import datetime
 from typing import TYPE_CHECKING, Any
 
 from .api.frames import (
-    FrameBase, FrameCommandRunStatusNotification,
+    FrameBase,
+    FrameCommandRunStatusNotification,
     FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
+    FrameNodeStatePositionChangedNotification,
+    FrameStatusRequestNotification,
+)
 from .const import NodeParameter, OperatingState, RunStatus, StatusReply
 from .dimmable_device import DimmableDevice
 from .log import PYVLXLOG

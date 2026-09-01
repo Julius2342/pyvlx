@@ -4,9 +4,7 @@ from typing import TYPE_CHECKING
 from pyvlx.log import PYVLXLOG
 
 from .api_event import ApiEvent
-from .frames import (
-    FrameBase, FramePasswordEnterConfirmation, FramePasswordEnterRequest,
-    PasswordEnterConfirmationStatus)
+from .frames import FrameBase, FramePasswordEnterConfirmation, FramePasswordEnterRequest, PasswordEnterConfirmationStatus
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX

@@ -9,8 +9,6 @@ all:
 	@echo ""
 	@echo "flake8          -- run flake8 checks"
 	@echo ""
-	@echo "isort           -- run isort checks"
-	@echo ""
 	@echo "mypy            -- run mypy checks"
 	@echo ""
 	@echo "pylint          -- run pylint tests"
@@ -27,13 +25,10 @@ all:
 test:
 	pytest
 
-ci: ruff flake8 pylint isort mypy test
+ci: ruff flake8 pylint mypy test
 
 flake8:
 	@flake8
-
-isort:
-	@isort --check-only test examples src/pyvlx
 
 mypy:
 	@mypy src/pyvlx

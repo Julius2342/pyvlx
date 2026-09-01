@@ -2,8 +2,7 @@
 import unittest
 
 from pyvlx.api.frame_creation import frame_from_raw
-from pyvlx.api.frames.frame_set_limitation import (
-    FrameSetLimitationConfirmation, SetLimitationRequestStatus)
+from pyvlx.api.frames.frame_set_limitation import FrameSetLimitationConfirmation, SetLimitationRequestStatus
 
 
 class TestFrameSetLimitationConfirmation(unittest.TestCase):

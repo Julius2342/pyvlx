@@ -3,8 +3,7 @@ import struct
 from datetime import datetime
 from enum import Enum
 
-from pyvlx.const import (
-    Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity)
+from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes

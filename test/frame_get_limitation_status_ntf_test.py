@@ -2,8 +2,7 @@
 import unittest
 
 from pyvlx.api.frame_creation import frame_from_raw
-from pyvlx.api.frames.frame_get_limitation import (
-    FrameGetLimitationStatusNotification)
+from pyvlx.api.frames.frame_get_limitation import FrameGetLimitationStatusNotification
 from pyvlx.const import Originator
 
 

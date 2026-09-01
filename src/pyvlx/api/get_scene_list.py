@@ -4,9 +4,7 @@ from typing import TYPE_CHECKING, List, Tuple
 from pyvlx.log import PYVLXLOG
 
 from .api_event import ApiEvent
-from .frames import (
-    FrameBase, FrameGetSceneListConfirmation, FrameGetSceneListNotification,
-    FrameGetSceneListRequest)
+from .frames import FrameBase, FrameGetSceneListConfirmation, FrameGetSceneListNotification, FrameGetSceneListRequest
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX

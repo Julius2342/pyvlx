@@ -2,9 +2,7 @@
 from typing import TYPE_CHECKING
 
 from .api_event import ApiEvent
-from .frames import (
-    FrameBase, FrameSetNodeNameConfirmation, FrameSetNodeNameRequest,
-    SetNodeNameConfirmationStatus)
+from .frames import FrameBase, FrameSetNodeNameConfirmation, FrameSetNodeNameRequest, SetNodeNameConfirmationStatus
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX

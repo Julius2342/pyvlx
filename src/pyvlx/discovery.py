@@ -5,8 +5,7 @@ from dataclasses import dataclass
 from typing import Any, Set
 
 from zeroconf import IPVersion
-from zeroconf.asyncio import (
-    AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf)
+from zeroconf.asyncio import AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf
 
 SERVICE_STARTS_WITH: str = "VELUX_KLF_LAN"
 SERVICE_TYPE: str = "_http._tcp.local."

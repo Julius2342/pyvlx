@@ -6,17 +6,18 @@ from unittest.mock import AsyncMock, MagicMock
 
 from pyvlx import Node, OpeningDevice, PyVLX
 from pyvlx.api.frames import (
-    FrameBase, FrameCommandRunStatusNotification,
+    FrameBase,
+    FrameCommandRunStatusNotification,
     FrameGetAllNodesInformationNotification,
-    FrameNodeStatePositionChangedNotification, FrameStatusRequestNotification)
+    FrameNodeStatePositionChangedNotification,
+    FrameStatusRequestNotification,
+)
 from pyvlx.connection import Connection
-from pyvlx.const import (
-    Command, NodeParameter, OperatingState, RunStatus, StatusReply)
+from pyvlx.const import Command, NodeParameter, OperatingState, RunStatus, StatusReply
 from pyvlx.dimmable_device import DimmableDevice
 from pyvlx.node_updater import NodeUpdater, _set_node_property
 from pyvlx.on_off_switch import OnOffSwitch
-from pyvlx.opening_device import (
-    Blind, DualRollerShutter, GarageDoor, Gate, RollerShutter)
+from pyvlx.opening_device import Blind, DualRollerShutter, GarageDoor, Gate, RollerShutter
 from pyvlx.parameter import Intensity, Parameter, Position, SwitchParameter
 
 
