@@ -15,7 +15,7 @@ all:
 	@echo ""
 	@echo "pylint          -- run pylint tests"
 	@echo ""
-	@echo "pydocstyle      -- run pydocstyle tests"
+	@echo "ruff            -- run ruff checks"
 	@echo ""
 	@echo "coverage        -- create coverage report"
 	@echo ""
@@ -27,7 +27,7 @@ all:
 test:
 	pytest
 
-ci: pydocstyle flake8 pylint isort mypy test
+ci: ruff flake8 pylint isort mypy test
 
 flake8:
 	@flake8
@@ -49,8 +49,8 @@ pypi:
 pylint:
 	@pylint src/pyvlx test/*.py examples/*.py
 
-pydocstyle:
-	 @pydocstyle src/pyvlx test/*.py test/*.py examples/*.py
+ruff:
+	 @ruff check
 
 coverage:
 	pytest --cov --cov-report html --verbose

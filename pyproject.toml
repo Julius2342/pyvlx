@@ -34,8 +34,8 @@ dev = [
     "flake8==7.3.0",
     "flake8-isort==7.0.0",
     "flake8-pyproject==1.2.4",
-    "pydocstyle==6.3.0",
     "pylint==4.0.7",
+    "ruff>=0.16.5",
 ]
 release = [
     "build==1.6.0",
@@ -71,6 +71,15 @@ warn_unused_ignores = true
 disallow_untyped_defs = true
 disallow_untyped_calls = true
 check_untyped_defs = true
+
+[tool.ruff.lint]
+select = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.ruff.lint.isort]
+split-on-trailing-comma = true
 
 [tool.isort]
 multi_line_output = 4
@@ -122,3 +131,4 @@ skip_covered = true
 exclude_lines = [
     "if TYPE_CHECKING:",
 ]
+
