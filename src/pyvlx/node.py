@@ -5,7 +5,8 @@ Node object is an interface class and should
 be derived by other objects like window openers
 and roller shutters.
 """
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, List
+from collections.abc import Awaitable, Callable
+from typing import TYPE_CHECKING, Any
 
 from .api import SetNodeName, WinkSend
 from .const import OperatingState, RunStatus, StatusReply, WinkTime
@@ -29,7 +30,7 @@ class Node:
         self.last_frame_state: OperatingState | None = None
         self.last_frame_status_reply: StatusReply | None = None
         self.last_frame_run_status: RunStatus | None = None
-        self.device_updated_cbs: List[CallbackType] = []
+        self.device_updated_cbs: list[CallbackType] = []
         self.pyvlx.connection.register_connection_opened_cb(self.after_update)
         self.pyvlx.connection.register_connection_closed_cb(self.after_update)
         self._disposed = False
@@ -112,7 +113,7 @@ class Node:
             f'last_frame_status_reply="{self.last_frame_status_reply}"/>'
         )
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Equal operator."""
         return (
             type(self).__name__ == type(other).__name__
