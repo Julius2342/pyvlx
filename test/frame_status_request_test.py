@@ -2,10 +2,8 @@
 import unittest
 
 from pyvlx.api.frame_creation import frame_from_raw
-from pyvlx.api.frames import (
-    FrameStatusRequestConfirmation, FrameStatusRequestRequest)
-from pyvlx.api.frames.frame_status_request import (
-    FrameStatusRequestNotification, StatusRequestStatus)
+from pyvlx.api.frames import FrameStatusRequestConfirmation, FrameStatusRequestRequest
+from pyvlx.api.frames.frame_status_request import FrameStatusRequestNotification, StatusRequestStatus
 from pyvlx.const import RunStatus, StatusReply, StatusType
 from pyvlx.parameter import Parameter
 

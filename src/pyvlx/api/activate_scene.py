@@ -2,9 +2,7 @@
 from typing import TYPE_CHECKING
 
 from .completable_api_event import CompletableApiEvent
-from .frames import (
-    ActivateSceneConfirmationStatus, FrameActivateSceneConfirmation,
-    FrameActivateSceneRequest, FrameBase)
+from .frames import ActivateSceneConfirmationStatus, FrameActivateSceneConfirmation, FrameActivateSceneRequest, FrameBase
 from .session_id import get_new_session_id
 
 if TYPE_CHECKING:

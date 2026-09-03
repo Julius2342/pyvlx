@@ -4,8 +4,7 @@ from typing import TYPE_CHECKING
 from pyvlx.log import PYVLXLOG
 
 from .api_event import ApiEvent
-from .frames import (
-    FrameBase, FrameGatewayRebootConfirmation, FrameGatewayRebootRequest)
+from .frames import FrameBase, FrameGatewayRebootConfirmation, FrameGatewayRebootRequest
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX

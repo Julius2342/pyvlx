@@ -2,9 +2,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from pyvlx import (
-    Blade, Blind, GarageDoor, Gate, Light, OnOffLight, PyVLX, RollerShutter,
-    Window)
+from pyvlx import Blade, Blind, GarageDoor, Gate, Light, OnOffLight, PyVLX, RollerShutter, Window
 from pyvlx.api.frames import FrameGetNodeInformationNotification
 from pyvlx.connection import Connection
 from pyvlx.const import NodeTypeWithSubtype

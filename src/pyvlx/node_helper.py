@@ -2,17 +2,13 @@
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
-from .api.frames import (
-    FrameGetAllNodesInformationNotification,
-    FrameGetNodeInformationNotification)
+from .api.frames import FrameGetAllNodesInformationNotification, FrameGetNodeInformationNotification
 from .const import NodeTypeWithSubtype
 from .dimmable_device import ExteriorHeating, Light, OnOffLight
 from .log import PYVLXLOG
 from .node import Node
 from .on_off_switch import OnOffSwitch
-from .opening_device import (
-    Awning, Blade, Blind, DualRollerShutter, GarageDoor, Gate, RollerShutter,
-    Window)
+from .opening_device import Awning, Blade, Blind, DualRollerShutter, GarageDoor, Gate, RollerShutter, Window
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX

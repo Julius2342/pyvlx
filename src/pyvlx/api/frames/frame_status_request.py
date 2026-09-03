@@ -1,8 +1,7 @@
 """Module for get node information from gateway."""
 from enum import Enum
 
-from pyvlx.const import (
-    Command, NodeParameter, RunStatus, StatusReply, StatusType)
+from pyvlx.const import Command, NodeParameter, RunStatus, StatusReply, StatusType
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter
 
@@ -38,7 +37,7 @@ class FrameStatusRequestRequest(FrameBase):
         """Init frame from binary data."""
         self.session_id = payload[0] * 256 + payload[1]
         len_node_ids = payload[2]
-        if len_node_ids > 20:
+        if len_node_ids > 20:  # noqa: PLR2004
             raise PyVLXException("command_send_request_wrong_node_length")
         self.node_ids = []
         for i in range(len_node_ids):

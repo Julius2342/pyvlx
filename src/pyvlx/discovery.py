@@ -5,8 +5,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from zeroconf import IPVersion
-from zeroconf.asyncio import (
-    AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf)
+from zeroconf.asyncio import AsyncServiceBrowser, AsyncServiceInfo, AsyncZeroconf
 
 SERVICE_STARTS_WITH: str = "VELUX_KLF_LAN"
 SERVICE_TYPE: str = "_http._tcp.local."
@@ -57,7 +56,7 @@ class VeluxDiscovery:
             self.hosts.append(host)
             got_host.set()
 
-        def handler(name: str, **kwargs: Any) -> None:  # pylint: disable=W0613:unused-argument
+        def handler(name: str, **kwargs: Any) -> None:  # noqa: ARG001
             if name.startswith(SERVICE_STARTS_WITH):
                 if name not in service_names:
                     service_names.append(name)

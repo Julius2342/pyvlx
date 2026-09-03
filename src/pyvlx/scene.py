@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from pyvlx import PyVLX
 
 
-class Scene:
+class Scene: # noqa: PLW1641
     """Object for scene."""
 
     def __init__(self, pyvlx: "PyVLX", scene_id: int, name: str):

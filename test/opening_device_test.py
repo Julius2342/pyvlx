@@ -2,9 +2,7 @@
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from pyvlx import (
-    Awning, Blade, Blind, CurrentPosition, OpeningDevice, Parameter, Position,
-    PyVLX, RollerShutter, Window)
+from pyvlx import Awning, Blade, Blind, CurrentPosition, OpeningDevice, Parameter, Position, PyVLX, RollerShutter, Window
 from pyvlx.connection import Connection
 from pyvlx.const import LimitationTime, LimitationType, Velocity
 from pyvlx.parameter import IgnorePosition

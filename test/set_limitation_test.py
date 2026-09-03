@@ -3,13 +3,9 @@ import unittest
 from unittest.mock import MagicMock
 
 from pyvlx import PyVLX
-from pyvlx.api.frames.frame_command_send import (
-    FrameSessionFinishedNotification)
-from pyvlx.api.frames.frame_get_limitation import (
-    FrameGetLimitationStatusNotification)
-from pyvlx.api.frames.frame_set_limitation import (
-    FrameSetLimitationConfirmation, FrameSetLimitationRequest,
-    SetLimitationRequestStatus)
+from pyvlx.api.frames.frame_command_send import FrameSessionFinishedNotification
+from pyvlx.api.frames.frame_get_limitation import FrameGetLimitationStatusNotification
+from pyvlx.api.frames.frame_set_limitation import FrameSetLimitationConfirmation, FrameSetLimitationRequest, SetLimitationRequestStatus
 from pyvlx.api.set_limitation import SetLimitation
 from pyvlx.const import LimitationTime, Originator
 from pyvlx.parameter import IgnorePosition, Position

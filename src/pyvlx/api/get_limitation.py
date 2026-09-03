@@ -5,9 +5,7 @@ from typing import TYPE_CHECKING
 from ..const import LimitationType, Originator
 from ..parameter import Position
 from .api_event import ApiEvent
-from .frames import (
-    FrameBase, FrameGetLimitationStatus, FrameGetLimitationStatusConfirmation,
-    FrameGetLimitationStatusNotification)
+from .frames import FrameBase, FrameGetLimitationStatus, FrameGetLimitationStatusConfirmation, FrameGetLimitationStatusNotification
 from .session_id import get_new_session_id
 
 if TYPE_CHECKING:

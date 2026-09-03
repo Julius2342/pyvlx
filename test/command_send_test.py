@@ -4,11 +4,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from pyvlx import Parameter, PyVLXException
 from pyvlx.api import CommandSend
-from pyvlx.api.frames import (
-    CommandSendConfirmationStatus, FrameCommandSendConfirmation,
-    FrameCommandSendRequest, FrameSessionFinishedNotification)
-from pyvlx.api.frames.frame_command_send import (
-    FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification)
+from pyvlx.api.frames import CommandSendConfirmationStatus, FrameCommandSendConfirmation, FrameCommandSendRequest, FrameSessionFinishedNotification
+from pyvlx.api.frames.frame_command_send import FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification
 
 
 class TestCommandSend(unittest.IsolatedAsyncioTestCase):
@@ -97,4 +94,4 @@ class TestCommandSend(unittest.IsolatedAsyncioTestCase):
         new_session_id_request.return_value = 5
         assert isinstance(self.command_send.request_frame(), FrameCommandSendRequest)
         assert new_session_id_request.called
-        assert self.command_send.session_id == 5
+        assert self.command_send.session_id == 5 # noqa: PLR2004

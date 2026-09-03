@@ -3,10 +3,12 @@ from typing import TYPE_CHECKING
 
 from .api_event import ApiEvent
 from .frames import (
-    FrameBase, FrameHouseStatusMonitorDisableConfirmation,
+    FrameBase,
+    FrameHouseStatusMonitorDisableConfirmation,
     FrameHouseStatusMonitorDisableRequest,
     FrameHouseStatusMonitorEnableConfirmation,
-    FrameHouseStatusMonitorEnableRequest)
+    FrameHouseStatusMonitorEnableRequest,
+)
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX

@@ -3,8 +3,7 @@ import struct
 from datetime import datetime
 from enum import Enum
 
-from pyvlx.const import (
-    Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity)
+from pyvlx.const import Command, NodeTypeWithSubtype, NodeVariation, OperatingState, Velocity
 from pyvlx.exception import PyVLXException
 from pyvlx.parameter import Parameter
 from pyvlx.string_helper import bytes_to_string, string_to_bytes
@@ -24,7 +23,6 @@ class FrameGetAllNodesInformationRequest(FrameBase):
 
 
 class AllNodesInformationStatus(Enum):
-    # pylint: disable=invalid-name
     """Enum for node information status."""
 
     OK = 0
@@ -107,7 +105,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
         self._serial_number = b""
         for elem in serial_number.split(":"):
             self._serial_number += bytes.fromhex(elem)
-        if len(self._serial_number) != 8:
+        if len(self._serial_number) != 8:  # noqa: PLR2004
             raise PyVLXException("could_not_parse_serial_number")
 
     def get_payload(self) -> bytes:

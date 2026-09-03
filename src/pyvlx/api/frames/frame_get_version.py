@@ -42,7 +42,7 @@ class FrameGetVersionConfirmation(FrameBase):
     @property
     def product(self) -> str:
         """Return product as human readable string."""
-        if self.product_group == 14 and self.product_type == 3:
+        if self.product_group == 14 and self.product_type == 3:  # noqa: PLR2004
             return "KLF 200"
         return f"Unknown Product: {self.product_group}:{self.product_type}"
 

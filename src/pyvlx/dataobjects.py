@@ -2,9 +2,7 @@
 import time
 from datetime import datetime
 
-from .const import (
-    DHCPParameter, GatewayState, GatewaySubState,
-    LeaveLearnStateConfirmationStatus)
+from .const import DHCPParameter, GatewayState, GatewaySubState, LeaveLearnStateConfirmationStatus
 
 
 class DtoLocalTime:
@@ -51,7 +49,7 @@ class DtoLocalTime:
         payload += self.localtime.day.to_bytes(1, "big")
         payload += self.localtime.month.to_bytes(1, "big")
         payload += (self.localtime.year - 1900).to_bytes(2, "big")
-        if (weekday := self.localtime.weekday()) == 6:
+        if (weekday := self.localtime.weekday()) == 6:  # noqa: PLR2004
             payload += (0).to_bytes(1, "big")
         else:
             payload += (weekday + 1).to_bytes(1, "big")

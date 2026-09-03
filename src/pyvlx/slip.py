@@ -9,7 +9,7 @@ SLIP_ESC_ESC = 0xDD
 
 def is_slip(raw: bytes) -> bool:
     """Check if raw is a SLIP packet."""
-    if len(raw) < 2:
+    if len(raw) < 2:  # noqa: PLR2004
         return False
     return raw[0] == SLIP_END and SLIP_END in raw[1:]
 

@@ -3,9 +3,7 @@ from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from pyvlx import PyVLX
-from pyvlx.api.frames import (
-    FrameCommandRunStatusNotification, FrameWinkSendConfirmation,
-    FrameWinkSendNotification, WinkSendConfirmationStatus)
+from pyvlx.api.frames import FrameCommandRunStatusNotification, FrameWinkSendConfirmation, FrameWinkSendNotification, WinkSendConfirmationStatus
 from pyvlx.api.wink_send import WinkSend
 
 

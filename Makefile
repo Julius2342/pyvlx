@@ -7,15 +7,9 @@ all:
 	@echo ""
 	@echo "test            -- execute test suite"
 	@echo ""
-	@echo "flake8          -- run flake8 checks"
-	@echo ""
-	@echo "isort           -- run isort checks"
-	@echo ""
 	@echo "mypy            -- run mypy checks"
 	@echo ""
-	@echo "pylint          -- run pylint tests"
-	@echo ""
-	@echo "pydocstyle      -- run pydocstyle tests"
+	@echo "ruff            -- run ruff checks"
 	@echo ""
 	@echo "coverage        -- create coverage report"
 	@echo ""
@@ -27,13 +21,7 @@ all:
 test:
 	pytest
 
-ci: pydocstyle flake8 pylint isort mypy test
-
-flake8:
-	@flake8
-
-isort:
-	@isort --check-only test examples src/pyvlx
+ci: ruff mypy test
 
 mypy:
 	@mypy src/pyvlx
@@ -46,11 +34,8 @@ pypi:
 	@python3 -m build
 	@twine upload dist/*
 
-pylint:
-	@pylint src/pyvlx test/*.py examples/*.py
-
-pydocstyle:
-	 @pydocstyle src/pyvlx test/*.py test/*.py examples/*.py
+ruff:
+	 @ruff check
 
 coverage:
 	pytest --cov --cov-report html --verbose

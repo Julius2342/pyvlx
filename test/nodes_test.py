@@ -53,10 +53,10 @@ class TestNodes(unittest.TestCase):
         nodes.add(window1)
         window2 = Window(self.pyvlx, 42, "Window_2", "aa:bb:aa:bb:aa:bb:aa:42")  # not added
         self.assertTrue("Window_1" in nodes)
-        self.assertTrue(23 in nodes)
+        self.assertTrue(23 in nodes) # noqa: PLR2004
         self.assertTrue(window1 in nodes)
         self.assertFalse("Window_2" in nodes)
-        self.assertFalse(42 in nodes)
+        self.assertFalse(42 in nodes) # noqa: PLR2004
         self.assertFalse(window2 in nodes)
 
     def test_iter(self) -> None:
@@ -280,7 +280,7 @@ class TestNodesLoadNode(unittest.TestCase):
         connection = MagicMock(spec=Connection)
         self.pyvlx.attach_mock(mock=connection, attribute="connection")
 
-    def _mock_get_node_information(self, loaded: Node) -> MagicMock:  # pylint: disable=unused-argument
+    def _mock_get_node_information(self, loaded: Node) -> MagicMock:  # noqa: ARG002
         event = MagicMock()
         event.success = True
         event.notification_frame = object()

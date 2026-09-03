@@ -4,8 +4,7 @@ from typing import TYPE_CHECKING
 from pyvlx.dataobjects import DtoLocalTime
 
 from .api_event import ApiEvent
-from .frames import (
-    FrameBase, FrameGetLocalTimeConfirmation, FrameGetLocalTimeRequest)
+from .frames import FrameBase, FrameGetLocalTimeConfirmation, FrameGetLocalTimeRequest
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX

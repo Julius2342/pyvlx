@@ -30,7 +30,7 @@ class FrameWinkSendRequest(FrameBase):
 
     def get_payload(self) -> bytes:
         """Return Payload."""
-        if len(self.node_ids) > 20:
+        if len(self.node_ids) > 20:  # noqa: PLR2004
             raise PyVLXException("wink_send_request_wrong_node_length")
         assert self.session_id is not None
         ret = bytes([self.session_id >> 8 & 255, self.session_id & 255])
@@ -53,7 +53,7 @@ class FrameWinkSendRequest(FrameBase):
         self.wink_time = WinkTime(payload[5])
 
         len_node_ids = payload[6]
-        if len_node_ids > 20:
+        if len_node_ids > 20:  # noqa: PLR2004
             raise PyVLXException("wink_send_request_wrong_node_length")
         self.node_ids = []
         for i in range(len_node_ids):

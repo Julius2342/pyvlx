@@ -30,12 +30,8 @@ dev = [
     "pytest-cov==7.1.0",
     "mypy==2.3.1",
     "types-PyYAML==6.0.12.20260815",
-    "isort==8.0.1",
-    "flake8==7.3.0",
-    "flake8-isort==7.0.0",
-    "flake8-pyproject==1.2.4",
-    "pydocstyle==6.3.0",
     "pylint==4.0.7",
+    "ruff>=0.16.5",
 ]
 release = [
     "build==1.6.0",
@@ -72,43 +68,25 @@ disallow_untyped_defs = true
 disallow_untyped_calls = true
 check_untyped_defs = true
 
-[tool.isort]
-multi_line_output = 4
-skip = ["_version.py"]
+[tool.ruff]
+line-length = 160
+extend-exclude = ["_version.py"]
 
-[tool.pylint.main]
-max-branches = 20
-max-statements = 55
-ignore-paths = ["src/pyvlx/_version.py"]
-
-[tool.pylint.messages_control]
-disable = [
-    "E1101",
-    "C0111",
-    "duplicate-code",
-    "fixme",
-    "locally-disabled",
-    "too-few-public-methods",
-    "too-many-arguments",
-    "too-many-instance-attributes",
-    "consider-using-f-string",
+[tool.ruff.lint]
+select = ["D", "I", "E", "W", "F", "PL", "RUF100", "ARG"]
+ignore = [
+    "E203",     # whitespace-before-punctuation
+    "E226",     # missing-whitespace-around-arithmetic-operator
+    "PLR0912",  # too-many-branches
+    "PLR0913",  # too-many-arguments
 ]
-good-names = ["PAYLOAD_LEN", "i", "j"]
-enable = ["useless-suppression"]
 
-[tool.pylint.reports]
-output-format = "colorized"
-reports = false
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
 
-[tool.pylint.format]
-indent-string = "    "
-max-line-length = 160
-max-positional-arguments = 7
+[tool.ruff.lint.isort]
+split-on-trailing-comma = true
 
-[tool.flake8]
-ignore = ["E203", "W503", "E226"]
-exclude = [".git", "bin", "lib", "deps", "build", "src/pyvlx/_version.py"]
-max-line-length = 160
 
 [tool.coverage.run]
 source = ["src/pyvlx"]
@@ -122,3 +100,4 @@ skip_covered = true
 exclude_lines = [
     "if TYPE_CHECKING:",
 ]
+

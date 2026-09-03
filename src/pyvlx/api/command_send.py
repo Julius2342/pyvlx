@@ -3,9 +3,7 @@ from typing import TYPE_CHECKING
 
 from ..parameter import FunctionalParams, Parameter
 from .completable_api_event import CompletableApiEvent
-from .frames import (
-    CommandSendConfirmationStatus, FrameBase, FrameCommandSendConfirmation,
-    FrameCommandSendRequest)
+from .frames import CommandSendConfirmationStatus, FrameBase, FrameCommandSendConfirmation, FrameCommandSendRequest
 from .session_id import get_new_session_id
 
 if TYPE_CHECKING:

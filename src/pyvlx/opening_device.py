@@ -8,13 +8,10 @@ from pyvlx.api.get_limitation import GetLimitation
 
 from .api.command_send import CommandSend
 from .api.set_limitation import SetLimitation
-from .const import (
-    LimitationTime, LimitationType, NodeParameter, Originator, Velocity)
+from .const import LimitationTime, LimitationType, NodeParameter, Originator, Velocity
 from .exception import PyVLXException
 from .node import Node
-from .parameter import (
-    CurrentPosition, DualRollerShutterPosition, FunctionalParams,
-    IgnorePosition, Parameter, Position, TargetPosition)
+from .parameter import CurrentPosition, DualRollerShutterPosition, FunctionalParams, IgnorePosition, Parameter, Position, TargetPosition
 
 if TYPE_CHECKING:
     from pyvlx import PyVLX
@@ -313,7 +310,7 @@ class OpeningDevice(Node):
 class Window(OpeningDevice):
     """Window object."""
 
-    def __init__(
+    def __init__( # noqa: PLR0917
         self,
         pyvlx: "PyVLX",
         node_id: int,

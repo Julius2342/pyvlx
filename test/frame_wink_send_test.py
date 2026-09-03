@@ -1,9 +1,7 @@
 """Unit test for frame wink send."""
 from unittest import TestCase
 
-from pyvlx.api.frames.frame_wink_send import (
-    FrameWinkSendConfirmation, FrameWinkSendNotification, FrameWinkSendRequest,
-    WinkSendConfirmationStatus)
+from pyvlx.api.frames.frame_wink_send import FrameWinkSendConfirmation, FrameWinkSendNotification, FrameWinkSendRequest, WinkSendConfirmationStatus
 from pyvlx.const import Originator, Priority, WinkTime
 
 
