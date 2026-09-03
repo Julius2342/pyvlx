@@ -2,7 +2,7 @@
 import asyncio
 from asyncio import Event, Future, Task
 from dataclasses import dataclass
-from typing import Any, Set
+from typing import Any
 
 from zeroconf import IPVersion
 from zeroconf.asyncio import (
@@ -13,7 +13,7 @@ SERVICE_TYPE: str = "_http._tcp.local."
 
 
 @dataclass
-class VeluxHost():
+class VeluxHost:
     """Class to store Velux KLF200 host information."""
 
     hostname: str
@@ -29,7 +29,7 @@ def sanitize_hostname(hostname: str) -> str:
     return hostname
 
 
-class VeluxDiscovery():
+class VeluxDiscovery:
     """Class to discover Velux KLF200 devices on the network."""
 
     hosts: list[VeluxHost] = []
@@ -43,7 +43,7 @@ class VeluxDiscovery():
         """Listen for zeroconf ServiceInfo."""
         self.hosts.clear()
         service_names: list[str] = []
-        tasks: Set[Task] = set()
+        tasks: set[Task] = set()
         got_host: Event = Event()
 
         def add_info_and_host(fut: Future) -> None:

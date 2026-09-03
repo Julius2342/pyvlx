@@ -1,6 +1,5 @@
 """Module for get node information from gateway."""
 from enum import Enum
-from typing import Dict, List
 
 from pyvlx.const import (
     Command, NodeParameter, RunStatus, StatusReply, StatusType)
@@ -15,7 +14,7 @@ class FrameStatusRequestRequest(FrameBase):
 
     PAYLOAD_LEN = 26
 
-    def __init__(self, session_id: int | None = None, node_ids: List[int] | None = None):
+    def __init__(self, session_id: int | None = None, node_ids: list[int] | None = None):
         """Init Frame."""
         super().__init__(Command.GW_STATUS_REQUEST_REQ)
         self.session_id = session_id
@@ -109,7 +108,7 @@ class FrameStatusRequestNotification(FrameBase):
         self.status_reply = StatusReply.UNKNOWN_STATUS_REPLY
         self.status_type = StatusType.REQUEST_TARGET_POSITION
         self.status_count = 0
-        self.parameter_data: Dict[NodeParameter, Parameter] = {}
+        self.parameter_data: dict[NodeParameter, Parameter] = {}
         self.target_position = Parameter()
         self.current_position = Parameter()
         self.remaining_time = 0
@@ -118,7 +117,7 @@ class FrameStatusRequestNotification(FrameBase):
 
     def get_payload(self) -> bytes:
         """Return Payload."""
-        payload = bytes()
+        payload = b""
         payload += bytes([self.session_id >> 8 & 255, self.session_id & 255])
         payload += bytes([self.status_id])
         payload += bytes([self.node_id])

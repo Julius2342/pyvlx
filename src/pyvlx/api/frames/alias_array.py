@@ -1,5 +1,4 @@
 """Module for storing alias array."""
-from typing import List, Tuple
 
 from pyvlx.exception import PyVLXException
 
@@ -9,7 +8,7 @@ class AliasArray:
 
     def __init__(self, raw: bytes | None = None):
         """Initialize alias array."""
-        self.alias_array_: List[Tuple[bytes, bytes]] = []
+        self.alias_array_: list[tuple[bytes, bytes]] = []
         if raw is not None:
             self.parse_raw(raw)
 
@@ -39,7 +38,7 @@ class AliasArray:
             raise PyVLXException(
                 "AliasArray::invalid_nbr_of_alias", nbr_of_alias=nbr_of_alias
             )
-        for i in range(0, nbr_of_alias):
+        for i in range(nbr_of_alias):
             self.alias_array_.append(
                 (raw[i * 4 + 1 : i * 4 + 3], raw[i * 4 + 3 : i * 4 + 5])
             )

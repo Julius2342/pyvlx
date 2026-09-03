@@ -2,7 +2,8 @@
 import asyncio
 import ssl
 import sys
-from typing import Any, Callable, Coroutine, List, Set
+from collections.abc import Callable, Coroutine
+from typing import Any
 
 from .api.frame_creation import frame_from_raw
 from .api.frames import FrameBase
@@ -17,7 +18,7 @@ class SlipTokenizer:
 
     def __init__(self) -> None:
         """Init Tokenizer."""
-        self.data = bytes()
+        self.data = b""
 
     def feed(self, chunk: bytes) -> None:
         """Feed chunk to tokenizer."""
@@ -84,12 +85,12 @@ class Connection:
         """Init TCP connection."""
         self.config = config
         self.transport: asyncio.Transport | None = None
-        self.frame_received_cbs: List[CallbackType] = []
-        self.connection_closed_cbs: List[Callable[[], Coroutine[Any, Any, None]]] = []
-        self.connection_opened_cbs: List[Callable[[], Coroutine[Any, Any, None]]] = []
+        self.frame_received_cbs: list[CallbackType] = []
+        self.connection_closed_cbs: list[Callable[[], Coroutine[Any, Any, None]]] = []
+        self.connection_opened_cbs: list[Callable[[], Coroutine[Any, Any, None]]] = []
         self.connected = False
         self.connection_counter = 0
-        self.tasks: Set[asyncio.Task[None]] = set()
+        self.tasks: set[asyncio.Task[None]] = set()
 
     def __del__(self) -> None:
         """Destruct connection."""
@@ -132,7 +133,7 @@ class Connection:
                     port=self.config.port,
                     ssl=self.create_ssl_context(),
                 )
-        except asyncio.TimeoutError as error:
+        except TimeoutError as error:
             self.transport = None
             self.connected = False
             raise PyVLXException(

@@ -1,6 +1,5 @@
 """Module for sending command to gw."""
 from enum import Enum
-from typing import List
 
 from pyvlx.const import (
     Command, NodeParameter, Originator, Priority, RunStatus, StatusReply)
@@ -18,7 +17,7 @@ class FrameCommandSendRequest(FrameBase):
     def __init__(
             self,
             functional_parameter: FunctionalParams | None = None,
-            node_ids: List[int] | None = None,
+            node_ids: list[int] | None = None,
             parameter: Parameter = Parameter(),
             active_parameter: int = 0,
             session_id: int | None = None,

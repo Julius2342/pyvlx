@@ -1,5 +1,6 @@
 """Module for storing and accessing scene list."""
-from typing import TYPE_CHECKING, Iterator, List
+from collections.abc import Iterator
+from typing import TYPE_CHECKING
 
 from .api import GetSceneList
 from .exception import PyVLXException
@@ -15,7 +16,7 @@ class Scenes:
     def __init__(self, pyvlx: "PyVLX"):
         """Initialize Scenes class."""
         self.pyvlx = pyvlx
-        self.__scenes: List[Scene] = []
+        self.__scenes: list[Scene] = []
 
     def __iter__(self) -> Iterator[Scene]:
         """Iterate."""
