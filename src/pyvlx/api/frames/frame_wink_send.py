@@ -1,6 +1,5 @@
 """Module for sending wink request."""
 from enum import Enum
-from typing import List
 
 from pyvlx.const import Command, Originator, Priority, WinkTime
 from pyvlx.exception import PyVLXException
@@ -15,7 +14,7 @@ class FrameWinkSendRequest(FrameBase):
 
     def __init__(
             self,
-            node_ids: List[int] | None = None,
+            node_ids: list[int] | None = None,
             wink_time: WinkTime = WinkTime.BY_MANUFACTURER,
             session_id: int | None = None,
             originator: Originator = Originator.USER,

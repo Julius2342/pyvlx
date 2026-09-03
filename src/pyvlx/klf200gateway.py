@@ -1,6 +1,7 @@
 """Module for basic klf200 gateway functions."""
 
-from typing import TYPE_CHECKING, Awaitable, Callable, List
+from collections.abc import Awaitable, Callable
+from typing import TYPE_CHECKING
 
 from .api import (
     FactoryDefault, GetLocalTime, GetNetworkSetup, GetProtocolVersion,
@@ -28,7 +29,7 @@ class Klf200Gateway:
         self.time: DtoLocalTime | None = None
         self.protocol_version: DtoProtocolVersion | None = None
         self.version: DtoVersion | None = None
-        self.device_updated_cbs: List[CallbackType] = []
+        self.device_updated_cbs: list[CallbackType] = []
         self.house_status_monitor_enabled = False
 
     def register_device_updated_cb(self, device_updated_cb: CallbackType) -> None:

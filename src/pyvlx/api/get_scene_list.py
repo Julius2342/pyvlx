@@ -1,5 +1,5 @@
 """Module for retrieving scene list from API."""
-from typing import TYPE_CHECKING, List, Tuple
+from typing import TYPE_CHECKING
 
 from pyvlx.log import PYVLXLOG
 
@@ -20,7 +20,7 @@ class GetSceneList(ApiEvent):
         super().__init__(pyvlx=pyvlx)
         self.success = False
         self.count_scenes: int | None = None
-        self.scenes: List[Tuple[int, str]] = []
+        self.scenes: list[tuple[int, str]] = []
 
     async def handle_frame(self, frame: FrameBase) -> bool:
         """Handle incoming API frame, return True if this was the expected frame."""

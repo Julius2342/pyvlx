@@ -1,5 +1,4 @@
 """Module for get limitation status classes."""
-from typing import List
 
 from pyvlx.const import Command, LimitationType, Originator, Priority
 
@@ -12,7 +11,7 @@ class FrameGetLimitationStatus(FrameBase):
     PAYLOAD_LEN = 25
 
     def __init__(self,
-                 node_ids: List[int] | None = None,
+                 node_ids: list[int] | None = None,
                  session_id: int | None = None,
                  limitation_type: LimitationType = LimitationType.MIN_LIMITATION):
         """Init Frame."""

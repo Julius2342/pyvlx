@@ -112,7 +112,7 @@ class FrameGetAllNodesInformationNotification(FrameBase):
 
     def get_payload(self) -> bytes:
         """Return Payload."""
-        payload = bytes()
+        payload = b''
         payload += bytes([self.node_id])
         payload += bytes([self.order >> 8 & 255, self.order & 255])
         payload += bytes([self.placement])

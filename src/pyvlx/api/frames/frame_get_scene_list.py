@@ -1,5 +1,4 @@
 """Module for get scene list frame classes."""
-from typing import List, Tuple
 
 from pyvlx.const import Command
 from pyvlx.exception import PyVLXException
@@ -47,7 +46,7 @@ class FrameGetSceneListNotification(FrameBase):
     def __init__(self) -> None:
         """Init Frame."""
         super().__init__(Command.GW_GET_SCENE_LIST_NTF)
-        self.scenes: List[Tuple[int, str]] = []
+        self.scenes: list[tuple[int, str]] = []
         self.remaining_scenes = 0
 
     def get_payload(self) -> bytes:

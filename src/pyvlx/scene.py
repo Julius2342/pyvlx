@@ -1,5 +1,5 @@
 """Module for scene."""
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from .api import ActivateScene
 
@@ -45,6 +45,6 @@ class Scene:
         """Return object as readable string."""
         return f'<{type(self).__name__} name="{self.name}" id="{self.scene_id}"/>'
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Equal operator."""
         return self.__dict__ == other.__dict__
