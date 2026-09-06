@@ -19,10 +19,7 @@ make ci
 Run individual checks when needed:
 
 ```bash
-make pydocstyle
-make flake8
-make pylint
-make isort
+make ruff
 make mypy
 make test
 ```
