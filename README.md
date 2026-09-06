@@ -4,41 +4,41 @@
 
 | Name                                                                        |    Stmts |     Miss |   Branch |   BrPart |   Cover |   Missing |
 |---------------------------------------------------------------------------- | -------: | -------: | -------: | -------: | ------: | --------: |
-| src/pyvlx/api/activate\_scene.py                                            |       15 |        7 |        2 |        0 |     47% |21-22, 26-28, 32-33 |
+| src/pyvlx/api/activate\_scene.py                                            |       15 |        7 |        2 |        0 |     47% |19-20, 24-26, 30-31 |
 | src/pyvlx/api/api\_event.py                                                 |       36 |       20 |        4 |        0 |     40% |31-60, 69, 73, 77, 81-82 |
 | src/pyvlx/api/completable\_api\_event.py                                    |       25 |        1 |        6 |        0 |     97% |        64 |
-| src/pyvlx/api/factory\_default.py                                           |       17 |        9 |        2 |        0 |     42% |20-22, 26-30, 34 |
-| src/pyvlx/api/frame\_creation.py                                            |      142 |        6 |      130 |        5 |     96% |49-54, 66, 68, 70, 214 |
+| src/pyvlx/api/factory\_default.py                                           |       17 |        9 |        2 |        0 |     42% |18-20, 24-28, 32 |
+| src/pyvlx/api/frame\_creation.py                                            |      142 |        6 |      130 |        5 |     96% |81-86, 98, 100, 102, 246 |
 | src/pyvlx/api/frames/frame\_node\_state\_position\_changed\_notification.py |       47 |        1 |        0 |        0 |     98% |        62 |
-| src/pyvlx/api/frames/frame\_status\_request.py                              |      116 |        6 |       16 |        5 |     92% |42, 137-138, 160, 165, 174 |
+| src/pyvlx/api/frames/frame\_status\_request.py                              |      116 |        6 |       16 |        5 |     92% |41, 136-137, 159, 164, 173 |
 | src/pyvlx/api/frames/frame\_wink\_send.py                                   |       71 |        2 |        6 |        2 |     95% |    34, 57 |
-| src/pyvlx/api/get\_all\_nodes\_information.py                               |       24 |       16 |        8 |        0 |     25% |22-25, 29-42, 46 |
-| src/pyvlx/api/get\_local\_time.py                                           |       17 |        9 |        2 |        0 |     42% |19-21, 25-30, 34 |
-| src/pyvlx/api/get\_network\_setup.py                                        |       17 |        9 |        2 |        0 |     42% |19-21, 25-30, 34 |
-| src/pyvlx/api/get\_node\_information.py                                     |       19 |       12 |        4 |        0 |     30% |18-21, 25-38, 42 |
-| src/pyvlx/api/get\_protocol\_version.py                                     |       20 |       10 |        2 |        0 |     45% |21-23, 27-31, 35, 40 |
-| src/pyvlx/api/get\_scene\_list.py                                           |       28 |       20 |       10 |        0 |     21% |20-23, 27-45, 49 |
+| src/pyvlx/api/get\_all\_nodes\_information.py                               |       24 |       16 |        8 |        0 |     25% |24-27, 31-44, 48 |
+| src/pyvlx/api/get\_local\_time.py                                           |       17 |        9 |        2 |        0 |     42% |18-20, 24-29, 33 |
+| src/pyvlx/api/get\_network\_setup.py                                        |       17 |        9 |        2 |        0 |     42% |18-20, 24-29, 33 |
+| src/pyvlx/api/get\_node\_information.py                                     |       19 |       12 |        4 |        0 |     30% |16-19, 23-36, 40 |
+| src/pyvlx/api/get\_protocol\_version.py                                     |       20 |       10 |        2 |        0 |     45% |19-21, 25-29, 33, 38 |
+| src/pyvlx/api/get\_scene\_list.py                                           |       28 |       20 |       10 |        0 |     21% |18-21, 25-43, 47 |
 | src/pyvlx/api/get\_state.py                                                 |       17 |        9 |        2 |        0 |     42% |18-20, 24-28, 32 |
-| src/pyvlx/api/get\_version.py                                               |       17 |        9 |        2 |        0 |     42% |19-21, 25-30, 34 |
-| src/pyvlx/api/house\_status\_monitor.py                                     |       25 |       14 |        4 |        0 |     38% |20-21, 25-28, 32, 40-41, 45-48, 52 |
-| src/pyvlx/api/leave\_learn\_state.py                                        |       17 |        9 |        2 |        0 |     42% |19-21, 25-29, 33 |
-| src/pyvlx/api/password\_enter.py                                            |       20 |       12 |        6 |        0 |     31% |20-22, 26-35, 39 |
-| src/pyvlx/api/reboot.py                                                     |       17 |        9 |        2 |        0 |     42% |19-21, 25-29, 33 |
-| src/pyvlx/api/set\_node\_name.py                                            |       16 |        9 |        2 |        0 |     39% |18-21, 25-28, 32 |
-| src/pyvlx/api/status\_request.py                                            |       22 |       14 |        4 |        0 |     31% |19-23, 27-40, 44-45 |
-| src/pyvlx/api/wink\_send.py                                                 |       19 |        2 |        2 |        0 |     90% |     46-47 |
+| src/pyvlx/api/get\_version.py                                               |       17 |        9 |        2 |        0 |     42% |18-20, 24-29, 33 |
+| src/pyvlx/api/house\_status\_monitor.py                                     |       25 |       14 |        4 |        0 |     38% |22-23, 27-30, 34, 42-43, 47-50, 54 |
+| src/pyvlx/api/leave\_learn\_state.py                                        |       17 |        9 |        2 |        0 |     42% |18-20, 24-28, 32 |
+| src/pyvlx/api/password\_enter.py                                            |       20 |       12 |        6 |        0 |     31% |18-20, 24-33, 37 |
+| src/pyvlx/api/reboot.py                                                     |       17 |        9 |        2 |        0 |     42% |18-20, 24-28, 32 |
+| src/pyvlx/api/set\_node\_name.py                                            |       16 |        9 |        2 |        0 |     39% |16-19, 23-26, 30 |
+| src/pyvlx/api/status\_request.py                                            |       22 |       14 |        4 |        0 |     31% |17-21, 25-38, 42-43 |
+| src/pyvlx/api/wink\_send.py                                                 |       19 |        2 |        2 |        0 |     90% |     44-45 |
 | src/pyvlx/connection.py                                                     |      129 |       37 |       18 |        1 |     67% |25-27, 31, 35-36, 54, 58-68, 72-73, 152-154, 162, 170, 174, 178, 182-186, 198-202, 206 |
 | src/pyvlx/const.py                                                          |      479 |        7 |        2 |        1 |     98% |313, 582, 635, 654, 667, 681, 696 |
-| src/pyvlx/dataobjects.py                                                    |       67 |       20 |        8 |        4 |     68% |15-\>17, 17-\>19, 31, 55, 72-75, 79, 90-91, 95, 103-104, 108, 120-123, 127, 138, 142 |
+| src/pyvlx/dataobjects.py                                                    |       67 |       20 |        8 |        4 |     68% |13-\>15, 15-\>17, 29, 53, 70-73, 77, 88-89, 93, 101-102, 106, 118-121, 125, 136, 140 |
 | src/pyvlx/dimmable\_device.py                                               |       21 |        5 |        0 |        0 |     76% |41-48, 58, 71 |
-| src/pyvlx/discovery.py                                                      |       57 |       40 |       12 |        0 |     25% |25-29, 40, 44-78, 95-100 |
+| src/pyvlx/discovery.py                                                      |       57 |       40 |       12 |        0 |     25% |24-28, 39, 43-77, 94-99 |
 | src/pyvlx/heartbeat.py                                                      |       64 |        9 |       18 |        2 |     87% |30-38, 47-\>51, 49-\>51 |
-| src/pyvlx/klf200gateway.py                                                  |      108 |       74 |       28 |        0 |     25% |37, 41, 45-46, 50-55, 59-64, 68-73, 77-82, 86-90, 94-98, 103, 108-112, 116-120, 124-129, 133-138, 142-146, 150-156, 160 |
+| src/pyvlx/klf200gateway.py                                                  |      108 |       74 |       28 |        0 |     25% |46, 50, 54-55, 59-64, 68-73, 77-82, 86-91, 95-99, 103-107, 112, 117-121, 125-129, 133-138, 142-147, 151-155, 159-165, 169 |
 | src/pyvlx/node.py                                                           |       63 |       14 |       14 |        3 |     75% |43, 55, 60, 76, 87-91, 95-96, 100-106, 111 |
-| src/pyvlx/node\_updater.py                                                  |      182 |        0 |       92 |        2 |     99% |372-\>379, 381-\>385 |
+| src/pyvlx/node\_updater.py                                                  |      182 |        0 |       92 |        2 |     99% |375-\>382, 384-\>388 |
 | src/pyvlx/nodes.py                                                          |      111 |       11 |       66 |        8 |     88% |64-68, 110, 117-120, 127, 130, 133, 139, 151, 156-\>154 |
 | src/pyvlx/on\_off\_switch.py                                                |       20 |        7 |        0 |        0 |     65% |24-28, 32, 36, 40, 44 |
-| src/pyvlx/opening\_device.py                                                |      214 |      100 |       62 |        7 |     44% |69-74, 104, 108-113, 217, 231, 245, 260, 268, 272-289, 293-303, 417-450, 477, 504, 531, 551, 581-598, 607, 615, 623, 691-738, 761, 790, 807 |
+| src/pyvlx/opening\_device.py                                                |      214 |      100 |       62 |        7 |     44% |66-71, 101, 105-110, 214, 228, 242, 257, 265, 269-286, 290-300, 414-447, 474, 501, 528, 548, 578-595, 604, 612, 620, 688-735, 758, 787, 804 |
 | src/pyvlx/parameter.py                                                      |      214 |       13 |       70 |        7 |     92% |113, 115, 117, 119, 164-168, 362, 364, 366, 391 |
 | src/pyvlx/pyvlx.py                                                          |       79 |       41 |       10 |        0 |     43% |12-13, 60-76, 80-84, 88, 92-93, 97-98, 102-114, 118, 122, 126-129 |
 | src/pyvlx/scenes.py                                                         |       39 |        6 |       20 |        0 |     83% |     56-61 |

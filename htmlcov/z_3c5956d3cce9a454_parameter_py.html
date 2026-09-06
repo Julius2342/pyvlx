@@ -67,7 +67,7 @@
             <a id="nextFileLink" class="nav" href="z_3c5956d3cce9a454_pyvlx_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
-            created at 2026-09-03 07:50 +0000
+            created at 2026-09-06 19:46 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -88,7 +88,7 @@
     <p class="run"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t"><span class="key">from</span> <span class="op">.</span><span class="nam">exception</span> <span class="key">import</span> <span class="nam">PyVLXException</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="key">class</span> <span class="nam">Parameter</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="key">class</span> <span class="nam">Parameter</span><span class="op">:</span> <span class="com"># noqa: PLW1641</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t">    <span class="str">&quot;&quot;&quot;General object for storing parameters.&quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t">    <span class="nam">UNKNOWN_VALUE</span> <span class="op">=</span> <span class="num">0xF7FF</span>  <span class="com"># F7 FF</span>&nbsp;</span><span class="r"></span></p>
@@ -152,7 +152,7 @@
     <p class="pln"><span class="n"><a id="t68" href="#t68">68</a></span><span class="t">        <span class="str">&quot;&quot;&quot;Test if raw packets are valid for initialization of Position.&quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t69" href="#t69">69</a></span><span class="t">        <span class="key">if</span> <span class="key">not</span> <span class="nam">isinstance</span><span class="op">(</span><span class="nam">raw</span><span class="op">,</span> <span class="nam">bytes</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t70" href="#t70">70</a></span><span class="t">            <span class="key">raise</span> <span class="nam">PyVLXException</span><span class="op">(</span><span class="str">&quot;Position::raw_must_be_bytes&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t71" href="#t71">71</a></span><span class="t">        <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">raw</span><span class="op">)</span> <span class="op">!=</span> <span class="num">2</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t71" href="#t71">71</a></span><span class="t">        <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">raw</span><span class="op">)</span> <span class="op">!=</span> <span class="num">2</span><span class="op">:</span>  <span class="com"># noqa: PLR2004</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t72" href="#t72">72</a></span><span class="t">            <span class="key">raise</span> <span class="nam">PyVLXException</span><span class="op">(</span><span class="str">&quot;Position::raw_must_be_two_bytes&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t73" href="#t73">73</a></span><span class="t">        <span class="key">if</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t74" href="#t74">74</a></span><span class="t">            <span class="nam">raw</span> <span class="op">!=</span> <span class="nam">Position</span><span class="op">.</span><span class="nam">from_int</span><span class="op">(</span><span class="nam">Position</span><span class="op">.</span><span class="nam">CURRENT</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -171,7 +171,7 @@
     <p class="run"><span class="n"><a id="t87" href="#t87">87</a></span><span class="t">            <span class="key">raise</span> <span class="nam">PyVLXException</span><span class="op">(</span><span class="str">&quot;Position::percent_has_to_be_int&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t88" href="#t88">88</a></span><span class="t">        <span class="key">if</span> <span class="nam">percent</span> <span class="op">&lt;</span> <span class="num">0</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t89" href="#t89">89</a></span><span class="t">            <span class="key">raise</span> <span class="nam">PyVLXException</span><span class="op">(</span><span class="str">&quot;Position::percent_has_to_be_positive&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t90" href="#t90">90</a></span><span class="t">        <span class="key">if</span> <span class="nam">percent</span> <span class="op">&gt;</span> <span class="num">100</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t90" href="#t90">90</a></span><span class="t">        <span class="key">if</span> <span class="nam">percent</span> <span class="op">&gt;</span> <span class="num">100</span><span class="op">:</span>  <span class="com"># noqa: PLR2004</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t91" href="#t91">91</a></span><span class="t">            <span class="key">raise</span> <span class="nam">PyVLXException</span><span class="op">(</span><span class="str">&quot;Position::percent_out_of_range&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t92" href="#t92">92</a></span><span class="t">        <span class="key">return</span> <span class="nam">bytes</span><span class="op">(</span><span class="op">[</span><span class="nam">percent</span> <span class="op">*</span> <span class="num">2</span><span class="op">,</span> <span class="num">0</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t93" href="#t93">93</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -414,7 +414,7 @@
     <p class="run"><span class="n"><a id="t330" href="#t330">330</a></span><span class="t">            <span class="key">raise</span> <span class="nam">PyVLXException</span><span class="op">(</span><span class="str">&quot;Intensity::percent_has_to_be_int&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t331" href="#t331">331</a></span><span class="t">        <span class="key">if</span> <span class="nam">percent</span> <span class="op">&lt;</span> <span class="num">0</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t332" href="#t332">332</a></span><span class="t">            <span class="key">raise</span> <span class="nam">PyVLXException</span><span class="op">(</span><span class="str">&quot;Intensity::percent_has_to_be_positive&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t333" href="#t333">333</a></span><span class="t">        <span class="key">if</span> <span class="nam">percent</span> <span class="op">&gt;</span> <span class="num">100</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t333" href="#t333">333</a></span><span class="t">        <span class="key">if</span> <span class="nam">percent</span> <span class="op">&gt;</span> <span class="num">100</span><span class="op">:</span>  <span class="com"># noqa: PLR2004</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t334" href="#t334">334</a></span><span class="t">            <span class="key">raise</span> <span class="nam">PyVLXException</span><span class="op">(</span><span class="str">&quot;Intensity::percent_out_of_range&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t335" href="#t335">335</a></span><span class="t">        <span class="com"># Invert: 0% = off (200), 100% = on (0)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t336" href="#t336">336</a></span><span class="t">        <span class="key">return</span> <span class="nam">bytes</span><span class="op">(</span><span class="op">[</span><span class="op">(</span><span class="num">100</span> <span class="op">-</span> <span class="nam">percent</span><span class="op">)</span> <span class="op">*</span> <span class="num">2</span><span class="op">,</span> <span class="num">0</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -486,7 +486,7 @@
             <a class="nav" href="z_3c5956d3cce9a454_pyvlx_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
-            created at 2026-09-03 07:50 +0000
+            created at 2026-09-06 19:46 +0000
         </p>
     </div>
 </footer>

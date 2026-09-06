@@ -67,7 +67,7 @@
             <a id="nextFileLink" class="nav" href="z_3286bf398e060a5f_get_all_nodes_information_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
-            created at 2026-09-03 07:50 +0000
+            created at 2026-09-06 19:46 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -114,7 +114,7 @@
     <p class="pln"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t31" href="#t31">31</a></span><span class="t">    <span class="key">def</span> <span class="nam">get_payload</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">bytes</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t32" href="#t32">32</a></span><span class="t">        <span class="str">&quot;&quot;&quot;Return Payload.&quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="par run show_par"><span class="n"><a id="t33" href="#t33">33</a></span><span class="t">        <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">node_ids</span><span class="op">)</span> <span class="op">&gt;</span> <span class="num">20</span><span class="op">:</span>&nbsp;</span><span class="r"><span class="annotate short">33&#x202F;&#x219B;&#x202F;34</span><span class="annotate long">line 33 didn't jump to line 34 because the condition on line 33 was never true</span></span></p>
+    <p class="par run show_par"><span class="n"><a id="t33" href="#t33">33</a></span><span class="t">        <span class="key">if</span> <span class="nam">len</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">node_ids</span><span class="op">)</span> <span class="op">&gt;</span> <span class="num">20</span><span class="op">:</span>  <span class="com"># noqa: PLR2004</span>&nbsp;</span><span class="r"><span class="annotate short">33&#x202F;&#x219B;&#x202F;34</span><span class="annotate long">line 33 didn't jump to line 34 because the condition on line 33 was never true</span></span></p>
     <p class="mis show_mis"><span class="n"><a id="t34" href="#t34">34</a></span><span class="t">            <span class="key">raise</span> <span class="nam">PyVLXException</span><span class="op">(</span><span class="str">&quot;wink_send_request_wrong_node_length&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t35" href="#t35">35</a></span><span class="t">        <span class="key">assert</span> <span class="nam">self</span><span class="op">.</span><span class="nam">session_id</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t36" href="#t36">36</a></span><span class="t">        <span class="nam">ret</span> <span class="op">=</span> <span class="nam">bytes</span><span class="op">(</span><span class="op">[</span><span class="nam">self</span><span class="op">.</span><span class="nam">session_id</span> <span class="op">&gt;&gt;</span> <span class="num">8</span> <span class="op">&amp;</span> <span class="num">255</span><span class="op">,</span> <span class="nam">self</span><span class="op">.</span><span class="nam">session_id</span> <span class="op">&amp;</span> <span class="num">255</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -137,7 +137,7 @@
     <p class="run"><span class="n"><a id="t53" href="#t53">53</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">wink_time</span> <span class="op">=</span> <span class="nam">WinkTime</span><span class="op">(</span><span class="nam">payload</span><span class="op">[</span><span class="num">5</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t54" href="#t54">54</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t55" href="#t55">55</a></span><span class="t">        <span class="nam">len_node_ids</span> <span class="op">=</span> <span class="nam">payload</span><span class="op">[</span><span class="num">6</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
-    <p class="par run show_par"><span class="n"><a id="t56" href="#t56">56</a></span><span class="t">        <span class="key">if</span> <span class="nam">len_node_ids</span> <span class="op">&gt;</span> <span class="num">20</span><span class="op">:</span>&nbsp;</span><span class="r"><span class="annotate short">56&#x202F;&#x219B;&#x202F;57</span><span class="annotate long">line 56 didn't jump to line 57 because the condition on line 56 was never true</span></span></p>
+    <p class="par run show_par"><span class="n"><a id="t56" href="#t56">56</a></span><span class="t">        <span class="key">if</span> <span class="nam">len_node_ids</span> <span class="op">&gt;</span> <span class="num">20</span><span class="op">:</span>  <span class="com"># noqa: PLR2004</span>&nbsp;</span><span class="r"><span class="annotate short">56&#x202F;&#x219B;&#x202F;57</span><span class="annotate long">line 56 didn't jump to line 57 because the condition on line 56 was never true</span></span></p>
     <p class="mis show_mis"><span class="n"><a id="t57" href="#t57">57</a></span><span class="t">            <span class="key">raise</span> <span class="nam">PyVLXException</span><span class="op">(</span><span class="str">&quot;wink_send_request_wrong_node_length&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t58" href="#t58">58</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">node_ids</span> <span class="op">=</span> <span class="op">[</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t59" href="#t59">59</a></span><span class="t">        <span class="key">for</span> <span class="nam">i</span> <span class="key">in</span> <span class="nam">range</span><span class="op">(</span><span class="nam">len_node_ids</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -219,7 +219,7 @@
             <a class="nav" href="z_3286bf398e060a5f_get_all_nodes_information_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
-            created at 2026-09-03 07:50 +0000
+            created at 2026-09-06 19:46 +0000
         </p>
     </div>
 </footer>
