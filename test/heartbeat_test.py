@@ -191,6 +191,7 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         moving_gate.is_closing = True
         moving_gate.is_opening = False
         moving_gate.name = "Moving Gate"
+        moving_gate.node_id = 1
         idle_node = AsyncMock()
         self.pyvlx.nodes = [moving_gate, idle_node]
 
