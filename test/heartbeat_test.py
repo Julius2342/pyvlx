@@ -18,6 +18,7 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         self.pyvlx = MagicMock(spec=PyVLX)
         self.pyvlx.connection = MagicMock()
         self.pyvlx.nodes = []
+        self.pyvlx.heartbeat_quiet_period_active = False
 
     def test_stopped_property(self) -> None:
         """Test stopped property reflects task state."""
@@ -172,6 +173,61 @@ class TestHeartbeat(IsolatedAsyncioTestCase):
         assert node_1.update_status.await_count == 1
         assert node_2.update_status.await_count == 1
         self.assertEqual(sleep_mock.await_count, 2)
+
+    @patch("pyvlx.heartbeat.asyncio.sleep", new_callable=AsyncMock)
+    @patch("pyvlx.heartbeat.GetState")
+    async def test_pulse_polls_when_quiet_period_expires_during_get_state(
+        self,
+        get_state_cls: MagicMock,
+        sleep_mock: AsyncMock,
+    ) -> None:
+        """Heartbeat resumes polling if the quiet period expires during GetState."""
+        node = AsyncMock()
+        node.is_opening = False
+        node.is_closing = False
+        self.pyvlx.nodes = [node]
+        self.pyvlx.heartbeat_quiet_period_active = True
+
+        get_state = MagicMock()
+        get_state.do_api_call = AsyncMock()
+        get_state.do_api_call.side_effect = lambda: setattr(self.pyvlx, "heartbeat_quiet_period_active", False)
+        get_state.success = True
+        get_state_cls.return_value = get_state
+
+        heartbeat = Heartbeat(self.pyvlx, load_all_states=True)
+        await heartbeat.pulse()
+
+        get_state.do_api_call.assert_awaited_once()
+        node.update_status.assert_awaited_once()
+        sleep_mock.assert_awaited_once_with(0.5)
+
+    @patch("pyvlx.heartbeat.asyncio.sleep", new_callable=AsyncMock)
+    @patch("pyvlx.heartbeat.GetState")
+    async def test_pulse_stops_polling_remaining_nodes_if_command_is_dispatched(
+        self,
+        get_state_cls: MagicMock,
+        sleep_mock: AsyncMock,
+    ) -> None:
+        """A command dispatched during a pulse prevents subsequent node polls."""
+        first_node = AsyncMock()
+        second_node = AsyncMock()
+        self.pyvlx.nodes = [first_node, second_node]
+
+        async def dispatch_command() -> None:
+            self.pyvlx.heartbeat_quiet_period_active = True
+
+        first_node.update_status.side_effect = dispatch_command
+        get_state = MagicMock()
+        get_state.do_api_call = AsyncMock()
+        get_state.success = True
+        get_state_cls.return_value = get_state
+
+        heartbeat = Heartbeat(self.pyvlx, load_all_states=True)
+        await heartbeat.pulse()
+
+        first_node.update_status.assert_awaited_once()
+        second_node.update_status.assert_not_called()
+        sleep_mock.assert_awaited_once_with(0.5)
 
     @patch("pyvlx.heartbeat.asyncio.sleep", new_callable=AsyncMock)
     @patch("pyvlx.heartbeat.GetState")

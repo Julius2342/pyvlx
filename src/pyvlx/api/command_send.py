@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 class CommandSend(CompletableApiEvent):
     """Class for sending command to API."""
 
+    extends_heartbeat_quiet_period = True
+
     def __init__(
             self,
             *,

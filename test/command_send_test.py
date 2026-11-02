@@ -1,11 +1,14 @@
 """Unit test for command send module."""
+import asyncio
 import unittest
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from pyvlx import Parameter, PyVLXException
-from pyvlx.api import CommandSend
+from pyvlx.api import ActivateScene, CommandSend, WinkSend
 from pyvlx.api.frames import CommandSendConfirmationStatus, FrameCommandSendConfirmation, FrameCommandSendRequest, FrameSessionFinishedNotification
 from pyvlx.api.frames.frame_command_send import FrameCommandRemainingTimeNotification, FrameCommandRunStatusNotification
+from pyvlx.api.get_limitation import GetLimitation
+from pyvlx.api.set_limitation import SetLimitation
 
 
 class TestCommandSend(unittest.IsolatedAsyncioTestCase):
@@ -86,6 +89,27 @@ class TestCommandSend(unittest.IsolatedAsyncioTestCase):
         self.command_send.success = False
         with self.assertRaises(PyVLXException):
             await self.command_send.send()
+
+    async def test_do_api_call_marks_quiet_period_before_sending(self) -> None:
+        """User command events extend the quiet period immediately before dispatch."""
+        mocked_pyvlx = MagicMock()
+        mocked_pyvlx.ensure_connected = AsyncMock()
+        mocked_pyvlx.get_connected.return_value = True
+        mocked_pyvlx.api_call_semaphore = asyncio.Semaphore(1)
+        command = CommandSend(pyvlx=mocked_pyvlx, node_id=23, parameter=Parameter())
+
+        async def send_frame() -> None:
+            mocked_pyvlx._mark_user_command_dispatched.assert_called_once()
+            command.response_received_or_timeout.set()
+
+        with patch.object(command, "send_frame", new_callable=AsyncMock, side_effect=send_frame):
+            await command.do_api_call()
+
+        mocked_pyvlx._mark_user_command_dispatched.assert_called_once()
+        self.assertTrue(ActivateScene.extends_heartbeat_quiet_period)
+        self.assertTrue(GetLimitation.extends_heartbeat_quiet_period)
+        self.assertTrue(SetLimitation.extends_heartbeat_quiet_period)
+        self.assertTrue(WinkSend.extends_heartbeat_quiet_period)
 
     @patch("pyvlx.api.command_send.get_new_session_id", callable=MagicMock)
     def test_request_frame(self, new_session_id_request: MagicMock) -> None:

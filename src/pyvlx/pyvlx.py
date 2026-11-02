@@ -6,6 +6,8 @@ a VELUX KLF 200 device for controlling window openers
 and roller shutters.
 """
 import asyncio
+import time
+from datetime import datetime, timedelta
 
 try:
     from ._version import version as v
@@ -35,8 +37,14 @@ class PyVLX:
         password: str | None = None,
         heartbeat_interval: int = 30,
         heartbeat_load_all_states: bool = True,
+        *,
+        heartbeat_quiet_period: float = 60.0,
     ):
         """Initialize PyVLX class."""
+        if heartbeat_quiet_period < 0:
+            heartbeat_quiet_period = 0.0
+        self.heartbeat_quiet_period = heartbeat_quiet_period
+        self._heartbeat_quiet_until: float = time.monotonic()
         self.config = Config(self, path, host, password)
         self.connection = Connection(config=self.config)
         self.heartbeat = Heartbeat(
@@ -96,6 +104,22 @@ class PyVLX:
         """Send frame to API via connection."""
         await self.ensure_connected()
         self.connection.write(frame)
+
+    def _mark_user_command_dispatched(self) -> None:
+        """Extend the heartbeat quiet period after dispatching a user command."""
+        if self.heartbeat_quiet_period > 0:
+            quiet_until_walltime = datetime.now().astimezone() + timedelta(seconds=self.heartbeat_quiet_period)
+            PYVLXLOG.debug(
+                "User command dispatched, extending heartbeat quiet period by %ss until %s",
+                self.heartbeat_quiet_period,
+                quiet_until_walltime.isoformat(),
+            )
+            self._heartbeat_quiet_until = time.monotonic() + self.heartbeat_quiet_period
+
+    @property
+    def heartbeat_quiet_period_active(self) -> bool:
+        """Return whether automatic heartbeat position polling should be paused."""
+        return time.monotonic() < self._heartbeat_quiet_until
 
     async def disconnect(self) -> None:
         """Disconnect from KLF 200."""

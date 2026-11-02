@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 class WinkSend(CompletableApiEvent):
     """Class for sending wink request to API."""
 
+    extends_heartbeat_quiet_period = True
+
     def __init__(
             self,
             pyvlx: "PyVLX",
