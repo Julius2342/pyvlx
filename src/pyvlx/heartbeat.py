@@ -93,8 +93,9 @@ class Heartbeat:
                 node.is_opening or node.is_closing
             ):
                 PYVLXLOG.debug(
-                    "Heartbeat: skipping node %s while it is in motion",
+                    "Heartbeat: skipping node %s (id=%s) while it is in motion",
                     node.name,
+                    node.node_id
                 )
                 continue
             if isinstance(node, (Blind, DualRollerShutter)) or self.load_all_states:

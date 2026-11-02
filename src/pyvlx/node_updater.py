@@ -29,10 +29,10 @@ def _set_node_property(node: Node, prop_name: str, new_value: Any, log_unchanged
     current_value = getattr(node, prop_name)
     if current_value != new_value:
         setattr(node, prop_name, new_value)
-        PYVLXLOG.debug("%s %s changed to: %s", node.name, prop_name, new_value)
+        PYVLXLOG.debug("%s (id=%s) %s changed to: %s", node.name, node.node_id, prop_name, new_value)
         return True
     if log_unchanged:
-        PYVLXLOG.debug("%s %s unchanged: %s", node.name, prop_name, new_value)
+        PYVLXLOG.debug("%s (id=%s) %s unchanged: %s", node.name, node.node_id, prop_name, new_value)
     return False
 
 
@@ -159,8 +159,8 @@ class NodeUpdater:
                 + datetime.timedelta(0, frame.remaining_time)
             )
             PYVLXLOG.debug(
-                "%s is opening (%s->%s), estimated completion in %ss at %s",
-                node.name, comparison_position, target,
+                "%s (id=%s) is opening (%s->%s), estimated completion in %ss at %s",
+                node.name, node.node_id, comparison_position, target,
                 frame.remaining_time,
                 node.estimated_completion.strftime("%Y-%m-%d %H:%M:%S")
             )
@@ -179,8 +179,8 @@ class NodeUpdater:
                 + datetime.timedelta(0, frame.remaining_time)
             )
             PYVLXLOG.debug(
-                "%s is closing (%s->%s), estimated completion in %ss at %s",
-                node.name, comparison_position, target,
+                "%s (id=%s) is closing (%s->%s), estimated completion in %ss at %s",
+                node.name, node.node_id, comparison_position, target,
                 frame.remaining_time,
                 node.estimated_completion.strftime("%Y-%m-%d %H:%M:%S")
             )
@@ -205,9 +205,10 @@ class NodeUpdater:
                 + datetime.timedelta(0, frame.remaining_time)
             )
             PYVLXLOG.debug(
-                "%s changed motion target while current position is unavailable (%s->%s),"
+                "%s (id=%s) changed motion target while current position is unavailable (%s->%s),"
                 " estimated completion in %ss at %s",
                 node.name,
+                node.node_id,
                 node.target,
                 target,
                 frame.remaining_time,
@@ -240,9 +241,10 @@ class NodeUpdater:
                 + datetime.timedelta(0, frame.remaining_time)
             )
             PYVLXLOG.debug(
-                "%s keeps previous motion state while current position is unavailable (%s->%s),"
+                "%s (id=%s) keeps previous motion state while current position is unavailable (%s->%s),"
                 " estimated completion in %ss at %s",
                 node.name,
+                node.node_id,
                 position,
                 target,
                 frame.remaining_time,
@@ -254,12 +256,12 @@ class NodeUpdater:
                 node_changed |= _set_node_property(node, "is_opening", False)
                 node.state_received_at = None
                 node.estimated_completion = None
-                PYVLXLOG.debug("%s stopped opening", node.name)
+                PYVLXLOG.debug("%s (id=%s) stopped opening", node.name, node.node_id)
             if node.is_closing:
                 node_changed |= _set_node_property(node, "is_closing", False)
                 node.state_received_at = None
                 node.estimated_completion = None
-                PYVLXLOG.debug("%s stopped closing", node.name)
+                PYVLXLOG.debug("%s (id=%s) stopped closing", node.name, node.node_id)
         return node_changed
 
     async def _update_node_main_parameter(
