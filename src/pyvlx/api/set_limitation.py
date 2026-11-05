@@ -21,6 +21,8 @@ if TYPE_CHECKING:
 class SetLimitation(ApiEvent):
     """Class for setting limitation."""
 
+    extends_heartbeat_quiet_period = True
+
     # NOTE: Required to always set both limits at the same time.
     # If setting only one limit to a value, the other to Ignore, Default or Current, the gateway will reject the Frame.
     def __init__(self, pyvlx: "PyVLX", node_id: int,

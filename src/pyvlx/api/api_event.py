@@ -16,6 +16,8 @@ class ApiEvent:
     call to do_api_call() they must be discarded.
     """
 
+    extends_heartbeat_quiet_period = False
+
     def __init__(self, pyvlx: "PyVLX", timeout_in_seconds: int = 10):
         """Initialize ApiEvent."""
         self.pyvlx = pyvlx
@@ -40,6 +42,8 @@ class ApiEvent:
             async with self.pyvlx.api_call_semaphore:
                 self.pyvlx.connection.register_frame_received_cb(self.response_rec_callback)
                 try:
+                    if self.extends_heartbeat_quiet_period:
+                        self.pyvlx._mark_user_command_dispatched()
                     await self.send_frame()
                     try:
                         async with asyncio.timeout(self.timeout_in_seconds):

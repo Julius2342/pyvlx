@@ -15,6 +15,8 @@ if TYPE_CHECKING:
 class GetLimitation(ApiEvent):
     """Class for retrieving limitation values from API."""
 
+    extends_heartbeat_quiet_period = True
+
     def __init__(self, pyvlx: "PyVLX", node_id: int, limitation_type: LimitationType = LimitationType.MIN_LIMITATION):
         """Initialize GetLimitation class."""
         super().__init__(pyvlx=pyvlx)

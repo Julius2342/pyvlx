@@ -80,6 +80,9 @@ class Heartbeat:
         # If nodes contain Blind or DualRollerShutter device, refresh orientation or upper/lower curtain positions because House Monitoring
         # delivers wrong values for FP1, FP2 and FP3 parameter
         for node in self.pyvlx.nodes:
+            if self.pyvlx.heartbeat_quiet_period_active:
+                PYVLXLOG.debug("Heartbeat: skipping position polling during quiet period")
+                break
             # A StatusRequest issued to a node mid-travel can make the
             # KLF200 emit a run_status = EXECUTION_COMPLETED notification
             # for the currently active command — sometimes with

@@ -12,6 +12,8 @@ if TYPE_CHECKING:
 class ActivateScene(CompletableApiEvent):
     """Class for activating scene via API."""
 
+    extends_heartbeat_quiet_period = True
+
     def __init__(
             self, pyvlx: "PyVLX", scene_id: int, wait_for_completion: bool = True, timeout_in_seconds: int = 60
     ):
