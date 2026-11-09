@@ -30,7 +30,7 @@ dev = [
     "pytest==9.2.0",
     "pytest-cov==7.1.0",
     "mypy==2.4.1",
-    "types-PyYAML==6.0.12.20261030",
+    "types-PyYAML==6.0.12.20261103",
     "ruff>=0.16.5",
 ]
 release = [
